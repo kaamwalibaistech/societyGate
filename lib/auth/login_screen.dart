@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'navigation_screen.dart';
+import '../navigation_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 class _CreateNewAccountState extends State<LoginScreen> {
   final TextEditingController _mobileNoController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isPasswordHidden = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,14 +106,21 @@ class _CreateNewAccountState extends State<LoginScreen> {
                 keyboardType: TextInputType.number,
                 maxLength: 10,
                 controller: _passwordController,
-                // validator: (value) {
-                //   if (value!.isEmpty) {
-                //     return "please enter numbers!";
-                //   } else {
-                //     return null;
-                //   }
-                // },
-                decoration: const InputDecoration(
+                obscureText: !isPasswordHidden,
+                decoration: InputDecoration(
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPasswordHidden = !isPasswordHidden;
+                      });
+                    },
+                    child: Icon(
+                      isPasswordHidden
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
                   fillColor: Colors.white,
                   border: OutlineInputBorder(borderSide: BorderSide.none),
                   contentPadding:
@@ -184,16 +192,15 @@ class _CreateNewAccountState extends State<LoginScreen> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20)),
-                  child: const Center(
+                  child: Center(
                     child: Row(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(left: 40.0),
-                          child: Icon(
-                            Icons.g_mobiledata,
-                            size: 35,
-                          ),
-                        ),
+                            padding: EdgeInsets.only(left: 25.0, right: 10),
+                            child: Image.asset(
+                              "lib/assets/icons/googlelogo.png",
+                              scale: 2,
+                            )),
                         Text("Google")
                       ],
                     ),
@@ -205,21 +212,18 @@ class _CreateNewAccountState extends State<LoginScreen> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20)),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 30.0),
-                        child: Icon(
-                          Icons.facebook,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      Padding(
+                          padding: EdgeInsets.only(left: 30.0),
+                          child: Image.asset(
+                            "lib/assets/icons/applelogo.png",
+                            scale: 2,
+                          )),
+                      const Padding(
                         padding: EdgeInsets.only(left: 7.0),
                         child: Text(
-                          "FaceBook",
-                          style: TextStyle(
-                              color: Colors.blue, fontWeight: FontWeight.bold),
+                          "Apple",
                         ),
                       )
                     ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'register_screen.dart';
+import 'auth/register_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,4 +17,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-// test main

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:my_society/auth/login_screen.dart';
+import 'package:my_society/constents/sizedbox.dart';
 
-class CreateNewAccount extends StatefulWidget {
-  const CreateNewAccount({super.key});
+class SoceityRegister extends StatefulWidget {
+  const SoceityRegister({super.key});
 
   @override
-  State<CreateNewAccount> createState() => _CreateNewAccountState();
+  State<SoceityRegister> createState() => _SoceityRegister();
 }
 
-class _CreateNewAccountState extends State<CreateNewAccount> {
+class _SoceityRegister extends State<SoceityRegister> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController mobileNoController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -47,25 +49,31 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
                 "Create an account",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               )),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Already have an account? ",
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
-                  Text(
-                    "Log In",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold),
-                  )
-                ],
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Already have an account? ",
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                    Text(
+                      "Log In",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
+              sizedBoxH10(context),
               const Text(
                 "Name",
                 style: TextStyle(fontSize: 16, color: Colors.grey),
