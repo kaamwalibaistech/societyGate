@@ -103,7 +103,7 @@ class _CreateNewAccountState extends State<LoginScreen> {
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(10)),
               child: TextFormField(
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.visiblePassword,
                 maxLength: 10,
                 controller: _passwordController,
                 obscureText: !isPasswordHidden,

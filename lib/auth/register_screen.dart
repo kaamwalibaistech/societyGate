@@ -9,7 +9,7 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: const Color(0xfff0f3fa),
+      backgroundColor: const Color(0xfff0f3fa),
       body: Column(
         children: [
           SizedBox(
@@ -96,7 +96,7 @@ class RegisterScreen extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SoceityRegister()));
+                      builder: (context) => const SocietyRegister()));
             },
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.05,

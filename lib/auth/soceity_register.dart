@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:my_society/auth/login_screen.dart';
 import 'package:my_society/constents/sizedbox.dart';
 
-class SoceityRegister extends StatefulWidget {
-  const SoceityRegister({super.key});
+class SocietyRegister extends StatefulWidget {
+  const SocietyRegister({super.key});
 
   @override
-  State<SoceityRegister> createState() => _SoceityRegister();
+  State<SocietyRegister> createState() => _SocietyRegister();
 }
 
-class _SoceityRegister extends State<SoceityRegister> {
+class _SocietyRegister extends State<SocietyRegister> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController mobileNoController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
