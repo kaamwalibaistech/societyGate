@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'register_screen.dart';
+import 'auth/register_screen.dart';
 
 Future main() async {
   // WidgetsFlutterBinding.ensureInitialized();
@@ -20,4 +20,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-// test main

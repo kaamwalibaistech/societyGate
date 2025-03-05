@@ -107,6 +107,8 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+<<<<<<< HEAD
+=======
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -120,6 +122,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.2.12"
+>>>>>>> 9bbebaa4b45d8b734479d74538a72b049fbd4ce6
   http:
     dependency: "direct main"
     description:
@@ -132,10 +135,17 @@ packages:
     dependency: transitive
     description:
       name: http_parser
+<<<<<<< HEAD
+      sha256: "178d74305e7866013777bab2c3d8726205dc5a4dd935297175b19a23a2e66571"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.2"
+=======
       sha256: "2aa08ce0341cc9b354a498388e30986515406668dbcc4f7c950c3e715496693b"
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+>>>>>>> 9bbebaa4b45d8b734479d74538a72b049fbd4ce6
   leak_tracker:
     dependency: transitive
     description:
@@ -276,8 +286,12 @@ packages:
       sha256: "664d3a9a64782fcdeb83ce9c6b39e78fd2971d4e37827b9b06c3aa1edc5e760c"
       url: "https://pub.dev"
     source: hosted
+<<<<<<< HEAD
+    version: "0.7.3"
+=======
 
     version: "0.7.2"
+>>>>>>> 9bbebaa4b45d8b734479d74538a72b049fbd4ce6
   typed_data:
     dependency: transitive
     description:
@@ -286,7 +300,10 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+<<<<<<< HEAD
+=======
 
+>>>>>>> 9bbebaa4b45d8b734479d74538a72b049fbd4ce6
   vector_math:
     dependency: transitive
     description:
@@ -302,8 +319,12 @@ packages:
       sha256: f6be3ed8bd01289b34d679c2b62226f63c0e69f9fd2e50a6b3c1c729a961041b
       url: "https://pub.dev"
     source: hosted
+<<<<<<< HEAD
+    version: "14.3.0"
+=======
 
     version: "14.2.5"
+>>>>>>> 9bbebaa4b45d8b734479d74538a72b049fbd4ce6
   web:
     dependency: transitive
     description:
@@ -312,7 +333,10 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+<<<<<<< HEAD
+=======
 
+>>>>>>> 9bbebaa4b45d8b734479d74538a72b049fbd4ce6
 sdks:
   dart: ">=3.5.4 <4.0.0"
   flutter: ">=3.18.0-18.0.pre.54"
