@@ -22,94 +22,139 @@ class _RegisterMemberState extends State<RegisterMember> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xfff0f3fa),
       appBar: AppBar(
-        backgroundColor: const Color(0xfff0f3fa),
+        backgroundColor: Colors.transparent, // Makes the AppBar transparent
+        elevation: 0, // Removes AppBar shadow
+
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
             },
             child: const Icon(Icons.arrow_back, color: Colors.black)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // Align content
-              children: [
-                const Center(
-                  child: Text(
-                    "Create a member account",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Already have an account? ",
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.1, left: 10, right: 10),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF9C27B0), Color(0xFF2196F3)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start, // Align content
+                children: [
+                  const Center(
+                    child: Text(
+                      "Create a member account",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                     ),
-                    TextButton(
-                      onPressed: () {}, // Add login navigation
-                      child: Text(
-                        "Log In",
-                        style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Already have an account? ",
+                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                      TextButton(
+                        onPressed: () {}, // Add login navigation
+                        child: Text(
+                          "Log In",
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  sizedBoxH20(context),
+                  inputFeild(
+                      "Name", "Enter your name", nameController, null, null),
+                  inputFeild("Phone", "Enter your phone number",
+                      phoneController, phoneValidator, TextInputType.number),
+                  inputFeild("Email", "Enter your email", emailController,
+                      emailValidator, TextInputType.emailAddress),
+                  inputFeild("Password", "Enter password", passwordController,
+                      passwordValidator, TextInputType.visiblePassword,
+                      isPassword: true),
+                  inputFeild(
+                      "Confirm Password",
+                      "Re-enter password",
+                      confirmPasswordController,
+                      confirmPasswordValidator,
+                      TextInputType.visiblePassword,
+                      isPassword: true),
+                  Row(
+                    children: [
+                      Checkbox(
+                          fillColor: WidgetStateProperty.resolveWith((states) {
+                            if (states.contains(WidgetState.selected)) {
+                              return Colors.green;
+                            }
+                            return Colors.white60;
+                          }),
+                          value: !isPasswordHidden,
+                          onChanged: (value) {
+                            setState(() {
+                              isPasswordHidden = !isPasswordHidden;
+                            });
+                          }),
+                      const Text(
+                        "Show password",
+                        style: TextStyle(color: Colors.white70),
+                      )
+                    ],
+                  ),
+
+                  sizedBoxH20(context),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.purple.shade50,
+                        border:
+                            Border.all(width: 1, color: Colors.purpleAccent),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        // fillColor: Colors.white,
+                        border: const OutlineInputBorder(
+                            borderSide: BorderSide.none),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 10),
+                        hintText: "Society Code",
+                        hintStyle: const TextStyle(color: Colors.black54),
                       ),
                     ),
-                  ],
-                ),
-                sizedBoxH20(context),
-                inputFeild(
-                    "Name", "Enter your name", nameController, null, null),
-                inputFeild("Phone", "Enter your phone number", phoneController,
-                    phoneValidator, TextInputType.number),
-                inputFeild("Email", "Enter your email", emailController,
-                    emailValidator, TextInputType.emailAddress),
-                inputFeild("Password", "Enter password", passwordController,
-                    passwordValidator, TextInputType.visiblePassword,
-                    isPassword: true),
-                inputFeild(
-                    "Confirm Password",
-                    "Re-enter password",
-                    confirmPasswordController,
-                    confirmPasswordValidator,
-                    TextInputType.visiblePassword,
-                    isPassword: true),
-                Row(
-                  children: [
-                    Checkbox(
-                        value: !isPasswordHidden,
-                        onChanged: (value) {
-                          setState(() {
-                            isPasswordHidden = !isPasswordHidden;
-                          });
-                        }),
-                    const Text("Show password")
-                  ],
-                ),
-                sizedBoxH20(context),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // All validations passed
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text("Registration Successful")),
-                        );
-                      }
-                    },
-                    child: const Text("Register"),
                   ),
-                ),
-                sizedBoxH20(context),
-              ],
+                  sizedBoxH20(context),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          // All validations passed
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text("Registration Successful")),
+                          );
+                        }
+                      },
+                      child: const Text("Register"),
+                    ),
+                  ),
+                  //   sizedBoxH20(context),
+                ],
+              ),
             ),
           ),
         ),
@@ -128,14 +173,16 @@ class _RegisterMemberState extends State<RegisterMember> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 16, color: Colors.grey),
-        ),
-        sizedBoxH5(context),
+        // Text(
+        //   title,
+        //   style: const TextStyle(fontSize: 16, color: Colors.white60),
+        // ),
+        sizedBoxH15(context),
         Container(
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(10)),
+              color: Colors.blue.shade50,
+              border: Border.all(width: 0.5, color: Colors.blue),
+              borderRadius: BorderRadius.circular(10)),
           child: TextFormField(
             keyboardType: keyboardType,
             maxLength: title == "Phone" ? 10 : 50,
@@ -143,13 +190,13 @@ class _RegisterMemberState extends State<RegisterMember> {
             validator: validator,
             obscureText: isPassword ? isPasswordHidden : false,
             decoration: InputDecoration(
-              fillColor: Colors.white,
+              //  fillColor: Colors.white,
               border: const OutlineInputBorder(borderSide: BorderSide.none),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
               counterText: "",
               hintText: hintText,
-              hintStyle: const TextStyle(color: Colors.grey),
+              hintStyle: const TextStyle(color: Colors.black54),
             ),
           ),
         ),
