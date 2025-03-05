@@ -9,112 +9,138 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfff0f3fa),
-      body: Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 2.5,
+      // backgroundColor: const Color(0xfff0f3fa),
+      body: Stack(alignment: Alignment.topCenter, children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                colorFilter: ColorFilter.mode(
+                    const Color.fromARGB(50, 0, 0, 0), BlendMode.colorBurn),
+                image: AssetImage('lib/assets/login_bgtest.jpg'),
+                fit: BoxFit.fill),
           ),
-          const Center(
-              child: Text(
-            " Smart App",
-            style: TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
-          )),
-          Center(
-              child: Text(
-            "Make Your Life Easy With MySociety",
-            style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.bold),
-          )),
-          const SizedBox(
-            height: 200,
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()));
-            },
-            child: Container(
-              height: 45,
-              width: 250,
-              decoration: BoxDecoration(
-                  color: const Color(0xffFAF9FE),
-                  borderRadius: BorderRadius.circular(20)),
-              child: Center(
-                  child: Text(
-                "Log in",
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.bold),
-              )),
+        ),
+        Center(
+          child: Container(
+            padding: EdgeInsets.only(top: 10),
+            margin: EdgeInsets.symmetric(
+              horizontal: 40,
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0),
-            child: Row(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.5,
+            decoration: BoxDecoration(
+                color: Colors.black54, borderRadius: BorderRadius.circular(10)),
+            child: Column(
               children: [
-                Expanded(
-                    child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.0),
-                  child: Divider(),
+                const Center(
+                    child: Text(
+                  " Society Gate",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
                 )),
-                Text("or"),
-                Expanded(
-                    child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30.0),
-                  child: Divider(),
-                ))
+                Center(
+                    child: Text(
+                  "Make Your Life Easy With MySociety",
+                  style: TextStyle(
+                      color: Colors.white70, fontWeight: FontWeight.w400),
+                )),
+                const SizedBox(
+                  height: 100,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()));
+                  },
+                  child: Container(
+                    height: 45,
+                    width: 250,
+                    decoration: BoxDecoration(
+                        color: const Color(0xffFAF9FE),
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Center(
+                        child: Text(
+                      "Log in",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold),
+                    )),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.0),
+                        child: Divider(),
+                      )),
+                      Text(
+                        "or",
+                        style: TextStyle(color: Colors.white60),
+                      ),
+                      Expanded(
+                          child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30.0),
+                        child: Divider(),
+                      ))
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RegisterMember()));
+                  },
+                  child: Container(
+                    height: 45,
+                    width: 250,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: const Center(
+                        child: Text(
+                      "Register as a Member",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    )),
+                  ),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.08,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SocietyRegister()));
+                  },
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.05,
+                    child: RichText(
+                        text: TextSpan(
+                            text: "Want to Register your Society?",
+                            style: const TextStyle(color: Colors.white70),
+                            children: [
+                          TextSpan(
+                              text: " Register here!",
+                              style: TextStyle(color: Colors.white))
+                        ])),
+                  ),
+                ),
               ],
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const RegisterMember()));
-            },
-            child: Container(
-              height: 45,
-              width: 250,
-              decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(20)),
-              child: const Center(
-                  child: Text(
-                "Register as a Member",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              )),
-            ),
-          ),
-          const Spacer(),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SocietyRegister()));
-            },
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.05,
-              child: RichText(
-                  text: TextSpan(
-                      text: "Want to Register your Society?",
-                      style: const TextStyle(color: Colors.blueGrey),
-                      children: [
-                    TextSpan(
-                        text: " Register here!",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ))
-                  ])),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 }
