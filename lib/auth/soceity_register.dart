@@ -3,6 +3,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_society/auth/login_screen.dart';
 import 'package:my_society/constents/sizedbox.dart';
 
+import '../api/api_repository.dart';
+
 class SocietyRegister extends StatefulWidget {
   const SocietyRegister({super.key});
 
@@ -26,6 +28,12 @@ class _SocietyRegister extends State<SocietyRegister> {
   bool? playGroundChecked = false;
   bool? moreChecked = false;
   final _formkey = GlobalKey<FormState>();
+  String? validateEmail(String? email) {
+    RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
+    final isEmailValid = emailRegEx.hasMatch(email ?? "");
+    if (!isEmailValid) return "please  Enter a valid email";
+    return null;
+  }
 
   List<String> amenities = [];
   @override
@@ -108,7 +116,6 @@ class _SocietyRegister extends State<SocietyRegister> {
                     SizedBox(
                       child: TextFormField(
                         keyboardType: TextInputType.number,
-                        maxLength: 10,
                         controller: nameController,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -178,13 +185,7 @@ class _SocietyRegister extends State<SocietyRegister> {
                     SizedBox(
                       child: TextFormField(
                         controller: emailController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter Your Email";
-                          } else {
-                            return null;
-                          }
-                        },
+                        validator: validateEmail,
                         decoration: const InputDecoration(
                           fillColor: Colors.white,
                           filled: true,
@@ -513,10 +514,8 @@ class _SocietyRegister extends State<SocietyRegister> {
                       height: 10,
                     ),
                     GestureDetector(
-                      onTap: () {
-                        if (_formkey.currentState!.validate()) {
-                          Fluttertoast.showToast(msg: "msg");
-                        }
+                      onTap: () async {
+                        adminRegisterMethod();
                       },
                       child: Center(
                         child: Container(
@@ -556,5 +555,37 @@ class _SocietyRegister extends State<SocietyRegister> {
         ),
       ]),
     );
+  }
+
+  void adminRegisterMethod() async {
+    String finalAmenities = "";
+    String add;
+    for (int i = 0; i < amenities.length; i++) {
+      if (finalAmenities == "") {
+        add = "";
+      } else {
+        add = ", ";
+      }
+      finalAmenities = "$finalAmenities $add ${amenities[i]}";
+      print(finalAmenities);
+    }
+    try {
+      if (_formkey.currentState!.validate()) {
+        ApiRepository apiRepository = ApiRepository();
+        dynamic data = await apiRepository.registerSociety(
+            societyNameController.text,
+            societyAddressController.text,
+            totalwingsController.text,
+            totalFlatController.text,
+            finalAmenities.toString(),
+            nameController.text,
+            emailController.text,
+            mobileNoController.text);
+        // Navigator.pop(context);
+        Fluttertoast.showToast(msg: data.toString());
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 }
