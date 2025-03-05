@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../navigation_screen.dart';
 
-import '../../../navigation_screen.dart';
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -28,7 +26,7 @@ class _CreateNewAccountState extends State<LoginScreen> {
       //       child: const Icon(Icons.arrow_back)),
       // ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment(0.8, 1),
@@ -134,19 +132,20 @@ class _CreateNewAccountState extends State<LoginScreen> {
                       ),
                     ),
                     fillColor: Colors.white,
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                    border:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 10),
                     counterText: "",
                     hintText: "******",
-                    hintStyle: TextStyle(color: Colors.grey),
+                    hintStyle: const TextStyle(color: Colors.grey),
                   ),
                 ),
               ),
               const SizedBox(
                 height: 30,
               ),
-              Center(
+              const Center(
                 child: Text(
                   "Forgot Password?",
                   style: TextStyle(
