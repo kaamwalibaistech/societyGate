@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_society/auth/login_success.dart';
 import 'package:my_society/constents/sizedbox.dart';
 
 import '../navigation_screen.dart';
@@ -112,7 +113,6 @@ class _CreateNewAccountState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(10)),
                 child: TextFormField(
                   keyboardType: TextInputType.visiblePassword,
-                  maxLength: 10,
                   controller: _passwordController,
                   obscureText: !isPasswordHidden,
                   decoration: InputDecoration(
@@ -159,7 +159,7 @@ class _CreateNewAccountState extends State<LoginScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Navigationscreen()));
+                          builder: (context) => const LoginSuccess()));
                 },
                 child: Center(
                   child: Container(
