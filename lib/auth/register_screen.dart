@@ -12,18 +12,18 @@ class RegisterScreen extends StatelessWidget {
       // backgroundColor: const Color(0xfff0f3fa),
       body: Stack(alignment: Alignment.topCenter, children: [
         Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
                 colorFilter: ColorFilter.mode(
-                    const Color.fromARGB(50, 0, 0, 0), BlendMode.colorBurn),
+                    Color.fromARGB(50, 0, 0, 0), BlendMode.colorBurn),
                 image: AssetImage('lib/assets/login_bgtest.jpg'),
                 fit: BoxFit.fill),
           ),
         ),
         Center(
           child: Container(
-            padding: EdgeInsets.only(top: 10),
-            margin: EdgeInsets.symmetric(
+            padding: const EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.symmetric(
               horizontal: 40,
             ),
             width: MediaQuery.of(context).size.width,
@@ -40,14 +40,14 @@ class RegisterScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 18),
                 )),
-                Center(
+                const Center(
                     child: Text(
                   "Make Your Life Easy With MySociety",
                   style: TextStyle(
                       color: Colors.white70, fontWeight: FontWeight.w400),
                 )),
                 const SizedBox(
-                  height: 100,
+                  height: 60,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -126,9 +126,9 @@ class RegisterScreen extends StatelessWidget {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.05,
                     child: RichText(
-                        text: TextSpan(
+                        text: const TextSpan(
                             text: "Want to Register your Society?",
-                            style: const TextStyle(color: Colors.white70),
+                            style: TextStyle(color: Colors.white70),
                             children: [
                           TextSpan(
                               text: " Register here!",
