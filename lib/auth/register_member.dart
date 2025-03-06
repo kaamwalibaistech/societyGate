@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_society/auth/login_screen.dart';
 import 'package:my_society/constents/sizedbox.dart';
 
 class RegisterMember extends StatefulWidget {
@@ -32,7 +33,7 @@ class _RegisterMemberState extends State<RegisterMember> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: const Icon(Icons.arrow_back, color: Colors.black)),
+            child: const Icon(Icons.arrow_back, color: Colors.white)),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -40,7 +41,16 @@ class _RegisterMemberState extends State<RegisterMember> {
             top: MediaQuery.of(context).size.height * 0.1, left: 10, right: 10),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF9C27B0), Color(0xFF2196F3)],
+            colors: <Color>[
+              Color(0xff1f005c),
+              Color(0xff5b0060),
+              Color(0xff870160),
+              Color(0xffac255e),
+              Color(0xffca485c),
+              Color(0xffe16b5c),
+              Color(0xfff39060),
+              Color(0xffffb56b),
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -56,8 +66,10 @@ class _RegisterMemberState extends State<RegisterMember> {
                   const Center(
                     child: Text(
                       "Create a member account",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: Colors.white),
                     ),
                   ),
                   Row(
@@ -65,23 +77,31 @@ class _RegisterMemberState extends State<RegisterMember> {
                     children: [
                       const Text(
                         "Already have an account? ",
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       ),
-                      TextButton(
-                        onPressed: () {}, // Add login navigation
-                        child: Text(
-                          "Log In",
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginScreen()));
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.only(left: 5.0),
+                          child: Text(
+                            "Log In",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 105, 178, 237),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ],
                   ),
                   sizedBoxH20(context),
-                  inputFeild(
-                      "Name", "Enter your name", nameController, null, null),
+                  inputFeild("Name", "Enter your name", nameController,
+                      nameValidator, null),
                   inputFeild("Phone", "Enter your phone number",
                       phoneController, phoneValidator, TextInputType.number),
                   inputFeild("Email", "Enter your email", emailController,
@@ -117,42 +137,52 @@ class _RegisterMemberState extends State<RegisterMember> {
                       )
                     ],
                   ),
-
                   sizedBoxH20(context),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.purple.shade50,
-                        border:
-                            Border.all(width: 1, color: Colors.purpleAccent),
-                        borderRadius: BorderRadius.circular(10)),
+                  SizedBox(
                     child: TextFormField(
-                      decoration: InputDecoration(
-                        // fillColor: Colors.white,
-                        border: const OutlineInputBorder(
-                            borderSide: BorderSide.none),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 10),
+                      validator: societyValidator,
+                      decoration: const InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(borderSide: BorderSide.none),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                         hintText: "Society Code",
-                        hintStyle: const TextStyle(color: Colors.black54),
+                        hintStyle: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  ),
+                  sizedBoxH30(context),
+                  Center(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.60,
+                      height: MediaQuery.of(context).size.height * 0.06,
+                      child: GestureDetector(
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            // All validations passed
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("Registration Successful")),
+                            );
+                          }
+                        },
+                        child: Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(30)),
+                            child: const Center(
+                                child: Text(
+                              "Register",
+                              style: TextStyle(color: Colors.white),
+                            )),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                   sizedBoxH20(context),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // All validations passed
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Registration Successful")),
-                          );
-                        }
-                      },
-                      child: const Text("Register"),
-                    ),
-                  ),
-                  //   sizedBoxH20(context),
                 ],
               ),
             ),
@@ -178,11 +208,7 @@ class _RegisterMemberState extends State<RegisterMember> {
         //   style: const TextStyle(fontSize: 16, color: Colors.white60),
         // ),
         sizedBoxH15(context),
-        Container(
-          decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              border: Border.all(width: 0.5, color: Colors.blue),
-              borderRadius: BorderRadius.circular(10)),
+        SizedBox(
           child: TextFormField(
             keyboardType: keyboardType,
             maxLength: title == "Phone" ? 10 : 50,
@@ -190,7 +216,8 @@ class _RegisterMemberState extends State<RegisterMember> {
             validator: validator,
             obscureText: isPassword ? isPasswordHidden : false,
             decoration: InputDecoration(
-              //  fillColor: Colors.white,
+              fillColor: Colors.white,
+              filled: true,
               border: const OutlineInputBorder(borderSide: BorderSide.none),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
@@ -243,6 +270,20 @@ class _RegisterMemberState extends State<RegisterMember> {
     }
     if (value.length != 10) {
       return "Phone number must be 10 digits";
+    }
+    return null;
+  }
+
+  String? nameValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Name is Required";
+    }
+    return null;
+  }
+
+  String? societyValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Society Code is Required";
     }
     return null;
   }
