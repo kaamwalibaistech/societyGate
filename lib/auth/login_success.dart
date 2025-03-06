@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:my_society/constents/sizedbox.dart';
-import 'package:my_society/homepage_screen.dart';
+
+import '../navigation_screen.dart';
 
 class LoginSuccess extends StatelessWidget {
   const LoginSuccess({super.key});
@@ -27,7 +28,7 @@ class LoginSuccess extends StatelessWidget {
                 sizedBoxH10(context),
                 const Text(
                   textAlign: TextAlign.center,
-                  "Start exploring, discovering, and engaging with the society facilities and amanities.",
+                  "Start exploring, discovering, and engaging with the society facilities and amenities.",
                   style: TextStyle(),
                 ),
                 SizedBox(
@@ -47,7 +48,8 @@ class LoginSuccess extends StatelessWidget {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const HomepageScreen()));
+                                builder: (context) =>
+                                    const Navigationscreen()));
                       }),
                 )
               ],
