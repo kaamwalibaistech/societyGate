@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:my_society/models/member_register_model.dart';
 
 import '../models/admin_register_model.dart';
 
 class ApiRepository {
-  Future<dynamic> registerSociety(sname, saddress, totalwings, totalflat,
-      amenities, uname, uemail, uphone) async {
+  Future<AdminRegister?> registerSocietyAdmin(sname, saddress, totalwings,
+      totalflat, amenities, uname, uemail, uphone) async {
     // Map<String, String> queryParameters = {};
     // queryParameters.addAll({"API-KEY": dotenv.get('API-KEY')});
 
@@ -28,14 +29,38 @@ class ApiRepository {
         final Map<String, dynamic> data = jsonDecode(response.body);
         if (data['status'] == 200) {
           return AdminRegister.fromJson(data);
+        } else {
+          final Map<String, dynamic> data = jsonDecode(response.body);
+
+          return AdminRegister.fromJson(data);
         }
-      } else {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        print(data["message"]);
-        return (data["message"]);
       }
     } catch (e) {
       throw Exception();
+    }
+    return null;
+  }
+
+  Future<MemberRegisterModel?> memberRegister(
+      uname, uemail, uphone, sregistrationNo) async {
+    final url = Uri.parse("https://blingbroomcleaning.com/api/memberregister");
+    final body = {
+      'uname': uname,
+      'uemail': uemail,
+      'uphone': uphone,
+      'sregistration_no': sregistrationNo
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return MemberRegisterModel.fromJson(data);
+        }
+        return MemberRegisterModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
     }
     return null;
   }

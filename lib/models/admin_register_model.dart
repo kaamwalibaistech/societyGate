@@ -11,8 +11,8 @@ String adminRegisterToJson(AdminRegister data) => json.encode(data.toJson());
 
 class AdminRegister {
   int status;
-  String message;
-  Data data;
+  String? message;
+  Data? data;
 
   AdminRegister({
     required this.status,
@@ -21,21 +21,21 @@ class AdminRegister {
   });
 
   factory AdminRegister.fromJson(Map<String, dynamic> json) => AdminRegister(
-        status: json["status"],
-        message: json["message"],
-        data: Data.fromJson(json["data"]),
+        status: json["status"] ?? 0,
+        message: json["message"] ?? "",
+        data: Data.fromJson(json["data"] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
-        "message": message,
-        "data": data.toJson(),
+        "message": message ?? "",
+        "data": data?.toJson() ?? {},
       };
 }
 
 class Data {
-  Society society;
-  User user;
+  Society? society;
+  User? user;
 
   Data({
     required this.society,
@@ -43,25 +43,25 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        society: Society.fromJson(json["society"]),
-        user: User.fromJson(json["user"]),
+        society: Society.fromJson(json["society"] ?? {}),
+        user: User.fromJson(json["user"] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
-        "society": society.toJson(),
-        "user": user.toJson(),
+        "society": society?.toJson() ?? {},
+        "user": user?.toJson() ?? {},
       };
 }
 
 class Society {
-  String name;
-  String address;
-  String registrationNo;
-  String totalWings;
-  String totalFlats;
+  String? name;
+  String? address;
+  String? registrationNo;
+  String? totalWings;
+  String? totalFlats;
   dynamic aminities;
-  String approvalStatus;
-  int societyId;
+  String? approvalStatus;
+  int? societyId;
 
   Society({
     required this.name,
@@ -75,14 +75,14 @@ class Society {
   });
 
   factory Society.fromJson(Map<String, dynamic> json) => Society(
-        name: json["name"],
-        address: json["address"],
-        registrationNo: json["registration_no"],
-        totalWings: json["total_wings"],
-        totalFlats: json["total_flats"],
+        name: json["name"] ?? "",
+        address: json["address"] ?? "",
+        registrationNo: json["registration_no"] ?? "",
+        totalWings: json["total_wings"] ?? "",
+        totalFlats: json["total_flats"] ?? "",
         aminities: json["aminities"],
-        approvalStatus: json["approval_status"],
-        societyId: json["society_id"],
+        approvalStatus: json["approval_status"] ?? "",
+        societyId: json["society_id"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -98,14 +98,14 @@ class Society {
 }
 
 class User {
-  int societyId;
-  String urole;
-  String uname;
-  String uemail;
-  String upassword;
-  String uphone;
-  String approvalStatus;
-  int userId;
+  int? societyId;
+  String? urole;
+  String? uname;
+  String? uemail;
+  String? upassword;
+  String? uphone;
+  String? approvalStatus;
+  int? userId;
 
   User({
     required this.societyId,
@@ -119,14 +119,14 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        societyId: json["society_id"],
-        urole: json["urole"],
-        uname: json["uname"],
-        uemail: json["uemail"],
-        upassword: json["upassword"],
-        uphone: json["uphone"],
-        approvalStatus: json["approval_status"],
-        userId: json["user_id"],
+        societyId: json["society_id"] ?? 0,
+        urole: json["urole"] ?? "",
+        uname: json["uname"] ?? "",
+        uemail: json["uemail"] ?? "",
+        upassword: json["upassword"] ?? "",
+        uphone: json["uphone"] ?? "",
+        approvalStatus: json["approval_status"] ?? "",
+        userId: json["user_id"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
