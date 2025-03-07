@@ -1,4 +1,5 @@
-// class ApiRepositiory {
-//   static const String baseUrl = "https://mygate.blingbroomcleaning.com/";
-//   static const String adminRegister = "mygetapi.php";
-// }
+class ApiRepositiory {
+  static const String baseUrl = "https://blingbroomcleaning.com/api/";
+  static const String adminRegister = "mygetapi.php";
+  static const String loginApi = "login";
+}
