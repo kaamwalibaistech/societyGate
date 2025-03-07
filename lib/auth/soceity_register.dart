@@ -4,6 +4,7 @@ import 'package:my_society/auth/login_screen.dart';
 import 'package:my_society/constents/sizedbox.dart';
 
 import '../api/api_repository.dart';
+import '../models/admin_register_model.dart';
 
 class SocietyRegister extends StatefulWidget {
   const SocietyRegister({super.key});
@@ -572,7 +573,7 @@ class _SocietyRegister extends State<SocietyRegister> {
     try {
       if (_formkey.currentState!.validate()) {
         ApiRepository apiRepository = ApiRepository();
-        dynamic data = await apiRepository.registerSociety(
+        AdminRegister? data = await apiRepository.registerSocietyAdmin(
             societyNameController.text,
             societyAddressController.text,
             totalwingsController.text,
@@ -581,8 +582,10 @@ class _SocietyRegister extends State<SocietyRegister> {
             nameController.text,
             emailController.text,
             mobileNoController.text);
+        Fluttertoast.showToast(msg: data!.message.toString());
+        Navigator.pop(context);
+
         // Navigator.pop(context);
-        Fluttertoast.showToast(msg: data.toString());
       }
     } catch (e) {
       throw Exception(e.toString());
