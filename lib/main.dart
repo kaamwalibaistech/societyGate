@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:my_society/models/login_model.dart';
 
+import 'auth/login_bloc/login_bloc.dart';
 import 'auth/register_screen.dart';
 
 Future main() async {
@@ -14,9 +17,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(),
-      home: const RegisterScreen(),
+    return MultiBlocProvider(
+      providers: [BlocProvider<LoginBloc>(create: (context) => LoginBloc())],
+      child: MaterialApp(
+        theme: ThemeData(),
+        home: const RegisterScreen(),
+      ),
     );
   }
 }
