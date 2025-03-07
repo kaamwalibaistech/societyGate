@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_society/auth/register_member.dart';
+import 'package:my_society/constents/sizedbox.dart';
 import 'soceity_register.dart';
 import 'login_screen.dart';
 
@@ -9,27 +10,30 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: const Color(0xfff0f3fa),
-      body: Stack(alignment: Alignment.topCenter, children: [
+      body: Stack(children: [
         Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                colorFilter: ColorFilter.mode(
-                    Color.fromARGB(50, 0, 0, 0), BlendMode.colorBurn),
-                image: AssetImage('lib/assets/login_bgtest.jpg'),
-                fit: BoxFit.fill),
-          ),
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).size.height * 0.46),
+          height: double.infinity,
+          width: double.infinity,
+          //  child: Image.asset('lib/assets/girlphoto.jpg',
+          child: Image.asset('lib/assets/girlphoto1.jpg',
+              //   child: Image.asset('lib/assets/girlphoto2.jpg',
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter),
         ),
-        Center(
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
           child: Container(
             padding: const EdgeInsets.only(top: 10),
-            margin: const EdgeInsets.symmetric(
-              horizontal: 40,
-            ),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.5,
             decoration: BoxDecoration(
-                color: Colors.black54, borderRadius: BorderRadius.circular(10)),
+              color: Colors.black,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+            ),
             child: Column(
               children: [
                 const Center(
@@ -40,14 +44,15 @@ class RegisterScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 18),
                 )),
+                sizedBoxH5(context),
                 const Center(
                     child: Text(
-                  "Make Your Life Easy With MySociety",
+                  "Make Your Life Easy With Society Gate!",
                   style: TextStyle(
                       color: Colors.white70, fontWeight: FontWeight.w400),
                 )),
                 const SizedBox(
-                  height: 60,
+                  height: 55,
                 ),
                 GestureDetector(
                   onTap: () {
