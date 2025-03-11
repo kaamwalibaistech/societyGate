@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:my_society/constents/sizedbox.dart';
+import 'package:my_society/models/login_model.dart';
 
+import '../constents/local_storage.dart';
 import '../navigation_screen.dart';
 
 class LoginSuccess extends StatelessWidget {
@@ -9,6 +13,16 @@ class LoginSuccess extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LoginModel? user = LocalStoragePref().getLoginModel();
+
+    if (user != null) {
+      log("User Name: ${user.user?.uname}");
+      log("User Email: ${user.user?.uemail}");
+      log("Id: ${user.user!.userId}");
+    } else {
+      log("No user found in local storage");
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Center(
