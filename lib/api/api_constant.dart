@@ -1,4 +1,4 @@
-class ApiRepositiory {
+class ApiConstant {
   static const String baseUrl = "https://blingbroomcleaning.com/api/";
   static const String adminRegister = "mygetapi.php";
   static const String loginApi = "login";

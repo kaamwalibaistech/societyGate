@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:ffi';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:my_society/models/login_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStoragePref {
   static final LocalStoragePref _instance = LocalStoragePref._internal();

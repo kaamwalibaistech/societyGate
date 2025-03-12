@@ -1,15 +1,15 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:my_society/api/api_constant.dart';
-
 import 'package:my_society/models/login_model.dart';
 
 Future<LoginModel?> login(
   String phone,
   String password,
 ) async {
-  String api = ApiRepositiory.loginApi;
-  String baseUrl = ApiRepositiory.baseUrl;
+  String api = ApiConstant.loginApi;
+  String baseUrl = ApiConstant.baseUrl;
   Uri url = Uri.parse(baseUrl + api);
 
   final body = {
