@@ -7,6 +7,7 @@ import 'package:my_society/navigation_screen.dart';
 
 import 'auth/login_bloc/login_bloc.dart';
 import 'auth/register_screen.dart';
+import 'dashboard/members/members_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +41,10 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [BlocProvider<LoginBloc>(create: (context) => LoginBloc())],
       child: MaterialApp(
-        theme: ThemeData(),
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
         home: isLoggedin == true
             ? const Navigationscreen()
             : const RegisterScreen(),
