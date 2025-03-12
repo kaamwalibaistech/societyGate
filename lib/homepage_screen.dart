@@ -1,10 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter/services.dart';
 import 'package:my_society/dashboard/members/members_page.dart';
 import 'package:my_society/dashboard/visitors/visitors_page.dart';
-
 
 import 'api/api_repository.dart';
 import 'models/homepage_model.dart';
@@ -18,8 +16,10 @@ class HomepageScreen extends StatefulWidget {
 
 class _HomepageScreenState extends State<HomepageScreen> {
   Homepagemodel? data;
+
   @override
-  initState() {
+  void initState() {
+    super.initState();
     getData();
   }
 

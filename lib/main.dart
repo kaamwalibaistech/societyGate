@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/models/login_model.dart';
+import 'package:my_society/dashboard/members/member_bloc/members_bloc.dart';
 import 'package:my_society/navigation_screen.dart';
 
 import 'auth/login_bloc/login_bloc.dart';
 import 'auth/register_screen.dart';
-import 'dashboard/members/members_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +38,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider<LoginBloc>(create: (context) => LoginBloc())],
+      providers: [
+        BlocProvider<LoginBloc>(create: (context) => LoginBloc()),
+        BlocProvider<MembersBloc>(create: (context) => MembersBloc()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
