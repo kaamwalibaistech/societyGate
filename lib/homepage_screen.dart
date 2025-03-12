@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:my_society/dashboard/members/members_page.dart';
+import 'package:my_society/dashboard/visitors/visitors_page.dart';
 
 class HomepageScreen extends StatelessWidget {
   const HomepageScreen({super.key});
@@ -113,50 +115,92 @@ class HomepageScreen extends StatelessWidget {
                       mainAxisExtent: 170,
                       crossAxisCount: 2),
                   itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15.0, vertical: 18),
-                      child: Stack(children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.green.shade100,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 8.0,
-                                  top: 10,
+                    return GestureDetector(
+                      onTap: () {
+                        switch (index) {
+                          case 0:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MembersPage()));
+                            break;
+                          case 1:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VisitorsPage()));
+                            break;
+                          case 2:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MembersPage()));
+                            break;
+                          case 3:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MembersPage()));
+                            break;
+                          case 4:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MembersPage()));
+                            break;
+                          case 5:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MembersPage()));
+                            break;
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 18),
+                        child: Stack(children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.green.shade100,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 8.0,
+                                    top: 10,
+                                  ),
+                                  child: Text(
+                                    title[index],
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                 ),
-                                child: Text(
-                                  title[index],
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, top: 2, right: 8),
+                                  child: Text(
+                                    subtitle[index],
+                                    style:
+                                        const TextStyle(color: Colors.blueGrey),
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0, top: 2, right: 8),
-                                child: Text(
-                                  subtitle[index],
-                                  style:
-                                      const TextStyle(color: Colors.blueGrey),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Positioned(
-                          bottom: 8,
-                          right: 12,
-                          child: Image.asset(
-                            communityList[index],
-                            // scale: 35,
-                          ),
-                        )
-                      ]),
+                          Positioned(
+                            bottom: 8,
+                            right: 12,
+                            child: Image.asset(
+                              communityList[index],
+                              // scale: 35,
+                            ),
+                          )
+                        ]),
+                      ),
                     );
                   }),
             )
