@@ -4,11 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:my_society/auth/login_bloc/login_bloc.dart';
 import 'package:my_society/auth/login_success.dart';
-import 'package:my_society/auth/network/login_api.dart';
 import 'package:my_society/auth/register_member.dart';
 import 'package:my_society/constents/sizedbox.dart';
-import 'package:my_society/models/login_model.dart';
-import 'package:my_society/navigation_screen.dart';
 
 import '../constents/local_storage.dart';
 
@@ -52,8 +49,6 @@ class _CreateNewAccountState extends State<LoginScreen> {
           await LocalStoragePref().storeLoginModel(state.loginModel);
           await LocalStoragePref().setLoginBool(true);
 
-          Navigator.of(context).pop();
-
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const LoginSuccess()),
@@ -69,12 +64,12 @@ class _CreateNewAccountState extends State<LoginScreen> {
       },
       child: Scaffold(
         appBar: AppBar(),
-        body: LoginScreen(),
+        body: loginScreen(),
       ),
     );
   }
 
-  Widget LoginScreen() {
+  Widget loginScreen() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 28.0),
       child: SingleChildScrollView(

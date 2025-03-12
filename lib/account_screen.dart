@@ -121,11 +121,110 @@ class _AccountScreenState extends State<AccountScreen>
                   decoration: const BoxDecoration(color: Colors.white),
                   height: MediaQuery.of(context).size.height * 0.50,
                   child: TabBarView(controller: _tabController, children: [
-                    const Text("Household"),
-                    Container(
-                      decoration: const BoxDecoration(color: Colors.white),
+                    ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 30,
+                        itemBuilder: (context, index) =>
+                            Text(index.toString())),
+                    SingleChildScrollView(
                       child: Column(
                         children: [
+                          ListTile(
+                            leading: const Icon(
+                              Icons.person,
+                              color: Colors.black,
+                            ),
+                            title: const Text(
+                              "Edit profile",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            trailing: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ProfileScreen()));
+                              },
+                              child: const Icon(
+                                Icons.arrow_forward_ios_outlined,
+                                size: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.person,
+                              color: Colors.black,
+                            ),
+                            title: const Text(
+                              "Edit profile",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            trailing: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ProfileScreen()));
+                              },
+                              child: const Icon(
+                                Icons.arrow_forward_ios_outlined,
+                                size: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.person,
+                              color: Colors.black,
+                            ),
+                            title: const Text(
+                              "Edit profile",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            trailing: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ProfileScreen()));
+                              },
+                              child: const Icon(
+                                Icons.arrow_forward_ios_outlined,
+                                size: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          ListTile(
+                            leading: const Icon(
+                              Icons.person,
+                              color: Colors.black,
+                            ),
+                            title: const Text(
+                              "Edit profile",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            trailing: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ProfileScreen()));
+                              },
+                              child: const Icon(
+                                Icons.arrow_forward_ios_outlined,
+                                size: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
                           ListTile(
                             leading: const Icon(
                               Icons.person,

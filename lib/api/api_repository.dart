@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:my_society/models/member_register_model.dart';
 
 import '../models/admin_register_model.dart';
+import '../models/homepage_model.dart';
 
 class ApiRepository {
   Future<AdminRegister?> registerSocietyAdmin(sname, saddress, totalwings,
@@ -58,6 +59,26 @@ class ApiRepository {
           return MemberRegisterModel.fromJson(data);
         }
         return MemberRegisterModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<Homepagemodel?> getHomePageData() async {
+    final url = Uri.parse("https://blingbroomcleaning.com/api/homepage");
+    final body = {
+      'society_id': "1",
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return Homepagemodel.fromJson(data);
+        }
+        return Homepagemodel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

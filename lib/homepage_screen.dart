@@ -1,37 +1,63 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
 import 'package:my_society/dashboard/members/members_page.dart';
 import 'package:my_society/dashboard/visitors/visitors_page.dart';
 
-class HomepageScreen extends StatelessWidget {
+
+import 'api/api_repository.dart';
+import 'models/homepage_model.dart';
+
+class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    List<String> title = [
-      "Members",
-      "Visitors",
-      "Notice Board",
-      "Payment",
-      "Book amenities",
-      "Help desk"
-    ];
-    List<String> subtitle = [
-      "connect society member",
-      "manage visitors entry",
-      "society announcement & event notice",
-      "direct payment of society due",
-      "pre book society amenities",
-      "complaint & suggestion"
-    ];
-    List<String> communityList = [
-      'lib/assets/members.png',
-      'lib/assets/visitors.png',
-      'lib/assets/mood-board.png',
-      'lib/assets/payment.png',
-      'lib/assets/ameneties.png',
-      'lib/assets/help_desk.png',
-    ];
+  State<HomepageScreen> createState() => _HomepageScreenState();
+}
+
+class _HomepageScreenState extends State<HomepageScreen> {
+  Homepagemodel? data;
+  @override
+  initState() {
+    getData();
+  }
+
+  getData() async {
+    ApiRepository apiRepositiory = ApiRepository();
+    Homepagemodel? mydata = await apiRepositiory.getHomePageData();
+    setState(() {
+      data = mydata;
+    });
+  }
+
+  List<String> title = [
+    "Members",
+    "Visitors",
+    "Notice Board",
+    "Payment",
+    "Book amenities",
+    "Help desk"
+  ];
+  List<String> subtitle = [
+    "connect society member",
+    "manage visitors entry",
+    "society announcement & event notice",
+    "direct payment of society due",
+    "pre book society amenities",
+    "complaint & suggestion"
+  ];
+  List<String> communityList = [
+    'lib/assets/members.png',
+    'lib/assets/visitors.png',
+    'lib/assets/mood-board.png',
+    'lib/assets/payment.png',
+    'lib/assets/ameneties.png',
+    'lib/assets/help_desk.png',
+  ];
+
+  @override
+  build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 19, 52, 84),
       body: SingleChildScrollView(
@@ -39,7 +65,7 @@ class HomepageScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin: EdgeInsets.only(top: 24),
+              margin: const EdgeInsets.only(top: 24),
               decoration: BoxDecoration(
                   color: Colors.red.shade50,
                   borderRadius: BorderRadius.circular(12)),
@@ -50,14 +76,14 @@ class HomepageScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 15.0),
                     child: ListTile(
-                      leading: CircleAvatar(
+                      leading: const CircleAvatar(
                         foregroundImage: AssetImage("lib/assets/man.png"),
                         radius: 30,
                       ),
                       title: const Text("Hi Ritesh Dixit"),
                       subtitle: const Text("F-101 | Shubham Complex"),
                       trailing: Container(
-                        padding: EdgeInsets.all(6),
+                        padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
                             border: Border.all(color: Colors.red)),
@@ -69,29 +95,72 @@ class HomepageScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 18.0, right: 18, top: 18),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.18,
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.red,
-                          ),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          "lib/assets/society.jpg",
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                  SizedBox(
+                    height: 150,
+                    width: MediaQuery.of(context).size.width,
+                    child: ClipRRect(
+                      child: CarouselSlider(
+                          items: [
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color:
+                                        const Color.fromARGB(255, 19, 52, 84),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      data!.data.announcements[0].description,
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                )),
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color:
+                                        const Color.fromARGB(255, 19, 52, 84),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      data!.data.announcements[0].description,
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                )),
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color:
+                                        const Color.fromARGB(255, 19, 52, 84),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      data!.data.announcements[0].description,
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                )),
+                          ],
+                          options: CarouselOptions(
+                            autoPlay: true,
+                            initialPage: 0,
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            aspectRatio: 16 / 9,
+                            enlargeCenterPage: true,
+                          )),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 22.0, top: 20),
+                    padding: const EdgeInsets.only(left: 22.0, top: 20),
                     child: Text(
                       "Community",
                       style: TextStyle(
@@ -104,7 +173,7 @@ class HomepageScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 590,
+              height: 560,
               child: GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: 6,

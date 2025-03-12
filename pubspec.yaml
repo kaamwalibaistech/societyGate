@@ -43,6 +43,7 @@ dependencies:
   flutter_dotenv: ^5.2.1
   lottie: 3.2.0
   shared_preferences: ^2.5.2
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
