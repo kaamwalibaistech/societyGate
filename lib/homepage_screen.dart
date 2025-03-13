@@ -5,6 +5,8 @@ import 'package:my_society/dashboard/members/members_page.dart';
 import 'package:my_society/dashboard/visitors/visitors_page.dart';
 
 import 'api/api_repository.dart';
+import 'constents/sizedbox.dart';
+import 'dashboard/notice_board/notice_board_screen.dart';
 import 'models/homepage_model.dart';
 
 class HomepageScreen extends StatefulWidget {
@@ -74,7 +76,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
+                    padding: const EdgeInsets.only(top: 15.0, bottom: 5),
                     child: ListTile(
                       leading: const CircleAvatar(
                         foregroundImage: AssetImage("lib/assets/man.png"),
@@ -95,13 +97,18 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       ),
                     ),
                   ),
+                  // const Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: 30.0),
+                  //   child: Divider(),
+                  // ),
                   SizedBox(
-                    height: 150,
+                    height: MediaQuery.of(context).size.height * 0.19,
                     width: MediaQuery.of(context).size.width,
                     child: ClipRRect(
-                      child: CarouselSlider(
-                          items: [
-                            SizedBox(
+                      child: CarouselSlider.builder(
+                          itemCount: 3,
+                          itemBuilder: (context, index, realIndex) {
+                            return SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -110,46 +117,151 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                         const Color.fromARGB(255, 19, 52, 84),
                                   ),
                                   child: Center(
-                                    child: Text(
-                                      data!.data.announcements[0].description,
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
+                                    child: Stack(children: [
+                                      Image.asset(
+                                          fit: BoxFit.fitWidth,
+                                          width: 330,
+                                          "lib/assets/notice_board.png.png"),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              data!.data.announcements[index]
+                                                  .title,
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          sizedBoxH5(context),
+                                          Center(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 25.0),
+                                              child: Text(
+                                                textAlign: TextAlign.center,
+                                                data!.data.announcements[index]
+                                                    .description,
+                                                style: const TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                          ),
+                                          sizedBoxH5(context),
+                                          Center(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 25.0),
+                                              child: Text(
+                                                "Announcement Type : ${data!.data.announcements[index].announcementType}",
+                                                style: const TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                          ),
+                                          // sizedBoxH5(context)
+                                        ],
+                                      )
+                                    ]),
                                   ),
-                                )),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color:
-                                        const Color.fromARGB(255, 19, 52, 84),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      data!.data.announcements[0].description,
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                )),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color:
-                                        const Color.fromARGB(255, 19, 52, 84),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      data!.data.announcements[0].description,
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                )),
-                          ],
+                                ));
+                          },
+
+                          // SizedBox(
+                          //     width: MediaQuery.of(context).size.width,
+                          //     child: Container(
+                          //       decoration: BoxDecoration(
+                          //         borderRadius: BorderRadius.circular(10),
+                          //         color:
+                          //             const Color.fromARGB(255, 19, 52, 84),
+                          //       ),
+                          //       child: Center(
+                          //         child: Stack(children: [
+                          //           Image.asset(
+                          //               fit: BoxFit.fitWidth,
+                          //               width: 330,
+                          //               "lib/assets/notice_board.png.png"),
+                          //           Column(
+                          //             mainAxisAlignment:
+                          //                 MainAxisAlignment.spaceBetween,
+                          //             children: [
+                          //               sizedBoxH5(context),
+                          //               Center(
+                          //                 child: Text(
+                          //                   data!.data.announcements[0].title,
+                          //                   style: const TextStyle(
+                          //                       color: Colors.black),
+                          //                 ),
+                          //               ),
+                          //               sizedBoxH5(context),
+                          //               Center(
+                          //                 child: Padding(
+                          //                   padding:
+                          //                       const EdgeInsets.symmetric(
+                          //                           horizontal: 25.0),
+                          //                   child: Text(
+                          //                     data!.data.announcements[0]
+                          //                         .description,
+                          //                     style: const TextStyle(
+                          //                         color: Colors.black),
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //               Center(
+                          //                 child: Padding(
+                          //                   padding:
+                          //                       const EdgeInsets.symmetric(
+                          //                           horizontal: 25.0),
+                          //                   child: Text("Announcement Type : ${
+                          //                     data!.data.announcements[0]
+                          //                         .announcementType}",
+                          //                     style: const TextStyle(
+                          //                         color: Colors.black),
+                          //                   ),
+                          //                 ),
+                          //               ),
+                          //               sizedBoxH5(context)
+                          //             ],
+                          //           )
+                          //         ]),
+                          //       ),
+                          //     )),
+                          // SizedBox(
+                          //     width: MediaQuery.of(context).size.width,
+                          //     child: Container(
+                          //       decoration: BoxDecoration(
+                          //         borderRadius: BorderRadius.circular(10),
+                          //         color:
+                          //             const Color.fromARGB(255, 19, 52, 84),
+                          //       ),
+                          //       child: Center(
+                          //         child: Text(
+                          //           data!.data.announcements[0].description,
+                          //           style:
+                          //               const TextStyle(color: Colors.white),
+                          //         ),
+                          //       ),
+                          //     )),
+                          // SizedBox(
+                          //     width: MediaQuery.of(context).size.width,
+                          //     child: Container(
+                          //       decoration: BoxDecoration(
+                          //         borderRadius: BorderRadius.circular(10),
+                          //         color:
+                          //             const Color.fromARGB(255, 19, 52, 84),
+                          //       ),
+                          //       child: Center(
+                          //         child: Text(
+                          //           data!.data.announcements[0].description,
+                          //           style:
+                          //               const TextStyle(color: Colors.white),
+                          //         ),
+                          //       ),
+                          //     )),
+
                           options: CarouselOptions(
                             autoPlay: true,
                             initialPage: 0,
@@ -191,37 +303,39 @@ class _HomepageScreenState extends State<HomepageScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MembersPage()));
+                                    builder: (context) => const MembersPage()));
                             break;
                           case 1:
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => VisitorsPage()));
+                                    builder: (context) =>
+                                        const VisitorsPage()));
                             break;
                           case 2:
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MembersPage()));
+                                    builder: (context) =>
+                                        NoticeBoardScreen(data: data)));
                             break;
                           case 3:
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MembersPage()));
+                                    builder: (context) => const MembersPage()));
                             break;
                           case 4:
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MembersPage()));
+                                    builder: (context) => const MembersPage()));
                             break;
                           case 5:
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => MembersPage()));
+                                    builder: (context) => const MembersPage()));
                             break;
                         }
                       },
