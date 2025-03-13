@@ -14,6 +14,8 @@ class _VisitorsPageState extends State<VisitorsPage> {
     return DefaultTabController(
       length: 2, // Number of tabs
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.add), onPressed: () {}),
         appBar: AppBar(
           backgroundColor: Colors.deepPurpleAccent,
           title: const Text(
