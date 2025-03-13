@@ -1,19 +1,19 @@
 import 'dart:convert';
 import 'dart:developer';
-
-import 'package:my_society/models/memberlist_model.dart';
+import 'package:my_society/models/visitorslist_model.dart';
 
 import '../../../api/api_constant.dart';
 import 'package:http/http.dart' as http;
 
-Future<MemberlistModel?> memberListApi(
+Future<VisitorsListModel?> visitorsListApi(
   String soceityId,
+  String flatId,
 ) async {
-  String api = ApiConstant.societyMembersList;
+  String api = ApiConstant.visitorsbysocietyAndFlatId;
   String baseUrl = ApiConstant.baseUrl;
   Uri url = Uri.parse(baseUrl + api);
 
-  final body = {'society_id': soceityId};
+  final body = {'society_id': soceityId, 'flat_id': flatId};
   try {
     final response = await http.post(url, body: body);
     if (response.statusCode == 200) {
@@ -21,7 +21,7 @@ Future<MemberlistModel?> memberListApi(
 
       data.forEach((key, value) => log('$key: $value'));
 
-      return MemberlistModel.fromJson(data);
+      return VisitorsListModel.fromJson(data);
     }
   } catch (e) {
     throw Exception();

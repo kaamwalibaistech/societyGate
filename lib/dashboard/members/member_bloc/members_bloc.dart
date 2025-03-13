@@ -14,7 +14,7 @@ class MembersBloc extends Bloc<MembersEvent, MembersState> {
   }
 
   void _getList(GetMemberListEvent event, Emitter<MembersState> emit) async {
-    // emit(MembersInitialState());
+    emit(MembersInitialState());
 
     try {
       final memberData = await memberListApi(event.soceityId);

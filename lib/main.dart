@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:my_society/constents/local_storage.dart';
 import 'package:my_society/dashboard/members/member_bloc/members_bloc.dart';
+import 'package:my_society/dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'package:my_society/navigation_screen.dart';
 
 import 'auth/login_bloc/login_bloc.dart';
@@ -41,6 +42,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         BlocProvider<LoginBloc>(create: (context) => LoginBloc()),
         BlocProvider<MembersBloc>(create: (context) => MembersBloc()),
+        BlocProvider<VisitorsBloc>(create: (context) => VisitorsBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
