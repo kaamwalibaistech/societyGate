@@ -10,7 +10,7 @@ import 'auth/register_screen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await LocalStoragePref.init();
+  await LocalStoragePref.instance!.initPrefBox();
   await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
