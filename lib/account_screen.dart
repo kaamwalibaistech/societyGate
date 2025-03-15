@@ -533,6 +533,7 @@ class _AccountScreenState extends State<AccountScreen>
     TextEditingController familyNameController = TextEditingController();
     TextEditingController familyMobileNoController = TextEditingController();
     TextEditingController familyRelationController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
 
     return showModalBottomSheet(
         isScrollControlled: true,
@@ -545,116 +546,147 @@ class _AccountScreenState extends State<AccountScreen>
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Center(
-                            child: Container(
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: const Icon(Icons.camera_alt_outlined),
-                            ),
-                          )),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10.0),
-                        child: Center(child: Text("My family")),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 5.0),
-                        child: Center(
-                          child: Text(
-                            "Add family members for quick entry",
-                            style: TextStyle(color: Colors.grey),
-                          ),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Center(
+                              child: Container(
+                                height: 80,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: const Icon(Icons.camera_alt_outlined),
+                              ),
+                            )),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 10.0),
+                          child: Center(child: Text("My family")),
                         ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.0),
-                        child: Text(
-                          "Name",
-                          style: TextStyle(),
-                        ),
-                      ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
+                        const Padding(
+                          padding: EdgeInsets.only(top: 5.0),
                           child: Center(
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  hintText: "Enter name",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 15.0, bottom: 10),
-                        child: Text(
-                          "Mobile number",
-                          style: TextStyle(),
-                        ),
-                      ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  hintText: "Enter mobile number",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 15.0, bottom: 10),
-                        child: Text(
-                          "Realtion",
-                          style: TextStyle(),
-                        ),
-                      ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  hintText: "Enter relation",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Theme.of(context).primaryColor),
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          width: MediaQuery.of(context).size.width,
-                          child: const Center(
                             child: Text(
-                              "Submit",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
+                              "Add family members for quick entry",
+                              style: TextStyle(color: Colors.grey),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            "Name",
+                            style: TextStyle(),
+                          ),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.90,
+                            height: MediaQuery.of(context).size.height * 0.06,
+                            child: Center(
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (familyNameController.text.isEmpty &&
+                                      familyNameController.text.length < 2) {
+                                    return "Enter name";
+                                  }
+                                  return null;
+                                },
+                                decoration: const InputDecoration(
+                                    hintText: "Enter name",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none)),
+                              ),
+                            )),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15.0, bottom: 10),
+                          child: Text(
+                            "Mobile number",
+                            style: TextStyle(),
+                          ),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.90,
+                            height: MediaQuery.of(context).size.height * 0.06,
+                            child: Center(
+                              child: TextFormField(
+                                maxLength: 10,
+                                keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (familyMobileNoController.text.length !=
+                                      10) {
+                                    return "Mobile no should be 10 in digits";
+                                  }
+                                  return null;
+                                },
+                                decoration: const InputDecoration(
+                                    counterText: "",
+                                    hintText: "Enter mobile number",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none)),
+                              ),
+                            )),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15.0, bottom: 10),
+                          child: Text(
+                            "Realtion",
+                            style: TextStyle(),
+                          ),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.90,
+                            height: MediaQuery.of(context).size.height * 0.06,
+                            child: Center(
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (familyRelationController.text.isEmpty) {
+                                    return "Enter your relation";
+                                  }
+                                  return null;
+                                },
+                                decoration: const InputDecoration(
+                                    hintText: "Enter relation",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none)),
+                              ),
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              if (formKey.currentState!.validate()) {}
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Theme.of(context).primaryColor),
+                              height: MediaQuery.of(context).size.height * 0.06,
+                              width: MediaQuery.of(context).size.width,
+                              child: const Center(
+                                child: Text(
+                                  "Submit",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ));
