@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_society/constents/local_storage.dart';
 import 'package:my_society/constents/sizedbox.dart';
+import 'package:my_society/dashboard/visitors/visitors_bloc/addvisitors_page.dart';
 import 'package:my_society/dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'package:my_society/models/login_model.dart';
 import 'package:my_society/models/visitorslist_model.dart';
@@ -36,7 +37,11 @@ class _VisitorsPageState extends State<VisitorsPage> {
       length: 2, // Number of tabs
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add), onPressed: () {}),
+            child: Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AddVisitorsPage()));
+            }),
         appBar: AppBar(
           backgroundColor: Colors.deepPurpleAccent,
           title: const Text(
