@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-
 import 'package:my_society/dashboard/members/members_page.dart';
 import 'package:my_society/dashboard/visitors/visitors_page.dart';
 
@@ -128,8 +127,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                         children: [
                                           Center(
                                             child: Text(
-                                              data!.data.announcements[index]
-                                                  .title,
+                                              data?.data.announcements[index]
+                                                      .title ??
+                                                  "",
                                               style: const TextStyle(
                                                   color: Colors.black),
                                             ),
@@ -142,8 +142,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                                       horizontal: 25.0),
                                               child: Text(
                                                 textAlign: TextAlign.center,
-                                                data!.data.announcements[index]
-                                                    .description,
+                                                data?.data.announcements[index]
+                                                        .description ??
+                                                    "",
                                                 style: const TextStyle(
                                                     color: Colors.black),
                                               ),
@@ -156,7 +157,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 25.0),
                                               child: Text(
-                                                "Announcement Type : ${data!.data.announcements[index].announcementType}",
+                                                "Announcement Type : ${data?.data.announcements[index].announcementType ?? ""}",
                                                 style: const TextStyle(
                                                     color: Colors.black),
                                               ),
