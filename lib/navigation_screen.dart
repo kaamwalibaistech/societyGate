@@ -21,7 +21,7 @@ class _NavigationscreenState extends State<Navigationscreen> {
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.home),
         title: ("Home"),
-        activeColorPrimary: Theme.of(context).primaryColor,
+        activeColorPrimary: const Color.fromARGB(255, 19, 52, 84),
         inactiveColorPrimary: CupertinoColors.systemGrey3,
       ),
       PersistentBottomNavBarItem(
