@@ -126,6 +126,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
       child: ListView.builder(
           itemCount: visitors?.length ?? 0,
           itemBuilder: (context, index) {
+            final visitorsList = visitors![index];
             return Container(
                 margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                 //height: 75,
@@ -134,24 +135,23 @@ class _VisitorsPageState extends State<VisitorsPage> {
                     borderRadius: BorderRadius.circular(10)),
                 child: Column(
                   children: [
-                    const SizedBox(
+                    SizedBox(
                       height: 65,
                       child: ListTile(
                         leading: CircleAvatar(
-                          foregroundImage:
-                              AssetImage("lib/assets/girlphoto2.jpg"),
+                          foregroundImage: AssetImage("lib/assets/qr.jpg"),
                           radius: 30,
                         ),
-                        title: Text("Rahul Sharma"),
-                        subtitle: Text("9876543220"),
+                        title: Text(visitorsList.name ?? "Not available"),
+                        subtitle: Text(visitorsList.phone ?? "Not available"),
                       ),
                     ),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Text(
-                            "Friend",
+                          Text(
+                            visitorsList.relation ?? "Not available",
                             style:
                                 TextStyle(fontSize: 12, color: Colors.blueGrey),
                           ),
@@ -162,8 +162,8 @@ class _VisitorsPageState extends State<VisitorsPage> {
                             color: Colors.blueGrey,
                           ),
                           sizedBoxW5(context),
-                          const Text(
-                            "Casual Visit",
+                          Text(
+                            visitorsList.visitingPurpose ?? "Not available",
                             style:
                                 TextStyle(fontSize: 12, color: Colors.blueGrey),
                           ),
@@ -177,8 +177,8 @@ class _VisitorsPageState extends State<VisitorsPage> {
                             ),
                           ),
                           sizedBoxW5(context),
-                          const Text(
-                            "2025-03-12",
+                          Text(
+                            visitorsList.visitingDate ?? "Not available",
                             style:
                                 TextStyle(fontSize: 12, color: Colors.blueGrey),
                           ),
@@ -197,6 +197,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
       child: ListView.builder(
           itemCount: regularvisitors?.length ?? 0,
           itemBuilder: (context, index) {
+            final RegularvisitorsList = regularvisitors![index];
             return Container(
                 margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                 height: 75,
@@ -205,12 +206,12 @@ class _VisitorsPageState extends State<VisitorsPage> {
                     borderRadius: BorderRadius.circular(20)),
                 child: ListTile(
                   leading: CircleAvatar(
-                    foregroundImage: AssetImage("lib/assets/watchman.jpg"),
+                    foregroundImage: AssetImage("lib/assets/qr.jpg"),
                     radius: 30,
                   ),
-                  title: Text(regularvisitors![index].name ?? "Not Available"),
+                  title: Text(RegularvisitorsList.name ?? "Not Available"),
                   subtitle:
-                      Text(regularvisitors[index].address ?? "Not Available"),
+                      Text(RegularvisitorsList.address ?? "Not Available"),
                 ));
           }),
     );
