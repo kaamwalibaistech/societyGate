@@ -4,31 +4,31 @@ import 'package:my_society/models/login_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStoragePref {
-  static final LocalStoragePref _instance = LocalStoragePref._internal();
-  static SharedPreferences? _storage;
+  static LocalStoragePref? _instance;
+  static SharedPreferences? storage;
 
-  factory LocalStoragePref() {
+  static LocalStoragePref? get instance {
+    _instance ??= LocalStoragePref();
+
     return _instance;
   }
 
-  LocalStoragePref._internal();
-
-  static Future<void> init() async {
-    _storage ??= await SharedPreferences.getInstance();
+  Future initPrefBox() async {
+    storage ??= await SharedPreferences.getInstance();
   }
 
   Future<void> clearAllPref() async {
-    await _storage?.clear();
+    await storage?.clear();
   }
 
   // Optional: for strongly typed usage
   Future<void> storeLoginModel(LoginModel model) async {
-    await _storage?.setString(
+    await storage?.setString(
         LocalStorageKeys.userProfile, jsonEncode(model.toJson()));
   }
 
   LoginModel? getLoginModel() {
-    final jsonStr = _storage?.getString(LocalStorageKeys.userProfile);
+    final jsonStr = storage?.getString(LocalStorageKeys.userProfile);
     if (jsonStr == null) return null;
     return LoginModel.fromJson(jsonDecode(jsonStr));
   }
@@ -51,11 +51,11 @@ class LocalStoragePref {
 */
 
   Future<void> setLoginBool(bool value) async {
-    await _storage?.setBool(LocalStorageKeys.isLoggedIn, value);
+    await storage?.setBool(LocalStorageKeys.isLoggedIn, value);
   }
 
   bool? getLoginBool() {
-    return _storage?.getBool(LocalStorageKeys.isLoggedIn);
+    return storage?.getBool(LocalStorageKeys.isLoggedIn);
   }
 }
 
