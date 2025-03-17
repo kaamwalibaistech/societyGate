@@ -5,4 +5,5 @@ class ApiConstant {
   static const String societyMembersList = "usersbysociety";
   static const String visitorsbysocietyAndFlatId =
       "getVisitorsbysocietyandflatid";
+  static const String insertVisitor = "insertvisitor";
 }
