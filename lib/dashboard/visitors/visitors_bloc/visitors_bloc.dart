@@ -13,7 +13,6 @@ class VisitorsBloc extends Bloc<VisitorsEvent, VisitorsState> {
 
   void _getList(GetVisitorsEvent event, Emitter<VisitorsState> emit) async {
     VisitorsListModel? _visitorsListModel;
-    // emit(VisitorsInitialState());
 
     try {
       final memberData = await visitorsListApi(event.soceityId, event.flatId);
