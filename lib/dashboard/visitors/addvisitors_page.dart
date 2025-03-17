@@ -6,11 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:my_society/constents/local_storage.dart';
 import 'package:my_society/constents/sizedbox.dart';
 import 'package:my_society/dashboard/visitors/network/add_visiters_api.dart';
+import 'package:my_society/dashboard/visitors/visitors_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../models/login_model.dart';
+import '../../models/login_model.dart';
 
 class AddVisitorsPage extends StatefulWidget {
   const AddVisitorsPage({super.key});
@@ -107,12 +108,13 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     icon: const Icon(
-                      Icons.close,
+                      Icons.done,
                       color: Colors.black,
                     ),
-                    label: const Text("Close"),
+                    label: const Text("Done"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey.shade300,
                       foregroundColor: Colors.black,
@@ -192,7 +194,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
             child: Column(
               children: [
                 _buildTextField("Name", (val) => name = val!),
-                _buildTextField("Phone", (val) => phone = val!),
+                _buildTextField("Phone", (val) => phone = val!, isPhone: true),
                 _buildTextField("Relation", (val) => relation = val!),
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(labelText: "Gender"),
@@ -231,7 +233,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
                       }
                       setState(() {
                         visitingDate = DateFormat('yyyy-MM-dd').format(picked);
-                        _dateController.text = visitingDate!;
+                        _dateController.text = visitingDate;
                       });
                     }
                   },
@@ -254,11 +256,21 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
     );
   }
 
-  Widget _buildTextField(String label, Function(String?) onSaved) {
+  Widget _buildTextField(String label, Function(String?) onSaved,
+      {bool isPhone = false}) {
     return TextFormField(
-      decoration: InputDecoration(labelText: label),
-      validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+      decoration: InputDecoration(
+        labelText: label,
+        counterText: "", // optional: hides character counter
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) return 'Required';
+        if (isPhone && value.length != 10) return 'Phone must be 10 digits';
+        return null;
+      },
       onSaved: onSaved,
+      keyboardType: isPhone ? TextInputType.number : TextInputType.text,
+      maxLength: isPhone ? 10 : null,
     );
   }
 }
