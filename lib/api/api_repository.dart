@@ -3,7 +3,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:my_society/models/member_register_model.dart';
 
+import '../models/add_daily_help_model.dart';
+import '../models/add_family_member_model.dart';
 import '../models/admin_register_model.dart';
+import '../models/get_daily_help_model.dart';
+import '../models/get_family_members_model.dart';
 import '../models/homepage_model.dart';
 
 class ApiRepository {
@@ -79,6 +83,103 @@ class ApiRepository {
           return Homepagemodel.fromJson(data);
         }
         return Homepagemodel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<AddFamilyMemberModel?> addFamilyMembers(societyid, flatid, memberid,
+      uname, uemail, uphone, relation, password) async {
+    final url =
+        Uri.parse("https://blingbroomcleaning.com/api/familymembersadd");
+    final body = {
+      'society_id': societyid,
+      'flat_id': flatid,
+      'member_id': memberid,
+      'uname': uname,
+      'uemail': uemail,
+      'uphone': uphone,
+      'relation': relation,
+      'password': password,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return AddFamilyMemberModel.fromJson(data);
+        }
+        return AddFamilyMemberModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<GetFamilyMemberModel?> getFamilyMembers(flatid) async {
+    final url =
+        Uri.parse("https://blingbroomcleaning.com/api/familymembersget");
+    final body = {
+      'flat_id': flatid,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return GetFamilyMemberModel.fromJson(data);
+        }
+        return GetFamilyMemberModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<AddDailyHelpModel?> addDailyHelpMembers(
+      societyid, memberid, flatid, name, phone, address, emptype) async {
+    final url = Uri.parse("https://blingbroomcleaning.com/api/employmentadd");
+    final body = {
+      'society_id': societyid,
+      'member_id': memberid,
+      'flat_id': flatid,
+      'name': name,
+      'phone': phone,
+      'address': address,
+      'emp_type': emptype,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return AddDailyHelpModel.fromJson(data);
+        }
+        return AddDailyHelpModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<GetDailyHelpModel?> getDailyHelpMembers(societyid, flatid) async {
+    final url = Uri.parse("https://blingbroomcleaning.com/api/employmentget");
+    final body = {
+      'society_id': societyid,
+      'flat_id': flatid,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return GetDailyHelpModel.fromJson(data);
+        }
       }
     } catch (e) {
       throw Exception(e.toString());
