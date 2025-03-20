@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_society/auth/register_member.dart';
 import 'package:my_society/constents/sizedbox.dart';
-import 'soceity_register.dart';
+
 import 'login_screen.dart';
+import 'soceity_register.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -30,7 +31,7 @@ class RegisterScreen extends StatelessWidget {
             padding: const EdgeInsets.only(top: 10),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height * 0.5,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.black,
               borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
             ),

@@ -79,8 +79,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
     }
     return Scaffold(
       backgroundColor: loginType == "watchman"
-          ? Color(0xffFE8A00)
-          : Color.fromARGB(255, 19, 52, 84),
+          ? const Color(0xffFE8A00)
+          : const Color.fromARGB(255, 19, 52, 84),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
@@ -100,14 +100,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       child: ListTile(
                         leading: CircleAvatar(
                           foregroundImage: loginType == "watchman"
-                              ? AssetImage('lib/assets/watchman.jpg')
-                              : AssetImage("lib/assets/man.png"),
+                              ? const AssetImage('lib/assets/watchman.jpg')
+                              : const AssetImage("lib/assets/man.png"),
                           radius: 30,
                         ),
                         title: Text(loginModel?.user?.uname ?? "NA"),
                         subtitle: loginType == "watchman"
                             ? Text(loginModel?.user?.societyName ?? "NA")
-                            : Text("F-101 | Shubham Complex"),
+                            : const Text("F-101 | Shubham Complex"),
                         trailing: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
@@ -315,24 +315,27 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ScannerPage()));
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 14),
-                        height: MediaQuery.of(context).size.height * 0.25,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            color: Colors.black12,
-                            border:
-                                Border.all(width: 0.5, color: Colors.white54),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Lottie.asset(
-                          "lib/assets/lottie_json/scan.json",
+                    Visibility(
+                      visible: loginType == "watchman",
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ScannerPage()));
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 14),
+                          height: MediaQuery.of(context).size.height * 0.25,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              color: Colors.black12,
+                              border:
+                                  Border.all(width: 0.5, color: Colors.white54),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Lottie.asset(
+                            "lib/assets/lottie_json/scan.json",
+                          ),
                         ),
                       ),
                     ),
