@@ -885,6 +885,7 @@ class _AccountScreenState extends State<AccountScreen>
     TextEditingController dailyHelpAddressController = TextEditingController();
     TextEditingController dailyHelpTypeController = TextEditingController();
     final formKey = GlobalKey<FormState>();
+    bool checkBoxValue = true;
 
     return showModalBottomSheet(
         isScrollControlled: true,
@@ -1021,6 +1022,13 @@ class _AccountScreenState extends State<AccountScreen>
                             style: TextStyle(),
                           ),
                         ),
+                        // Checkbox(
+                        //     value: checkBoxValue,
+                        //     onChanged: (newValue) {
+                        //       setState(() {
+                        //         newValue = checkBoxValue;
+                        //       });
+                        //     }),
                         SizedBox(
                             width: MediaQuery.of(context).size.width * 0.90,
                             height: MediaQuery.of(context).size.height * 0.06,
