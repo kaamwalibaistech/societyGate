@@ -36,9 +36,18 @@ class _CreateNewAccountState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) async {
-        if (state is LoginSuccessState) {
-          await LocalStoragePref().storeLoginModel(state.loginModel);
-          await LocalStoragePref().setLoginBool(true);
+
+
+
+        if (state is LoginLoadingState) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (state is LoginSuccessState) {
 
           Navigator.pushReplacement(
             context,

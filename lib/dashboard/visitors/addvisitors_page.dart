@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../models/login_model.dart';
+import '../../models/login_model.dart';
 
 class AddVisitorsPage extends StatefulWidget {
   const AddVisitorsPage({super.key});
@@ -107,12 +108,13 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     icon: const Icon(
-                      Icons.close,
+                      Icons.done,
                       color: Colors.black,
                     ),
-                    label: const Text("Close"),
+                    label: const Text("Done"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey.shade300,
                       foregroundColor: Colors.black,
@@ -158,8 +160,30 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
         embeddedImageStyle: null,
       );
 
-      final picData = await painter.toImageData(400);
-      final bytes = picData!.buffer.asUint8List();
+      // Define sizes
+      final qrSize = 400.0;
+      final padding = 40.0;
+      final totalSize = qrSize + padding * 2;
+
+      // Create canvas
+      final recorder = PictureRecorder();
+      final canvas =
+          Canvas(recorder, Rect.fromLTWH(0, 0, totalSize, totalSize));
+
+      // Fill background with white
+      final bgPaint = Paint()..color = Colors.white;
+      canvas.drawRect(Rect.fromLTWH(0, 0, totalSize, totalSize), bgPaint);
+
+      // Shift canvas to add white padding
+      canvas.translate(padding, padding);
+
+      // Draw QR in the center
+      painter.paint(canvas, Size(qrSize, qrSize));
+
+      final picture = recorder.endRecording();
+      final image = await picture.toImage(totalSize.toInt(), totalSize.toInt());
+      final byteData = await image.toByteData(format: ImageByteFormat.png);
+      final bytes = byteData!.buffer.asUint8List();
 
       final tempDir = await getTemporaryDirectory();
       final file = await File('${tempDir.path}/qr_code.png').create();
@@ -192,7 +216,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
             child: Column(
               children: [
                 _buildTextField("Name", (val) => name = val!),
-                _buildTextField("Phone", (val) => phone = val!),
+                _buildTextField("Phone", (val) => phone = val!, isPhone: true),
                 _buildTextField("Relation", (val) => relation = val!),
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(labelText: "Gender"),
@@ -231,7 +255,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
                       }
                       setState(() {
                         visitingDate = DateFormat('yyyy-MM-dd').format(picked);
-                        _dateController.text = visitingDate!;
+                        _dateController.text = visitingDate;
                       });
                     }
                   },
@@ -254,11 +278,21 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
     );
   }
 
-  Widget _buildTextField(String label, Function(String?) onSaved) {
+  Widget _buildTextField(String label, Function(String?) onSaved,
+      {bool isPhone = false}) {
     return TextFormField(
-      decoration: InputDecoration(labelText: label),
-      validator: (value) => value == null || value.isEmpty ? 'Required' : null,
+      decoration: InputDecoration(
+        labelText: label,
+        counterText: "", // optional: hides character counter
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) return 'Required';
+        if (isPhone && value.length != 10) return 'Phone must be 10 digits';
+        return null;
+      },
       onSaved: onSaved,
+      keyboardType: isPhone ? TextInputType.number : TextInputType.text,
+      maxLength: isPhone ? 10 : null,
     );
   }
 }
