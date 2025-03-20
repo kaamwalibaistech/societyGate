@@ -28,6 +28,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
     if (loginModel != null) {
       final societyId = loginModel.user!.societyId;
       final flatId = loginModel.user!.flatId;
+
       context.read<VisitorsBloc>().add(GetVisitorsEvent(
           soceityId: societyId.toString(), flatId: flatId.toString()));
     } else {
@@ -38,7 +39,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Number of tabs
+      length: 3, // Number of tabs
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
@@ -66,22 +67,38 @@ class _VisitorsPageState extends State<VisitorsPage> {
                     labelColor: Colors.deepPurpleAccent,
                     unselectedLabelColor: Colors.grey,
                     tabs: [
-                      Tab(text: "One Time"),
+                      Tab(text: "Upcomming"),
                       Tab(text: "Regular"),
+                      Tab(text: "Past"),
                     ],
                   ),
                   sizedBoxH10(context),
                   Expanded(
                     child: TabBarView(
                       children: [
-                        (state.visitorsListModel?.visitors?.isNotEmpty ?? false)
-                            ? getVisitorsWidget(
-                                context, state.visitorsListModel!.visitors)
-                            : Center(child: Text("No visitors today!")),
-                        (state.visitorsListModel?.regularvisitors?.isNotEmpty ??
+                        (state.visitorsListModel?.data?.upcomingVisitors?.list
+                                    ?.isNotEmpty ??
                                 false)
-                            ? getRegularVisitorsWidget(context,
-                                state.visitorsListModel!.regularvisitors)
+                            ? getUpcomingVisitorsWidget(
+                                context,
+                                state.visitorsListModel!.data?.upcomingVisitors
+                                    ?.list)
+                            : Center(child: Text("No visitors today!")),
+                        (state.visitorsListModel?.data?.regularVisitors?.list
+                                    ?.isNotEmpty ??
+                                false)
+                            ? getRegularVisitorsWidget(
+                                context,
+                                state.visitorsListModel!.data!.regularVisitors!
+                                    .list)
+                            : Center(child: Text("Not available!")),
+                        (state.visitorsListModel?.data?.pastVisitors?.list
+                                    ?.isNotEmpty ??
+                                false)
+                            ? getPastVisitorsWidget(
+                                context,
+                                state.visitorsListModel?.data?.pastVisitors
+                                    ?.list)
                             : Center(child: Text("No visitors!")),
                       ],
                     ),
@@ -89,7 +106,29 @@ class _VisitorsPageState extends State<VisitorsPage> {
                 ],
               );
             } else if (state is VisitorsErrorState) {
-              return _buildError(state.msg);
+              return Column(
+                children: [
+                  const TabBar(
+                    labelColor: Colors.deepPurpleAccent,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: [
+                      Tab(text: "Upcomming"),
+                      Tab(text: "Regular"),
+                      Tab(text: "Past"),
+                    ],
+                  ),
+                  sizedBoxH10(context),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        _buildError(state.msg),
+                        _buildError(state.msg),
+                        _buildError(state.msg),
+                      ],
+                    ),
+                  )
+                ],
+              );
             } else {
               return CircularProgressIndicator();
             }
@@ -124,20 +163,24 @@ class _VisitorsPageState extends State<VisitorsPage> {
     );
   }
 
-  Widget getVisitorsWidget(BuildContext context, List<Visitors>? visitors) {
+  Widget getUpcomingVisitorsWidget(
+    BuildContext context,
+    List<Visitor>? visitorsList,
+  ) {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: ListView.builder(
-          itemCount: visitors?.length ?? 0,
+          itemCount: visitorsList?.length ?? 0,
           itemBuilder: (context, index) {
-            final visitorsList = visitors![index];
+            final visitors = visitorsList![index];
+            //final visitorsList = upcomingVisitors.data[index];
             return GestureDetector(
               onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => VisitorsDetailsPage(
-                            visitorID: visitorsList.visitorId.toString())));
+                            visitorID: visitors.visitorId.toString())));
               },
               child: Container(
                   margin:
@@ -155,8 +198,8 @@ class _VisitorsPageState extends State<VisitorsPage> {
                             foregroundImage: AssetImage("lib/assets/qr.jpg"),
                             radius: 30,
                           ),
-                          title: Text(visitorsList.name ?? "Not available"),
-                          subtitle: Text(visitorsList.phone ?? "Not available"),
+                          title: Text(visitors.name ?? "Not available"),
+                          subtitle: Text(visitors.phone ?? "Not available"),
                         ),
                       ),
                       Row(
@@ -164,7 +207,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              visitorsList.relation ?? "Not available",
+                              visitors.relation ?? "Not available",
                               style: TextStyle(
                                   fontSize: 12, color: Colors.blueGrey),
                             ),
@@ -176,7 +219,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                             ),
                             sizedBoxW5(context),
                             Text(
-                              visitorsList.visitingPurpose ?? "Not available",
+                              visitors.visitingPurpose ?? "Not available",
                               style: TextStyle(
                                   fontSize: 12, color: Colors.blueGrey),
                             ),
@@ -191,7 +234,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                             ),
                             sizedBoxW5(context),
                             Text(
-                              visitorsList.visitingDate ?? "Not available",
+                              visitors.visitingDate ?? "Not available",
                               style: TextStyle(
                                   fontSize: 12, color: Colors.blueGrey),
                             ),
@@ -205,13 +248,15 @@ class _VisitorsPageState extends State<VisitorsPage> {
   }
 
   Widget getRegularVisitorsWidget(
-      BuildContext context, List<Regularvisitors>? regularvisitors) {
+    BuildContext context,
+    List<Visitor>? regularvisitorsList,
+  ) {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: ListView.builder(
-          itemCount: regularvisitors?.length ?? 0,
+          itemCount: regularvisitorsList?.length ?? 0,
           itemBuilder: (context, index) {
-            final RegularvisitorsList = regularvisitors![index];
+            final regularvisitors = regularvisitorsList![index];
             return Container(
                 margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                 height: 75,
@@ -223,9 +268,36 @@ class _VisitorsPageState extends State<VisitorsPage> {
                     foregroundImage: AssetImage("lib/assets/qr.jpg"),
                     radius: 30,
                   ),
-                  title: Text(RegularvisitorsList.name ?? "Not Available"),
-                  subtitle:
-                      Text(RegularvisitorsList.address ?? "Not Available"),
+                  title: Text(regularvisitors.name ?? "Not Available"),
+                  subtitle: Text(regularvisitors.phone ?? "Not Available"),
+                ));
+          }),
+    );
+  }
+
+  Widget getPastVisitorsWidget(
+    BuildContext context,
+    List<Visitor>? pastVisitorsList,
+  ) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: ListView.builder(
+          itemCount: pastVisitorsList?.length ?? 0,
+          itemBuilder: (context, index) {
+            final regularvisitors = pastVisitorsList![index];
+            return Container(
+                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                height: 75,
+                decoration: BoxDecoration(
+                    color: Colors.purple.shade50,
+                    borderRadius: BorderRadius.circular(20)),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    foregroundImage: AssetImage("lib/assets/qr.jpg"),
+                    radius: 30,
+                  ),
+                  title: Text(regularvisitors.name ?? "Not Available"),
+                  subtitle: Text(regularvisitors.phone ?? "Not Available"),
                 ));
           }),
     );

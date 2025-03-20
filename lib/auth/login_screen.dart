@@ -45,10 +45,6 @@ class _CreateNewAccountState extends State<LoginScreen> {
             ),
           );
         } else if (state is LoginSuccessState) {
-          //  Store user model as JSON string
-          await LocalStoragePref().storeLoginModel(state.loginModel);
-          await LocalStoragePref().setLoginBool(true);
-
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const LoginSuccess()),

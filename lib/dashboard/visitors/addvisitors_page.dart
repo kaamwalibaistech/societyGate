@@ -1,12 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_society/constents/local_storage.dart';
 import 'package:my_society/constents/sizedbox.dart';
 import 'package:my_society/dashboard/visitors/network/add_visiters_api.dart';
-import 'package:my_society/dashboard/visitors/visitors_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -160,8 +160,30 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
         embeddedImageStyle: null,
       );
 
-      final picData = await painter.toImageData(400);
-      final bytes = picData!.buffer.asUint8List();
+      // Define sizes
+      final qrSize = 400.0;
+      final padding = 40.0;
+      final totalSize = qrSize + padding * 2;
+
+      // Create canvas
+      final recorder = PictureRecorder();
+      final canvas =
+          Canvas(recorder, Rect.fromLTWH(0, 0, totalSize, totalSize));
+
+      // Fill background with white
+      final bgPaint = Paint()..color = Colors.white;
+      canvas.drawRect(Rect.fromLTWH(0, 0, totalSize, totalSize), bgPaint);
+
+      // Shift canvas to add white padding
+      canvas.translate(padding, padding);
+
+      // Draw QR in the center
+      painter.paint(canvas, Size(qrSize, qrSize));
+
+      final picture = recorder.endRecording();
+      final image = await picture.toImage(totalSize.toInt(), totalSize.toInt());
+      final byteData = await image.toByteData(format: ImageByteFormat.png);
+      final bytes = byteData!.buffer.asUint8List();
 
       final tempDir = await getTemporaryDirectory();
       final file = await File('${tempDir.path}/qr_code.png').create();
