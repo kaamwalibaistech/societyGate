@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_society/api/api_repository.dart';
-import 'package:my_society/auth/login_screen.dart';
 import 'package:my_society/constents/sizedbox.dart';
 import 'package:my_society/models/get_family_members_model.dart';
 
@@ -608,10 +607,10 @@ class _AccountScreenState extends State<AccountScreen>
                           GestureDetector(
                             onTap: () async {
                               await LocalStoragePref.instance!.clearAllPref();
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginScreen()));
+                              // Navigator.pushReplacement(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => LoginScreen()));
                             },
                             child: const ListTile(
                               leading: Icon(

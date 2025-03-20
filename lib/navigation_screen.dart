@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my_society/constents/local_storage.dart';
+import 'package:my_society/dashboard/watchman_profile_page.dart';
 import 'package:my_society/message_screen.dart';
 import 'package:my_society/timeline_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
@@ -54,11 +56,15 @@ class _NavigationscreenState extends State<Navigationscreen> {
   }
 
   List<Widget> buildScreens() {
+    final loginModel = LocalStoragePref().getLoginModel();
+
     return [
       const HomepageScreen(),
       const TimelineScreen(),
       const MessageScreen(),
-      const AccountScreen(),
+      loginModel!.user!.role != "watchman"
+          ? const AccountScreen()
+          : const WatchmanProfilePage()
     ];
   }
 
