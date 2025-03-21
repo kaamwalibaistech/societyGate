@@ -5,9 +5,11 @@ import 'package:my_society/models/member_register_model.dart';
 
 import '../models/add_daily_help_model.dart';
 import '../models/add_family_member_model.dart';
+import '../models/add_vehicle_model.dart';
 import '../models/admin_register_model.dart';
 import '../models/get_daily_help_model.dart';
 import '../models/get_family_members_model.dart';
+import '../models/get_vehicle_detail_model.dart';
 import '../models/homepage_model.dart';
 
 class ApiRepository {
@@ -140,6 +142,27 @@ class ApiRepository {
     return null;
   }
 
+  Future<GetVehicleDetailsModel?> getVehicleDetails(flatid) async {
+    final url =
+        Uri.parse("https://blingbroomcleaning.com/api/getvehicleparking");
+    final body = {
+      'flat_id': flatid,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return GetVehicleDetailsModel.fromJson(data);
+        }
+        return GetVehicleDetailsModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
   Future<AddDailyHelpModel?> addDailyHelpMembers(
       societyid, memberid, flatid, name, phone, address, emptype) async {
     final url = Uri.parse("https://blingbroomcleaning.com/api/employmentadd");
@@ -180,6 +203,43 @@ class ApiRepository {
         if (data['status'] == 200) {
           return GetDailyHelpModel.fromJson(data);
         }
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<AddVehicleModel?> addVehicle(
+    societyid,
+    memberId,
+    flatid,
+    vehicleNo,
+    type,
+    model,
+    String? slotNumber,
+  ) async {
+    final url =
+        Uri.parse("https://blingbroomcleaning.com/api/insertvehicleparking");
+    final body = {
+      'society_id': societyid,
+      "member_id": memberId,
+      'flat_id': flatid,
+      "vehicle_no": vehicleNo,
+      "type": type,
+      "model": model,
+      "status": "active",
+      "slot_number": slotNumber ?? "",
+      "parking_status": "occupied"
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return AddVehicleModel.fromJson(data);
+        }
+        return AddVehicleModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

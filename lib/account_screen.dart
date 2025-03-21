@@ -5,8 +5,13 @@ import 'package:my_society/api/api_repository.dart';
 import 'package:my_society/constents/sizedbox.dart';
 import 'package:my_society/models/get_family_members_model.dart';
 
+import 'auth/login_screen.dart';
 import 'constents/local_storage.dart';
+import 'models/add_daily_help_model.dart';
+import 'models/add_family_member_model.dart';
+import 'models/add_vehicle_model.dart';
 import 'models/get_daily_help_model.dart';
+import 'models/get_vehicle_detail_model.dart';
 import 'profile_screen.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -21,6 +26,7 @@ class _AccountScreenState extends State<AccountScreen>
   late TabController _tabController;
   GetFamilyMemberModel? getFamilyMemberData;
   GetDailyHelpModel? getDailyHelpData;
+  GetVehicleDetailsModel? getVehicledetails;
 
   @override
   void initState() {
@@ -28,6 +34,7 @@ class _AccountScreenState extends State<AccountScreen>
     _tabController = TabController(length: 2, vsync: this);
     getfamilymembers();
     getDailyHelpmembers();
+    getVehicleData();
   }
 
   getfamilymembers() async {
@@ -37,6 +44,16 @@ class _AccountScreenState extends State<AccountScreen>
         await apiRepository.getFamilyMembers(data!.user!.flatId.toString());
     setState(() {
       getFamilyMemberData = getFamilyMember;
+    });
+  }
+
+  getVehicleData() async {
+    ApiRepository apiRepository = ApiRepository();
+    final data = LocalStoragePref.instance!.getLoginModel();
+    var getVehicleData =
+        await apiRepository.getVehicleDetails(data!.user!.flatId.toString());
+    setState(() {
+      getVehicledetails = getVehicleData;
     });
   }
 
@@ -58,6 +75,7 @@ class _AccountScreenState extends State<AccountScreen>
 
   @override
   Widget build(BuildContext context) {
+    final loginModel = LocalStoragePref().getLoginModel();
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 241, 237, 237),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -106,10 +124,10 @@ class _AccountScreenState extends State<AccountScreen>
                               height: 50,
                               width: 50,
                             ),
-                            title: const Text("Ritesh Dixit"),
-                            subtitle: const Text(
-                              "ritesh.dixit2002@gmail.com",
-                              style: TextStyle(color: Colors.grey),
+                            title: Text(loginModel!.user?.uname ?? "---"),
+                            subtitle: Text(
+                              loginModel.user?.uemail ?? "---",
+                              style: const TextStyle(color: Colors.grey),
                             ),
                           ),
                         ),
@@ -118,9 +136,9 @@ class _AccountScreenState extends State<AccountScreen>
                             Icons.house_outlined,
                             color: Theme.of(context).primaryColor,
                           ),
-                          title: const Text(
-                            "F-101 Shubham Complex",
-                            style: TextStyle(fontSize: 14),
+                          title: Text(
+                            loginModel.user?.societyName ?? "---",
+                            style: const TextStyle(fontSize: 14),
                           ),
                         )
                       ],
@@ -198,7 +216,7 @@ class _AccountScreenState extends State<AccountScreen>
                                 scrollDirection: Axis.horizontal,
                                 itemCount:
                                     getFamilyMemberData?.familyMembers.length ??
-                                        1,
+                                        2,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -238,16 +256,19 @@ class _AccountScreenState extends State<AccountScreen>
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 top: 5.0, left: 5),
-                                            child: Text(getFamilyMemberData!
-                                                .familyMembers[index].uname),
+                                            child: Text(getFamilyMemberData
+                                                    ?.familyMembers[index].uname
+                                                    .toString() ??
+                                                ""),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 5.0),
                                             child: Text(
-                                              getFamilyMemberData!
-                                                  .familyMembers[index]
-                                                  .relation,
+                                              getFamilyMemberData
+                                                      ?.familyMembers[index]
+                                                      .relation ??
+                                                  "",
                                               style: const TextStyle(
                                                   color: Colors.grey),
                                             ),
@@ -350,15 +371,17 @@ class _AccountScreenState extends State<AccountScreen>
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 top: 5.0, left: 5),
-                                            child: Text(getDailyHelpData!
-                                                .employees[index].name),
+                                            child: Text(getDailyHelpData
+                                                    ?.employees[index].name ??
+                                                ""),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 5.0),
                                             child: Text(
-                                              getDailyHelpData!
-                                                  .employees[index].empType,
+                                              getDailyHelpData?.employees[index]
+                                                      .empType ??
+                                                  "",
                                               style: const TextStyle(
                                                   color: Colors.grey),
                                             ),
@@ -420,7 +443,7 @@ class _AccountScreenState extends State<AccountScreen>
                               child: ListView.builder(
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
-                                itemCount: 5,
+                                itemCount: getVehicledetails?.data.length ?? 2,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -435,8 +458,48 @@ class _AccountScreenState extends State<AccountScreen>
                                       // height: MediaQuery.of(context).size.height *
                                       //     0.10,
                                       width: MediaQuery.of(context).size.width *
-                                          0.36,
-                                      child: const Center(child: Text("data")),
+                                          0.30,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 5.0, top: 5),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  border: Border.all(
+                                                      color: Colors.black),
+                                                  color: Colors.white),
+                                              height: 30,
+                                              width: 30,
+                                              child: const Icon(
+                                                Icons.car_repair_outlined,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 5.0, left: 5),
+                                            child: Text(getVehicledetails
+                                                    ?.data[index].vehicleNo ??
+                                                ""),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 5.0),
+                                            child: Text(
+                                              getVehicledetails
+                                                      ?.data[index].model ??
+                                                  "",
+                                              style: const TextStyle(
+                                                  color: Colors.grey),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -607,10 +670,12 @@ class _AccountScreenState extends State<AccountScreen>
                           GestureDetector(
                             onTap: () async {
                               await LocalStoragePref.instance!.clearAllPref();
-                              // Navigator.pushReplacement(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => LoginScreen()));
+
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LoginScreen()));
                             },
                             child: const ListTile(
                               leading: Icon(
@@ -840,20 +905,21 @@ class _AccountScreenState extends State<AccountScreen>
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 20.0),
                           child: GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               if (formKey.currentState!.validate()) {
                                 final data =
                                     LocalStoragePref.instance!.getLoginModel();
                                 ApiRepository apiRepository = ApiRepository();
-                                apiRepository.addFamilyMembers(
-                                    data!.user!.societyId.toString(),
-                                    data.user!.flatId.toString(),
-                                    data.user!.userId.toString(),
-                                    familyNameController.text,
-                                    familyEmailController.text,
-                                    familyMobileNoController.text,
-                                    familyRelationController.text,
-                                    familyPasswordController.text);
+                                AddFamilyMemberModel? familyMemberData =
+                                    await apiRepository.addFamilyMembers(
+                                        data!.user!.societyId.toString(),
+                                        data.user!.flatId.toString(),
+                                        data.user!.userId.toString(),
+                                        familyNameController.text,
+                                        familyEmailController.text,
+                                        familyMobileNoController.text,
+                                        familyRelationController.text,
+                                        familyPasswordController.text);
                                 Navigator.pop(context);
                                 Fluttertoast.showToast(
                                     msg: "Family Member Added Successfully");
@@ -1057,12 +1123,13 @@ class _AccountScreenState extends State<AccountScreen>
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 20.0),
                           child: GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               if (formKey.currentState!.validate()) {
                                 final data =
                                     LocalStoragePref.instance!.getLoginModel();
                                 ApiRepository apiRepository = ApiRepository();
-                                apiRepository.addDailyHelpMembers(
+                                AddDailyHelpModel? dailyHelpData =
+                                    await apiRepository.addDailyHelpMembers(
                                   data!.user!.societyId.toString(),
                                   data.user!.userId.toString(),
                                   data.user!.flatId.toString(),
@@ -1072,7 +1139,8 @@ class _AccountScreenState extends State<AccountScreen>
                                   dailyHelpTypeController.text,
                                 );
                                 Navigator.pop(context);
-                                Fluttertoast.showToast(msg: data.message);
+                                Fluttertoast.showToast(
+                                    msg: dailyHelpData!.message.toString());
                               }
                             },
                             child: Container(
@@ -1101,8 +1169,12 @@ class _AccountScreenState extends State<AccountScreen>
 
   myVehicleModelBottomSheet() {
     TextEditingController vehicleNumberController = TextEditingController();
-    TextEditingController vehicleModelController = TextEditingController();
     TextEditingController vehicleTypeController = TextEditingController();
+    TextEditingController vehicleModelController = TextEditingController();
+    TextEditingController vehicleParkingSlotController =
+        TextEditingController();
+
+    final globalKey = GlobalKey<FormState>();
 
     return showModalBottomSheet(
         isScrollControlled: true,
@@ -1115,116 +1187,184 @@ class _AccountScreenState extends State<AccountScreen>
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Center(
-                            child: Container(
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: const Icon(Icons.camera_alt_outlined),
-                            ),
-                          )),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 10.0),
-                        child: Center(child: Text("Add vehicle image")),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 5.0),
-                        child: Center(
-                          child: Text(
-                            "Add your vehicle for quick entry",
-                            style: TextStyle(color: Colors.grey),
-                          ),
+                  child: Form(
+                    key: globalKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.only(top: 15.0),
+                            child: Center(
+                              child: Container(
+                                height: 80,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: const Icon(Icons.camera_alt_outlined),
+                              ),
+                            )),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 10.0),
+                          child: Center(child: Text("Add vehicle image")),
                         ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.0),
-                        child: Text(
-                          "vehicle number",
-                          style: TextStyle(),
-                        ),
-                      ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
+                        const Padding(
+                          padding: EdgeInsets.only(top: 5.0),
                           child: Center(
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  hintText: "Enter vehicle number",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 15.0, bottom: 10),
-                        child: Text(
-                          "vehicle model",
-                          style: TextStyle(),
-                        ),
-                      ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  hintText: "Enter vehicle model",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 15.0, bottom: 10),
-                        child: Text(
-                          "Add vehicle type",
-                          style: TextStyle(),
-                        ),
-                      ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                  hintText: "Enter vehicle type",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Theme.of(context).primaryColor),
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          width: MediaQuery.of(context).size.width,
-                          child: const Center(
                             child: Text(
-                              "Submit",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
+                              "Add your vehicle for quick entry",
+                              style: TextStyle(color: Colors.grey),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            "vehicle number",
+                            style: TextStyle(),
+                          ),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.90,
+                            height: MediaQuery.of(context).size.height * 0.06,
+                            child: Center(
+                              child: TextFormField(
+                                controller: vehicleNumberController,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please Enter Vehicle Number";
+                                  }
+                                  return null;
+                                },
+                                decoration: const InputDecoration(
+                                    hintText: "Enter vehicle number",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none)),
+                              ),
+                            )),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15.0, bottom: 10),
+                          child: Text(
+                            "Add vehicle type",
+                            style: TextStyle(),
+                          ),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.90,
+                            height: MediaQuery.of(context).size.height * 0.06,
+                            child: Center(
+                              child: TextFormField(
+                                controller: vehicleTypeController,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Please Enter Vechile type";
+                                  }
+                                  return null;
+                                },
+                                decoration: const InputDecoration(
+                                    hintText: "E.g car / Bike",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none)),
+                              ),
+                            )),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15.0, bottom: 10),
+                          child: Text(
+                            "vehicle model",
+                            style: TextStyle(),
+                          ),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.90,
+                            height: MediaQuery.of(context).size.height * 0.06,
+                            child: Center(
+                              child: TextFormField(
+                                controller: vehicleModelController,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "please Enter Vehicle model";
+                                  }
+                                  return null;
+                                },
+                                decoration: const InputDecoration(
+                                    hintText: "Enter Vehicle company",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none)),
+                              ),
+                            )),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15.0, bottom: 10),
+                          child: Text(
+                            "parking Slot",
+                            style: TextStyle(),
+                          ),
+                        ),
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.90,
+                            height: MediaQuery.of(context).size.height * 0.06,
+                            child: Center(
+                              child: TextFormField(
+                                controller: vehicleParkingSlotController,
+                                decoration: const InputDecoration(
+                                    hintText: "Enter parking slot",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none)),
+                              ),
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: GestureDetector(
+                            onTap: () async {
+                              if (globalKey.currentState!.validate()) {
+                                final data =
+                                    LocalStoragePref.instance!.getLoginModel();
+                                ApiRepository apiRepository = ApiRepository();
+                                AddVehicleModel? addVehicleData =
+                                    await apiRepository.addVehicle(
+                                  data!.user!.societyId.toString(),
+                                  data.user!.userId.toString(),
+                                  data.user!.flatId.toString(),
+                                  vehicleNumberController.text,
+                                  vehicleTypeController.text,
+                                  vehicleModelController.text,
+                                  vehicleParkingSlotController.text,
+                                );
+                                Navigator.pop(context);
+                                Fluttertoast.showToast(
+                                    msg: addVehicleData!.message.toString());
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Theme.of(context).primaryColor),
+                              height: MediaQuery.of(context).size.height * 0.06,
+                              width: MediaQuery.of(context).size.width,
+                              child: const Center(
+                                child: Text(
+                                  "Submit",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ));

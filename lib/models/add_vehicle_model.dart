@@ -1,13 +1,13 @@
 // To parse this JSON data, do
 //
-//     final addVehicleModel = addVehicleModelFromJson(jsonString);
+//     final getVehicleDetailsModel = getVehicleDetailsModelFromJson(jsonString);
 
 import 'dart:convert';
 
-AddVehicleModel addVehicleModelFromJson(String str) =>
+AddVehicleModel getVehicleDetailsModelFromJson(String str) =>
     AddVehicleModel.fromJson(json.decode(str));
 
-String addVehicleModelToJson(AddVehicleModel data) =>
+String getVehicleDetailsModelToJson(AddVehicleModel data) =>
     json.encode(data.toJson());
 
 class AddVehicleModel {
@@ -42,7 +42,7 @@ class AddVehicleModel {
 class ParkingSlot {
   String flatId;
   int vehicleId;
-  String slotNumber;
+  dynamic slotNumber;
   String status;
   String societyId;
   int parkingId;
