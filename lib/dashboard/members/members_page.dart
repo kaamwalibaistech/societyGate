@@ -99,7 +99,7 @@ class _MembersPageState extends State<MembersPage> {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(20)),
                         child: ListTile(
-                          leading: CircleAvatar(
+                          leading: const CircleAvatar(
                             foregroundImage:
                                 AssetImage("lib/assets/girlphoto2.jpg"),
                             radius: 30,
