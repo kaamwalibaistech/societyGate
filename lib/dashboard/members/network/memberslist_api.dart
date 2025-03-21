@@ -19,7 +19,7 @@ Future<MemberlistModel?> memberListApi(
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
 
-      data.forEach((key, value) => log('$key: $value'));
+      //data.forEach((key, value) => log('$key: $value'));
 
       return MemberlistModel.fromJson(data);
     }

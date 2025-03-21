@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:my_society/constents/local_storage.dart';
@@ -19,6 +21,7 @@ class VisitorsBloc extends Bloc<VisitorsEvent, VisitorsState> {
 
     try {
       if (loginModel!.user!.role == "watchman") {
+        log(loginModel.user!.role);
         final memberData =
             await visitorsListForWatchmanApi(event.soceityId, "1", "10");
         visitorsListModel = memberData;

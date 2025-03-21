@@ -40,7 +40,7 @@ Future<VisitorsListModel?> visitorsListForWatchmanApi(
   String page,
   String limit,
 ) async {
-  String api = ApiConstant.visitorsbysocietyAndFlatId;
+  String api = ApiConstant.visitorsbysocietyId;
   String baseUrl = ApiConstant.baseUrl;
   Uri url = Uri.parse(baseUrl + api);
 
@@ -49,6 +49,8 @@ Future<VisitorsListModel?> visitorsListForWatchmanApi(
     final response = await http.post(url, body: body);
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
+      data.forEach((key, value) => log('$key: $value'));
+
       return VisitorsListModel.fromJson(data);
     }
   } catch (e, stacktrace) {

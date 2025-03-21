@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_society/constents/sizedbox.dart';
+import 'package:my_society/dashboard/visitors/edit_visitor.dart';
 import 'package:my_society/dashboard/visitors/network/visitor_delete.dart';
 import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_bloc.dart';
 import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_event.dart';
@@ -216,7 +217,12 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
             children: [
               ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditVisitor(
+                              visitorsDetailModel: visitorsDetailModel)));
                 },
                 icon: const Icon(
                   Icons.edit,

@@ -16,6 +16,7 @@ class VisitorsPage extends StatefulWidget {
 }
 
 class _VisitorsPageState extends State<VisitorsPage> {
+  LoginModel? loginModel;
   @override
   void initState() {
     super.initState();
@@ -23,11 +24,14 @@ class _VisitorsPageState extends State<VisitorsPage> {
   }
 
   fetchVisitors() {
-    LoginModel? loginModel = LocalStoragePref().getLoginModel();
+    final loginModelStorage = LocalStoragePref().getLoginModel();
 
+    setState(() {
+      loginModel = loginModelStorage;
+    });
     if (loginModel != null) {
-      final societyId = loginModel.user!.societyId;
-      final flatId = loginModel.user!.flatId;
+      final societyId = loginModel?.user?.societyId;
+      final flatId = loginModel?.user?.flatId;
 
       context.read<VisitorsBloc>().add(GetVisitorsEvent(
           soceityId: societyId.toString(), flatId: flatId.toString()));
@@ -41,12 +45,16 @@ class _VisitorsPageState extends State<VisitorsPage> {
     return DefaultTabController(
       length: 3, // Number of tabs
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddVisitorsPage()));
-            }),
+        floatingActionButton: loginModel?.user?.role != "watchman"
+            ? FloatingActionButton(
+                child: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddVisitorsPage()));
+                })
+            : null,
         appBar: AppBar(
           backgroundColor: Colors.deepPurpleAccent,
           title: const Text(

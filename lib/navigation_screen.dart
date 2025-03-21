@@ -76,7 +76,7 @@ class _NavigationscreenState extends State<Navigationscreen> {
         controller: controller,
         screens: buildScreens(),
         items: navBarsItems(),
-        handleAndroidBackButtonPress: true, // Default is true.
+        handleAndroidBackButtonPress: true,
         resizeToAvoidBottomInset:
             true, // This needs to be true if you want to move up the screen on a non-scrollable screen when keyboard appears. Default is true.
         stateManagement: true, // Default is true.
