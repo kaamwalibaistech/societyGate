@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_society/constents/sizedbox.dart';
 
+import '../auth/login_screen.dart';
 import '../constents/local_storage.dart';
 
 class WatchmanProfilePage extends StatefulWidget {
@@ -26,7 +27,7 @@ class _WatchmanProfilePageState extends State<WatchmanProfilePage> {
           child: Column(
             children: [
               Container(
-                  // margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(width: 1, color: Colors.amber),
@@ -97,10 +98,10 @@ class _WatchmanProfilePageState extends State<WatchmanProfilePage> {
                     GestureDetector(
                       onTap: () async {
                         await LocalStoragePref.instance!.clearAllPref();
-                        // Navigator.pushReplacement(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => LoginScreen()));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginScreen()));
                       },
                       child: const ListTile(
                         leading: Icon(

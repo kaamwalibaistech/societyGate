@@ -107,7 +107,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         title: Text(loginModel?.user?.uname ?? "NA"),
                         subtitle: loginType == "watchman"
                             ? Text(loginModel?.user?.societyName ?? "NA")
-                            : const Text("F-101 | Shubham Complex"),
+                            : const Text(""),
                         trailing: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
