@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_society/constents/sizedbox.dart';
 import 'package:my_society/dashboard/members/member_bloc/members_bloc.dart';
-import 'package:my_society/models/login_model.dart';
 import 'package:my_society/models/memberlist_model.dart';
 
 import '../../constents/local_storage.dart';
