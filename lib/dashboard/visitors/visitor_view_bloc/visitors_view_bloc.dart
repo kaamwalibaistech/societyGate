@@ -12,16 +12,16 @@ class VisitorsDetailBloc
 
   void _getDetails(
       GetVisitorDetailEvent event, Emitter<VisitorsDetailState> emit) async {
-    VisitorsDetailModel? _visitorsDetailModel;
+    VisitorsDetailModel? visitorsDetailModel;
     try {
       final memberData = await visitorsDetailsApi(event.visitorId);
-      _visitorsDetailModel = memberData;
-      if (_visitorsDetailModel!.status == 200) {
+      visitorsDetailModel = memberData;
+      if (visitorsDetailModel!.status == 200) {
         emit(VisitorsDetailSuccessState(
-            visitorsDetailModel: _visitorsDetailModel));
+            visitorsDetailModel: visitorsDetailModel));
       } else {
         emit(VisitorsDetailErrorState(
-            _visitorsDetailModel.message?.toString() ?? "Error"));
+            visitorsDetailModel.message?.toString() ?? "Not found!"));
       }
     } catch (e) {
       throw Exception(e);

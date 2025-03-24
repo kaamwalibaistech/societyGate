@@ -32,7 +32,7 @@ class Data {
   String? visitingPurpose;
   String? visitingDate;
   String? entryTime;
-  Null exitTime;
+  String? exitTime;
   int? visitingRequestBy;
   int? societyId;
   int? approvedBy;
