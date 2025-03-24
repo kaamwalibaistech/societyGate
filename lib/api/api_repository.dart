@@ -5,6 +5,7 @@ import 'package:my_society/models/member_register_model.dart';
 
 import '../models/add_daily_help_model.dart';
 import '../models/add_family_member_model.dart';
+import '../models/add_notices_model.dart';
 import '../models/add_vehicle_model.dart';
 import '../models/admin_register_model.dart';
 import '../models/get_daily_help_model.dart';
@@ -88,10 +89,10 @@ class ApiRepository {
     return null;
   }
 
-  Future<Homepagemodel?> getHomePageData() async {
+  Future<Homepagemodel?> getHomePageData(societyId) async {
     final url = Uri.parse("https://blingbroomcleaning.com/api/homepage");
     final body = {
-      'society_id': "1",
+      'society_id': societyId,
     };
     try {
       final response = await http.post(url, body: body);
@@ -256,6 +257,32 @@ class ApiRepository {
           return AddVehicleModel.fromJson(data);
         }
         return AddVehicleModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<AddNoticeModel?> addNotices(societyid, memberId, String title,
+      String description, String announcementType) async {
+    final url =
+        Uri.parse("https://blingbroomcleaning.com/api/announcementsadd");
+    final body = {
+      'society_id': societyid,
+      "user_id": memberId,
+      'title': title,
+      "description": description,
+      "announcement_type": announcementType,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return AddNoticeModel.fromJson(data);
+        }
+        return AddNoticeModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

@@ -36,7 +36,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
     final getLoginModel = LocalStoragePref().getLoginModel();
 
     ApiRepository apiRepositiory = ApiRepository();
-    Homepagemodel? mydata = await apiRepositiory.getHomePageData();
+    Homepagemodel? mydata = await apiRepositiory
+        .getHomePageData(getLoginModel!.user!.societyId.toString());
     setState(() {
       loginModel = getLoginModel;
       data = mydata;
@@ -128,7 +129,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                             height: MediaQuery.of(context).size.height * 0.19,
                             width: MediaQuery.of(context).size.width,
                             child: CarouselSlider.builder(
-                                itemCount: 3,
+                                itemCount: data?.data.announcements.length ?? 1,
                                 itemBuilder: (context, index, realIndex) {
                                   return SizedBox(
                                       width: MediaQuery.of(context).size.width,
@@ -147,27 +148,41 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                                 "lib/assets/notice_board.png.png"),
                                             Column(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Center(
-                                                  child: Text(
-                                                    data
-                                                            ?.data
-                                                            .announcements[
-                                                                index]
-                                                            .title ??
-                                                        "",
-                                                    style: const TextStyle(
-                                                        color: Colors.black),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10.0,
+                                                          left: 20,
+                                                          right: 20),
+                                                  child: Center(
+                                                    child: Text(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      data
+                                                              ?.data
+                                                              .announcements[
+                                                                  index]
+                                                              .title ??
+                                                          "",
+                                                      style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
                                                   ),
                                                 ),
-                                                sizedBoxH5(context),
                                                 Center(
                                                   child: Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
                                                         horizontal: 25.0),
                                                     child: Text(
+                                                      maxLines: 5,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       textAlign:
                                                           TextAlign.center,
                                                       data
@@ -181,7 +196,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                sizedBoxH5(context),
                                                 Center(
                                                   child: Padding(
                                                     padding: const EdgeInsets
