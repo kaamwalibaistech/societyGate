@@ -62,6 +62,7 @@ class _AccountScreenState extends State<AccountScreen>
     final data = LocalStoragePref.instance!.getLoginModel();
     final getDailyHelpMember = await apiRepository.getDailyHelpMembers(
         data!.user!.societyId.toString(), data.user!.flatId.toString());
+
     setState(() {
       getDailyHelpData = getDailyHelpMember;
     });

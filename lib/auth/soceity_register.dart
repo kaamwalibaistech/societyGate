@@ -22,6 +22,9 @@ class _SocietyRegister extends State<SocietyRegister> {
       TextEditingController();
   final TextEditingController totalFlatController = TextEditingController();
   final TextEditingController totalwingsController = TextEditingController();
+  final TextEditingController flatNoController = TextEditingController();
+  final TextEditingController floorNoNoController = TextEditingController();
+  final TextEditingController blockController = TextEditingController();
   bool? swimmingPoolChecked = false;
   bool? gardenChecked = false;
   bool? parkingChecked = false;
@@ -200,8 +203,131 @@ class _SocietyRegister extends State<SocietyRegister> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 15,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Flat No",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  controller: flatNoController,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Enter Your flat no";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  decoration: const InputDecoration(
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 10),
+                                    counterText: "",
+                                    hintText: "Your flat no",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Floor",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  controller: floorNoNoController,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Enter floor";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  decoration: const InputDecoration(
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 10),
+                                    counterText: "",
+                                    hintText: "Your floor no",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "block",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  controller: blockController,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Enter block";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  decoration: const InputDecoration(
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 10),
+                                    counterText: "",
+                                    hintText: "block/wing",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 5),
+                      child: Divider(),
                     ),
                     const Text(
                       "Society Name",
@@ -581,7 +707,10 @@ class _SocietyRegister extends State<SocietyRegister> {
             finalAmenities.toString(),
             nameController.text,
             emailController.text,
-            mobileNoController.text);
+            mobileNoController.text,
+            flatNoController.text,
+            blockController.text,
+            floorNoNoController.text);
         Fluttertoast.showToast(msg: data!.message.toString());
         Navigator.pop(context);
 

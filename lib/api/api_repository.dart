@@ -13,8 +13,18 @@ import '../models/get_vehicle_detail_model.dart';
 import '../models/homepage_model.dart';
 
 class ApiRepository {
-  Future<AdminRegister?> registerSocietyAdmin(sname, saddress, totalwings,
-      totalflat, amenities, uname, uemail, uphone) async {
+  Future<AdminRegister?> registerSocietyAdmin(
+      sname,
+      saddress,
+      totalwings,
+      totalflat,
+      amenities,
+      uname,
+      uemail,
+      uphone,
+      flatNumber,
+      block,
+      floor) async {
     // Map<String, String> queryParameters = {};
     // queryParameters.addAll({"API-KEY": dotenv.get('API-KEY')});
 
@@ -28,7 +38,10 @@ class ApiRepository {
       'amenities': amenities ?? "",
       'uname': uname,
       'uemail': uemail,
-      'uphone': uphone
+      'uphone': uphone,
+      "flat_number": flatNumber,
+      "block": block,
+      "floor": floor,
     };
     try {
       final response = await http.post(url, body: body);
@@ -49,13 +62,16 @@ class ApiRepository {
   }
 
   Future<MemberRegisterModel?> memberRegister(
-      uname, uemail, uphone, sregistrationNo) async {
+      uname, uemail, uphone, sregistrationNo, flatNumber, block, floor) async {
     final url = Uri.parse("https://blingbroomcleaning.com/api/memberregister");
     final body = {
       'uname': uname,
       'uemail': uemail,
       'uphone': uphone,
-      'sregistration_no': sregistrationNo
+      'sregistration_no': sregistrationNo,
+      'flat_number': flatNumber,
+      'block': block,
+      'floor': floor,
     };
     try {
       final response = await http.post(url, body: body);
