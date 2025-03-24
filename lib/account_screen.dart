@@ -5,7 +5,7 @@ import 'package:my_society/api/api_repository.dart';
 import 'package:my_society/constents/sizedbox.dart';
 import 'package:my_society/models/get_family_members_model.dart';
 
-import 'auth/login_screen.dart';
+import 'auth/register_screen.dart';
 import 'constents/local_storage.dart';
 import 'models/add_daily_help_model.dart';
 import 'models/add_family_member_model.dart';
@@ -258,8 +258,8 @@ class _AccountScreenState extends State<AccountScreen>
                                             padding: const EdgeInsets.only(
                                                 top: 5.0, left: 5),
                                             child: Text(getFamilyMemberData
-                                                    ?.familyMembers[index].uname
-                                                    .toString() ??
+                                                    ?.familyMembers[index]
+                                                    .uname ??
                                                 ""),
                                           ),
                                           Padding(
@@ -676,7 +676,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const LoginScreen()));
+                                          const RegisterScreen()));
                             },
                             child: const ListTile(
                               leading: Icon(
