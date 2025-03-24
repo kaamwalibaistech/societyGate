@@ -53,7 +53,7 @@ class _MembersPageState extends State<MembersPage> {
             } else if (state is MembersErrorState) {
               return _buildError(state.msg);
             } else {
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             }
           },
         ),
@@ -111,13 +111,13 @@ class _MembersPageState extends State<MembersPage> {
                   ),
                 )
               : Container(
-                  margin: EdgeInsets.only(top: 10),
+                  margin: const EdgeInsets.only(top: 10),
                   width: MediaQuery.of(context).size.width * 0.8,
                   height: MediaQuery.of(context).size.height * 0.05,
                   decoration: BoxDecoration(
                       color: Colors.purple.shade50,
                       borderRadius: BorderRadius.circular(5)),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       "No Admin",
                       style: TextStyle(fontSize: 15),
@@ -138,10 +138,10 @@ class _MembersPageState extends State<MembersPage> {
             children: [
               (memberlistModel?.users?.members?.isNotEmpty ?? false)
                   ? getMembersWidget(context, memberlistModel?.users!.members)
-                  : Center(child: const Text("No Members Available!")),
+                  : const Center(child: Text("No Members Available!")),
               (memberlistModel?.users?.watchmen?.isNotEmpty ?? false)
                   ? getWatchmanWidget(context, memberlistModel?.users!.watchmen)
-                  : Center(child: const Text("No Watchman Available!"))
+                  : const Center(child: Text("No Watchman Available!"))
             ],
           ),
         )
@@ -213,7 +213,7 @@ class _MembersPageState extends State<MembersPage> {
                     color: Colors.purple.shade50,
                     borderRadius: BorderRadius.circular(20)),
                 child: ListTile(
-                  leading: CircleAvatar(
+                  leading: const CircleAvatar(
                     foregroundImage: AssetImage("lib/assets/watchman.jpg"),
                     radius: 30,
                   ),
