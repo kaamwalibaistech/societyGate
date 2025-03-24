@@ -3,10 +3,12 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:my_society/constents/local_storage.dart';
 import 'package:my_society/constents/sizedbox.dart';
 import 'package:my_society/dashboard/visitors/network/add_visiters_api.dart';
+import 'package:my_society/dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -107,6 +109,10 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () {
+                      context.read<VisitorsBloc>().add(GetVisitorsEvent(
+                          soceityId: societyId.toString(),
+                          flatId: flatId.toString()));
+
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },

@@ -80,7 +80,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
     return Scaffold(
       backgroundColor: loginType == "watchman"
           ? const Color(0xffFE8A00)
-          : const Color.fromARGB(255, 19, 52, 84),
+          : const Color.fromARGB(255, 19, 73, 128),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
@@ -89,7 +89,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
               Container(
                 margin: const EdgeInsets.only(top: 10, right: 10, left: 10),
                 decoration: BoxDecoration(
-                    color: Colors.red.shade50,
+                    color: loginType == "watchman"
+                        ? Colors.red.shade50
+                        : Colors.blue.shade50,
                     borderRadius: BorderRadius.circular(12)),
                 height: MediaQuery.of(context).size.height * 0.38,
                 child: Column(
@@ -110,8 +112,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         trailing: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(color: Colors.black45)),
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: Colors.black45),
+                          ),
                           child: const Icon(
                             Icons.notifications_active,
                             color: Colors.black54,
@@ -124,7 +127,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       visible: loginType != "watchman",
                       child: Column(
                         children: [
-                          SizedBox(
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
                             height: MediaQuery.of(context).size.height * 0.19,
                             width: MediaQuery.of(context).size.width,
                             child: CarouselSlider.builder(
@@ -141,10 +145,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                         ),
                                         child: Center(
                                           child: Stack(children: [
-                                            Image.asset(
-                                                fit: BoxFit.fitWidth,
-                                                width: 330,
-                                                "lib/assets/notice_board.png.png"),
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Image.asset(
+                                                  fit: BoxFit.fitWidth,
+                                                  width: 330,
+                                                  "lib/assets/notice_board.png.png"),
+                                            ),
                                             Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceEvenly,
@@ -308,7 +316,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
-                                  color: Colors.red.shade900),
+                                  color: loginType == "watchman"
+                                      ? Colors.red.shade500
+                                      : Colors.black54),
                             ),
                           )
                         ],
@@ -405,9 +415,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.5,
                               decoration: BoxDecoration(
-                                color: loginType == "watchman"
-                                    ? Colors.white
-                                    : Colors.green.shade100,
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
