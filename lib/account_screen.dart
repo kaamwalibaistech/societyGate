@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_society/api/api_repository.dart';
+import 'package:my_society/auth/login_screen.dart';
 import 'package:my_society/constents/sizedbox.dart';
 import 'package:my_society/models/get_family_members_model.dart';
 
-import 'auth/register_screen.dart';
 import 'constents/local_storage.dart';
 import 'models/add_daily_help_model.dart';
 import 'models/add_family_member_model.dart';
 import 'models/add_vehicle_model.dart';
 import 'models/get_daily_help_model.dart';
 import 'models/get_vehicle_detail_model.dart';
+import 'privacy_policy_screen.dart';
 import 'profile_screen.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -608,34 +609,43 @@ class _AccountScreenState extends State<AccountScreen>
                               ),
                             ),
                           ),
-                          const ListTile(
-                            leading: Icon(
-                              Icons.language,
-                              color: Colors.black,
-                            ),
-                            title: Text(
-                              "language",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios_outlined,
-                              size: 18,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const ListTile(
-                            leading: Icon(
-                              Icons.privacy_tip,
-                              color: Colors.black,
-                            ),
-                            title: Text(
-                              "privacy",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios_outlined,
-                              size: 18,
-                              color: Colors.black,
+                          // const ListTile(
+                          //   leading: Icon(
+                          //     Icons.language,
+                          //     color: Colors.black,
+                          //   ),
+                          //   title: Text(
+                          //     "language",
+                          //     style: TextStyle(color: Colors.black),
+                          //   ),
+                          //   trailing: Icon(
+                          //     Icons.arrow_forward_ios_outlined,
+                          //     size: 18,
+                          //     color: Colors.black,
+                          //   ),
+                          // ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PrivacyPolicyScreen()));
+                            },
+                            child: const ListTile(
+                              leading: Icon(
+                                Icons.privacy_tip,
+                                color: Colors.black,
+                              ),
+                              title: Text(
+                                "Privacy Policy",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              trailing: Icon(
+                                Icons.arrow_forward_ios_outlined,
+                                size: 18,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                           const ListTile(
@@ -672,11 +682,12 @@ class _AccountScreenState extends State<AccountScreen>
                             onTap: () async {
                               await LocalStoragePref.instance!.clearAllPref();
 
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RegisterScreen()));
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginScreen()),
+                                (Route<dynamic> route) => true,
+                              );
                             },
                             child: const ListTile(
                               leading: Icon(

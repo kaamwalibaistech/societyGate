@@ -45,7 +45,7 @@ class LoginSuccess extends StatelessWidget {
                         style: TextStyle(fontSize: 17, color: Colors.black87),
                       ),
                       onPressed: () async {
-                        Navigator.pushReplacement(
+                        Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>

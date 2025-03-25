@@ -5,8 +5,15 @@ class TimelineScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("timeline")),
-    );
+    return Scaffold(
+        body: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 200.0),
+          child: Image.asset("lib/assets/empty.jpg"),
+        ),
+        const Text("We are working on this feature")
+      ],
+    ));
   }
 }
