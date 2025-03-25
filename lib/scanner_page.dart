@@ -1,10 +1,17 @@
 import 'dart:convert';
 
+import 'dart:developer';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:my_society/api/api_constant.dart';
+import 'package:my_society/constents/local_storage.dart';
 import 'package:my_society/constents/sizedbox.dart';
+import 'package:my_society/models/login_model.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 class ScannerPage extends StatefulWidget {
@@ -19,7 +26,6 @@ class _ScannerPageState extends State<ScannerPage> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool _dialogShown = false;
-  late String entryExitTextValue;
 
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
@@ -72,9 +78,10 @@ class _ScannerPageState extends State<ScannerPage> {
     );
   }
 
-  showScanData() {
+  void successDialog() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         content: Container(
           padding: const EdgeInsets.only(top: 18),
@@ -89,7 +96,7 @@ class _ScannerPageState extends State<ScannerPage> {
                 height: 50,
                 width: 200,
                 child: ElevatedButton(
-                  onPressed: () async {
+                  onPressed: () {
                     Navigator.pop(context);
                     controller?.resumeCamera();
                     _dialogShown = false;
@@ -105,8 +112,10 @@ class _ScannerPageState extends State<ScannerPage> {
   }
 
   showOptionDilog() {
+    LoginModel? loginModel = LocalStoragePref().getLoginModel();
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         content: Container(
           padding: const EdgeInsets.only(top: 18),
@@ -118,13 +127,12 @@ class _ScannerPageState extends State<ScannerPage> {
                 height: 80,
                 width: 200,
                 child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      entryExitTextValue = "entry";
-                    });
+                  onPressed: () async {
                     Navigator.pop(context);
-                    showScanData();
-                    controller?.pauseCamera();
+                    String watchmanId = loginModel!.user!.userId.toString();
+                    log("${result!.code}  $watchmanId");
+                    await aproveVisitor(
+                        result!.code.toString(), watchmanId, "entry");
                   },
                   child: const Text("Entry"),
                 ),
@@ -134,13 +142,12 @@ class _ScannerPageState extends State<ScannerPage> {
                 height: 80,
                 width: 200,
                 child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      entryExitTextValue = "exit";
-                    });
+                  onPressed: () async {
                     Navigator.pop(context);
-                    showScanData();
-                    controller?.pauseCamera();
+                    String watchmanId = loginModel!.user!.userId.toString();
+                    log("${result!.code}  $watchmanId");
+                    await aproveVisitor(
+                        result!.code.toString(), watchmanId, "exit");
                   },
                   child: const Text("Exit"),
                 ),
@@ -151,31 +158,77 @@ class _ScannerPageState extends State<ScannerPage> {
       ),
     );
   }
-}
 
-Future<int?> deleteVisitor(
-  String uniqueCode,
-  String watchmanId,
-  String action,
-) async {
-  String api = ApiConstant.deleteVisitor;
-  String baseUrl = ApiConstant.baseUrl;
-  Uri url = Uri.parse(baseUrl + api);
+  Future<void> aproveVisitor(
+    String uniqueCode,
+    String watchmanId,
+    String action,
+  ) async {
+    String api = ApiConstant.aproveVisitor;
+    String baseUrl = ApiConstant.baseUrl;
+    Uri url = Uri.parse(baseUrl + api);
 
-  final body = {
-    'unique_code': uniqueCode,
-    'watchman_id': watchmanId,
-    'action': action,
-  };
-  try {
-    final response = await http.post(url, body: body);
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
+    final body = {
+      'unique_code': uniqueCode,
+      'watchman_id': watchmanId,
+      'action': action,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        Fluttertoast.showToast(msg: data['message']);
 
-      return data['status'];
+        if (data['status'] == 200) {
+          //await Future.delayed(const Duration(milliseconds: 300));
+          successDialog();
+        } else {
+          // await Future.delayed(const Duration(milliseconds: 300));
+          failedDialog(data['message']);
+        }
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Error occurred: $e");
+      Navigator.pop(context);
+      controller?.resumeCamera();
+      _dialogShown = false;
     }
-  } catch (e) {
-    throw Exception(e);
   }
-  return null;
+
+  void failedDialog(String message) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: Container(
+                padding: const EdgeInsets.only(top: 18),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.4,
+                child: Column(
+                  children: [
+                    Text(
+                      message,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                    const Spacer(),
+                    SizedBox(
+                      height: 80,
+                      width: 200,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+
+                          controller?.resumeCamera();
+                          _dialogShown = false;
+                        },
+                        child: const Text(
+                          "Close",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ));
+  }
 }

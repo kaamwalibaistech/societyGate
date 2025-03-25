@@ -4,11 +4,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:my_society/constents/local_storage.dart';
 import 'package:my_society/constents/sizedbox.dart';
+import 'package:my_society/dashboard/visitors/edit_visitor.dart';
 import 'package:my_society/dashboard/visitors/network/visitor_delete.dart';
 import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_bloc.dart';
 import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_event.dart';
 import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_state.dart';
+import 'package:my_society/models/login_model.dart';
 import 'package:my_society/models/visitors_details_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -24,6 +27,7 @@ class VisitorsDetailsPage extends StatefulWidget {
 
 class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
   late String visitorId;
+  LoginModel? loginModel;
   @override
   void initState() {
     super.initState();
@@ -31,6 +35,8 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
   }
 
   fetchVisitors() {
+    loginModel = LocalStoragePref().getLoginModel();
+
     setState(() {
       visitorId = widget.visitorID;
     });
@@ -84,11 +90,15 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
   }
 
   Widget _buildError(String msg) {
-    return Center(
-      child: Text(
-        msg,
-        style: const TextStyle(color: Colors.red),
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset('lib/assets/empty.jpg'),
+        Text(
+          msg,
+          style: const TextStyle(color: Colors.red, fontSize: 20),
+        ),
+      ],
     );
   }
 
@@ -199,80 +209,91 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
                     children: [
                       _infoTile(
                           "Date", visitorsDetailModel?.data?.visitingDate),
-                      _infoTile(
-                          "Entry Time", visitorsDetailModel?.data?.entryTime),
+                      _infoTile("Purpose",
+                          visitorsDetailModel?.data?.visitingPurpose),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  _infoTile(
-                      "Purpose", visitorsDetailModel?.data?.visitingPurpose),
+                  sizedBoxH15(context),
+                  _infoTile("Entry Time", visitorsDetailModel?.data?.entryTime),
+                  sizedBoxH15(context),
+                  _infoTile("Exit Time", visitorsDetailModel?.data?.exitTime),
+                  // const SizedBox(height: 16),
+                  // _infoTile(
+                  //     "Purpose", visitorsDetailModel?.data?.visitingPurpose),
                 ],
               ),
             ),
           ),
           sizedBoxH15(context),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.edit,
-                  color: Colors.black,
+          Visibility(
+            visible: loginModel?.user?.role == "member",
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditVisitor(
+                                visitorsDetailModel: visitorsDetailModel)));
+                  },
+                  icon: const Icon(
+                    Icons.edit,
+                    color: Colors.black,
+                  ),
+                  label: const Text("Edit"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade300,
+                    foregroundColor: Colors.black,
+                  ),
                 ),
-                label: const Text("Edit"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.shade300,
-                  foregroundColor: Colors.black,
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            title: Text("Delete this visitor?"),
-                            content: Text("You can add this visitor again!"),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("Cancel")),
-                              TextButton(
-                                  onPressed: () async {
-                                    final deleted =
-                                        await deleteVisitor(visitorId);
-                                    if (deleted != null) {
-                                      if (deleted.containsValue(200)) {
+                ElevatedButton.icon(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text("Delete this visitor?"),
+                              content: Text("You can add this visitor again!"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Cancel")),
+                                TextButton(
+                                    onPressed: () async {
+                                      final deleted =
+                                          await deleteVisitor(visitorId);
+                                      if (deleted != null) {
+                                        if (deleted.containsValue(200)) {
+                                          Fluttertoast.showToast(
+                                            msg: deleted["message"],
+                                          );
+                                          Navigator.pop(context);
+                                        }
+                                      } else {
                                         Fluttertoast.showToast(
-                                          msg: deleted["message"],
-                                        );
-                                        Navigator.pop(context);
+                                            msg: "Try again!",
+                                            backgroundColor: Colors.red);
                                       }
-                                    } else {
-                                      Fluttertoast.showToast(
-                                          msg: "Try again!",
-                                          backgroundColor: Colors.red);
-                                    }
-                                  },
-                                  child: Text("Delete"))
-                            ],
-                          ));
-                },
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.black,
+                                    },
+                                    child: Text("Delete"))
+                              ],
+                            ));
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.black,
+                  ),
+                  label: const Text("Delete"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red.shade200,
+                    foregroundColor: Colors.black,
+                  ),
                 ),
-                label: const Text("Delete"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red.shade200,
-                  foregroundColor: Colors.black,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

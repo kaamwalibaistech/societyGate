@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_society/constents/local_storage.dart';
@@ -16,6 +18,7 @@ class VisitorsPage extends StatefulWidget {
 }
 
 class _VisitorsPageState extends State<VisitorsPage> {
+  LoginModel? loginModel;
   @override
   void initState() {
     super.initState();
@@ -23,16 +26,19 @@ class _VisitorsPageState extends State<VisitorsPage> {
   }
 
   fetchVisitors() {
-    LoginModel? loginModel = LocalStoragePref().getLoginModel();
+    final loginModelStorage = LocalStoragePref().getLoginModel();
 
+    setState(() {
+      loginModel = loginModelStorage;
+    });
     if (loginModel != null) {
-      final societyId = loginModel.user!.societyId;
-      final flatId = loginModel.user!.flatId;
+      final societyId = loginModel?.user?.societyId;
+      final flatId = loginModel?.user?.flatId;
 
       context.read<VisitorsBloc>().add(GetVisitorsEvent(
           soceityId: societyId.toString(), flatId: flatId.toString()));
     } else {
-      debugPrint("LoginModel not found in local storage.");
+      log("LoginModel not found in local storage.");
     }
   }
 
@@ -41,12 +47,16 @@ class _VisitorsPageState extends State<VisitorsPage> {
     return DefaultTabController(
       length: 3, // Number of tabs
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddVisitorsPage()));
-            }),
+        floatingActionButton: loginModel?.user?.role != "watchman"
+            ? FloatingActionButton(
+                child: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddVisitorsPage()));
+                })
+            : null,
         appBar: AppBar(
           backgroundColor: Colors.deepPurpleAccent,
           title: const Text(
@@ -130,7 +140,8 @@ class _VisitorsPageState extends State<VisitorsPage> {
                 ],
               );
             } else {
-              return CircularProgressIndicator();
+              return Text("data");
+              //CircularProgressIndicator();
             }
           },
         ),
@@ -257,20 +268,30 @@ class _VisitorsPageState extends State<VisitorsPage> {
           itemCount: regularvisitorsList?.length ?? 0,
           itemBuilder: (context, index) {
             final regularvisitors = regularvisitorsList![index];
-            return Container(
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                height: 75,
-                decoration: BoxDecoration(
-                    color: Colors.purple.shade50,
-                    borderRadius: BorderRadius.circular(20)),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    foregroundImage: AssetImage("lib/assets/qr.jpg"),
-                    radius: 30,
-                  ),
-                  title: Text(regularvisitors.name ?? "Not Available"),
-                  subtitle: Text(regularvisitors.phone ?? "Not Available"),
-                ));
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VisitorsDetailsPage(
+                            visitorID: regularvisitors.visitorId.toString())));
+              },
+              child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                  height: 75,
+                  decoration: BoxDecoration(
+                      color: Colors.purple.shade50,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      foregroundImage: AssetImage("lib/assets/qr.jpg"),
+                      radius: 30,
+                    ),
+                    title: Text(regularvisitors.name ?? "Not Available"),
+                    subtitle: Text(regularvisitors.phone ?? "Not Available"),
+                  )),
+            );
           }),
     );
   }
@@ -285,20 +306,30 @@ class _VisitorsPageState extends State<VisitorsPage> {
           itemCount: pastVisitorsList?.length ?? 0,
           itemBuilder: (context, index) {
             final regularvisitors = pastVisitorsList![index];
-            return Container(
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                height: 75,
-                decoration: BoxDecoration(
-                    color: Colors.purple.shade50,
-                    borderRadius: BorderRadius.circular(20)),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    foregroundImage: AssetImage("lib/assets/qr.jpg"),
-                    radius: 30,
-                  ),
-                  title: Text(regularvisitors.name ?? "Not Available"),
-                  subtitle: Text(regularvisitors.phone ?? "Not Available"),
-                ));
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VisitorsDetailsPage(
+                            visitorID: regularvisitors.visitorId.toString())));
+              },
+              child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                  height: 75,
+                  decoration: BoxDecoration(
+                      color: Colors.purple.shade50,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      foregroundImage: AssetImage("lib/assets/qr.jpg"),
+                      radius: 30,
+                    ),
+                    title: Text(regularvisitors.name ?? "Not Available"),
+                    subtitle: Text(regularvisitors.phone ?? "Not Available"),
+                  )),
+            );
           }),
     );
   }

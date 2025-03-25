@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:my_society/models/memberlist_model.dart';
-
 import '../../../api/api_constant.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,7 +16,7 @@ Future<MemberlistModel?> memberListApi(
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
 
-      data.forEach((key, value) => log('$key: $value'));
+      //data.forEach((key, value) => log('$key: $value'));
 
       return MemberlistModel.fromJson(data);
     }

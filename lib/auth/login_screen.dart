@@ -7,8 +7,6 @@ import 'package:my_society/auth/login_success.dart';
 import 'package:my_society/auth/register_member.dart';
 import 'package:my_society/constents/sizedbox.dart';
 
-import '../constents/local_storage.dart';
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -36,9 +34,6 @@ class _CreateNewAccountState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) async {
-
-
-
         if (state is LoginLoadingState) {
           showDialog(
             context: context,
@@ -48,7 +43,6 @@ class _CreateNewAccountState extends State<LoginScreen> {
             ),
           );
         } else if (state is LoginSuccessState) {
-
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const LoginSuccess()),
