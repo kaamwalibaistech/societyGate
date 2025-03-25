@@ -6,6 +6,7 @@ import 'package:my_society/dashboard/members/member_bloc/members_bloc.dart';
 import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_bloc.dart';
 import 'package:my_society/dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'package:my_society/navigation_screen.dart';
+import 'package:my_society/navigation_screen2.dart';
 
 import 'auth/login_bloc/login_bloc.dart';
 import 'auth/register_screen.dart';
@@ -52,9 +53,8 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
             useMaterial3: true,
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
-        home: isLoggedin == true
-            ? const Navigationscreen()
-            : const RegisterScreen(),
+        home:
+            isLoggedin == true ? const BottomNavbar() : const RegisterScreen(),
       ),
     );
   }
