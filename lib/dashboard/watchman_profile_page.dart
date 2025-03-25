@@ -108,10 +108,12 @@ class _WatchmanProfilePageState extends State<WatchmanProfilePage> {
                     GestureDetector(
                       onTap: () async {
                         await LocalStoragePref.instance!.clearAllPref();
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginScreen()));
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()),
+                          (Route<dynamic> route) => false,
+                        );
                       },
                       child: const ListTile(
                         leading: Icon(

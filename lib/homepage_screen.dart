@@ -127,361 +127,135 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         ),
                       ),
                     ),
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                     Visibility(
                       visible: loginType != "watchman",
                       child: Column(
                         children: [
-
                           SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.19,
-                              width: MediaQuery.of(context).size.width,
-                              child: data!.data.announcements.isNotEmpty
-                                  ? CarouselSlider.builder(
-                                      itemCount:
-                                          data?.data.announcements.length ?? 1,
-                                      itemBuilder: (context, index, realIndex) {
-                                        return SizedBox(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: const Color.fromARGB(
-                                                    255, 19, 52, 84),
-                                              ),
-                                              child: Center(
-                                                child: Stack(children: [
-                                                  Image.asset(
-                                                      fit: BoxFit.fitWidth,
-                                                      width: 330,
-                                                      "lib/assets/notice_board.png.png"),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                                top: 10.0,
-                                                                left: 20,
-                                                                right: 20),
-                                                        child: Center(
-                                                          child: Text(
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            data
-                                                                    ?.data
-                                                                    .announcements[
-                                                                        index]
-                                                                    .title ??
-                                                                "",
-                                                            style: const TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Center(
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      25.0),
-                                                          child: Text(
-                                                            maxLines: 5,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            data
-                                                                    ?.data
-                                                                    .announcements[
-                                                                        index]
-                                                                    .description ??
-                                                                "",
-                                                            style:
-                                                                const TextStyle(
-                                                                    color: Colors
-                                                                        .black),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Center(
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      25.0),
-                                                          child: Text(
-                                                            "Announcement Type : ${data?.data.announcements[index].announcementType ?? ""}",
-                                                            style:
-                                                                const TextStyle(
-                                                                    color: Colors
-                                                                        .black),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                ]),
-                                              ),
-                                            ));
-                                      },
-
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10),
                             height: MediaQuery.of(context).size.height * 0.19,
                             width: MediaQuery.of(context).size.width,
                             child: CarouselSlider.builder(
-                                itemCount: data?.data.announcements.length ?? 1,
-                                itemBuilder: (context, index, realIndex) {
-                                  return SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Container(
-                                        decoration: BoxDecoration(
+                              itemCount:
+                                  (data?.data.announcements.isNotEmpty ?? false)
+                                      ? data!.data.announcements.length
+                                      : 1,
+                              itemBuilder: (context, index, realIndex) {
+                                bool hasAnnouncements =
+                                    data?.data.announcements.isNotEmpty ??
+                                        false;
+
+                                return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color:
+                                        const Color.fromARGB(255, 19, 52, 84),
+                                  ),
+                                  child: Center(
+                                    child: Stack(
+                                      children: [
+                                        ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: const Color.fromARGB(
-                                              255, 19, 52, 84),
+                                          child: Image.asset(
+                                            "lib/assets/notice_board.png.png",
+                                            fit: BoxFit.fitWidth,
+                                            width: 330,
+                                          ),
                                         ),
-                                        child: Center(
-                                          child: Stack(children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.asset(
-                                                  fit: BoxFit.fitWidth,
-                                                  width: 330,
-                                                  "lib/assets/notice_board.png.png"),
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 10.0,
-                                                          left: 20,
-                                                          right: 20),
-                                                  child: Center(
-                                                    child: Text(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      data
-                                                              ?.data
-                                                              .announcements[
-                                                                  index]
-                                                              .title ??
-                                                          "",
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 25.0),
-                                                    child: Text(
-                                                      maxLines: 5,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      data
-                                                              ?.data
-                                                              .announcements[
-                                                                  index]
-                                                              .description ??
-                                                          "",
-                                                      style: const TextStyle(
-                                                          color: Colors.black),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 25.0),
-                                                    child: Text(
-                                                      "Announcement Type : ${data?.data.announcements[index].announcementType ?? ""}",
-                                                      style: const TextStyle(
-                                                          color: Colors.black),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ]),
-                                        ),
-                                      ));
-                                },
-
-                                      /*      SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color:
-                                            const Color.fromARGB(255, 19, 52, 84),
-                                      ),
-                                      child: Center(
-                                        child: Stack(children: [
-                                          Image.asset(
-                                              fit: BoxFit.fitWidth,
-                                              width: 330,
-                                              "lib/assets/notice_board.png.png"),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              sizedBoxH5(context),
-                                              Center(
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0,
+                                                  left: 20,
+                                                  right: 20),
+                                              child: Center(
                                                 child: Text(
-                                                  data!.data.announcements[0].title,
+                                                  hasAnnouncements
+                                                      ? data!
+                                                          .data
+                                                          .announcements[index]
+                                                          .title
+                                                      : "No Notices",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            if (hasAnnouncements) ...[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 25.0),
+                                                child: Text(
+                                                  data!
+                                                      .data
+                                                      .announcements[index]
+                                                      .description,
+                                                  maxLines: 5,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.center,
                                                   style: const TextStyle(
                                                       color: Colors.black),
                                                 ),
                                               ),
-                                              sizedBoxH5(context),
-                                              Center(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                          horizontal: 25.0),
-                                                  child: Text(
-                                                    data!.data.announcements[0]
-                                                        .description,
-                                                    style: const TextStyle(
-                                                        color: Colors.black),
-                                                  ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 25.0),
+                                                child: Text(
+                                                  "Announcement Type: ${data!.data.announcements[index].announcementType}",
+                                                  style: const TextStyle(
+                                                      color: Colors.black),
                                                 ),
                                               ),
-                                              Center(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                          horizontal: 25.0),
-                                                  child: Text("Announcement Type : ${
-                                                    data!.data.announcements[0]
-                                                        .announcementType}",
-                                                    style: const TextStyle(
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
-                                              ),
-                                              sizedBoxH5(context)
                                             ],
-                                          )
-                                        ]),
-                                      ),
-                                    )),
-                                SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color:
-                                            const Color.fromARGB(255, 19, 52, 84),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          data!.data.announcements[0].description,
-                                          style:
-                                              const TextStyle(color: Colors.white),
+                                          ],
                                         ),
-                                      ),
-                                    )),
-                                SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color:
-                                            const Color.fromARGB(255, 19, 52, 84),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          data!.data.announcements[0].description,
-                                          style:
-                                              const TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                    )),*/
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                              options: CarouselOptions(
+                                autoPlay: true,
+                                initialPage: 0,
+                                autoPlayCurve: Curves.fastOutSlowIn,
+                                aspectRatio: 16 / 9,
+                                enlargeCenterPage: true,
+                              ),
+                            ),
+                          ),
 
-                                      options: CarouselOptions(
-                                        autoPlay: true,
-                                        initialPage: 0,
-                                        autoPlayCurve: Curves.fastOutSlowIn,
-                                        aspectRatio: 16 / 9,
-                                        enlargeCenterPage: true,
-                                      ))
-                                  : CarouselSlider.builder(
-                                      itemCount: 1,
-                                      itemBuilder: (context, index, realIndex) {
-                                        return SizedBox(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: const Color.fromARGB(
-                                                    255, 19, 52, 84),
-                                              ),
-                                              child: Center(
-                                                child: Stack(children: [
-                                                  Image.asset(
-                                                      fit: BoxFit.fitWidth,
-                                                      width: 330,
-                                                      "lib/assets/notice_board.png.png"),
-                                                  const Center(
-                                                    child: Text("No Notices"),
-                                                  )
-                                                ]),
-                                              ),
-                                            ));
-                                      },
-                                      options: CarouselOptions(
-                                        autoPlay: true,
-                                        initialPage: 0,
-                                        autoPlayCurve: Curves.fastOutSlowIn,
-                                        aspectRatio: 16 / 9,
-                                        enlargeCenterPage: true,
-                                      ))),
+                          // Community Section
                           Padding(
                             padding: const EdgeInsets.only(left: 22.0, top: 20),
                             child: Text(
                               "Community",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: loginType == "watchman"
-                                      ? Colors.red.shade500
-                                      : Colors.black54),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: loginType == "watchman"
+                                    ? Colors.red.shade500
+                                    : Colors.black54,
+                              ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     Visibility(
                       visible: loginType == "watchman",
                       child: GestureDetector(
