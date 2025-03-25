@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:my_society/api/api_constant.dart';
 import 'package:my_society/constents/sizedbox.dart';
@@ -61,7 +61,7 @@ class _ScannerPageState extends State<ScannerPage> {
         sizedBoxH30(context),
         Positioned(
             top: MediaQuery.of(context).size.height * 0.14,
-            child: Text(
+            child: const Text(
               "Society Gate",
               style: TextStyle(
                   color: Colors.white,

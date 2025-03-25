@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_society/constents/sizedbox.dart';
+import 'package:my_society/manual_visitors_screen.dart';
 
 import '../auth/login_screen.dart';
 import '../constents/local_storage.dart';
@@ -26,28 +27,37 @@ class _WatchmanProfilePageState extends State<WatchmanProfilePage> {
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              Container(
-                  margin: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 1, color: Colors.amber),
-                      color: Colors.amber.shade50,
-                      boxShadow: [
-                        BoxShadow(
-                            offset: const Offset(0, 1),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            color: Colors.amber.shade100)
-                      ]),
-                  height: MediaQuery.of(context).size.height * 0.10,
-                  width: MediaQuery.of(context).size.width,
-                  child: const Center(child: Text("Add Manual Visitor"))),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ManualVisitorsScreen()));
+                },
+                child: Container(
+                    margin: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(width: 1, color: Colors.amber),
+                        color: Colors.amber.shade50,
+                        boxShadow: [
+                          BoxShadow(
+                              offset: const Offset(0, 1),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              color: Colors.amber.shade100)
+                        ]),
+                    height: MediaQuery.of(context).size.height * 0.10,
+                    width: MediaQuery.of(context).size.width,
+                    child: const Center(child: Text("Add Manual Visitor"))),
+              ),
               sizedBoxH20(context),
               const Divider(
                 indent: 15,
                 endIndent: 15,
               ),
               Container(
+                decoration: const BoxDecoration(),
                 // height: MediaQuery.of(context).size.height * 0.50,
                 child: Column(
                   children: [

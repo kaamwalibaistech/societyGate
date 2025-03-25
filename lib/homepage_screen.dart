@@ -10,9 +10,12 @@ import 'package:my_society/models/login_model.dart';
 import 'package:my_society/scanner_page.dart';
 
 import 'api/api_repository.dart';
+import 'book_amenities.dart';
 import 'constents/sizedbox.dart';
 import 'dashboard/notice_board/notice_board_screen.dart';
 import 'models/homepage_model.dart';
+import 'payment_screen.dart';
+import 'shops_screen.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -126,96 +129,113 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.19,
-                            width: MediaQuery.of(context).size.width,
-                            child: CarouselSlider.builder(
-                                itemCount: data?.data.announcements.length ?? 1,
-                                itemBuilder: (context, index, realIndex) {
-                                  return SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: const Color.fromARGB(
-                                              255, 19, 52, 84),
-                                        ),
-                                        child: Center(
-                                          child: Stack(children: [
-                                            Image.asset(
-                                                fit: BoxFit.fitWidth,
-                                                width: 330,
-                                                "lib/assets/notice_board.png.png"),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 10.0,
-                                                          left: 20,
-                                                          right: 20),
-                                                  child: Center(
-                                                    child: Text(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      data
-                                                              ?.data
-                                                              .announcements[
-                                                                  index]
-                                                              .title ??
-                                                          "",
-                                                      style: const TextStyle(
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 25.0),
-                                                    child: Text(
-                                                      maxLines: 5,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      data
-                                                              ?.data
-                                                              .announcements[
-                                                                  index]
-                                                              .description ??
-                                                          "",
-                                                      style: const TextStyle(
-                                                          color: Colors.black),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 25.0),
-                                                    child: Text(
-                                                      "Announcement Type : ${data?.data.announcements[index].announcementType ?? ""}",
-                                                      style: const TextStyle(
-                                                          color: Colors.black),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ]),
-                                        ),
-                                      ));
-                                },
+                              height: MediaQuery.of(context).size.height * 0.19,
+                              width: MediaQuery.of(context).size.width,
+                              child: data!.data.announcements.isNotEmpty
+                                  ? CarouselSlider.builder(
+                                      itemCount:
+                                          data?.data.announcements.length ?? 1,
+                                      itemBuilder: (context, index, realIndex) {
+                                        return SizedBox(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: const Color.fromARGB(
+                                                    255, 19, 52, 84),
+                                              ),
+                                              child: Center(
+                                                child: Stack(children: [
+                                                  Image.asset(
+                                                      fit: BoxFit.fitWidth,
+                                                      width: 330,
+                                                      "lib/assets/notice_board.png.png"),
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                top: 10.0,
+                                                                left: 20,
+                                                                right: 20),
+                                                        child: Center(
+                                                          child: Text(
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            data
+                                                                    ?.data
+                                                                    .announcements[
+                                                                        index]
+                                                                    .title ??
+                                                                "",
+                                                            style: const TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Center(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      25.0),
+                                                          child: Text(
+                                                            maxLines: 5,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            data
+                                                                    ?.data
+                                                                    .announcements[
+                                                                        index]
+                                                                    .description ??
+                                                                "",
+                                                            style:
+                                                                const TextStyle(
+                                                                    color: Colors
+                                                                        .black),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Center(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      25.0),
+                                                          child: Text(
+                                                            "Announcement Type : ${data?.data.announcements[index].announcementType ?? ""}",
+                                                            style:
+                                                                const TextStyle(
+                                                                    color: Colors
+                                                                        .black),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ]),
+                                              ),
+                                            ));
+                                      },
 
-                                /*      SizedBox(
+                                      /*      SizedBox(
                                     width: MediaQuery.of(context).size.width,
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -307,14 +327,47 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                       ),
                                     )),*/
 
-                                options: CarouselOptions(
-                                  autoPlay: true,
-                                  initialPage: 0,
-                                  autoPlayCurve: Curves.fastOutSlowIn,
-                                  aspectRatio: 16 / 9,
-                                  enlargeCenterPage: true,
-                                )),
-                          ),
+                                      options: CarouselOptions(
+                                        autoPlay: true,
+                                        initialPage: 0,
+                                        autoPlayCurve: Curves.fastOutSlowIn,
+                                        aspectRatio: 16 / 9,
+                                        enlargeCenterPage: true,
+                                      ))
+                                  : CarouselSlider.builder(
+                                      itemCount: 1,
+                                      itemBuilder: (context, index, realIndex) {
+                                        return SizedBox(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: const Color.fromARGB(
+                                                    255, 19, 52, 84),
+                                              ),
+                                              child: Center(
+                                                child: Stack(children: [
+                                                  Image.asset(
+                                                      fit: BoxFit.fitWidth,
+                                                      width: 330,
+                                                      "lib/assets/notice_board.png.png"),
+                                                  const Center(
+                                                    child: Text("No Notices"),
+                                                  )
+                                                ]),
+                                              ),
+                                            ));
+                                      },
+                                      options: CarouselOptions(
+                                        autoPlay: true,
+                                        initialPage: 0,
+                                        autoPlayCurve: Curves.fastOutSlowIn,
+                                        aspectRatio: 16 / 9,
+                                        enlargeCenterPage: true,
+                                      ))),
                           Padding(
                             padding: const EdgeInsets.only(left: 22.0, top: 20),
                             child: Text(
@@ -394,19 +447,19 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const MembersPage()));
+                                  builder: (context) => const PaymentScreen()));
                           break;
                         case 4:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const MembersPage()));
+                                  builder: (context) => const BookAmenities()));
                           break;
                         case 5:
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const MembersPage()));
+                                  builder: (context) => const ShopsScreen()));
                           break;
                       }
                     },
