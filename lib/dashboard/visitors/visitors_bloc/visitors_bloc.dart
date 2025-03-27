@@ -13,6 +13,7 @@ part 'visitors_state.dart';
 class VisitorsBloc extends Bloc<VisitorsEvent, VisitorsState> {
   VisitorsBloc() : super(VisitorsInitialState()) {
     on<GetVisitorsEvent>(_getList);
+    on<GetEnteredVisitorsEvent>(_getEnteredList);
   }
 
   void _getList(GetVisitorsEvent event, Emitter<VisitorsState> emit) async {
@@ -35,6 +36,30 @@ class VisitorsBloc extends Bloc<VisitorsEvent, VisitorsState> {
         emit(VisitorsSuccessState(visitorsListModel: visitorsListModel));
       } else {
         emit(VisitorsErrorState(visitorsListModel.message.toString()));
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  void _getEnteredList(
+      GetEnteredVisitorsEvent event, Emitter<VisitorsState> emit) async {
+    List<Map<String, dynamic>>? getManualvisitorsList;
+    LoginModel? loginModel = LocalStoragePref().getLoginModel();
+
+    try {
+      if (loginModel!.user!.role == "watchman") {
+        log(loginModel.user!.role);
+        final memberData = await enteredVisitorsListForWatchmanApi(
+            loginModel.user!.societyId.toString(), "1", "10");
+        getManualvisitorsList = memberData;
+      }
+
+      if (getManualvisitorsList!.isNotEmpty) {
+        emit(
+            VisitorsSuccessState(getManualvisitorsList: getManualvisitorsList));
+      } else {
+        // emit(VisitorsErrorState(visitorsListModel.message.toString()));
       }
     } catch (e) {
       throw Exception(e);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_society/api/api_repository.dart';
-import 'package:my_society/auth/login_screen.dart';
 import 'package:my_society/constents/sizedbox.dart';
 import 'package:my_society/models/get_family_members_model.dart';
 
@@ -12,8 +11,7 @@ import 'models/add_family_member_model.dart';
 import 'models/add_vehicle_model.dart';
 import 'models/get_daily_help_model.dart';
 import 'models/get_vehicle_detail_model.dart';
-import 'privacy_policy_screen.dart';
-import 'profile_screen.dart';
+import 'setting_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -131,6 +129,15 @@ class _AccountScreenState extends State<AccountScreen>
                               loginModel.user?.uemail ?? "---",
                               style: const TextStyle(color: Colors.grey),
                             ),
+                            trailing: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SettingScreen()));
+                                },
+                                child: const Icon(Icons.settings)),
                           ),
                         ),
                         ListTile(
@@ -151,563 +158,410 @@ class _AccountScreenState extends State<AccountScreen>
                   height: 20,
                 ),
                 Container(
-                  decoration:
-                      BoxDecoration(color: Theme.of(context).primaryColor),
-                  child: TabBar(
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      unselectedLabelColor: Colors.grey,
-                      labelColor: Colors.white,
-                      controller: _tabController,
-                      tabs: const [
-                        Tab(
-                          text: "Household",
-                        ),
-                        Tab(
-                          text: "Settings",
-                        )
-                      ]),
-                ),
+                    height: 50,
+                    decoration:
+                        BoxDecoration(color: Theme.of(context).primaryColor),
+                    child: const Center(
+                      child: Text(
+                        "Household",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )),
                 Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Container(
                     decoration: const BoxDecoration(color: Colors.white),
-                    height: MediaQuery.of(context).size.height * 0.50,
-                    child: TabBarView(controller: _tabController, children: [
-                      SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            ListTile(
-                              trailing: GestureDetector(
-                                onTap: () {
-                                  familyMemberModelBottomSheet();
-                                },
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.05,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.19,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Theme.of(context).primaryColor),
-                                  child: const Center(
-                                    child: Text(
-                                      "Add",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 15),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              subtitle: const Text(
-                                "Add family  member for quick entry",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              title: const Text("My family"),
-                            ),
-                            const Text(
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              "----------------------------------------------------------------------------------------------",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            sizedBoxH10(context),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.12,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount:
-                                    getFamilyMemberData?.familyMembers.length ??
-                                        2,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          border:
-                                              Border.all(color: Colors.grey),
-                                          color: Colors.white),
-                                      // height: MediaQuery.of(context).size.height *
-                                      //     0.10,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.30,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 5.0, top: 5),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  border: Border.all(
-                                                      color: Colors.black),
-                                                  color: Colors.white),
-                                              height: 30,
-                                              width: 30,
-                                              child: const Icon(
-                                                Icons.person,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 5.0, left: 5),
-                                            child: Text(getFamilyMemberData
-                                                    ?.familyMembers[index]
-                                                    .uname ??
-                                                ""),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 5.0),
-                                            child: Text(
-                                              getFamilyMemberData
-                                                      ?.familyMembers[index]
-                                                      .relation ??
-                                                  "",
-                                              style: const TextStyle(
-                                                  color: Colors.grey),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 15.0),
-                              child: Container(
-                                height: 20,
-                                decoration: const BoxDecoration(
-                                    color: Color.fromARGB(255, 241, 237, 237)),
-                              ),
-                            ),
-                            ListTile(
-                              trailing: GestureDetector(
-                                onTap: () {
-                                  dailyHelpModelBottomSheet();
-                                },
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.05,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.19,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Theme.of(context).primaryColor),
-                                  child: const Center(
-                                    child: Text(
-                                      "Add",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 15),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              subtitle: const Text(
-                                overflow: TextOverflow.ellipsis,
-                                "Add maid, helper, launder for quick entry",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              title: const Text("Daily help"),
-                            ),
-                            const Text(
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              "----------------------------------------------------------------------------------------------",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            sizedBoxH10(context),
-                            SizedBox(
-                              height: 100,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount:
-                                    getDailyHelpData?.employees.length ?? 2,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          border:
-                                              Border.all(color: Colors.grey),
-                                          color: Colors.white),
-                                      // height: MediaQuery.of(context).size.height *
-                                      //     0.10,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.30,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 5.0, top: 5),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  border: Border.all(
-                                                      color: Colors.black),
-                                                  color: Colors.white),
-                                              height: 30,
-                                              width: 30,
-                                              child: const Icon(
-                                                Icons.person,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 5.0, left: 5),
-                                            child: Text(getDailyHelpData
-                                                    ?.employees[index].name ??
-                                                ""),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 5.0),
-                                            child: Text(
-                                              getDailyHelpData?.employees[index]
-                                                      .empType ??
-                                                  "",
-                                              style: const TextStyle(
-                                                  color: Colors.grey),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 15.0),
-                              child: Container(
-                                height: 20,
-                                decoration: const BoxDecoration(
-                                    color: Color.fromARGB(255, 241, 237, 237)),
-                              ),
-                            ),
-                            ListTile(
-                              trailing: GestureDetector(
-                                onTap: () {
-                                  myVehicleModelBottomSheet();
-                                },
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.05,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.19,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Theme.of(context).primaryColor),
-                                  child: const Center(
-                                    child: Text(
-                                      "Add",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 15),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              subtitle: const Text(
-                                overflow: TextOverflow.ellipsis,
-                                "Add your vehicle for quick entry",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              title: const Text("My vehicle"),
-                            ),
-                            const Text(
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              "----------------------------------------------------------------------------------------------",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            sizedBoxH10(context),
-                            SizedBox(
-                              height: 100,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: getVehicledetails?.data.length ?? 2,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          border:
-                                              Border.all(color: Colors.grey),
-                                          color: Colors.white),
-                                      // height: MediaQuery.of(context).size.height *
-                                      //     0.10,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.30,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 5.0, top: 5),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  border: Border.all(
-                                                      color: Colors.black),
-                                                  color: Colors.white),
-                                              height: 30,
-                                              width: 30,
-                                              child: const Icon(
-                                                Icons.car_repair_outlined,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 5.0, left: 5),
-                                            child: Text(getVehicledetails
-                                                    ?.data[index].vehicleNo ??
-                                                ""),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 5.0),
-                                            child: Text(
-                                              getVehicledetails
-                                                      ?.data[index].model ??
-                                                  "",
-                                              style: const TextStyle(
-                                                  color: Colors.grey),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            // Padding(
-                            //   padding:
-                            //       const EdgeInsets.symmetric(vertical: 15.0),
-                            //   child: Container(
-                            //     height: 20,
-                            //     decoration: const BoxDecoration(
-                            //         color: Color.fromARGB(255, 241, 237, 237)),
-                            //   ),
-                            // ),
-                            // ListTile(
-                            //   trailing: GestureDetector(
-                            //     onTap: () {
-                            //       frequentEntryModelBottomSheet();
-                            //     },
-                            //     child: Container(
-                            //       height:
-                            //           MediaQuery.of(context).size.height * 0.05,
-                            //       width:
-                            //           MediaQuery.of(context).size.width * 0.19,
-                            //       decoration: BoxDecoration(
-                            //           borderRadius: BorderRadius.circular(5),
-                            //           color: Theme.of(context).primaryColor),
-                            //       child: const Center(
-                            //         child: Text(
-                            //           "Add",
-                            //           style: TextStyle(
-                            //               color: Colors.white, fontSize: 15),
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ),
-                            //   subtitle: const Text(
-                            //     overflow: TextOverflow.ellipsis,
-                            //     "Add frequent person for quick entry",
-                            //     style: TextStyle(color: Colors.grey),
-                            //   ),
-                            //   title: const Text("Frequent entry"),
-                            // ),
-                            // const Text(
-                            //   overflow: TextOverflow.ellipsis,
-                            //   maxLines: 1,
-                            //   "----------------------------------------------------------------------------------------------",
-                            //   style: TextStyle(color: Colors.grey),
-                            // ),
-                            // sizedBoxH10(context),
-                            // SizedBox(
-                            //   height: 100,
-                            //   child: ListView.builder(
-                            //     shrinkWrap: true,
-                            //     scrollDirection: Axis.horizontal,
-                            //     itemCount: 5,
-                            //     itemBuilder: (BuildContext context, int index) {
-                            //       return Padding(
-                            //         padding: const EdgeInsets.symmetric(
-                            //             horizontal: 10.0),
-                            //         child: Container(
-                            //           decoration: BoxDecoration(
-                            //               borderRadius:
-                            //                   BorderRadius.circular(5),
-                            //               border:
-                            //                   Border.all(color: Colors.grey),
-                            //               color: Colors.white),
-                            //           // height: MediaQuery.of(context).size.height *
-                            //           //     0.10,
-                            //           width: MediaQuery.of(context).size.width *
-                            //               0.36,
-                            //           child: const Center(child: Text("data")),
-                            //         ),
-                            //       );
-                            //     },
-                            //   ),
-                            // ),
-                            sizedBoxH10(context),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          ListTile(
-                            leading: const Icon(
-                              Icons.person,
-                              color: Colors.black,
-                            ),
-                            title: const Text(
-                              "Edit profile",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            trailing: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ProfileScreen()));
-                              },
-                              child: const Icon(
-                                Icons.arrow_forward_ios_outlined,
-                                size: 18,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          // const ListTile(
-                          //   leading: Icon(
-                          //     Icons.language,
-                          //     color: Colors.black,
-                          //   ),
-                          //   title: Text(
-                          //     "language",
-                          //     style: TextStyle(color: Colors.black),
-                          //   ),
-                          //   trailing: Icon(
-                          //     Icons.arrow_forward_ios_outlined,
-                          //     size: 18,
-                          //     color: Colors.black,
-                          //   ),
-                          // ),
-                          GestureDetector(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          trailing: GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PrivacyPolicyScreen()));
+                              familyMemberModelBottomSheet();
                             },
-                            child: const ListTile(
-                              leading: Icon(
-                                Icons.privacy_tip,
-                                color: Colors.black,
-                              ),
-                              title: Text(
-                                "Privacy Policy",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              trailing: Icon(
-                                Icons.arrow_forward_ios_outlined,
-                                size: 18,
-                                color: Colors.black,
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.05,
+                              width: MediaQuery.of(context).size.width * 0.19,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Theme.of(context).primaryColor),
+                              child: const Center(
+                                child: Text(
+                                  "Add",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
+                                ),
                               ),
                             ),
                           ),
-                          const ListTile(
-                            leading: Icon(
-                              Icons.privacy_tip_outlined,
-                              color: Colors.black,
-                            ),
-                            title: Text(
-                              "terms & conditions",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios_outlined,
-                              size: 18,
-                              color: Colors.black,
-                            ),
+                          subtitle: const Text(
+                            "Add family  member for quick entry",
+                            style: TextStyle(color: Colors.grey),
                           ),
-                          const ListTile(
-                            leading: Icon(
-                              Icons.help,
-                              color: Colors.black,
-                            ),
-                            title: Text(
-                              "Help & support",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios_outlined,
-                              size: 18,
-                              color: Colors.black,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              await LocalStoragePref.instance!.clearAllPref();
-
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginScreen()),
-                                (Route<dynamic> route) => true,
+                          title: const Text("My family"),
+                        ),
+                        const Text(
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          "------------------------------------------------------------------------------------",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        sizedBoxH10(context),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.12,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount:
+                                getFamilyMemberData?.familyMembers.length ?? 2,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(color: Colors.grey),
+                                      color: Colors.white),
+                                  // height: MediaQuery.of(context).size.height *
+                                  //     0.10,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.30,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 5.0, top: 5),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              border: Border.all(
+                                                  color: Colors.black),
+                                              color: Colors.white),
+                                          height: 30,
+                                          width: 30,
+                                          child: const Icon(
+                                            Icons.person,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 5.0, left: 5),
+                                        child: Text(getFamilyMemberData
+                                                ?.familyMembers[index].uname ??
+                                            ""),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 5.0),
+                                        child: Text(
+                                          getFamilyMemberData
+                                                  ?.familyMembers[index]
+                                                  .relation ??
+                                              "",
+                                          style: const TextStyle(
+                                              color: Colors.grey),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               );
                             },
-                            child: const ListTile(
-                              leading: Icon(
-                                Icons.logout_outlined,
-                                color: Colors.black,
-                              ),
-                              title: Text(
-                                "log out",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              trailing: Icon(
-                                Icons.arrow_forward_ios_outlined,
-                                size: 18,
-                                color: Colors.black,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          child: Container(
+                            height: 20,
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 241, 237, 237)),
+                          ),
+                        ),
+                        ListTile(
+                          trailing: GestureDetector(
+                            onTap: () {
+                              dailyHelpModelBottomSheet();
+                            },
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.05,
+                              width: MediaQuery.of(context).size.width * 0.19,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Theme.of(context).primaryColor),
+                              child: const Center(
+                                child: Text(
+                                  "Add",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
+                                ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    ]),
+                          subtitle: const Text(
+                            overflow: TextOverflow.ellipsis,
+                            "Add maid, helper, launder for quick entry",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          title: const Text("Daily help"),
+                        ),
+                        const Text(
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          "--------------------------------------------------------------------------------------",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        sizedBoxH10(context),
+                        SizedBox(
+                          height: 100,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: getDailyHelpData?.employees.length ?? 2,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(color: Colors.grey),
+                                      color: Colors.white),
+                                  // height: MediaQuery.of(context).size.height *
+                                  //     0.10,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.30,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 5.0, top: 5),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              border: Border.all(
+                                                  color: Colors.black),
+                                              color: Colors.white),
+                                          height: 30,
+                                          width: 30,
+                                          child: const Icon(
+                                            Icons.person,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 5.0, left: 5),
+                                        child: Text(getDailyHelpData
+                                                ?.employees[index].name ??
+                                            ""),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 5.0),
+                                        child: Text(
+                                          getDailyHelpData
+                                                  ?.employees[index].empType ??
+                                              "",
+                                          style: const TextStyle(
+                                              color: Colors.grey),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          child: Container(
+                            height: 20,
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 241, 237, 237)),
+                          ),
+                        ),
+                        ListTile(
+                          trailing: GestureDetector(
+                            onTap: () {
+                              myVehicleModelBottomSheet();
+                            },
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.05,
+                              width: MediaQuery.of(context).size.width * 0.19,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Theme.of(context).primaryColor),
+                              child: const Center(
+                                child: Text(
+                                  "Add",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
+                                ),
+                              ),
+                            ),
+                          ),
+                          subtitle: const Text(
+                            overflow: TextOverflow.ellipsis,
+                            "Add your vehicle for quick entry",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          title: const Text("My vehicle"),
+                        ),
+                        const Text(
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          "--------------------------------------------------------------------------------------",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        sizedBoxH10(context),
+                        SizedBox(
+                          height: 100,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: getVehicledetails?.data.length ?? 2,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(color: Colors.grey),
+                                      color: Colors.white),
+                                  // height: MediaQuery.of(context).size.height *
+                                  //     0.10,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.30,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 5.0, top: 5),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              border: Border.all(
+                                                  color: Colors.black),
+                                              color: Colors.white),
+                                          height: 30,
+                                          width: 30,
+                                          child: const Icon(
+                                            Icons.car_repair_outlined,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 5.0, left: 5),
+                                        child: Text(getVehicledetails
+                                                ?.data[index].vehicleNo ??
+                                            ""),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 5.0),
+                                        child: Text(
+                                          getVehicledetails
+                                                  ?.data[index].model ??
+                                              "",
+                                          style: const TextStyle(
+                                              color: Colors.grey),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        // Padding(
+                        //   padding:
+                        //       const EdgeInsets.symmetric(vertical: 15.0),
+                        //   child: Container(
+                        //     height: 20,
+                        //     decoration: const BoxDecoration(
+                        //         color: Color.fromARGB(255, 241, 237, 237)),
+                        //   ),
+                        // ),
+                        // ListTile(
+                        //   trailing: GestureDetector(
+                        //     onTap: () {
+                        //       frequentEntryModelBottomSheet();
+                        //     },
+                        //     child: Container(
+                        //       height:
+                        //           MediaQuery.of(context).size.height * 0.05,
+                        //       width:
+                        //           MediaQuery.of(context).size.width * 0.19,
+                        //       decoration: BoxDecoration(
+                        //           borderRadius: BorderRadius.circular(5),
+                        //           color: Theme.of(context).primaryColor),
+                        //       child: const Center(
+                        //         child: Text(
+                        //           "Add",
+                        //           style: TextStyle(
+                        //               color: Colors.white, fontSize: 15),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        //   subtitle: const Text(
+                        //     overflow: TextOverflow.ellipsis,
+                        //     "Add frequent person for quick entry",
+                        //     style: TextStyle(color: Colors.grey),
+                        //   ),
+                        //   title: const Text("Frequent entry"),
+                        // ),
+                        // const Text(
+                        //   overflow: TextOverflow.ellipsis,
+                        //   maxLines: 1,
+                        //   "----------------------------------------------------------------------------------------------",
+                        //   style: TextStyle(color: Colors.grey),
+                        // ),
+                        // sizedBoxH10(context),
+                        // SizedBox(
+                        //   height: 100,
+                        //   child: ListView.builder(
+                        //     shrinkWrap: true,
+                        //     scrollDirection: Axis.horizontal,
+                        //     itemCount: 5,
+                        //     itemBuilder: (BuildContext context, int index) {
+                        //       return Padding(
+                        //         padding: const EdgeInsets.symmetric(
+                        //             horizontal: 10.0),
+                        //         child: Container(
+                        //           decoration: BoxDecoration(
+                        //               borderRadius:
+                        //                   BorderRadius.circular(5),
+                        //               border:
+                        //                   Border.all(color: Colors.grey),
+                        //               color: Colors.white),
+                        //           // height: MediaQuery.of(context).size.height *
+                        //           //     0.10,
+                        //           width: MediaQuery.of(context).size.width *
+                        //               0.36,
+                        //           child: const Center(child: Text("data")),
+                        //         ),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
+                        sizedBoxH10(context),
+                      ],
+                    ),
                   ),
                 ),
               ],

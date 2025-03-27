@@ -49,12 +49,12 @@ class _VisitorsPageState extends State<VisitorsPage> {
       child: Scaffold(
         floatingActionButton: loginModel?.user?.role != "watchman"
             ? FloatingActionButton(
-                child: Icon(Icons.add),
+                child: const Icon(Icons.add),
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AddVisitorsPage()));
+                          builder: (context) => const AddVisitorsPage()));
                 })
             : null,
         appBar: AppBar(
@@ -93,7 +93,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                                 context,
                                 state.visitorsListModel!.data?.upcomingVisitors
                                     ?.list)
-                            : Center(child: Text("No visitors today!")),
+                            : const Center(child: Text("No visitors today!")),
                         (state.visitorsListModel?.data?.regularVisitors?.list
                                     ?.isNotEmpty ??
                                 false)
@@ -101,7 +101,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                                 context,
                                 state.visitorsListModel!.data!.regularVisitors!
                                     .list)
-                            : Center(child: Text("Not available!")),
+                            : const Center(child: Text("Not available!")),
                         (state.visitorsListModel?.data?.pastVisitors?.list
                                     ?.isNotEmpty ??
                                 false)
@@ -109,7 +109,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                                 context,
                                 state.visitorsListModel?.data?.pastVisitors
                                     ?.list)
-                            : Center(child: Text("No visitors!")),
+                            : const Center(child: Text("No visitors!")),
                       ],
                     ),
                   )
@@ -140,7 +140,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                 ],
               );
             } else {
-              return Text("data");
+              return const Text("data");
               //CircularProgressIndicator();
             }
           },
@@ -205,7 +205,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                       SizedBox(
                         height: 65,
                         child: ListTile(
-                          leading: CircleAvatar(
+                          leading: const CircleAvatar(
                             foregroundImage: AssetImage("lib/assets/qr.jpg"),
                             radius: 30,
                           ),
@@ -219,7 +219,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                           children: [
                             Text(
                               visitors.relation ?? "Not available",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 12, color: Colors.blueGrey),
                             ),
                             sizedBoxW5(context),
@@ -231,7 +231,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                             sizedBoxW5(context),
                             Text(
                               visitors.visitingPurpose ?? "Not available",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 12, color: Colors.blueGrey),
                             ),
                             //   sizedBoxW5(context),
@@ -246,7 +246,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                             sizedBoxW5(context),
                             Text(
                               visitors.visitingDate ?? "Not available",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 12, color: Colors.blueGrey),
                             ),
                           ]),
@@ -284,7 +284,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                       color: Colors.purple.shade50,
                       borderRadius: BorderRadius.circular(20)),
                   child: ListTile(
-                    leading: CircleAvatar(
+                    leading: const CircleAvatar(
                       foregroundImage: AssetImage("lib/assets/qr.jpg"),
                       radius: 30,
                     ),
@@ -322,7 +322,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                       color: Colors.purple.shade50,
                       borderRadius: BorderRadius.circular(20)),
                   child: ListTile(
-                    leading: CircleAvatar(
+                    leading: const CircleAvatar(
                       foregroundImage: AssetImage("lib/assets/qr.jpg"),
                       radius: 30,
                     ),

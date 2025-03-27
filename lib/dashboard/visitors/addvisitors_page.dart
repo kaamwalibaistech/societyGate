@@ -77,7 +77,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
                 blurRadius: 15,
@@ -167,24 +167,24 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
       );
 
       // Define sizes
-      final qrSize = 400.0;
-      final padding = 40.0;
-      final totalSize = qrSize + padding * 2;
+      const qrSize = 400.0;
+      const padding = 40.0;
+      const totalSize = qrSize + padding * 2;
 
       // Create canvas
       final recorder = PictureRecorder();
       final canvas =
-          Canvas(recorder, Rect.fromLTWH(0, 0, totalSize, totalSize));
+          Canvas(recorder, const Rect.fromLTWH(0, 0, totalSize, totalSize));
 
       // Fill background with white
       final bgPaint = Paint()..color = Colors.white;
-      canvas.drawRect(Rect.fromLTWH(0, 0, totalSize, totalSize), bgPaint);
+      canvas.drawRect(const Rect.fromLTWH(0, 0, totalSize, totalSize), bgPaint);
 
       // Shift canvas to add white padding
       canvas.translate(padding, padding);
 
       // Draw QR in the center
-      painter.paint(canvas, Size(qrSize, qrSize));
+      painter.paint(canvas, const Size(qrSize, qrSize));
 
       final picture = recorder.endRecording();
       final image = await picture.toImage(totalSize.toInt(), totalSize.toInt());
@@ -225,7 +225,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
                 _buildTextField("Phone", (val) => phone = val!, isPhone: true),
                 _buildTextField("Relation", (val) => relation = val!),
                 DropdownButtonFormField<String>(
-                  decoration: InputDecoration(labelText: "Gender"),
+                  decoration: const InputDecoration(labelText: "Gender"),
                   items: ["male", "female", "other"].map((value) {
                     return DropdownMenuItem(value: value, child: Text(value));
                   }).toList(),
@@ -234,7 +234,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
                 _buildTextField("Visiting Purpose", (val) => purpose = val!),
                 TextFormField(
                   controller: _dateController,
-                  decoration: InputDecoration(labelText: "Visiting Date"),
+                  decoration: const InputDecoration(labelText: "Visiting Date"),
                   readOnly: true,
                   onTap: () async {
                     DateTime? picked = await showDatePicker(
@@ -251,7 +251,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
 
                       if (selectedDate.isBefore(today)) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                             content: Text(
                                 "Please select today's date or a future date"),
                             backgroundColor: Colors.red,
@@ -274,7 +274,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
                       addVisitors();
                     }
                   },
-                  child: Text("Submit"),
+                  child: const Text("Submit"),
                 ),
               ],
             ),

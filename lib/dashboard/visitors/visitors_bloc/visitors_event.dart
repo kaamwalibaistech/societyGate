@@ -9,3 +9,8 @@ final class GetVisitorsEvent extends VisitorsEvent {
   @override
   List<Object?> get props => [soceityId, flatId];
 }
+
+final class GetEnteredVisitorsEvent extends VisitorsEvent {
+  @override
+  List<Object?> get props => [];
+}
