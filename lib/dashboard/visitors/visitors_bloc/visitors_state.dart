@@ -9,8 +9,9 @@ final class VisitorsInitialState extends VisitorsState {
 
 final class VisitorsSuccessState extends VisitorsState {
   final VisitorsListModel? visitorsListModel;
+  final List<Map<String, dynamic>>? getManualvisitorsList;
 
-  VisitorsSuccessState({required this.visitorsListModel});
+  VisitorsSuccessState({this.visitorsListModel, this.getManualvisitorsList});
   @override
   List<Object?> get props => [visitorsListModel];
 }

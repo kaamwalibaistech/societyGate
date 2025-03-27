@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
+
+import 'package:http/http.dart' as http;
 import 'package:my_society/models/visitorslist_model.dart';
 
 import '../../../api/api_constant.dart';
-import 'package:http/http.dart' as http;
 
 Future<VisitorsListModel?> visitorsListApi(
   String soceityId,
@@ -59,4 +60,46 @@ Future<VisitorsListModel?> visitorsListForWatchmanApi(
     throw Exception("Failed to fetch visitors list");
   }
   return null;
+}
+
+Future<List<Map<String, dynamic>>?> enteredVisitorsListForWatchmanApi(
+  String soceityId,
+  String page,
+  String limit,
+) async {
+  List<Map<String, dynamic>> mapData = [];
+  String api = ApiConstant.visitorsbysocietyId;
+  String baseUrl = ApiConstant.baseUrl;
+  Uri url = Uri.parse(baseUrl + api);
+
+  final body = {'society_id': soceityId, 'page': page, 'limit': limit};
+  try {
+    final response = await http.post(url, body: body);
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+
+      data['data']['upcoming_visitors'].forEach((key, value) {
+        if (key == 'udata') {
+          List<dynamic> shop = value;
+          for (var i in shop) {
+            log('$i');
+
+            if (i['entry_time'] != null) {
+              log('$mapData');
+              mapData.addAll([i]);
+            }
+          }
+          return mapData;
+        } else {
+          return null;
+        }
+      });
+      return mapData;
+    }
+  } catch (e, stacktrace) {
+    log("visitorsListApi error: $e");
+    log("Stacktrace: $stacktrace");
+    throw Exception("Failed to fetch visitors list");
+  }
+  return mapData;
 }

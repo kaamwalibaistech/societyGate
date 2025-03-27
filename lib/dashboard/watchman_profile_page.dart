@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_society/constents/sizedbox.dart';
 import 'package:my_society/manual_visitors_screen.dart';
+import 'package:my_society/privacy_policy_screen.dart';
 
 import '../auth/login_screen.dart';
 import '../constents/local_storage.dart';
@@ -61,18 +62,27 @@ class _WatchmanProfilePageState extends State<WatchmanProfilePage> {
                 // height: MediaQuery.of(context).size.height * 0.50,
                 child: Column(
                   children: [
-                    const ListTile(
-                      leading: Icon(
-                        Icons.privacy_tip_outlined,
-                        //   color: Colors.black,
-                      ),
-                      title: Text(
-                        "privacy",
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios_outlined,
-                        size: 18,
-                        // color: Colors.black,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const PrivacyPolicyScreen()));
+                      },
+                      child: const ListTile(
+                        leading: Icon(
+                          Icons.privacy_tip_outlined,
+                          //   color: Colors.black,
+                        ),
+                        title: Text(
+                          "privacy policy",
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          size: 18,
+                          // color: Colors.black,
+                        ),
                       ),
                     ),
                     const ListTile(
