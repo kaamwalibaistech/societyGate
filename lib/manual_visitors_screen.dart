@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_society/api/api_repository.dart';
+import 'package:my_society/constents/local_storage.dart';
 
 import 'constents/sizedbox.dart';
+import 'dashboard/visitors/network/add_visiters_api.dart';
 import 'dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'manual_visitors_form.dart';
-import 'models/login_model.dart';
 
 class ManualVisitorsScreen extends StatefulWidget {
   const ManualVisitorsScreen({super.key});
@@ -14,7 +16,8 @@ class ManualVisitorsScreen extends StatefulWidget {
 }
 
 class _ManualVisitorsScreenState extends State<ManualVisitorsScreen> {
-  LoginModel? loginModel;
+  // LoginModel? loginModel;
+  AddVisitoModel? _addVisitoModel;
   @override
   void initState() {
     super.initState();
@@ -73,9 +76,9 @@ class _ManualVisitorsScreenState extends State<ManualVisitorsScreen> {
                   child: const Center(child: Text("Add Manual Visitor"))),
             ),
             BlocBuilder<VisitorsBloc, VisitorsState>(
-              buildWhen: (previous, current) {
-                return current is VisitorsSuccessState;
-              },
+              // buildWhen: (previous, current) {
+              //   return current is VisitorsSuccessState;
+              // },
               builder: (context, state) {
                 if (state is VisitorsSuccessState) {
                   return ListView.builder(
@@ -94,7 +97,25 @@ class _ManualVisitorsScreenState extends State<ManualVisitorsScreen> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: ListTile(
-                                    trailing: const Icon(Icons.exit_to_app),
+                                    trailing: GestureDetector(
+                                        onTap: () async {
+                                          final loginModel = LocalStoragePref()
+                                              .getLoginModel();
+
+                                          ApiRepository apiRepository =
+                                              ApiRepository();
+                                          final data = await apiRepository
+                                              .manualAproveApi(
+                                                  state.getManualvisitorsList?[
+                                                              index]
+                                                              ["unique_code"]
+                                                          .toString() ??
+                                                      "",
+                                                  loginModel!.user!.userId
+                                                      .toString(),
+                                                  "exit");
+                                        },
+                                        child: const Icon(Icons.exit_to_app)),
                                     leading: const CircleAvatar(
                                       foregroundImage:
                                           AssetImage("lib/assets/qr.jpg"),
