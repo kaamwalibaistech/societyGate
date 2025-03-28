@@ -8,6 +8,7 @@ import 'package:my_society/dashboard/members/members_page.dart';
 import 'package:my_society/dashboard/visitors/visitors_page.dart';
 import 'package:my_society/models/login_model.dart';
 import 'package:my_society/scanner_page.dart';
+import 'package:my_society/shops/dailyneeds_tab.dart';
 
 import 'api/api_repository.dart';
 import 'book_amenities.dart';
@@ -15,7 +16,6 @@ import 'constents/sizedbox.dart';
 import 'dashboard/notice_board/notice_board_screen.dart';
 import 'models/homepage_model.dart';
 import 'payment_screen.dart';
-import 'shops_screen.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -334,7 +334,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const ShopsScreen()));
+                                  builder: (context) => const DailyneedsTab()));
                           break;
                       }
                     },

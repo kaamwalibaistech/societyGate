@@ -7,7 +7,7 @@ import 'package:my_society/constents/local_storage.dart';
 import 'package:my_society/dashboard/watchman_profile_page.dart';
 import 'package:my_society/homepage_screen.dart';
 import 'package:my_society/message_screen.dart';
-import 'package:my_society/timeline_screen.dart';
+import 'package:my_society/shops/dailyneeds_tab.dart';
 
 class Navigationscreen extends StatefulWidget {
   const Navigationscreen({super.key});
@@ -68,7 +68,7 @@ class _Navigationscreen extends State<Navigationscreen> {
           },
           children: [
             const HomepageScreen(),
-            const TimelineScreen(),
+            const DailyneedsTab(),
             const MessageScreen(),
             loginModel!.user!.role != "watchman"
                 ? const AccountScreen()
