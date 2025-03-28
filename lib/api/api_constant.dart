@@ -11,4 +11,8 @@ class ApiConstant {
   static const String deleteVisitor = "deletevisitor";
   static const String aproveVisitor = "approvevisitor";
   static const String editVisitor = "updatevisitor";
+  static const String shopList = "shopslist";
+  static const String addShop = "shopsadd";
+  static const String updateShop = "shopsupdate";
+  static const String deleteShop = "shopsdelete";
 }

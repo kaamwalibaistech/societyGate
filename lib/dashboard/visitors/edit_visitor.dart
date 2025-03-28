@@ -120,17 +120,6 @@ class _EditVisitorState extends State<EditVisitor> {
                     decoration: const InputDecoration(
                       labelText: "Gender",
                     ),
-                    // validator: (value) {
-                    //   if (value == null || value.isEmpty) {
-                    //     setState(() {
-                    //       gender =
-                    //           widget.visitorsDetailModel!.data!.gender.toString();
-                    //     });
-                    //     return null;
-                    //   } else {
-                    //     return null;
-                    //   }
-                    // },
                     items: ["male", "female", "other"].map((value) {
                       return DropdownMenuItem(
                         value: value,
