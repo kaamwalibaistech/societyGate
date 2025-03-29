@@ -9,6 +9,7 @@ import '../models/add_family_member_model.dart';
 import '../models/add_notices_model.dart';
 import '../models/add_vehicle_model.dart';
 import '../models/admin_register_model.dart';
+import '../models/flat_id_model.dart';
 import '../models/get_daily_help_model.dart';
 import '../models/get_family_members_model.dart';
 import '../models/get_vehicle_detail_model.dart';
@@ -84,6 +85,29 @@ class ApiRepository {
           return MemberRegisterModel.fromJson(data);
         }
         return MemberRegisterModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<FlatIdModel?> getFlatId(societyId, flatNo, block, floor) async {
+    final url = Uri.parse("https://blingbroomcleaning.com/api/flatsidsearch");
+    final body = {
+      'society_id': societyId,
+      'flat_number': flatNo,
+      'block': block,
+      'floor': floor,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return FlatIdModel.fromJson(data);
+        }
+        return FlatIdModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

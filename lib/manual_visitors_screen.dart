@@ -4,7 +4,6 @@ import 'package:my_society/api/api_repository.dart';
 import 'package:my_society/constents/local_storage.dart';
 
 import 'constents/sizedbox.dart';
-import 'dashboard/visitors/network/add_visiters_api.dart';
 import 'dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'manual_visitors_form.dart';
 
@@ -17,7 +16,7 @@ class ManualVisitorsScreen extends StatefulWidget {
 
 class _ManualVisitorsScreenState extends State<ManualVisitorsScreen> {
   // LoginModel? loginModel;
-  AddVisitoModel? _addVisitoModel;
+  // AddVisitoModel? _addVisitoModel;
   @override
   void initState() {
     super.initState();
@@ -84,7 +83,7 @@ class _ManualVisitorsScreenState extends State<ManualVisitorsScreen> {
                   return ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
-                      itemCount: state.getManualvisitorsList!.length,
+                      itemCount: state.getManualvisitorsList?.length,
                       shrinkWrap: true,
                       itemBuilder: ((context, index) {
                         return Padding(
