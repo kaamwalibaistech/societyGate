@@ -83,7 +83,10 @@ class _ShopSettingsState extends State<ShopSettings> {
         } else if (action == 'addShop') {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => AddShop()));
-        } else {}
+        } else {
+          Fluttertoast.showToast(
+              msg: "Currently, we are working on this feature!");
+        }
       },
       child: Card(
         elevation: 0,

@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:my_society/constents/local_storage.dart';
 import 'package:my_society/dashboard/members/member_bloc/members_bloc.dart';
 import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_bloc.dart';
@@ -15,7 +18,26 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalStoragePref.instance!.initPrefBox();
   await dotenv.load(fileName: ".env");
+  checkForUpdates();
   runApp(const MyApp());
+}
+
+/// Function to check for updates at app startup
+void checkForUpdates() async {
+  try {
+    AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+
+    if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+      if (updateInfo.immediateUpdateAllowed) {
+        await InAppUpdate.performImmediateUpdate();
+      } else if (updateInfo.flexibleUpdateAllowed) {
+        await InAppUpdate.startFlexibleUpdate();
+        await InAppUpdate.completeFlexibleUpdate();
+      }
+    }
+  } catch (e) {
+    log("Error checking for updates: $e");
+  }
 }
 
 class MyApp extends StatefulWidget {
