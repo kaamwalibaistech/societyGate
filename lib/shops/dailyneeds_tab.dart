@@ -46,7 +46,7 @@ class DailyneedsTabState extends State<DailyneedsTab> {
                     MaterialPageRoute(builder: (context) => ShopSettings()));
               },
               child: Visibility(
-                visible: admin != "admin",
+                visible: admin == "admin",
                 child: Padding(
                   padding: EdgeInsets.only(right: 20),
                   child: Icon(

@@ -50,6 +50,7 @@ dependencies:
   path_provider: ^2.0.15
   qr_code_scanner_plus: ^2.0.10+1
   url_launcher: ^6.3.1
+  in_app_update: ^4.2.3
 
 # dependency_overrides:
 #   shared_preferences_android: 2.4.8
