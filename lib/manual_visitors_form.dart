@@ -1,13 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:my_society/api/api_constant.dart';
+import 'package:my_society/api/api_repository.dart';
 
 import 'constents/local_storage.dart';
 import 'dashboard/visitors/network/add_visiters_api.dart';
+import 'models/flat_id_model.dart';
 import 'models/login_model.dart';
 
 class ManualVisitorsForm extends StatefulWidget {
@@ -26,6 +24,10 @@ class _ManualVisitorsFormState extends State<ManualVisitorsForm> {
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController flatNoController = TextEditingController();
+  final TextEditingController blockController = TextEditingController();
+  final TextEditingController floorNoController = TextEditingController();
+
   late String flatId, societyId, requestBy;
   late String name, phone, relation, gender, purpose, visitingDate;
   AddVisitoModel? _addVisitoModel;
@@ -90,19 +92,46 @@ class _ManualVisitorsFormState extends State<ManualVisitorsForm> {
                     }
                   },
                 ),
+                TextField(
+                    decoration: const InputDecoration(hintText: "Flat number"),
+                    controller: flatNoController),
+                TextField(
+                    decoration: const InputDecoration(hintText: "Block"),
+                    controller: blockController),
+                TextField(
+                    decoration: const InputDecoration(hintText: "Floor number"),
+                    controller: floorNoController),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
+                      ApiRepository apiRepository = ApiRepository();
                       _loginModel = LocalStoragePref().getLoginModel();
                       _formKey.currentState!.save();
-                      addVisitors();
-                      await manualAproveApi(
-                          _addVisitoModel!.uniqueCode.toString(),
+
+                      FlatIdModel? flatIdData = await apiRepository.getFlatId(
+                          societyId,
+                          flatNoController.text,
+                          blockController.text,
+                          floorNoController.text);
+
+                      AddVisitoModel? dataa = await addVisitorApi(
+                          flatIdData!.data[0].flatId.toString(),
+                          societyId,
+                          requestBy,
+                          name,
+                          phone,
+                          relation,
+                          gender,
+                          purpose,
+                          visitingDate);
+                      await apiRepository.manualAproveApi(
+                          dataa!.uniqueCode.toString(),
                           _loginModel!.user!.userId.toString(),
                           "entry");
 
                       Fluttertoast.showToast(msg: "Added Successfully");
+                      Navigator.pop(context);
                     }
                   },
                   child: const Text("Entry"),
@@ -160,39 +189,5 @@ class _ManualVisitorsFormState extends State<ManualVisitorsForm> {
       keyboardType: isPhone ? TextInputType.number : TextInputType.text,
       maxLength: isPhone ? 10 : null,
     );
-  }
-
-  Future<void> manualAproveApi(
-    String uniqueCode,
-    String watchmanId,
-    String action,
-  ) async {
-    String api = ApiConstant.aproveVisitor;
-    String baseUrl = ApiConstant.baseUrl;
-    Uri url = Uri.parse(baseUrl + api);
-
-    final body = {
-      'unique_code': uniqueCode,
-      'watchman_id': watchmanId,
-      'action': action,
-    };
-    try {
-      final response = await http.post(url, body: body);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        Fluttertoast.showToast(msg: data['message']);
-
-        if (data['status'] == 200) {
-          //await Future.delayed(const Duration(milliseconds: 300));
-          //  successDialog();
-        } else {
-          // await Future.delayed(const Duration(milliseconds: 300));
-          //failedDialog(data['message']);
-        }
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: "Error occurred: $e");
-      Navigator.pop(context);
-    }
   }
 }

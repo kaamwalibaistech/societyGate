@@ -85,9 +85,9 @@ Future<List<Map<String, dynamic>>?> enteredVisitorsListForWatchmanApi(
             log('$i');
 
             if (i['entry_time'] != null) {
-              log('$mapData');
               mapData.addAll([i]);
             }
+            log('$mapData');
           }
           return mapData;
         } else {

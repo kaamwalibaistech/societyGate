@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_society/models/member_register_model.dart';
 
@@ -8,10 +9,12 @@ import '../models/add_family_member_model.dart';
 import '../models/add_notices_model.dart';
 import '../models/add_vehicle_model.dart';
 import '../models/admin_register_model.dart';
+import '../models/flat_id_model.dart';
 import '../models/get_daily_help_model.dart';
 import '../models/get_family_members_model.dart';
 import '../models/get_vehicle_detail_model.dart';
 import '../models/homepage_model.dart';
+import 'api_constant.dart';
 
 class ApiRepository {
   Future<AdminRegister?> registerSocietyAdmin(
@@ -82,6 +85,29 @@ class ApiRepository {
           return MemberRegisterModel.fromJson(data);
         }
         return MemberRegisterModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<FlatIdModel?> getFlatId(societyId, flatNo, block, floor) async {
+    final url = Uri.parse("https://blingbroomcleaning.com/api/flatsidsearch");
+    final body = {
+      'society_id': societyId,
+      'flat_number': flatNo,
+      'block': block,
+      'floor': floor,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return FlatIdModel.fromJson(data);
+        }
+        return FlatIdModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());
@@ -262,6 +288,40 @@ class ApiRepository {
       throw Exception(e.toString());
     }
     return null;
+  }
+
+  Future<void> manualAproveApi(
+    String uniqueCode,
+    String watchmanId,
+    String action,
+  ) async {
+    String api = ApiConstant.aproveVisitor;
+    String baseUrl = ApiConstant.baseUrl;
+    Uri url = Uri.parse(baseUrl + api);
+
+    final body = {
+      'unique_code': uniqueCode,
+      'watchman_id': watchmanId,
+      'action': action,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        Fluttertoast.showToast(msg: data['message']);
+
+        if (data['status'] == 200) {
+          //await Future.delayed(const Duration(milliseconds: 300));
+          //  successDialog();
+        } else {
+          // await Future.delayed(const Duration(milliseconds: 300));
+          //failedDialog(data['message']);
+        }
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Error occurred: $e");
+      // Navigator.pop(context);
+    }
   }
 
   Future<AddNoticeModel?> addNotices(societyid, memberId, String title,
