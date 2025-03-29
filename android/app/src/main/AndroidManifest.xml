@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"    
-package="com.example.my_society">
+package="com.society_gate.my_society">
 <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="my_society"
+        android:label="society gate"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
