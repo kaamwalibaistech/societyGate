@@ -113,6 +113,8 @@ class _ManualVisitorsScreenState extends State<ManualVisitorsScreen> {
                                                   loginModel!.user!.userId
                                                       .toString(),
                                                   "exit");
+                                          BlocProvider.of<VisitorsBloc>(context)
+                                              .add(GetEnteredVisitorsEvent());
                                         },
                                         child: const Icon(Icons.exit_to_app)),
                                     leading: const CircleAvatar(
