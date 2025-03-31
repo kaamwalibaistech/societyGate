@@ -27,7 +27,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         final ss = LocalStoragePref().getLoginModel();
         String dd = ss?.user?.societyName ?? "NAAAA";
-        log(" Local : ${dd}");
+        log(" Local : $dd");
         log(" Model : ${_loginModel?.user?.societyName}");
 
         emit(LoginSuccessState(loginModel: _loginModel!));

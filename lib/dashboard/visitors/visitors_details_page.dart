@@ -66,7 +66,7 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
           } else if (state is VisitorsDetailSuccessState) {
             return buildVisitorUI(state.visitorsDetailModel);
           } else {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
         },
       ),
@@ -253,14 +253,15 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
                     showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                              title: Text("Delete this visitor?"),
-                              content: Text("You can add this visitor again!"),
+                              title: const Text("Delete this visitor?"),
+                              content:
+                                  const Text("You can add this visitor again!"),
                               actions: [
                                 TextButton(
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: Text("Cancel")),
+                                    child: const Text("Cancel")),
                                 TextButton(
                                     onPressed: () async {
                                       final deleted =
@@ -278,7 +279,7 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
                                             backgroundColor: Colors.red);
                                       }
                                     },
-                                    child: Text("Delete"))
+                                    child: const Text("Delete"))
                               ],
                             ));
                   },

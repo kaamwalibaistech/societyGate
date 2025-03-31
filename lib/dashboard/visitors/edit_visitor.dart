@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:my_society/constents/local_storage.dart';
 import 'package:my_society/dashboard/visitors/network/edit_visitor.dart';
@@ -66,7 +66,7 @@ class _EditVisitorState extends State<EditVisitor> {
           widget.visitorsDetailModel!.data!.visitorId.toString());
 
       Fluttertoast.showToast(msg: message ?? "Error");
-      await Future.delayed(Duration(microseconds: 1000));
+      await Future.delayed(const Duration(microseconds: 1000));
       if (mounted) {
         context.read<VisitorsDetailBloc>().add(GetVisitorDetailEvent(
             visitorId: widget.visitorsDetailModel!.data!.visitorId.toString()));
@@ -136,7 +136,8 @@ class _EditVisitorState extends State<EditVisitor> {
                               .visitorsDetailModel!.data!.visitingPurpose)),
                   TextFormField(
                     controller: _dateController,
-                    decoration: InputDecoration(labelText: "Visiting Date"),
+                    decoration:
+                        const InputDecoration(labelText: "Visiting Date"),
                     readOnly: true,
                     onTap: () async {
                       DateTime? picked = await showDatePicker(
@@ -153,7 +154,7 @@ class _EditVisitorState extends State<EditVisitor> {
 
                         if (selectedDate.isBefore(today)) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text(
                                   "Please select today's date or a future date"),
                               backgroundColor: Colors.red,
@@ -178,7 +179,7 @@ class _EditVisitorState extends State<EditVisitor> {
                         apiCall();
                       }
                     },
-                    child: Text("Submit"),
+                    child: const Text("Submit"),
                   ),
                 ],
               ),
@@ -193,7 +194,7 @@ class _EditVisitorState extends State<EditVisitor> {
             color: Colors.black26,
           ),
         ),
-        Visibility(visible: isLoading, child: CircularProgressIndicator())
+        Visibility(visible: isLoading, child: const CircularProgressIndicator())
       ]),
     );
   }

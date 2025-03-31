@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_society/constents/sizedbox.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_society/models/shoplist_model.dart';
 import 'package:my_society/shops/addshop.dart';
 import 'package:my_society/shops/bloc/dailyneeds_bloc.dart';
-import 'package:my_society/shops/dailyneeds_tab.dart';
 import 'package:my_society/shops/network/shop_apis.dart';
 
 import 'editShop.dart';
@@ -35,12 +34,12 @@ class _ShopSettingsState extends State<ShopSettings> {
               Navigator.pop(context);
             },
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 32),
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 32),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   border: Border.all(width: 1, color: Colors.blue),
                   color: Colors.white),
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back,
                 color: Colors.blue,
               ),
@@ -81,8 +80,8 @@ class _ShopSettingsState extends State<ShopSettings> {
         } else if (action == 'edit') {
           editDeleteShop("edit");
         } else if (action == 'addShop') {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddShop()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AddShop()));
         } else {
           Fluttertoast.showToast(
               msg: "Currently, we are working on this feature!");
@@ -97,9 +96,9 @@ class _ShopSettingsState extends State<ShopSettings> {
           ),
           title: Text(
             text,
-            style: TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           ),
-          trailing: Icon(
+          trailing: const Icon(
             Icons.arrow_forward_ios_rounded,
             size: 20,
           ),
@@ -114,7 +113,7 @@ class _ShopSettingsState extends State<ShopSettings> {
         context: context,
         builder: (context) {
           return Container(
-              margin: EdgeInsets.all(20),
+              margin: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(12)),
               child: Column(
@@ -124,7 +123,7 @@ class _ShopSettingsState extends State<ShopSettings> {
                     padding: const EdgeInsets.all(10),
                     child: Text(
                       "Please select shop to $action",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -141,11 +140,11 @@ class _ShopSettingsState extends State<ShopSettings> {
                       } else if (state is DailyneedsSuccessState) {
                         return buildDeleteWidget(state.shopListModel, action);
                       } else if (state is DailyneedsSuccessState) {
-                        return Center(
+                        return const Center(
                           child: Text("Error"),
                         );
                       } else {
-                        return Center(
+                        return const Center(
                           child: Text("Error"),
                         );
                       }

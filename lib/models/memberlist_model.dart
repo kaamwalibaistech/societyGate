@@ -12,7 +12,7 @@ class MemberlistModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['message'] = message;
     if (users != null) {
@@ -51,7 +51,7 @@ class Users {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (admins != null) {
       data['admins'] = admins!.map((v) => v.toJson()).toList();
     }
@@ -98,7 +98,7 @@ class Members {
       );
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['user_id'] = userId;
     data['society_id'] = societyId;
     data['urole'] = urole;
@@ -143,7 +143,7 @@ class Admins {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['user_id'] = userId;
     data['society_id'] = societyId;
     data['urole'] = urole;
@@ -188,7 +188,7 @@ class Watchmen {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['user_id'] = userId;
     data['society_id'] = societyId;
     data['urole'] = urole;
