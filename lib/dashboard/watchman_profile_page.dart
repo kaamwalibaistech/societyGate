@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:my_society/constents/sizedbox.dart';
-import 'package:my_society/manual_visitors_screen.dart';
-import 'package:my_society/privacy_policy_screen.dart';
 
 import '../auth/login_screen.dart';
 import '../constents/local_storage.dart';
+import '../constents/sizedbox.dart';
+import '../manual_visitors_screen.dart';
+import '../privacy_policy_screen.dart';
 
 class WatchmanProfilePage extends StatefulWidget {
   const WatchmanProfilePage({super.key});

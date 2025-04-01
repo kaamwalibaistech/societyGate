@@ -2,9 +2,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
-import 'package:my_society/constents/sizedbox.dart';
-import 'package:my_society/shops/bloc/dailyneeds_bloc.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../constents/sizedbox.dart';
+import 'bloc/dailyneeds_bloc.dart';
 
 class AddShop extends StatefulWidget {
   const AddShop({super.key});

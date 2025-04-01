@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:my_society/models/visitors_details_model.dart';
+
+import '../../../models/visitors_details_model.dart';
 
 abstract class VisitorsDetailState extends Equatable {}
 

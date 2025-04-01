@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
-import 'package:my_society/auth/login_bloc/login_bloc.dart';
-import 'package:my_society/auth/login_success.dart';
-import 'package:my_society/auth/register_member.dart';
-import 'package:my_society/constents/sizedbox.dart';
+
+import '../constents/sizedbox.dart';
+import 'login_bloc/login_bloc.dart';
+import 'login_success.dart';
+import 'register_member.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/dashboard/notice_board/add_notice_screen.dart';
 
+import '../../constents/local_storage.dart';
 import '../../models/homepage_model.dart';
+import 'add_notice_screen.dart';
 
 class NoticeBoardScreen extends StatefulWidget {
   final Homepagemodel? data;

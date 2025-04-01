@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_society/auth/register_member.dart';
-import 'package:my_society/constents/sizedbox.dart';
 
+import '../constents/sizedbox.dart';
 import 'login_screen.dart';
+import 'register_member.dart';
 import 'soceity_register.dart';
 
 class RegisterScreen extends StatelessWidget {

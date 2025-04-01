@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:my_society/models/shoplist_model.dart';
-
 import '../../../api/api_constant.dart';
 import 'package:http/http.dart' as http;
+
+import '../../models/shoplist_model.dart';
 
 Future<ShopListModel?> shopList(String societyId) async {
   String api = ApiConstant.shopList;

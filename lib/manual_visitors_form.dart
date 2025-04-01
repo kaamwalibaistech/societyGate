@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:my_society/api/api_repository.dart';
-import 'package:my_society/dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 
+import 'api/api_repository.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/visitors/network/add_visiters_api.dart';
+import 'dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'models/flat_id_model.dart';
 import 'models/login_model.dart';
 

@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'package:my_society/models/visitors_details_model.dart';
 
 import '../../../api/api_constant.dart';
 import 'package:http/http.dart' as http;
+
+import '../../../models/visitors_details_model.dart';
 
 Future<VisitorsDetailModel?> visitorsDetailsApi(
   String visitorId,

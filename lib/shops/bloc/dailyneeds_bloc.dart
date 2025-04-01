@@ -1,9 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/models/login_model.dart';
-import 'package:my_society/models/shoplist_model.dart';
-import 'package:my_society/shops/network/shop_apis.dart';
+
+import '../../constents/local_storage.dart';
+import '../../models/login_model.dart';
+import '../../models/shoplist_model.dart';
+import '../network/shop_apis.dart';
 
 part 'dailyneeds_event.dart';
 part 'dailyneeds_state.dart';

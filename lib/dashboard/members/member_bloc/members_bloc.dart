@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:my_society/dashboard/members/network/memberslist_api.dart';
-import 'package:my_society/models/memberlist_model.dart';
+
+import '../../../models/memberlist_model.dart';
+import '../network/memberslist_api.dart';
 
 part 'members_event.dart';
 part 'members_state.dart';

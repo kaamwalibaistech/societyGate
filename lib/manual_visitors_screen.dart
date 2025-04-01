@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_society/api/api_repository.dart';
-import 'package:my_society/constents/local_storage.dart';
 
+import 'api/api_repository.dart';
+import 'constents/local_storage.dart';
 import 'constents/sizedbox.dart';
 import 'dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'manual_visitors_form.dart';

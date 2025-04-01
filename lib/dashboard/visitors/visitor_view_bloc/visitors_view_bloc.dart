@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:my_society/dashboard/visitors/network/visitors_details_api.dart';
-import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_event.dart';
-import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_state.dart';
-import 'package:my_society/models/visitors_details_model.dart';
+
+import '../../../models/visitors_details_model.dart';
+import '../network/visitors_details_api.dart';
+import 'visitors_view_event.dart';
+import 'visitors_view_state.dart';
 
 class VisitorsDetailBloc
     extends Bloc<VisitorDetailsEvent, VisitorsDetailState> {
