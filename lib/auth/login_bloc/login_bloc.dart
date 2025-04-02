@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/models/login_model.dart';
 
+import '../../constents/local_storage.dart';
+import '../../models/login_model.dart';
 import '../network/login_api.dart';
 
 part 'login_event.dart';

@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my_society/account_screen.dart';
-import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/dashboard/watchman_profile_page.dart';
-import 'package:my_society/homepage_screen.dart';
-import 'package:my_society/message_screen.dart';
-import 'package:my_society/shops/dailyneeds_tab.dart';
+
+import 'account_screen.dart';
+import 'constents/local_storage.dart';
+import 'dashboard/watchman_profile_page.dart';
+import 'homepage_screen.dart';
+import 'message_screen.dart';
+import 'shops/dailyneeds_tab.dart';
 
 class Navigationscreen extends StatefulWidget {
   const Navigationscreen({super.key});

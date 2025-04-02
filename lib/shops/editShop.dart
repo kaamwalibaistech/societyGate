@@ -2,13 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/constents/sizedbox.dart';
-import 'package:my_society/models/shoplist_model.dart';
-import 'package:my_society/shops/network/shop_apis.dart';
 
+import '../constents/local_storage.dart';
+import '../constents/sizedbox.dart';
+import '../models/shoplist_model.dart';
 import 'bloc/dailyneeds_bloc.dart';
+import 'network/shop_apis.dart';
 
 class Editshop extends StatefulWidget {
   final ShopListModel? shopListModel;

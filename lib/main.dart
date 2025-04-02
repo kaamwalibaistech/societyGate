@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:in_app_update/in_app_update.dart';
-import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/dashboard/members/member_bloc/members_bloc.dart';
-import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_bloc.dart';
-import 'package:my_society/dashboard/visitors/visitors_bloc/visitors_bloc.dart';
-import 'package:my_society/navigation_screen.dart';
-import 'package:my_society/shops/bloc/dailyneeds_bloc.dart';
 
 import 'auth/login_bloc/login_bloc.dart';
 import 'auth/register_screen.dart';
+import 'constents/local_storage.dart';
+import 'dashboard/members/member_bloc/members_bloc.dart';
+import 'dashboard/visitors/visitor_view_bloc/visitors_view_bloc.dart';
+import 'dashboard/visitors/visitors_bloc/visitors_bloc.dart';
+import 'navigation_screen.dart';
+import 'shops/bloc/dailyneeds_bloc.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

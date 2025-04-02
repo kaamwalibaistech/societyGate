@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:my_society/models/login_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/login_model.dart';
 
 class LocalStoragePref {
   static LocalStoragePref? _instance;

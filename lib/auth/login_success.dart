@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:my_society/constents/sizedbox.dart';
-import 'package:my_society/navigation_screen.dart';
+
+import '../constents/sizedbox.dart';
+import '../navigation_screen.dart';
 
 class LoginSuccess extends StatelessWidget {
   const LoginSuccess({super.key});

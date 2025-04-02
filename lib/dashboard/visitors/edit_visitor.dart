@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/dashboard/visitors/network/edit_visitor.dart';
-import 'package:my_society/dashboard/visitors/visitors_bloc/visitors_bloc.dart';
-import 'package:my_society/models/visitors_details_model.dart';
 
+import '../../constents/local_storage.dart';
 import '../../models/login_model.dart';
+import '../../models/visitors_details_model.dart';
+import 'network/edit_visitor.dart';
 import 'visitor_view_bloc/visitors_view_bloc.dart';
 import 'visitor_view_bloc/visitors_view_event.dart';
+import 'visitors_bloc/visitors_bloc.dart';
 
 class EditVisitor extends StatefulWidget {
   final VisitorsDetailModel? visitorsDetailModel;

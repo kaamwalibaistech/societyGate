@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:my_society/constents/sizedbox.dart';
 
 import '../../api/api_repository.dart';
 import '../../constents/local_storage.dart';
+import '../../constents/sizedbox.dart';
 import '../../models/add_notices_model.dart';
 
 class AddNoticeScreen extends StatefulWidget {
