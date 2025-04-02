@@ -2,10 +2,11 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/dashboard/visitors/network/visitorslist_api.dart';
-import 'package:my_society/models/login_model.dart';
-import 'package:my_society/models/visitorslist_model.dart';
+
+import '../../../constents/local_storage.dart';
+import '../../../models/login_model.dart';
+import '../../../models/visitorslist_model.dart';
+import '../network/visitorslist_api.dart';
 
 part 'visitors_event.dart';
 part 'visitors_state.dart';

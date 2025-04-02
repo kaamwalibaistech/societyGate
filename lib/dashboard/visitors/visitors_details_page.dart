@@ -4,18 +4,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/constents/sizedbox.dart';
-import 'package:my_society/dashboard/visitors/edit_visitor.dart';
-import 'package:my_society/dashboard/visitors/network/visitor_delete.dart';
-import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_bloc.dart';
-import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_event.dart';
-import 'package:my_society/dashboard/visitors/visitor_view_bloc/visitors_view_state.dart';
-import 'package:my_society/models/login_model.dart';
-import 'package:my_society/models/visitors_details_model.dart';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '../../constents/local_storage.dart';
+import '../../constents/sizedbox.dart';
+import '../../models/login_model.dart';
+import '../../models/visitors_details_model.dart';
+import 'edit_visitor.dart';
+import 'network/visitor_delete.dart';
+import 'visitor_view_bloc/visitors_view_bloc.dart';
+import 'visitor_view_bloc/visitors_view_event.dart';
+import 'visitor_view_bloc/visitors_view_state.dart';
 
 class VisitorsDetailsPage extends StatefulWidget {
   final String visitorID;

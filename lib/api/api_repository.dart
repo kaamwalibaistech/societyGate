@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:my_society/models/member_register_model.dart';
 
 import '../models/add_daily_help_model.dart';
 import '../models/add_family_member_model.dart';
@@ -14,6 +13,7 @@ import '../models/get_daily_help_model.dart';
 import '../models/get_family_members_model.dart';
 import '../models/get_vehicle_detail_model.dart';
 import '../models/homepage_model.dart';
+import '../models/member_register_model.dart';
 import 'api_constant.dart';
 
 class ApiRepository {

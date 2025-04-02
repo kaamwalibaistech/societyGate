@@ -2,13 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/constents/sizedbox.dart';
-import 'package:my_society/dashboard/visitors/addvisitors_page.dart';
-import 'package:my_society/dashboard/visitors/visitors_bloc/visitors_bloc.dart';
-import 'package:my_society/dashboard/visitors/visitors_details_page.dart';
-import 'package:my_society/models/login_model.dart';
-import 'package:my_society/models/visitorslist_model.dart';
+
+import '../../constents/local_storage.dart';
+import '../../constents/sizedbox.dart';
+import '../../models/login_model.dart';
+import '../../models/visitorslist_model.dart';
+import 'addvisitors_page.dart';
+import 'visitors_bloc/visitors_bloc.dart';
+import 'visitors_details_page.dart';
 
 class VisitorsPage extends StatefulWidget {
   const VisitorsPage({super.key});

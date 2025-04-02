@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:my_society/api/api_repository.dart';
-import 'package:my_society/auth/login_screen.dart';
-import 'package:my_society/constents/sizedbox.dart';
-import 'package:my_society/models/member_register_model.dart';
+
+import '../api/api_repository.dart';
+import '../constents/sizedbox.dart';
+import '../models/member_register_model.dart';
+import 'login_screen.dart';
 
 class RegisterMember extends StatefulWidget {
   const RegisterMember({super.key});

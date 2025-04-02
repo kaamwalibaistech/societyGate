@@ -3,19 +3,19 @@ import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:my_society/constents/local_storage.dart';
-import 'package:my_society/dashboard/members/members_page.dart';
-import 'package:my_society/dashboard/visitors/visitors_page.dart';
-import 'package:my_society/models/login_model.dart';
-import 'package:my_society/scanner_page.dart';
-import 'package:my_society/shops/dailyneeds_tab.dart';
 
 import 'api/api_repository.dart';
 import 'book_amenities.dart';
+import 'constents/local_storage.dart';
 import 'constents/sizedbox.dart';
+import 'dashboard/members/members_page.dart';
 import 'dashboard/notice_board/notice_board_screen.dart';
+import 'dashboard/visitors/visitors_page.dart';
 import 'models/homepage_model.dart';
+import 'models/login_model.dart';
 import 'payment_screen.dart';
+import 'scanner_page.dart';
+import 'shops/dailyneeds_tab.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});

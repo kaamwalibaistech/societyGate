@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:my_society/constents/sizedbox.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_society/models/shoplist_model.dart';
-import 'package:my_society/shops/addshop.dart';
-import 'package:my_society/shops/bloc/dailyneeds_bloc.dart';
-import 'package:my_society/shops/dailyneeds_tab.dart';
-import 'package:my_society/shops/network/shop_apis.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../constents/sizedbox.dart';
+import '../models/shoplist_model.dart';
+import 'addshop.dart';
+import 'bloc/dailyneeds_bloc.dart';
 import 'editShop.dart';
+import 'network/shop_apis.dart';
 
 class ShopSettings extends StatefulWidget {
   const ShopSettings({super.key});

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:my_society/auth/login_screen.dart';
-import 'package:my_society/constents/sizedbox.dart';
 
 import '../api/api_repository.dart';
+import '../constents/sizedbox.dart';
 import '../models/admin_register_model.dart';
+import 'login_screen.dart';
 
 class SocietyRegister extends StatefulWidget {
   const SocietyRegister({super.key});
