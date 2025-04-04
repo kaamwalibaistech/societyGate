@@ -316,7 +316,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      NoticeBoardScreen(data: data)));
+                                      const NoticeBoardScreen()));
                           break;
                         case 3:
                           Navigator.push(

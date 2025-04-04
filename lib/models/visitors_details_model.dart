@@ -8,13 +8,13 @@ class VisitorsDetailModel {
   VisitorsDetailModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -72,21 +72,21 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['visitor_id'] = this.visitorId;
-    data['flat_id'] = this.flatId;
-    data['name'] = this.name;
-    data['phone'] = this.phone;
-    data['relation'] = this.relation;
-    data['gender'] = this.gender;
-    data['visiting_purpose'] = this.visitingPurpose;
-    data['visiting_date'] = this.visitingDate;
-    data['entry_time'] = this.entryTime;
-    data['exit_time'] = this.exitTime;
-    data['visiting_request_by'] = this.visitingRequestBy;
-    data['society_id'] = this.societyId;
-    data['approved_by'] = this.approvedBy;
-    data['unique_code'] = this.uniqueCode;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['visitor_id'] = visitorId;
+    data['flat_id'] = flatId;
+    data['name'] = name;
+    data['phone'] = phone;
+    data['relation'] = relation;
+    data['gender'] = gender;
+    data['visiting_purpose'] = visitingPurpose;
+    data['visiting_date'] = visitingDate;
+    data['entry_time'] = entryTime;
+    data['exit_time'] = exitTime;
+    data['visiting_request_by'] = visitingRequestBy;
+    data['society_id'] = societyId;
+    data['approved_by'] = approvedBy;
+    data['unique_code'] = uniqueCode;
     return data;
   }
 }

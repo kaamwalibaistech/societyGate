@@ -44,12 +44,14 @@ class DailyneedsTabState extends State<DailyneedsTab> {
           actions: [
             GestureDetector(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ShopSettings()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ShopSettings()));
               },
               child: Visibility(
                 visible: admin == "admin",
-                child: Padding(
+                child: const Padding(
                   padding: EdgeInsets.only(right: 20),
                   child: Icon(
                     Icons.settings,
@@ -63,8 +65,8 @@ class DailyneedsTabState extends State<DailyneedsTab> {
         body: BlocBuilder<DailyneedsBloc, DailyneedsState>(
             builder: (context, state) {
           if (state is DailyneedsInitial) {
-            return Center(
-              child: const CircularProgressIndicator(),
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           } else if (state is DailyneedsSuccessState) {
             return buildSuccessWidget(state.shopListModel);
@@ -149,7 +151,7 @@ class DailyneedsTabState extends State<DailyneedsTab> {
                             shopListModel?.data?[index].phone.toString() ?? "");
                         final phoneUri = Uri(
                           scheme: 'tel',
-                          path: "${num}",
+                          path: "$num",
                         );
                         launchUrl(phoneUri);
                       },

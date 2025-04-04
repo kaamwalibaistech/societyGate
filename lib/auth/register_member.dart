@@ -339,6 +339,7 @@ class _RegisterMemberState extends State<RegisterMember> {
                                     floorNoNoController.text);
                             // All validations passed
                             Fluttertoast.showToast(
+                                timeInSecForIosWeb: 2,
                                 msg: memberRegisterData!.message);
                             Navigator.pop(context);
                           }

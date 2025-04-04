@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:society_gate/bloc/homepage_bloc.dart';
 
 import 'auth/login_bloc/login_bloc.dart';
 import 'auth/register_screen.dart';
@@ -70,6 +71,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<DailyneedsBloc>(create: (context) => DailyneedsBloc()),
         BlocProvider<VisitorsDetailBloc>(
             create: (context) => VisitorsDetailBloc()),
+        BlocProvider<HomepageBloc>(create: (context) => HomepageBloc())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

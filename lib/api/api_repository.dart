@@ -14,6 +14,9 @@ import '../models/get_family_members_model.dart';
 import '../models/get_vehicle_detail_model.dart';
 import '../models/homepage_model.dart';
 import '../models/member_register_model.dart';
+import '../models/user_approve.dart';
+import '../models/watchman_add_model.dart';
+import '../models/watchman_delete_model.dart';
 import 'api_constant.dart';
 
 class ApiRepository {
@@ -115,6 +118,26 @@ class ApiRepository {
     return null;
   }
 
+  Future<UserApprove?> getUserApproval(userId) async {
+    final url = Uri.parse("https://blingbroomcleaning.com/api/userapprove");
+    final body = {
+      'user_id': userId,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return UserApprove.fromJson(data);
+        }
+        return UserApprove.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
   Future<Homepagemodel?> getHomePageData(societyId) async {
     final url = Uri.parse("https://blingbroomcleaning.com/api/homepage");
     final body = {
@@ -177,7 +200,7 @@ class ApiRepository {
         if (data['status'] == 200) {
           return GetFamilyMemberModel.fromJson(data);
         }
-        return GetFamilyMemberModel.fromJson(data);
+        return null;
       }
     } catch (e) {
       throw Exception(e.toString());
@@ -198,7 +221,7 @@ class ApiRepository {
         if (data['status'] == 200) {
           return GetVehicleDetailsModel.fromJson(data);
         }
-        return GetVehicleDetailsModel.fromJson(data);
+        return null;
       }
     } catch (e) {
       throw Exception(e.toString());
@@ -225,7 +248,32 @@ class ApiRepository {
         if (data['status'] == 200) {
           return AddDailyHelpModel.fromJson(data);
         }
-        return AddDailyHelpModel.fromJson(data);
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<WatchManAddModel?> addWatchman(
+      societyid, name, email, phoneNo, password) async {
+    final url = Uri.parse("https://blingbroomcleaning.com/api/watchmenadd");
+    final body = {
+      'society_id': societyid,
+      'uname': name,
+      'uemail': email,
+      'uphone': phoneNo,
+      'upassword': password,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return WatchManAddModel.fromJson(data);
+        }
+        return WatchManAddModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());
@@ -246,6 +294,27 @@ class ApiRepository {
         if (data['status'] == 200) {
           return GetDailyHelpModel.fromJson(data);
         }
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<WatchManDeleteModel?> deleteWatchman(userId) async {
+    final url = Uri.parse("https://blingbroomcleaning.com/api/watchmendelete");
+    final body = {
+      'user_id': userId,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return WatchManDeleteModel.fromJson(data);
+        }
+        return WatchManDeleteModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

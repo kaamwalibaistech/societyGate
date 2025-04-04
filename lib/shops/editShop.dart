@@ -1,9 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lottie/lottie.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../constents/local_storage.dart';
 import '../constents/sizedbox.dart';
@@ -49,7 +48,7 @@ class _EditshopState extends State<Editshop> {
     log(widget.index.toString());
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Update Shop",
           style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w500),
         ),
@@ -60,12 +59,12 @@ class _EditshopState extends State<Editshop> {
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 32),
+            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 32),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
                 border: Border.all(width: 1, color: Colors.blue),
                 color: Colors.white),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back,
               color: Colors.blue,
             ),
@@ -250,7 +249,7 @@ class _EditshopState extends State<Editshop> {
                           scale: 0.6,
                         ),
                       ),
-                      Text(
+                      const Text(
                         "Shop Updated!",
                         style: TextStyle(
                             fontWeight: FontWeight.w400,
@@ -258,7 +257,7 @@ class _EditshopState extends State<Editshop> {
                             letterSpacing: 1),
                       ),
                       sizedBoxH20(context),
-                      Text(
+                      const Text(
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 15,
