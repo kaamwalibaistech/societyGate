@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:society_gate/bloc/homepage_bloc.dart';
+import 'package:society_gate/bloc/homepage_event.dart';
 
 import '../../api/api_repository.dart';
 import '../../constents/local_storage.dart';
@@ -220,6 +223,8 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                             descriptionController.text,
                             announcementType.toString(),
                           );
+                          BlocProvider.of<HomepageBloc>(context)
+                              .add(GetHomePageDataEvent());
                           Fluttertoast.showToast(
                               msg: addNoticeData?.message.toString() ?? "");
                           Navigator.pop(context);
