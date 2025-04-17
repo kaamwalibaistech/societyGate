@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
 
@@ -21,6 +22,23 @@ Future main() async {
   await dotenv.load(fileName: ".env");
   checkForUpdates();
   runApp(const MyApp());
+  configLoading();
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 2000)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false;
 }
 
 /// Function to check for updates at app startup
@@ -81,6 +99,7 @@ class _MyAppState extends State<MyApp> {
         home: isLoggedin == true
             ? const Navigationscreen()
             : const RegisterScreen(),
+        builder: EasyLoading.init(),
       ),
     );
   }
