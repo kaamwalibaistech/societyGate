@@ -30,7 +30,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.society_gate.my_society"
+        applicationId = "com.society_gate.society_gate"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
