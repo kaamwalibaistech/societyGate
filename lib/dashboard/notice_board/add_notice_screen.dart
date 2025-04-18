@@ -18,6 +18,7 @@ class AddNoticeScreen extends StatefulWidget {
 
 class _AddNoticeScreenState extends State<AddNoticeScreen> {
   final formKey = GlobalKey<FormState>();
+
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 

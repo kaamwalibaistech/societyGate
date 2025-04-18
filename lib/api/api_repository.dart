@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:society_gate/models/help_support_model.dart';
+import 'package:society_gate/models/update_user_model.dart';
 
 import '../models/add_daily_help_model.dart';
 import '../models/add_family_member_model.dart';
@@ -222,6 +224,53 @@ class ApiRepository {
           return GetVehicleDetailsModel.fromJson(data);
         }
         return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<UpdateUserModel?> updateUser(userId, name, email, number) async {
+    final url = Uri.parse("https://blingbroomcleaning.com/api/userupdate");
+    final body = {
+      'user_id': userId,
+      'uname': name,
+      'uemail': email,
+      'uphone': number,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return UpdateUserModel.fromJson(data);
+        }
+        return UpdateUserModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<HelpSupportModel?> postSupportMessage(
+      societyId, userId, title, message) async {
+    final url = Uri.parse("https://blingbroomcleaning.com/api/supportinsert");
+    final body = {
+      'society_id': societyId,
+      'user_id': userId,
+      'title': title,
+      'message': message,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return HelpSupportModel.fromJson(data);
+        }
+        return HelpSupportModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

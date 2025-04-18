@@ -19,7 +19,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   void _loginMethod(LoginButtonEvent event, Emitter<LoginState> emit) async {
     emit(LoginLoadingState());
     try {
-      final loginData = await login(event.email, event.password);
+      final loginData =
+          await login(event.phoneNo.toString(), event.password.toString());
       _loginModel = loginData;
       if (_loginModel!.status == 200) {
         LocalStoragePref().storeLoginModel(_loginModel!);

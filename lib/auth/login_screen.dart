@@ -114,10 +114,17 @@ class _CreateNewAccountState extends State<LoginScreen> {
               ),
               SizedBox(
                 child: TextFormField(
-                  validator: validateEmail,
-                  keyboardType: TextInputType.emailAddress,
+                  maxLength: 10,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter mobile no.";
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.number,
                   controller: _mobileNoController,
                   decoration: InputDecoration(
+                    counterText: "",
                     fillColor: Colors.white,
                     filled: true,
                     border: const OutlineInputBorder(),
@@ -133,7 +140,7 @@ class _CreateNewAccountState extends State<LoginScreen> {
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 10),
-                    hintText: "Email ",
+                    hintText: "Phone No ",
                     hintStyle: TextStyle(color: Colors.deepPurple[200]),
                   ),
                 ),
