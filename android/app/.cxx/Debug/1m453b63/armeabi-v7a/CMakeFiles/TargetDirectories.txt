@@ -1,0 +1,2 @@
+D:/cursor ai projeycts/societyGate/android/app/.cxx/Debug/1m453b63/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/cursor ai projeycts/societyGate/android/app/.cxx/Debug/1m453b63/armeabi-v7a/CMakeFiles/rebuild_cache.dir
