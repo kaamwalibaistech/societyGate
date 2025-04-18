@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:society_gate/auth/register_screen.dart';
+import 'package:society_gate/terms_condition.dart';
 
-import '../auth/login_screen.dart';
 import '../constents/local_storage.dart';
 import '../constents/sizedbox.dart';
 import '../manual_visitors_screen.dart';
@@ -18,6 +19,7 @@ class _WatchmanProfilePageState extends State<WatchmanProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text("Profile"),
         centerTitle: true,
         backgroundColor: Colors.amber,
@@ -85,19 +87,28 @@ class _WatchmanProfilePageState extends State<WatchmanProfilePage> {
                         ),
                       ),
                     ),
-                    const ListTile(
-                      leading: Icon(
-                        Icons.handshake_outlined,
-                        //  color: Colors.black,
-                      ),
-                      title: Text(
-                        "terms & conditions",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios_outlined,
-                        size: 18,
-                        // color: Colors.black,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const TermsConditionScreen()));
+                      },
+                      child: const ListTile(
+                        leading: Icon(
+                          Icons.handshake_outlined,
+                          //  color: Colors.black,
+                        ),
+                        title: Text(
+                          "terms & conditions",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          size: 18,
+                          // color: Colors.black,
+                        ),
                       ),
                     ),
                     const ListTile(
@@ -121,7 +132,7 @@ class _WatchmanProfilePageState extends State<WatchmanProfilePage> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
+                              builder: (context) => const RegisterScreen()),
                           (Route<dynamic> route) => false,
                         );
                       },
