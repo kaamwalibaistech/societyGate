@@ -24,12 +24,12 @@ class _CreateNewAccountState extends State<LoginScreen> {
 
   LoginBloc? loginBloc;
 
-  String? validateEmail(String? email) {
-    RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
-    final isEmailValid = emailRegEx.hasMatch(email ?? "");
-    if (!isEmailValid) return "please  Enter a valid email";
-    return null;
-  }
+  // String? validateEmail(String? email) {
+  //   RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
+  //   final isEmailValid = emailRegEx.hasMatch(email ?? "");
+  //   if (!isEmailValid) return "please  Enter a valid email";
+  //   return null;
+  // }
 
   @override
   Widget build(BuildContext context) {
