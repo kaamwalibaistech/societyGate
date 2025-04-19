@@ -7,7 +7,7 @@ import 'account_screen.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/watchman_profile_page.dart';
 import 'homepage_screen.dart';
-import 'message_screen.dart';
+import 'message/message_screen.dart';
 import 'shops/dailyneeds_tab.dart';
 
 class Navigationscreen extends StatefulWidget {
