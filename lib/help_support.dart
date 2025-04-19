@@ -17,111 +17,146 @@ class _HelpSupportState extends State<HelpSupport> {
     TextEditingController titleController = TextEditingController();
     TextEditingController messageController = TextEditingController();
     return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FF),
       appBar: AppBar(
         automaticallyImplyLeading: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: const Text(
-          "Get Support",
-          style: TextStyle(fontSize: 18),
+          "Help & Support",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF2D3142),
+          ),
+        ),
+        iconTheme: const IconThemeData(
+          color: Color(0xFF2D3142),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
         child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Center(
-                  child: Image.asset(
-                    "lib/assets/help_desk.png.png",
-                    height: 150,
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 10.0),
-                child: Center(
-                  child: Text(
-                    "Ask us suggest any way we can improve",
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 40.0),
-                child: Text(
-                  "Issue type",
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
-                ),
-              ),
-              sizedBoxH10(context),
               Container(
-                height: 50,
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      spreadRadius: 1,
-                      blurRadius: 6,
-                      offset: const Offset(0, 3), // changes position of shadow
+                  color: const Color(0xFFF8F9FF),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "How can we help you?",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF2D3142),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "We're here to assist you. Please describe your issue or suggestion in detail.",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF6C7A9C),
+                        height: 1.5,
+                      ),
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                "Issue Type",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2D3142),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFFE0E0E0),
+                    width: 1,
+                  ),
+                ),
                 child: TextFormField(
                   controller: titleController,
-                  decoration: InputDecoration(
-                      hintText: "Enter topic / Issue type",
-                      hintStyle: const TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w400),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(10))),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF2D3142),
+                  ),
+                  decoration: const InputDecoration(
+                    hintText: "Enter the type of issue",
+                    hintStyle: TextStyle(
+                      color: Color(0xFF9E9E9E),
+                      fontSize: 16,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 30.0),
-                child: Text(
-                  "message",
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
+              const SizedBox(height: 24),
+              const Text(
+                "Description",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2D3142),
                 ),
               ),
-              sizedBoxH10(context),
+              const SizedBox(height: 8),
               Container(
                 height: 200,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      spreadRadius: 1,
-                      blurRadius: 6,
-                      offset: const Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFFE0E0E0),
+                    width: 1,
+                  ),
                 ),
                 child: TextFormField(
                   controller: messageController,
                   maxLines: 10,
-                  decoration: InputDecoration(
-                      hintText: "Enter your message",
-                      hintStyle: const TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w400),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(10))),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF2D3142),
+                  ),
+                  decoration: const InputDecoration(
+                    hintText: "Please describe your issue in detail",
+                    hintStyle: TextStyle(
+                      color: Color(0xFF9E9E9E),
+                      fontSize: 16,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
+              const SizedBox(height: 32),
               GestureDetector(
                 onTap: () async {
                   if (titleController.text.isNotEmpty &&
@@ -139,27 +174,57 @@ class _HelpSupportState extends State<HelpSupport> {
                     Fluttertoast.showToast(msg: "Both fields are required");
                   }
                 },
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.20,
-                  child: Center(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.06,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      child: const Center(
-                          child: Text(
-                        "Submit message",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18),
-                      )),
+                child: Container(
+                  height: 56,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xFF2196F3),
+                        Color(0xFF1976D2),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF2196F3).withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.support_agent_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        "Submit Request",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

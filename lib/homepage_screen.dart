@@ -76,318 +76,537 @@ class _HomepageScreenState extends State<HomepageScreen> {
   ];
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     List<int> visibleIndices = List.generate(6, (index) => index);
     if (loginType == "watchman") {
       visibleIndices.removeWhere((index) => index == 3 || index == 4);
     }
+
     return Scaffold(
-      backgroundColor: loginType == "watchman"
-          ? const Color(0xffFE8A00)
-          : const Color.fromARGB(255, 19, 73, 128),
-      body: SingleChildScrollView(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              loginType == "watchman"
+                  ? const Color(0xFFFFF5E6)
+                  : const Color(0xFFF8F9FF),
+              loginType == "watchman"
+                  ? const Color(0xFFFFE5CC)
+                  : const Color(0xFFEEF1FF),
+            ],
+          ),
+        ),
         child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 10, right: 10, left: 10),
-                decoration: BoxDecoration(
-                    color: loginType == "watchman"
-                        ? Colors.red.shade50
-                        : Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(12)),
-                height: MediaQuery.of(context).size.height * 0.38,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 6),
-                      child: ListTile(
-                        leading: CircleAvatar(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 12),
+                // Profile Section
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: loginType == "watchman"
+                                ? const Color(0xFFFF9933)
+                                : const Color(0xFF6B4EFF),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          radius: 20,
                           foregroundImage: loginType == "watchman"
                               ? const AssetImage('lib/assets/watchman.jpg')
                               : const AssetImage("lib/assets/man.png"),
-                          radius: 30,
-                        ),
-                        title: Text(loginModel?.user?.uname ?? "NA"),
-                        subtitle: Text(loginModel?.user?.societyName ?? "NA"),
-                        // : const Text(""),
-                        trailing: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(color: Colors.black45),
-                          ),
-                          child: const Icon(
-                            Icons.notifications_active,
-                            color: Colors.black54,
-                            size: 30,
-                          ),
                         ),
                       ),
-                    ),
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                    Visibility(
-                      visible: loginType != "watchman",
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.19,
-                            width: MediaQuery.of(context).size.width,
-                            child: CarouselSlider.builder(
-                              itemCount:
-                                  (data?.data.announcements.isNotEmpty ?? false)
-                                      ? data!.data.announcements.length
-                                      : 1,
-                              itemBuilder: (context, index, realIndex) {
-                                bool hasAnnouncements =
-                                    data?.data.announcements.isNotEmpty ??
-                                        false;
-
-                                return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color:
-                                        const Color.fromARGB(255, 19, 52, 84),
-                                  ),
-                                  child: Center(
-                                    child: Stack(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Image.asset(
-                                            "lib/assets/notice_board.png.png",
-                                            fit: BoxFit.fitWidth,
-                                            width: 330,
-                                          ),
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10.0,
-                                                  left: 20,
-                                                  right: 20),
-                                              child: Center(
-                                                child: Text(
-                                                  hasAnnouncements
-                                                      ? data!
-                                                          .data
-                                                          .announcements[index]
-                                                          .title
-                                                      : "No Notices",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            if (hasAnnouncements) ...[
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 25.0),
-                                                child: Text(
-                                                  data!
-                                                      .data
-                                                      .announcements[index]
-                                                      .description,
-                                                  maxLines: 5,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                      color: Colors.black),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 25.0),
-                                                child: Text(
-                                                  "Announcement Type: ${data!.data.announcements[index].announcementType}",
-                                                  style: const TextStyle(
-                                                      color: Colors.black),
-                                                ),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                              options: CarouselOptions(
-                                autoPlay: true,
-                                initialPage: 0,
-                                autoPlayCurve: Curves.fastOutSlowIn,
-                                aspectRatio: 16 / 9,
-                                enlargeCenterPage: true,
-                              ),
-                            ),
-                          ),
-
-                          // Community Section
-                          Padding(
-                            padding: const EdgeInsets.only(left: 22.0, top: 20),
-                            child: Text(
-                              "Community",
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              loginModel?.user?.uname ?? "NA",
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: loginType == "watchman"
-                                    ? Colors.red.shade500
-                                    : Colors.black54,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey[800],
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    Visibility(
-                      visible: loginType == "watchman",
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const ScannerPage()));
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 14),
-                          height: MediaQuery.of(context).size.height * 0.25,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: Colors.black12,
-                              border:
-                                  Border.all(width: 0.5, color: Colors.white54),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Lottie.asset(
-                            "lib/assets/lottie_json/scan.json",
-                          ),
+                            Text(
+                              loginModel?.user?.societyName ?? "NA",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.notifications_outlined,
+                          color: loginType == "watchman"
+                              ? const Color(0xFFFF9933)
+                              : const Color(0xFF6B4EFF),
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              sizedBoxH20(context),
-              GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: visibleIndices.length,
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisExtent: 180,
-                  crossAxisCount: 2,
-                ),
-                itemBuilder: (BuildContext context, int i) {
-                  int index =
-                      visibleIndices[i]; // actual index from original list
 
-                  return GestureDetector(
-                    onTap: () {
-                      switch (index) {
-                        case 0:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const MembersPage()));
-                          break;
-                        case 1:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const VisitorsPage()));
-                          break;
-                        case 2:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const NoticeBoardScreen()));
-                          break;
-                        case 3:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const PaymentScreen()));
-                          break;
-                        case 4:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const BookAmenities()));
-                          break;
-                        case 5:
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const DailyneedsTab()));
-                          break;
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15.0, vertical: 18),
-                      child: Stack(
+                const SizedBox(height: 16),
+
+                // Stats Section
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Card(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Action Required",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[800],
+                                ),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              const SizedBox(height: 5),
+                              Row(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8.0, top: 10),
-                                    child: Text(
-                                      title[index],
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
-                                    ),
+                                  Icon(
+                                    Icons.check_circle,
+                                    color: Colors.green[400],
+                                    size: 20,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 8.0, top: 2, right: 8),
-                                    child: Text(
-                                      subtitle[index],
-                                      style: const TextStyle(
-                                          color: Colors.blueGrey),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    "All tasks completed",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
                                     ),
                                   ),
                                 ],
                               ),
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF6B4EFF).withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.arrow_forward,
+                              color: Color(0xFF6B4EFF),
                             ),
                           ),
-                          Positioned(
-                            bottom: 8,
-                            right: 12,
-                            child: Image.asset(communityList[index]),
-                          )
                         ],
                       ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Announcements Section (if not watchman)
+                if (loginType != "watchman") ...[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: CarouselSlider.builder(
+                      itemCount: (data?.data.announcements.isNotEmpty ?? false)
+                          ? data!.data.announcements.length
+                          : 1,
+                      itemBuilder: (context, index, realIndex) {
+                        bool hasAnnouncements =
+                            data?.data.announcements.isNotEmpty ?? false;
+                        return Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color(0xFF6B4EFF).withOpacity(0.04),
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(12),
+                                    topRight: Radius.circular(12),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.campaign_rounded,
+                                      color: const Color(0xFF6B4EFF),
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      hasAnnouncements
+                                          ? data!.data.announcements[index]
+                                              .announcementType
+                                          : "Notice",
+                                      style: const TextStyle(
+                                        color: Color(0xFF6B4EFF),
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.access_time,
+                                            color: const Color(0xFF6B4EFF),
+                                            size: 12,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            "New",
+                                            style: TextStyle(
+                                              color: Colors.grey[700],
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        hasAnnouncements
+                                            ? data!
+                                                .data.announcements[index].title
+                                            : "No Notices",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey[800],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      if (hasAnnouncements)
+                                        Expanded(
+                                          child: Text(
+                                            data!.data.announcements[index]
+                                                .description,
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.grey[600],
+                                              height: 1.3,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                              vertical: 5,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFF6B4EFF)
+                                                  .withOpacity(0.08),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "Read More",
+                                                  style: TextStyle(
+                                                    color:
+                                                        const Color(0xFF6B4EFF),
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 4),
+                                                Icon(
+                                                  Icons.arrow_forward,
+                                                  color:
+                                                      const Color(0xFF6B4EFF),
+                                                  size: 12,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Icon(
+                                            Icons.bookmark_border_rounded,
+                                            color: Colors.grey[400],
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Icon(
+                                            Icons.share_outlined,
+                                            color: Colors.grey[400],
+                                            size: 18,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      options: CarouselOptions(
+                        height: 180,
+                        autoPlay: true,
+                        enlargeCenterPage: true,
+                        viewportFraction: 0.92,
+                        autoPlayCurve: Curves.easeInOut,
+                        autoPlayAnimationDuration:
+                            const Duration(milliseconds: 800),
+                        enableInfiniteScroll: true,
+                        padEnds: true,
+                      ),
                     ),
-                  );
-                },
-              )
-            ],
+                  ),
+                  const SizedBox(height: 8),
+                ],
+
+                // Scanner Section (if watchman)
+                if (loginType == "watchman")
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ScannerPage()),
+                        );
+                      },
+                      child: Container(
+                        height: 160,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.04),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Lottie.asset(
+                          "lib/assets/lottie_json/scan.json",
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                const SizedBox(height: 8),
+
+                // Features Grid
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: visibleIndices.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: 1.1,
+                    ),
+                    itemBuilder: (context, i) {
+                      int index = visibleIndices[i];
+                      return GestureDetector(
+                        onTap: () {
+                          switch (index) {
+                            case 0:
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MembersPage()));
+                              break;
+                            case 1:
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const VisitorsPage()));
+                              break;
+                            case 2:
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const NoticeBoardScreen()));
+                              break;
+                            case 3:
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PaymentScreen()));
+                              break;
+                            case 4:
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const BookAmenities()));
+                              break;
+                            case 5:
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const DailyneedsTab()));
+                              break;
+                          }
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                margin: const EdgeInsets.only(bottom: 2),
+                                decoration: BoxDecoration(
+                                  color: loginType == "watchman"
+                                      ? const Color(0xFFFF9933)
+                                          .withOpacity(0.08)
+                                      : const Color(0xFF6B4EFF)
+                                          .withOpacity(0.08),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Image.asset(
+                                  communityList[index],
+                                  height: 35,
+                                  width: 35,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                title[index],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(
+                                  subtitle[index],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey[600],
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),
