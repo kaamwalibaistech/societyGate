@@ -9,68 +9,150 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   final TextEditingController _controller = TextEditingController();
-  // Dummy messages for UI preview - replace with your actual chat data source
+  final ScrollController _scrollController = ScrollController();
+
   final List<ChatMessage> _messages = [
     ChatMessage(
-        text: "Hello everyone!", senderId: "user2", isCurrentUser: false),
+      text: "Hello everyone! How's everyone doing today?",
+      senderId: "user2",
+      isCurrentUser: false,
+      senderName: "John",
+      time: "10:30 AM",
+    ),
     ChatMessage(
-        text: "Hi there!",
-        senderId: "user1",
-        isCurrentUser: true), // Assume 'user1' is the current user
+      text: "Hi there! I'm doing great, thanks for asking!",
+      senderId: "user1",
+      isCurrentUser: true,
+      senderName: "Me",
+      time: "10:32 AM",
+    ),
     ChatMessage(
-        text: "How's the project going?",
-        senderId: "user3",
-        isCurrentUser: false),
+      text:
+          "The project is going well. We're making good progress on the new features.",
+      senderId: "user3",
+      isCurrentUser: false,
+      senderName: "Sarah",
+      time: "10:35 AM",
+    ),
     ChatMessage(
-        text: "Making good progress.", senderId: "user1", isCurrentUser: true),
+      text:
+          "That's awesome! Let me know if you need any help with the implementation.",
+      senderId: "user1",
+      isCurrentUser: true,
+      senderName: "Me",
+      time: "10:37 AM",
+    ),
     ChatMessage(
-        text: "Need any help?", senderId: "user2", isCurrentUser: false),
+      text:
+          "Thanks! We might need some assistance with the backend integration.",
+      senderId: "user2",
+      isCurrentUser: false,
+      senderName: "John",
+      time: "10:40 AM",
+    ),
   ];
 
-  // Method to handle sending a message
   void _sendMessage() {
     if (_controller.text.trim().isNotEmpty) {
       setState(() {
-        // Add the message to the local list (for UI update)
-        // In a real app, send this to your backend/chat service
         _messages.add(ChatMessage(
           text: _controller.text.trim(),
-          senderId: "user1", // Replace with actual current user ID
+          senderId: "user1",
+          senderName: "Me",
           isCurrentUser: true,
+          time:
+              "${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}",
         ));
-        _controller.clear(); // Clear the input field
+        _controller.clear();
+
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        });
       });
-      // TODO: Implement logic to send the message to your backend/chat service
-      // e.g., chatService.sendMessage(groupId, _controller.text);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF0F7FF),
       appBar: AppBar(
-        title: const Text('Group Chat'),
-        // Customize AppBar color if needed
-        // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: const Color(0xFF4A90E2),
+        elevation: 0,
+        title: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 2),
+              ),
+              child: const CircleAvatar(
+                backgroundColor: Color(0xFFE3F2FD),
+                child: Icon(Icons.group, color: Color(0xFF4A90E2)),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Group Chat',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  '5 members online',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white70,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            color: Colors.white,
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Column(
         children: [
-          // Message list area
           Expanded(
-            child: ListView.builder(
-              padding:
-                  const EdgeInsets.all(12.0), // Add padding around the list
-              reverse:
-                  false, // Set to true if you want latest messages at the bottom and auto-scroll
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final message = _messages[index];
-                // Build the message bubble based on whether it's the current user's message
-                return _buildMessageBubble(message);
-              },
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              child: ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(16.0),
+                reverse: false,
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  final message = _messages[index];
+                  return _buildMessageBubble(message);
+                },
+              ),
             ),
           ),
-          // Message input area
           _buildMessageInput(),
         ],
       ),
@@ -78,62 +160,96 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   Widget _buildMessageBubble(ChatMessage message) {
-    // Determine alignment and color based on the sender
-    final alignment = message.isCurrentUser
-        ? CrossAxisAlignment.end
-        : CrossAxisAlignment.start;
-    final color =
-        message.isCurrentUser ? Colors.lightBlue[100] : Colors.grey[300];
-    final bubbleAlignment =
-        message.isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
-    final margin = message.isCurrentUser
-        ? const EdgeInsets.only(
-            top: 4.0,
-            bottom: 4.0,
-            left: 60.0,
-            right: 8.0) // Indent from left for own messages
-        : const EdgeInsets.only(
-            top: 4.0,
-            bottom: 4.0,
-            right: 60.0,
-            left: 8.0); // Indent from right for others' messages
+    final isCurrentUser = message.isCurrentUser;
+    final bubbleColor =
+        isCurrentUser ? const Color(0xFF4A90E2) : const Color(0xFFF5F9FF);
+    final textColor = isCurrentUser ? Colors.white : const Color(0xFF2D3142);
+    final timeColor = isCurrentUser ? Colors.white70 : const Color(0xFF6C7A9C);
 
     return Container(
-      alignment: bubbleAlignment,
-      margin: margin,
+      margin: EdgeInsets.only(
+        top: 8.0,
+        bottom: 8.0,
+        left: isCurrentUser ? 60.0 : 8.0,
+        right: isCurrentUser ? 8.0 : 60.0,
+      ),
       child: Column(
-        crossAxisAlignment: alignment,
+        crossAxisAlignment:
+            isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          // Display sender ID/Name above the bubble for others' messages
-          if (!message.isCurrentUser)
+          if (!isCurrentUser)
             Padding(
-              padding: const EdgeInsets.only(
-                  bottom: 3.0, left: 8.0), // Adjust padding as needed
-              child: Text(
-                message.senderId, // Replace with sender name if available
-                style: TextStyle(fontSize: 12.0, color: Colors.grey[600]),
+              padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _getUserColor(message.senderId),
+                    ),
+                    child: Center(
+                      child: Text(
+                        (message.senderName ?? 'U')[0].toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    message.senderName ?? 'User',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF2D3142),
+                    ),
+                  ),
+                ],
               ),
             ),
-          // The chat bubble container
           Container(
             padding:
-                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14.0),
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
             decoration: BoxDecoration(
-                color: color,
-                // Add nice rounded corners
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(18.0),
-                    topRight: Radius.circular(18.0),
-                    bottomLeft: message.isCurrentUser
-                        ? Radius.circular(18.0)
-                        : Radius.circular(0), // Pointy corner for sender
-                    bottomRight: message.isCurrentUser
-                        ? Radius.circular(0)
-                        : Radius.circular(18.0) // Pointy corner for receiver
-                    )),
-            child: Text(
-              message.text,
-              style: const TextStyle(color: Colors.black87, fontSize: 15.0),
+              color: bubbleColor,
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(20),
+                topRight: const Radius.circular(20),
+                bottomLeft: Radius.circular(isCurrentUser ? 20 : 0),
+                bottomRight: Radius.circular(isCurrentUser ? 0 : 20),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 5,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  message.text,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: 15.0,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  message.time,
+                  style: TextStyle(
+                    color: timeColor,
+                    fontSize: 10.0,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -141,55 +257,83 @@ class _MessageScreenState extends State<MessageScreen> {
     );
   }
 
-  // Widget for the text input field and send button
+  Color _getUserColor(String userId) {
+    final colors = [
+      const Color(0xFF4CAF50),
+      const Color(0xFF2196F3),
+      const Color(0xFF9C27B0),
+      const Color(0xFFFF9800),
+      const Color(0xFFE91E63),
+    ];
+    return colors[userId.hashCode % colors.length];
+  }
+
   Widget _buildMessageInput() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor, // Use card color for background
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
-            offset: Offset(0, -1),
-            blurRadius: 4,
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
           ),
         ],
       ),
       child: SafeArea(
-        // Ensure input isn't hidden by system UI (like keyboards)
         child: Row(
           children: [
-            // Potentially add an attachment button here
-            // IconButton(icon: Icon(Icons.attach_file), onPressed: () {}),
+            IconButton(
+              icon: const Icon(Icons.attach_file),
+              color: const Color(0xFF4A90E2),
+              onPressed: () {},
+            ),
             Expanded(
-              child: TextField(
-                controller: _controller,
-                minLines: 1,
-                maxLines: 5, // Allow multi-line input
-                textCapitalization: TextCapitalization.sentences,
-                decoration: InputDecoration(
-                  hintText: 'Type a message...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide.none, // No visible border
-                  ),
-                  filled: true,
-                  fillColor:
-                      Colors.grey[200], // Light grey background for input
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5F9FF),
+                  borderRadius: BorderRadius.circular(25),
                 ),
-                // Send message when the user presses 'send' on the keyboard
-                onSubmitted: (_) => _sendMessage(),
+                child: TextField(
+                  controller: _controller,
+                  minLines: 1,
+                  maxLines: 5,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: InputDecoration(
+                    hintText: 'Type a message...',
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 10.0,
+                    ),
+                    hintStyle: TextStyle(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  onSubmitted: (_) => _sendMessage(),
+                ),
               ),
             ),
             const SizedBox(width: 8.0),
-            // Send button
-            FloatingActionButton(
-              mini: true, // Make the button smaller
-              onPressed: _sendMessage,
-              child: const Icon(Icons.send),
-              elevation: 2.0,
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF4A90E2),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF4A90E2).withOpacity(0.3),
+                    spreadRadius: 1,
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.send),
+                color: Colors.white,
+                onPressed: _sendMessage,
+              ),
             ),
           ],
         ),
@@ -198,14 +342,18 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 }
 
-// Define a simple message model
 class ChatMessage {
   final String text;
-  final String senderId; // In a real app, use a unique user ID
+  final String senderId;
   final bool isCurrentUser;
+  final String time;
+  final String? senderName;
 
-  ChatMessage(
-      {required this.text,
-      required this.senderId,
-      required this.isCurrentUser});
+  const ChatMessage({
+    required this.text,
+    required this.senderId,
+    required this.isCurrentUser,
+    required this.time,
+    this.senderName,
+  });
 }
