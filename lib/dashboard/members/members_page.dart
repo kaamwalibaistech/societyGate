@@ -44,14 +44,45 @@ class _MembersPageState extends State<MembersPage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: const Color(0xFFF8F9FF),
         appBar: AppBar(
-          backgroundColor: Colors.deepPurpleAccent,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Color(0xFF6B4EFF)),
+            onPressed: () => Navigator.pop(context),
+          ),
           title: const Text(
             "Members",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(
+              color: Color(0xFF1A1A1A),
+              fontWeight: FontWeight.w600,
+              fontSize: 20,
+            ),
           ),
           centerTitle: true,
-          elevation: 10,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(48),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF0F2FF),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: TabBar(
+                indicator: BoxDecoration(
+                  color: const Color(0xFF6B4EFF),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                labelColor: Colors.white,
+                unselectedLabelColor: const Color(0xFF6B4EFF),
+                tabs: const [
+                  Tab(text: "Members"),
+                  Tab(text: "Watchman"),
+                ],
+              ),
+            ),
+          ),
         ),
         body: BlocBuilder<MembersBloc, MembersState>(
           builder: (context, state) {
@@ -62,7 +93,7 @@ class _MembersPageState extends State<MembersPage> {
             } else if (state is MembersErrorState) {
               return _buildError(state.msg);
             } else {
-              return const CircularProgressIndicator();
+              return const Center(child: CircularProgressIndicator());
             }
           },
         ),
@@ -75,106 +106,150 @@ class _MembersPageState extends State<MembersPage> {
     String? adminEmail;
     if (memberlistModel?.users?.admins?.isNotEmpty ?? false) {
       adminName = memberlistModel!.users!.admins!.first.uname;
-      //  adminPic = memberlistModel!.users!.admins!.first.uname;
       adminEmail = memberlistModel.users!.admins!.first.uemail;
     }
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: (memberlistModel?.users?.admins?.isNotEmpty ?? false)
-              ? Container(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                      color: Colors.deepPurpleAccent,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const Text(
-                        "Admin",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        height: 75,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: ListTile(
-                          leading: const CircleAvatar(
-                            foregroundImage:
-                                AssetImage("lib/assets/girlphoto2.jpg"),
-                            radius: 30,
-                          ),
-                          title: Text(adminName ?? "Not avilable"),
-                          subtitle: Text(adminEmail ?? "Not avilable"),
-                        ),
-                      ),
-                    ],
+        // Admin Card
+        Container(
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: const Color(0xFF6B4EFF),
+                    width: 1.5,
                   ),
-                )
-              : Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  decoration: BoxDecoration(
-                      color: Colors.purple.shade50,
-                      borderRadius: BorderRadius.circular(5)),
-                  child: const Center(
-                    child: Text(
-                      "No Admin",
-                      style: TextStyle(fontSize: 15),
+                ),
+                child: const CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Color(0xFFF0F2FF),
+                  child: Icon(
+                    Icons.admin_panel_settings,
+                    color: Color(0xFF6B4EFF),
+                    size: 30,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      adminName ?? "No Admin",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF1A1A1A),
+                      ),
                     ),
-                  )),
+                    const SizedBox(height: 4),
+                    Text(
+                      adminEmail ?? "Not Available",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-        const TabBar(
-          labelColor: Colors.deepPurpleAccent,
-          unselectedLabelColor: Colors.grey,
-          tabs: [
-            Tab(text: "Members"),
-            Tab(text: "Watchman"),
-          ],
-        ),
-        sizedBoxH10(context),
+
+        // Tab Content
         Expanded(
           child: TabBarView(
             children: [
+              // Members Tab
               (memberlistModel?.users?.members?.isNotEmpty ?? false)
                   ? getMembersWidget(context, memberlistModel?.users!.members)
-                  : const Center(child: Text("No Members Available!")),
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.group_outlined,
+                            size: 64,
+                            color: Colors.grey[400],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            "No Members Available",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+              // Watchman Tab
               (memberlistModel?.users?.watchmen?.isNotEmpty ?? false)
                   ? getWatchmanWidget(context, memberlistModel?.users!.watchmen)
                   : Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.25,
+                        Icon(
+                          Icons.security_outlined,
+                          size: 64,
+                          color: Colors.grey[400],
                         ),
-                        const Center(child: Text("No watchman available")),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.30,
+                        const SizedBox(height: 16),
+                        Text(
+                          "No watchman available",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                        loginModel?.user!.role == "admin"
-                            ? Padding(
-                                padding: const EdgeInsets.only(right: 30.0),
-                                child: FloatingActionButton(
-                                    child: const Icon(Icons.add),
-                                    onPressed: () {
-                                      modelBottomsheet();
-                                    }),
-                              )
-                            : const SizedBox()
+                        const SizedBox(height: 32),
+                        if (loginModel?.user!.role == "admin")
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: ElevatedButton.icon(
+                              onPressed: () => modelBottomsheet(),
+                              icon: const Icon(Icons.add),
+                              label: const Text("Add Watchman"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF6B4EFF),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+                          ),
                       ],
-                    )
+                    ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -183,12 +258,12 @@ class _MembersPageState extends State<MembersPage> {
     return ListView.builder(
       itemCount: 5,
       itemBuilder: (_, __) => Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16),
         child: Container(
           height: 80,
           decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(10),
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
       ),
@@ -197,9 +272,25 @@ class _MembersPageState extends State<MembersPage> {
 
   Widget _buildError(String msg) {
     return Center(
-      child: Text(
-        msg,
-        style: const TextStyle(color: Colors.red),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: Colors.red[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            msg,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

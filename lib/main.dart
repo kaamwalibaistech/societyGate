@@ -1,11 +1,13 @@
 import 'dart:developer';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
+import 'package:society_gate/firebase_options.dart';
 
 import 'auth/login_bloc/login_bloc.dart';
 import 'auth/register_screen.dart';
@@ -16,8 +18,14 @@ import 'dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'navigation_screen.dart';
 import 'shops/bloc/dailyneeds_bloc.dart';
 
-Future main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   await LocalStoragePref.instance!.initPrefBox();
   await dotenv.load(fileName: ".env");
   checkForUpdates();
