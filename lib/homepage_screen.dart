@@ -7,7 +7,6 @@ import 'package:lottie/lottie.dart';
 import 'api/api_repository.dart';
 import 'book_amenities.dart';
 import 'constents/local_storage.dart';
-import 'constents/sizedbox.dart';
 import 'dashboard/members/members_page.dart';
 import 'dashboard/notice_board/notice_board_screen.dart';
 import 'dashboard/visitors/visitors_page.dart';
@@ -133,7 +132,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              loginModel?.user?.uname ?? "NA",
+                              loginModel?.user?.uname ?? "",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -141,7 +140,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                               ),
                             ),
                             Text(
-                              loginModel?.user?.societyName ?? "NA",
+                              loginModel?.user?.societyName ?? "",
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.grey[600],
@@ -179,7 +178,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
                 // Stats Section
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -291,7 +290,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                   children: [
                                     Icon(
                                       Icons.campaign_rounded,
-                                      color: const Color(0xFF6B4EFF),
+                                      color: hasAnnouncements
+                                          ? _getAnnouncementColor(data!
+                                              .data
+                                              .announcements[index]
+                                              .announcementType)
+                                          : const Color(0xFF6B4EFF),
                                       size: 18,
                                     ),
                                     const SizedBox(width: 8),
@@ -300,8 +304,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                           ? data!.data.announcements[index]
                                               .announcementType
                                           : "Notice",
-                                      style: const TextStyle(
-                                        color: Color(0xFF6B4EFF),
+                                      style: TextStyle(
+                                        color: hasAnnouncements
+                                            ? _getAnnouncementColor(data!
+                                                .data
+                                                .announcements[index]
+                                                .announcementType)
+                                            : const Color(0xFF6B4EFF),
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -318,9 +327,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                       ),
                                       child: Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.access_time,
-                                            color: const Color(0xFF6B4EFF),
+                                            color: Color(0xFF6B4EFF),
                                             size: 12,
                                           ),
                                           const SizedBox(width: 4),
@@ -385,22 +394,20 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                             ),
-                                            child: Row(
+                                            child: const Row(
                                               children: [
                                                 Text(
                                                   "Read More",
                                                   style: TextStyle(
-                                                    color:
-                                                        const Color(0xFF6B4EFF),
+                                                    color: Color(0xFF6B4EFF),
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                                const SizedBox(width: 4),
+                                                SizedBox(width: 4),
                                                 Icon(
                                                   Icons.arrow_forward,
-                                                  color:
-                                                      const Color(0xFF6B4EFF),
+                                                  color: Color(0xFF6B4EFF),
                                                   size: 12,
                                                 ),
                                               ],
@@ -611,5 +618,18 @@ class _HomepageScreenState extends State<HomepageScreen> {
         ),
       ),
     );
+  }
+
+  Color _getAnnouncementColor(String type) {
+    switch (type.toLowerCase()) {
+      case 'emergency':
+        return const Color(0xFFFF3B30); // Red color for emergency
+      case 'maintenance':
+        return const Color(0xFF34C759); // Green color for maintenance
+      case 'general':
+        return const Color(0xFF6B4EFF); // Purple color for general
+      default:
+        return const Color(0xFF6B4EFF); // Default color
+    }
   }
 }
