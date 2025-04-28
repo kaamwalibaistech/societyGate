@@ -7,7 +7,7 @@ import 'account_screen.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/watchman_profile_page.dart';
 import 'homepage_screen.dart';
-import 'message/message_screen.dart';
+import 'message/community_page.dart';
 import 'shops/dailyneeds_tab.dart';
 
 class Navigationscreen extends StatefulWidget {
@@ -70,7 +70,7 @@ class _Navigationscreen extends State<Navigationscreen> {
           children: [
             const HomepageScreen(),
             const DailyneedsTab(),
-            const MessageScreen(),
+            const CommunityPage(),
             loginModel!.user!.role != "watchman"
                 ? const AccountScreen()
                 : const WatchmanProfilePage()
