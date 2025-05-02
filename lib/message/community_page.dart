@@ -37,7 +37,7 @@ Widget _post(BuildContext context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      ListTile(
+      const ListTile(
         leading: CircleAvatar(
           foregroundImage: NetworkImage(
               "https://ui-avatars.com/api/?background=random&name=User+Names"),
@@ -50,34 +50,34 @@ Widget _post(BuildContext context) {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "This is title, This is title. This is title, This is title.",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            ExpansionTile(
+            const ExpansionTile(
               title: Text(
                 "This is description. This is description. This is description.",
                 overflow: TextOverflow.ellipsis,
               ),
-              children: [
-                Text(
-                    "This is description. This is description. This is description. This is description. This is description.This is description.This is description.This is description.This is description.")
-              ],
               dense: true,
               iconColor: Colors.green,
               collapsedIconColor: Colors.red,
               minTileHeight: 10,
               expandedAlignment: Alignment.topLeft,
               childrenPadding: EdgeInsets.only(left: 15, right: 10, bottom: 5),
+              children: [
+                Text(
+                    "This is description. This is description. This is description. This is description. This is description.This is description.This is description.This is description.This is description.")
+              ],
             ),
             // sizedBoxH10(context),
             SizedBox(
                 height: 400,
                 width: double.maxFinite,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
                   ),
@@ -90,41 +90,41 @@ Widget _post(BuildContext context) {
               height: 50,
               decoration: BoxDecoration(
                   color: Colors.red.shade50,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10),
                   )),
               child: Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, left: 6),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 5, left: 6),
                     child: Text("123k"),
                   ),
                   sizedBoxW5(context),
-                  Icon(
+                  const Icon(
                     Icons.thumb_up_outlined,
                     color: Colors.blueGrey,
                   ),
                   sizedBoxW10(context),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, left: 6),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 5, left: 6),
                     child: Text("123k"),
                   ),
                   sizedBoxW5(context),
-                  Icon(
+                  const Icon(
                     Icons.thumb_up_outlined,
                     color: Colors.blueGrey,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   GestureDetector(
                     onTap: () => showCommentsBottomSheet(context),
-                    child: Icon(
+                    child: const Icon(
                       Icons.chat,
                       color: Colors.blueGrey,
                     ),
                   ),
                   sizedBoxW15(context),
-                  Icon(
+                  const Icon(
                     Icons.share,
                     color: Colors.blueGrey,
                   ),
@@ -138,7 +138,7 @@ Widget _post(BuildContext context) {
               child: Container(
                   decoration: BoxDecoration(
                       color: Colors.blue.shade50,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(10),
                         bottomRight: Radius.circular(10),
                       )),
@@ -151,7 +151,7 @@ Widget _post(BuildContext context) {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("See all"),
+                            const Text("See all"),
                             Container(
                               padding: const EdgeInsets.all(2),
                               decoration: BoxDecoration(
@@ -177,7 +177,7 @@ Widget _post(BuildContext context) {
 }
 
 Widget commentTile(BuildContext context) {
-  return Column(
+  return const Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       ListTile(
@@ -192,7 +192,7 @@ Widget commentTile(BuildContext context) {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
+        padding: EdgeInsets.symmetric(horizontal: 18),
         child: Text(
           "This is title, This is title. This is title, This is title.",
           style: TextStyle(fontSize: 12),
@@ -246,9 +246,9 @@ Future<Widget> showCommentsBottomSheet(BuildContext ctx) async {
                 margin: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: TextField(
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: 'Add a comment...',
                           border: InputBorder.none,
                         ),

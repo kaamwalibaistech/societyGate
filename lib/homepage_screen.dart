@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:society_gate/create_post.dart';
 
 import 'api/api_repository.dart';
 import 'book_amenities.dart';
@@ -177,85 +178,43 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 const SizedBox(height: 16),
 
                 // Stats Section
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      loginType == "admin"
-                          ? Center(
-                              child: ListTile(
-                              leading: Icon(
-                                Icons.add_comment_rounded,
-                                color: Colors.green,
-                              ),
-                              title: Text(
-                                "Create a post!",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[800],
+                GestureDetector(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const CreatePost())),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        loginType == "admin"
+                            ? Center(
+                                child: ListTile(
+                                leading: const Icon(
+                                  Icons.add_comment_rounded,
+                                  color: Colors.green,
                                 ),
-                              ),
-                              trailing: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color(0xFF6B4EFF).withOpacity(0.1),
-                                  shape: BoxShape.circle,
+                                title: Text(
+                                  "Create a post!",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[800],
+                                  ),
                                 ),
-                                child: const Icon(
-                                  Icons.arrow_forward,
-                                  color: Color(0xFF6B4EFF),
-                                ),
-                              ),
-                            ))
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "New Post is arrived",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.grey[800],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.error,
-                                          color: Colors.green[400],
-                                          size: 20,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          "A new post is here from Admin.",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Container(
+                                trailing: Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF6B4EFF)
@@ -267,9 +226,59 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     color: Color(0xFF6B4EFF),
                                   ),
                                 ),
-                              ],
-                            ),
-                    ],
+                              ))
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "New Post is arrived",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey[800],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.error,
+                                            color: Colors.green[400],
+                                            size: 20,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            "A new post is here from Admin.",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF6B4EFF)
+                                          .withOpacity(0.1),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.arrow_forward,
+                                      color: Color(0xFF6B4EFF),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                      ],
+                    ),
                   ),
                 ),
 
@@ -411,34 +420,45 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                       const SizedBox(height: 8),
                                       Row(
                                         children: [
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 10,
-                                              vertical: 5,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFF6B4EFF)
-                                                  .withOpacity(0.08),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: const Row(
-                                              children: [
-                                                Text(
-                                                  "Read More",
-                                                  style: TextStyle(
-                                                    color: Color(0xFF6B4EFF),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w500,
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const NoticeBoardScreen()));
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 10,
+                                                vertical: 5,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFF6B4EFF)
+                                                    .withOpacity(0.08),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: const Row(
+                                                children: [
+                                                  Text(
+                                                    "Read More",
+                                                    style: TextStyle(
+                                                      color: Color(0xFF6B4EFF),
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(width: 4),
-                                                Icon(
-                                                  Icons.arrow_forward,
-                                                  color: Color(0xFF6B4EFF),
-                                                  size: 12,
-                                                ),
-                                              ],
+                                                  SizedBox(width: 4),
+                                                  Icon(
+                                                    Icons.arrow_forward,
+                                                    color: Color(0xFF6B4EFF),
+                                                    size: 12,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                           const Spacer(),
