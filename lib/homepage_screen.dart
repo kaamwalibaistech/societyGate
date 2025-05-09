@@ -12,7 +12,7 @@ import 'dashboard/notice_board/notice_board_screen.dart';
 import 'dashboard/visitors/visitors_page.dart';
 import 'models/homepage_model.dart';
 import 'models/login_model.dart';
-import 'payment_screen.dart';
+import 'payments_screen/payment_screen.dart';
 import 'scanner_page.dart';
 import 'shops/dailyneeds_tab.dart';
 

@@ -11,11 +11,13 @@ import 'package:society_gate/firebase_options.dart';
 
 import 'auth/login_bloc/login_bloc.dart';
 import 'auth/register_screen.dart';
+import 'community/bloc/community_bloc.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/members/member_bloc/members_bloc.dart';
 import 'dashboard/visitors/visitor_view_bloc/visitors_view_bloc.dart';
 import 'dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'navigation_screen.dart';
+import 'payments_screen/bloc/payments_bloc.dart';
 import 'shops/bloc/dailyneeds_bloc.dart';
 
 Future<void> main() async {
@@ -95,6 +97,8 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<MembersBloc>(create: (context) => MembersBloc()),
         BlocProvider<VisitorsBloc>(create: (context) => VisitorsBloc()),
         BlocProvider<DailyneedsBloc>(create: (context) => DailyneedsBloc()),
+        BlocProvider<PaymentsBloc>(create: (context) => PaymentsBloc()),
+        BlocProvider<CommunityBloc>(create: (context) => CommunityBloc()),
         BlocProvider<VisitorsDetailBloc>(
             create: (context) => VisitorsDetailBloc()),
         BlocProvider<HomepageBloc>(create: (context) => HomepageBloc())

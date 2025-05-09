@@ -15,4 +15,8 @@ class ApiConstant {
   static const String addShop = "shopsadd";
   static const String updateShop = "shopsupdate";
   static const String deleteShop = "shopsdelete";
+
+  /// Community API Constants
+  static const String getCommunityPosts = "communitypostget";
+  static const String getComments = "community_commentget";
 }
