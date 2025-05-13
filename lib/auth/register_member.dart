@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:my_society/api/api_repository.dart';
-import 'package:my_society/auth/login_screen.dart';
-import 'package:my_society/constents/sizedbox.dart';
-import 'package:my_society/models/member_register_model.dart';
+
+import '../api/api_repository.dart';
+import '../constents/sizedbox.dart';
+import '../models/member_register_model.dart';
+import 'login_screen.dart';
 
 class RegisterMember extends StatefulWidget {
   const RegisterMember({super.key});
@@ -17,6 +18,9 @@ class _RegisterMemberState extends State<RegisterMember> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController societyCodeController = TextEditingController();
+  final TextEditingController flatNoController = TextEditingController();
+  final TextEditingController floorNoNoController = TextEditingController();
+  final TextEditingController blockController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   bool isPasswordHidden = true;
@@ -131,6 +135,7 @@ class _RegisterMemberState extends State<RegisterMember> {
                   ),
                   inputFeild("Email", "Enter your email", emailController,
                       emailValidator, TextInputType.emailAddress),
+
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 5.0),
                     child: Text(
@@ -192,6 +197,128 @@ class _RegisterMemberState extends State<RegisterMember> {
                   //     ),
                   //   ),
                   // ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Flat No",
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                controller: flatNoController,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Enter Your flat no";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 10),
+                                  counterText: "",
+                                  hintText: "Your flat no",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Floor",
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                controller: floorNoNoController,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Enter floor";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 10),
+                                  counterText: "",
+                                  hintText: "Your floor no",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "block",
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                controller: blockController,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Enter block";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 10),
+                                  counterText: "",
+                                  hintText: "block/wing",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   sizedBoxH30(context),
                   Center(
                     child: SizedBox(
@@ -206,9 +333,13 @@ class _RegisterMemberState extends State<RegisterMember> {
                                     nameController.text,
                                     emailController.text,
                                     phoneController.text,
-                                    societyCodeController.text);
+                                    societyCodeController.text,
+                                    flatNoController.text,
+                                    blockController.text,
+                                    floorNoNoController.text);
                             // All validations passed
                             Fluttertoast.showToast(
+                                timeInSecForIosWeb: 2,
                                 msg: memberRegisterData!.message);
                             Navigator.pop(context);
                           }

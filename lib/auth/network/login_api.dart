@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:my_society/api/api_constant.dart';
-import 'package:my_society/models/login_model.dart';
+
+import '../../api/api_constant.dart';
+import '../../models/login_model.dart';
 
 Future<LoginModel?> login(
   String phone,
@@ -13,7 +14,7 @@ Future<LoginModel?> login(
   Uri url = Uri.parse(baseUrl + api);
 
   final body = {
-    'uemail': phone,
+    'uphone': phone,
     'upassword': password,
   };
   try {

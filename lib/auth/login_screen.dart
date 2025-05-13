@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
-import 'package:my_society/auth/login_bloc/login_bloc.dart';
-import 'package:my_society/auth/login_success.dart';
-import 'package:my_society/auth/register_member.dart';
-import 'package:my_society/constents/sizedbox.dart';
 
-import '../constents/local_storage.dart';
+import '../constents/sizedbox.dart';
+import 'login_bloc/login_bloc.dart';
+import 'login_success.dart';
+import 'register_member.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,12 +24,12 @@ class _CreateNewAccountState extends State<LoginScreen> {
 
   LoginBloc? loginBloc;
 
-  String? validateEmail(String? email) {
-    RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
-    final isEmailValid = emailRegEx.hasMatch(email ?? "");
-    if (!isEmailValid) return "please  Enter a valid email";
-    return null;
-  }
+  // String? validateEmail(String? email) {
+  //   RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
+  //   final isEmailValid = emailRegEx.hasMatch(email ?? "");
+  //   if (!isEmailValid) return "please  Enter a valid email";
+  //   return null;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +44,6 @@ class _CreateNewAccountState extends State<LoginScreen> {
             ),
           );
         } else if (state is LoginSuccessState) {
-          //  Store user model as JSON string
-          await LocalStoragePref().storeLoginModel(state.loginModel);
-          await LocalStoragePref().setLoginBool(true);
-
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const LoginSuccess()),
@@ -119,10 +114,17 @@ class _CreateNewAccountState extends State<LoginScreen> {
               ),
               SizedBox(
                 child: TextFormField(
-                  validator: validateEmail,
-                  keyboardType: TextInputType.emailAddress,
+                  maxLength: 10,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter mobile no.";
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.number,
                   controller: _mobileNoController,
                   decoration: InputDecoration(
+                    counterText: "",
                     fillColor: Colors.white,
                     filled: true,
                     border: const OutlineInputBorder(),
@@ -138,7 +140,7 @@ class _CreateNewAccountState extends State<LoginScreen> {
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 12, horizontal: 10),
-                    hintText: "Email ",
+                    hintText: "Phone No ",
                     hintStyle: TextStyle(color: Colors.deepPurple[200]),
                   ),
                 ),
