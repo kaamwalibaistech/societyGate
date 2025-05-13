@@ -160,6 +160,30 @@ class ApiRepository {
     return null;
   }
 
+  Future<int?> communityPost(
+      societyId, adminId, title, description, photo) async {
+    final url =
+        Uri.parse("https://blingbroomcleaning.com/api/communitypostinsert");
+    final body = {
+      'society_id': societyId,
+      'admin_id': adminId,
+      'title': title,
+      'description': description,
+      'photo': photo,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+
+        return data['status'];
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
   Future<AddFamilyMemberModel?> addFamilyMembers(societyid, flatid, memberid,
       uname, uemail, uphone, relation, password) async {
     final url =

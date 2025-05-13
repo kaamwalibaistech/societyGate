@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/auth/login_bloc/login_bloc.dart';
 import 'package:society_gate/constents/local_storage.dart';
@@ -14,11 +18,116 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
+  void initState() {
+    super.initState();
+    getuserPhoto();
+  }
+
+  Uint8List? _userPhoto;
+
+  File? image;
+  final ImagePicker picker = ImagePicker();
+  // File? _userPhoto;
+  // Uint8List? bytes;
+
+  Future<void> pickImage(ImageSource source) async {
+    try {
+      final pickedFile = await picker.pickImage(source: source);
+
+      if (pickedFile != null) {
+        setState(() {
+          image = File(pickedFile.path);
+          // LocalStoragePref prefs = LocalStoragePref();
+
+          LocalStoragePref.instance!.storeUserPhoto(image!);
+          getuserPhoto();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No image selected.')),
+        );
+      }
+    } on PlatformException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.message}')),
+      );
+      print('PlatformException: ${e.code} - ${e.message}');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An unexpected error occurred.')),
+      );
+      print('Unexpected error: $e');
+    }
+  }
+
+  // getuserPhoto() {
+  //   final data = LocalStoragePref.instance!.getUserPhoto();
+  //   if (data != null) {
+  //     setState(() {
+  //       _userPhoto = File(data);
+  //       // bytes = Uint8List.fromList(utf8.encode(_userPhoto.toString()));
+  //     });
+  //   }
+  // else {
+  //     setState(() {
+  //       _userPhoto = null;
+  //     });
+  //   }
+  // }
+
+  void getuserPhoto() {
+    final data = LocalStoragePref.instance!.getUserPhoto();
+    setState(() {
+      _userPhoto = data;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     TextEditingController nameController = TextEditingController();
     TextEditingController phoneNumberController = TextEditingController();
     TextEditingController emailController = TextEditingController();
     final formKey = GlobalKey<FormState>();
+
+    void showImagePickerOptions() {
+      showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (BuildContext context) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Select Image Source",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: const Text('Gallery'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    pickImage(ImageSource.gallery);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text('Camera'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    pickImage(ImageSource.camera);
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFFF0F7FF),
@@ -53,58 +162,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
+                GestureDetector(
+                  onTap: () {
+                    showImagePickerOptions();
+                  },
                   child: Stack(
                     children: [
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color(0xFF4A90E2),
-                            width: 3,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF4A90E2).withOpacity(0.3),
-                              spreadRadius: 2,
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: const CircleAvatar(
-                          radius: 60,
-                          backgroundColor: Color(0xFFE3F2FD),
-                          child: Icon(
-                            Icons.person,
-                            size: 60,
-                            color: Color(0xFF4A90E2),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
+                      Center(
                         child: Container(
-                          padding: const EdgeInsets.all(8),
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: MediaQuery.of(context).size.width * 0.3,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF4A90E2),
                             shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFF4A90E2),
+                              width: 3,
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: const Color(0xFF4A90E2).withOpacity(0.3),
-                                spreadRadius: 1,
-                                blurRadius: 8,
+                                spreadRadius: 2,
+                                blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
                             ],
                           ),
-                          child: const Icon(
-                            Icons.camera_alt_rounded,
-                            color: Colors.white,
-                            size: 20,
+                          child: CircleAvatar(
+                            radius: MediaQuery.of(context).size.width * 0.15,
+                            backgroundColor: const Color(0xFFE3F2FD),
+                            backgroundImage: _userPhoto != null
+                                ? MemoryImage(_userPhoto!)
+                                : null,
+                            child: _userPhoto == null
+                                ? const Icon(
+                                    Icons.person,
+                                    size: 60,
+                                    color: Color(0xFF4A90E2),
+                                  )
+                                : null,
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 70.0, top: 80),
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF4A90E2),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      const Color(0xFF4A90E2).withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.camera_alt_rounded,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                           ),
                         ),
                       ),

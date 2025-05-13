@@ -1,4 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+// import 'dart:nativewrappers/_internal/vm/lib/math_patch.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,6 +30,30 @@ class LocalStoragePref {
   Future<void> storeLoginModel(LoginModel model) async {
     await storage?.setString(
         LocalStorageKeys.userProfile, jsonEncode(model.toJson()));
+  }
+
+  // Future<void> storeUserPhoto(File photo) async {
+  //   final bytes = photo.path;
+  //   // String data = bytes.substring(7, bytes.length - 1);
+  //   log(bytes);
+  //   await storage?.setString(LocalStorageKeys.userPhoto, bytes);
+  // }
+  Future<void> storeUserPhoto(File photo) async {
+    final bytes = await photo.readAsBytes(); // Convert to Uint8List
+    final base64String = base64Encode(bytes); // Encode to Base64
+    await storage?.setString(LocalStorageKeys.userPhoto, base64String);
+  }
+
+  // String? getUserPhoto() {
+  //   storage?.getString(LocalStorageKeys.userPhoto);
+  //   String? photoPath = storage?.getString(LocalStorageKeys.userPhoto);
+  //   if (photoPath == null) return null;
+  //   return photoPath;
+  // }
+  Uint8List? getUserPhoto() {
+    final base64String = storage?.getString(LocalStorageKeys.userPhoto);
+    if (base64String == null) return null;
+    return base64Decode(base64String); // Convert Base64 back to Uint8List
   }
 
   LoginModel? getLoginModel() {
@@ -63,4 +91,5 @@ class LocalStoragePref {
 class LocalStorageKeys {
   static const userProfile = 'user_profile';
   static const isLoggedIn = 'isLoggedIn';
+  static const userPhoto = 'user_photo';
 }
