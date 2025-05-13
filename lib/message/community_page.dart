@@ -205,8 +205,8 @@ Widget commentTile(BuildContext context) {
   );
 }
 
-Future<Widget> showCommentsBottomSheet(BuildContext ctx) async {
-  return await showModalBottomSheet(
+showCommentsBottomSheet(BuildContext ctx) {
+  return showModalBottomSheet(
     context: ctx,
     showDragHandle: true,
     isScrollControlled: true,

@@ -1,9 +1,11 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/create_post.dart';
+import 'package:society_gate/message/community_page.dart';
 
 import 'api/api_repository.dart';
 import 'book_amenities.dart';
@@ -28,11 +30,20 @@ class _HomepageScreenState extends State<HomepageScreen> {
   Homepagemodel? data;
   LoginModel? loginModel;
   String? loginType;
+  Uint8List? _userPhoto;
 
   @override
   void initState() {
     super.initState();
     getData();
+    getuserPhoto();
+  }
+
+  void getuserPhoto() {
+    final data = LocalStoragePref.instance!.getUserPhoto();
+    setState(() {
+      _userPhoto = data;
+    });
   }
 
   getData() async {
@@ -122,9 +133,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         ),
                         child: CircleAvatar(
                           radius: 20,
-                          foregroundImage: loginType == "watchman"
-                              ? const AssetImage('lib/assets/watchman.jpg')
-                              : const AssetImage("lib/assets/man.png"),
+                          foregroundImage: _userPhoto != null
+                              ? MemoryImage(_userPhoto!)
+                              : NetworkImage(
+                                  "https://ui-avatars.com/api/?background=random&name=${loginModel?.user?.uname}",
+                                ) as ImageProvider<Object>?,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -178,11 +191,16 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 const SizedBox(height: 16),
 
                 // Stats Section
+
+                // loginType !="watchman"?
+
                 GestureDetector(
                   onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const CreatePost())),
+                          builder: (context) => loginType == "admin"
+                              ? const CreatePost()
+                              : const CommunityPage())),
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 10),
                     padding: const EdgeInsets.all(20),

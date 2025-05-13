@@ -17,9 +17,17 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getuserPhoto();
+  }
+
+  Uint8List? _userPhoto;
+
   File? image;
   final ImagePicker picker = ImagePicker();
-  File? _userPhoto;
+  // File? _userPhoto;
   // Uint8List? bytes;
 
   Future<void> pickImage(ImageSource source) async {
@@ -52,18 +60,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  getuserPhoto() {
+  // getuserPhoto() {
+  //   final data = LocalStoragePref.instance!.getUserPhoto();
+  //   if (data != null) {
+  //     setState(() {
+  //       _userPhoto = File(data);
+  //       // bytes = Uint8List.fromList(utf8.encode(_userPhoto.toString()));
+  //     });
+  //   }
+  // else {
+  //     setState(() {
+  //       _userPhoto = null;
+  //     });
+  //   }
+  // }
+
+  void getuserPhoto() {
     final data = LocalStoragePref.instance!.getUserPhoto();
-    if (data != null) {
-      setState(() {
-        _userPhoto = File(data);
-        // bytes = Uint8List.fromList(utf8.encode(_userPhoto.toString()));
-      });
-    } else {
-      setState(() {
-        _userPhoto = null;
-      });
-    }
+    setState(() {
+      _userPhoto = data;
+    });
   }
 
   @override
@@ -150,12 +166,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     showImagePickerOptions();
                   },
-                  child: Center(
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: 120,
-                          height: 120,
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: MediaQuery.of(context).size.width * 0.3,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
@@ -171,28 +187,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ],
                           ),
-                          child: _userPhoto != null
-                              ? CircleAvatar(
-                                  child: Image.file(
-                                    _userPhoto!,
-                                    width: double.infinity,
-                                    height: 200,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : const CircleAvatar(
-                                  radius: 60,
-                                  backgroundColor: Color(0xFFE3F2FD),
-                                  child: Icon(
+                          child: CircleAvatar(
+                            radius: MediaQuery.of(context).size.width * 0.15,
+                            backgroundColor: const Color(0xFFE3F2FD),
+                            backgroundImage: _userPhoto != null
+                                ? MemoryImage(_userPhoto!)
+                                : null,
+                            child: _userPhoto == null
+                                ? const Icon(
                                     Icons.person,
                                     size: 60,
                                     color: Color(0xFF4A90E2),
-                                  ),
-                                ),
+                                  )
+                                : null,
+                          ),
                         ),
-                        Positioned(
-                          right: 0,
-                          bottom: 0,
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 70.0, top: 80),
                           child: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
@@ -215,8 +228,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 32),

@@ -2,7 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/constents/local_storage.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({super.key});
@@ -43,6 +47,10 @@ class _CreatePostState extends State<CreatePost> {
 
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+    TextEditingController titleController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -61,7 +69,28 @@ class _CreatePostState extends State<CreatePost> {
           Padding(
             padding: const EdgeInsets.only(right: 15.0),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                if (formKey.currentState!.validate()) {
+                  if (_image == null) {
+                    Fluttertoast.showToast(
+                      msg: "Please select an image",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                    return;
+                  }
+                  communityPostInsert(
+                      titleController.text, descriptionController.text);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please fill all fields')),
+                  );
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.black,
@@ -76,113 +105,173 @@ class _CreatePostState extends State<CreatePost> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    TextField(
-                      decoration: InputDecoration(
-                        hintText: "Title",
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 14),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      maxLines: 8,
-                      decoration: InputDecoration(
-                        hintText: "What's on your mind?",
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 14),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    _image != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.file(
-                              _image!,
-                              width: double.infinity,
-                              height: 250,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : Container(
-                            height: 200,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                'No image selected.',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black54),
-                              ),
-                            ),
-                          ),
-                    const SizedBox(height: 20),
-                    Row(
+        child: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () => _pickImage(ImageSource.gallery),
-                            icon: const Icon(Icons.photo_library),
-                            label: const Text('Gallery'),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                        TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a title';
+                            }
+                            return null;
+                          }, // Add validation here
+                          style: const TextStyle(fontSize: 16),
+                          // textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.text,
+
+                          controller: titleController,
+                          decoration: InputDecoration(
+                            hintText: "Title",
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 14),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () => _pickImage(ImageSource.camera),
-                            icon: const Icon(
-                              Icons.camera_alt,
-                            ),
-                            label: const Text('Camera',
-                                style: TextStyle(color: Colors.black)),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
+                        const SizedBox(height: 10),
+                        TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a description';
+                            }
+                            return null;
+                          }, // Add validation here
+                          style: const TextStyle(fontSize: 16),
+                          // textInputAction: TextInputAction.newline,
+                          keyboardType: TextInputType.multiline,
+                          // inputFormatters: [
+                          //   LengthLimitingTextInputFormatter(200),
+                          // ],
+                          // onChanged: (value) {
+                          //   setState(() {});
+                          // },
+                          controller: descriptionController,
+                          maxLines: 8,
+                          decoration: InputDecoration(
+                            hintText: "What's on your mind?",
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 14),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
                             ),
                           ),
+                        ),
+                        const SizedBox(height: 20),
+                        _image != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.file(
+                                  _image!,
+                                  width: double.infinity,
+                                  height: 250,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Container(
+                                height: 200,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    'No image selected.',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.black54),
+                                  ),
+                                ),
+                              ),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () =>
+                                    _pickImage(ImageSource.gallery),
+                                icon: const Icon(Icons.photo_library),
+                                label: const Text('Gallery'),
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () => _pickImage(ImageSource.camera),
+                                icon: const Icon(
+                                  Icons.camera_alt,
+                                ),
+                                label: const Text('Camera',
+                                    style: TextStyle(color: Colors.black)),
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  communityPostInsert(title, description) async {
+    EasyLoading.show();
+    try {
+      final getLoginModel = LocalStoragePref().getLoginModel();
+      ApiRepository apiRepository = ApiRepository();
+      int? status = await apiRepository.communityPost(
+          getLoginModel!.user!.societyId.toString(),
+          getLoginModel.user!.userId.toString(),
+          title,
+          description,
+          _image!.path);
+
+      if (status == 200) {
+        EasyLoading.showSuccess("Community post created successfully");
+        Navigator.pop(context);
+      } else {
+        EasyLoading.showError("Something went wrong!");
+      }
+    } catch (e) {
+      EasyLoading.showError(e.toString());
+
+      throw Exception(e.toString());
+    }
   }
 }
