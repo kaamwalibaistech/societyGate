@@ -5,17 +5,17 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/create_post.dart';
-import 'package:society_gate/message/community_page.dart';
 
 import 'api/api_repository.dart';
 import 'book_amenities.dart';
+import 'community/community_page.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/members/members_page.dart';
 import 'dashboard/notice_board/notice_board_screen.dart';
 import 'dashboard/visitors/visitors_page.dart';
 import 'models/homepage_model.dart';
 import 'models/login_model.dart';
-import 'payment_screen.dart';
+import 'payments_screen/payment_screen.dart';
 import 'scanner_page.dart';
 import 'shops/dailyneeds_tab.dart';
 
