@@ -302,9 +302,8 @@ class _CommunityPageState extends State<CommunityPage> {
                   "https://ui-avatars.com/api/?background=random&name=User+Namez"),
             ),
             title: Text(
-              // "User Name",
               comments.memberName ?? "NA",
-              style: TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12),
             ),
             trailing: PopupMenuButton(
               icon: Icon(
@@ -327,11 +326,11 @@ class _CommunityPageState extends State<CommunityPage> {
               },
             )),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           child: Text(
             comments.comment ?? "NA",
             // "This is title, This is title. This is title, This is title.",
-            style: TextStyle(fontSize: 12),
+            style: const TextStyle(fontSize: 12),
           ),
         ),
         const Divider(
