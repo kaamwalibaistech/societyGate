@@ -20,11 +20,20 @@ class Navigationscreen extends StatefulWidget {
 class _Navigationscreen extends State<Navigationscreen> {
   int selectedIndex = 0;
   late final PageController _pageController;
+  Uint8List? _userPhoto;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: selectedIndex);
+    getuserPhoto();
+  }
+
+  void getuserPhoto() {
+    final data = LocalStoragePref.instance!.getUserPhoto();
+    setState(() {
+      _userPhoto = data;
+    });
   }
 
   final loginModel = LocalStoragePref().getLoginModel();
@@ -100,9 +109,24 @@ class _Navigationscreen extends State<Navigationscreen> {
                 label: "Messege",
                 activeIcon: Icon(Icons.message)),
             BottomNavigationBarItem(
-                icon: Image.asset(
-                  "lib/assets/man.png",
-                  scale: 14,
+                icon: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(
+                          width: 0.5, color: Colors.deepOrangeAccent)),
+                  child: Container(
+                      child: _userPhoto != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.memory(
+                                _userPhoto!,
+                                fit: BoxFit.cover,
+                                width: 30,
+                                height: 30,
+                              ),
+                            )
+                          : const Icon(Icons.person)),
                 ),
                 label: "Profile",
                 activeIcon: Container(
@@ -111,10 +135,18 @@ class _Navigationscreen extends State<Navigationscreen> {
                       borderRadius: BorderRadius.circular(100),
                       border: Border.all(
                           width: 0.5, color: Colors.deepOrangeAccent)),
-                  child: Image.asset(
-                    "lib/assets/man.png",
-                    scale: 18,
-                  ),
+                  child: Container(
+                      child: _userPhoto != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.memory(
+                                _userPhoto!,
+                                fit: BoxFit.cover,
+                                width: 30,
+                                height: 30,
+                              ),
+                            )
+                          : const Icon(Icons.person)),
                 )),
           ],
         ),
