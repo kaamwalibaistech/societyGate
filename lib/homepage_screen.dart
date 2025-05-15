@@ -1,11 +1,9 @@
 import 'dart:developer';
 import 'dart:typed_data';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/create_post.dart';
-
 import 'api/api_repository.dart';
 import 'book_amenities.dart';
 import 'community/community_page.dart';
