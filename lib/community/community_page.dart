@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:society_gate/community/bloc/community_bloc.dart';
+import 'package:society_gate/community/network/community_apis.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 import 'package:society_gate/models/comments_model.dart';
 import 'package:society_gate/models/community_model.dart';
@@ -48,7 +49,7 @@ class _CommunityPageState extends State<CommunityPage> {
             builder: (context, state) {
               if (state is CommunityPostInitial ||
                   state is CommunityPostLoading) {
-                return Text(state.toString());
+                return const Center(child: CircularProgressIndicator());
               } else if (state is CommunityPostSuccess) {
                 return ListView.builder(
                   itemCount: state.communityModel?.data?.length ?? 0,
@@ -153,7 +154,8 @@ class _CommunityPageState extends State<CommunityPage> {
                     ),
                     const Spacer(),
                     IconButton(
-                      onPressed: () => showCommentsBottomSheet(comments),
+                      onPressed: () =>
+                          showCommentsBottomSheet(comments, index, data),
                       icon: const Icon(
                         Icons.chat,
                         color: Colors.blueGrey,
@@ -171,7 +173,7 @@ class _CommunityPageState extends State<CommunityPage> {
               ),
               sizedBoxH5(context),
               GestureDetector(
-                onTap: () => showCommentsBottomSheet(comments),
+                onTap: () => showCommentsBottomSheet(comments, index, data),
                 child: Container(
                     decoration: BoxDecoration(
                         color: Colors.blue.shade50,
@@ -214,8 +216,10 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 
-  Future<Widget> showCommentsBottomSheet(Comment comments) async {
-    return await showModalBottomSheet(
+  showCommentsBottomSheet(
+      Comment comments, int index, List<CommunityPost> dataa) {
+    TextEditingController commentController = TextEditingController();
+    return showModalBottomSheet(
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
@@ -255,9 +259,10 @@ class _CommunityPageState extends State<CommunityPage> {
                   margin: const EdgeInsets.symmetric(horizontal: 12),
                   child: Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: commentController,
+                          decoration: const InputDecoration(
                             hintText: 'Add a comment...',
                             border: InputBorder.none,
                           ),
@@ -265,7 +270,19 @@ class _CommunityPageState extends State<CommunityPage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          final getLoginModel =
+                              LocalStoragePref().getLoginModel();
+                          final id = dataa[index].id.toString();
+                          final societyId =
+                              getLoginModel!.user!.societyId.toString();
+                          final memberId =
+                              getLoginModel.user!.userId.toString();
+
+                          await insertComment(
+                              id, societyId, memberId, commentController.text);
+                          Navigator.pop(context);
+                        },
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(

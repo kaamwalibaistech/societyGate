@@ -1,4 +1,4 @@
-package com.society_gate.society_gate
+package com.webhubinfotech.society_gate
 
 import io.flutter.embedding.android.FlutterActivity
 

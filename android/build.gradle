@@ -18,6 +18,13 @@ buildscript {
         cmake_version = '3.22.1'
     }
 }
+// plugins {
+//   // ...
+
+//   // Add the dependency for the Google services Gradle plugin
+//   id 'com.google.gms.google-services' version '4.4.2' apply false
+
+// }
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir

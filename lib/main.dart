@@ -6,8 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
 import 'package:society_gate/firebase_options.dart';
+
+// import 'package:society_gate/firebase_options.dart';
 
 import 'auth/login_bloc/login_bloc.dart';
 import 'auth/register_screen.dart';
@@ -31,6 +34,7 @@ Future<void> main() async {
   await LocalStoragePref.instance!.initPrefBox();
   await dotenv.load(fileName: ".env");
   checkForUpdates();
+  FirebaseApi().initNotification();
   runApp(const MyApp());
   configLoading();
 }

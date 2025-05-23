@@ -21,13 +21,10 @@ class CommunityBloc extends Bloc<CommunityEvent, CommunityPostState> {
     try {
       List<Comment> commentsList = [];
       final communityModel = await getCommunityPosts(event.page, "10");
-      if (communityModel == null) {
-        emit(CommunityPostError());
-        return;
-      } else {
+      if (communityModel != null) {
         for (var i = 0; i < communityModel.data!.length; i++) {
           final commentsModel = await getCommentsApi(
-              "2", // its for testing only because only this has data data to show
+              "11", // its for testing only because only this has data data to show
               // communityModel.data![i].id.toString(),   // use this dynamic value to fetch comments also handle empty list
               event.page,
               "10");
@@ -36,9 +33,12 @@ class CommunityBloc extends Bloc<CommunityEvent, CommunityPostState> {
             log(commentsList[i].comment.toString());
           }
         }
+        emit(CommunityPostSuccess(
+            communityModel: communityModel, commentsList: commentsList));
+        return;
+      } else {
+        emit(CommunityPostError());
       }
-      emit(CommunityPostSuccess(
-          communityModel: communityModel, commentsList: commentsList));
     } catch (e) {
       emit(CommunityPostError());
       throw Exception(e);
