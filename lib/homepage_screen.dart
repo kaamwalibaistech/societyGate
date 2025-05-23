@@ -1,9 +1,12 @@
 import 'dart:developer';
 import 'dart:typed_data';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/create_post.dart';
+
 import 'api/api_repository.dart';
 import 'book_amenities.dart';
 import 'community/community_page.dart';
@@ -29,6 +32,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
   LoginModel? loginModel;
   String? loginType;
   Uint8List? _userPhoto;
+  String uiPhoto = "";
 
   @override
   void initState() {
@@ -54,9 +58,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
       loginModel = getLoginModel;
       data = mydata;
       loginType = loginModel?.user?.role ?? "NA";
-      log(loginType ?? "No data");
-      log(loginModel?.user?.role ?? "NA");
+      uiPhoto = loginModel?.user?.uname ?? "User";
     });
+    log(loginType ?? "No data");
+    log(loginModel?.user?.role ?? "NA");
   }
 
   List<String> title = [
@@ -130,13 +135,20 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           ),
                         ),
                         child: CircleAvatar(
-                          radius: 20,
-                          foregroundImage: _userPhoto != null
-                              ? MemoryImage(_userPhoto!)
-                              : NetworkImage(
-                                  "https://ui-avatars.com/api/?background=random&name=${loginModel?.user?.uname}",
-                                ) as ImageProvider<Object>?,
-                        ),
+                            radius: 20,
+                            backgroundImage: _userPhoto == null
+                                ? CachedNetworkImageProvider(
+                                    "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")
+                                : MemoryImage(_userPhoto!)
+                            // child: _userPhoto != null
+                            //     ? Image.memory(_userPhoto!)
+                            //     : ClipOval(
+                            //         child: Image.network(
+                            //             "https://ui-avatars.com/api/?background=random&name=$uiPhoto."
+                            //             // "https://ui-avatars.com/api/?background=random&name=$uiPhoto",
+                            //             ),
+                            //       ),
+                            ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(

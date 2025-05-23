@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,20 +43,39 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAFDelg5zv2v0UDmZghT5senGnmpL-XnN4',
+    appId: '1:349458851809:web:ec9185dd589744e6c594a0',
+    messagingSenderId: '349458851809',
+    projectId: 'society-gate-39b69',
+    authDomain: 'society-gate-39b69.firebaseapp.com',
+    storageBucket: 'society-gate-39b69.firebasestorage.app',
+    measurementId: 'G-60PLYGNGDR',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAKN-MXa2D0D9i3Xf81T7VqxdoWzRfBoho',
-    appId: '1:1066516467342:android:c27c56642477034776c3df',
-    messagingSenderId: '1066516467342',
-    projectId: 'societygate-7fda9',
-    storageBucket: 'societygate-7fda9.firebasestorage.app',
+    apiKey: 'AIzaSyDgBBZaAhS9E0XMcedyk_fyyCc4JqEbvyM',
+    appId: '1:349458851809:android:fa08d07a09ddcb71c594a0',
+    messagingSenderId: '349458851809',
+    projectId: 'society-gate-39b69',
+    storageBucket: 'society-gate-39b69.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCELF4IVK7YKE7A3JpYcQ1mOBGQkr8hc0U',
-    appId: '1:1066516467342:ios:c843913bc29c33eb76c3df',
-    messagingSenderId: '1066516467342',
-    projectId: 'societygate-7fda9',
-    storageBucket: 'societygate-7fda9.firebasestorage.app',
+    apiKey: 'AIzaSyD0bim5wfrAeJxtiI711F-Gqada-IxPctQ',
+    appId: '1:349458851809:ios:f09abcaba5dee8f3c594a0',
+    messagingSenderId: '349458851809',
+    projectId: 'society-gate-39b69',
+    storageBucket: 'society-gate-39b69.firebasestorage.app',
+    iosBundleId: 'com.example.mySociety',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyD0bim5wfrAeJxtiI711F-Gqada-IxPctQ',
+    appId: '1:349458851809:ios:f09abcaba5dee8f3c594a0',
+    messagingSenderId: '349458851809',
+    projectId: 'society-gate-39b69',
+    storageBucket: 'society-gate-39b69.firebasestorage.app',
     iosBundleId: 'com.example.mySociety',
   );
 }

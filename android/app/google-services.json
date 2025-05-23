@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1066516467342",
-    "project_id": "societygate-7fda9",
-    "storage_bucket": "societygate-7fda9.firebasestorage.app"
+    "project_number": "349458851809",
+    "project_id": "society-gate-39b69",
+    "storage_bucket": "society-gate-39b69.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1066516467342:android:c27c56642477034776c3df",
+        "mobilesdk_app_id": "1:349458851809:android:fa08d07a09ddcb71c594a0",
         "android_client_info": {
-          "package_name": "com.society_gate.society_gate"
+          "package_name": "com.webhubinfotech.society_gate"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAKN-MXa2D0D9i3Xf81T7VqxdoWzRfBoho"
+          "current_key": "AIzaSyDgBBZaAhS9E0XMcedyk_fyyCc4JqEbvyM"
         }
       ],
       "services": {
