@@ -224,9 +224,11 @@ class _CommunityPageState extends State<CommunityPage> {
         });
   }
 
-  showCommentsBottomSheet(List<Comment> comments, String postId) {
+  void showCommentsBottomSheet(List<Comment> initialComments, String postId) {
     TextEditingController commentController = TextEditingController();
-    return showModalBottomSheet(
+    List<Comment> comments = List.from(initialComments); // Make it mutable
+
+    showModalBottomSheet(
       context: context,
       showDragHandle: true,
       isScrollControlled: true,
@@ -235,88 +237,101 @@ class _CommunityPageState extends State<CommunityPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewPadding.bottom,
-          ),
-          child: Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-              color: Colors.white,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 1.5,
-                  child: comments.isEmpty
-                      ? const Center(
-                          child: Text("No comments available for this post!"),
-                        )
-                      : ListView.builder(
-                          itemCount: comments.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) =>
-                              commentTile(comments[index]),
-                        ),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewPadding.bottom,
+              ),
+              child: Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                  color: Colors.white,
                 ),
-                const SizedBox(height: 16),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.blue.shade100),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  margin: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: commentController,
-                          decoration: const InputDecoration(
-                            hintText: 'Add a comment...',
-                            border: InputBorder.none,
-                          ),
-                          maxLines: null,
-                        ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 1.5,
+                      child: comments.isEmpty
+                          ? const Center(
+                              child:
+                                  Text("No comments available for this post!"),
+                            )
+                          : ListView.builder(
+                              itemCount: comments.length,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) =>
+                                  commentTile(comments[index]),
+                            ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.blue.shade100),
                       ),
-                      GestureDetector(
-                        onTap: () async {
-                          final getLoginModel =
-                              LocalStoragePref().getLoginModel();
-                          final societyId =
-                              getLoginModel!.user!.societyId.toString();
-                          final memberId =
-                              getLoginModel.user!.userId.toString();
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      margin: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: commentController,
+                              decoration: const InputDecoration(
+                                hintText: 'Add a comment...',
+                                border: InputBorder.none,
+                              ),
+                              maxLines: null,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              final getLoginModel =
+                                  LocalStoragePref().getLoginModel();
+                              final societyId =
+                                  getLoginModel!.user!.societyId.toString();
+                              final memberId =
+                                  getLoginModel.user!.userId.toString();
 
-                          await insertComment(postId, societyId, memberId,
-                              commentController.text);
-                          // communityBloc!.add(CommunityPostEvent(page: '1'));
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                          }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF6B4EFF),
-                            shape: BoxShape.circle,
+                              String commentText =
+                                  commentController.text.trim();
+                              if (commentText.isEmpty) return;
+
+                              await insertComment(
+                                  postId, societyId, memberId, commentText);
+
+                              setState(() {
+                                comments.add(Comment(
+                                  comment: commentText,
+                                  memberName: getLoginModel.user!.uname,
+                                ));
+                                commentController.clear();
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF6B4EFF),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.send,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
                           ),
-                          child: const Icon(
-                            Icons.send,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
                 ),
-                const SizedBox(height: 8),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
