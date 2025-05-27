@@ -302,10 +302,12 @@ class _CommunityPageState extends State<CommunityPage> {
                                   postId, societyId, memberId, commentText);
 
                               setState(() {
-                                comments.add(Comment(
-                                  comment: commentText,
-                                  memberName: getLoginModel.user!.uname,
-                                ));
+                                comments.insert(
+                                    0,
+                                    Comment(
+                                      comment: commentText,
+                                      memberName: getLoginModel.user!.uname,
+                                    ));
 
                                 commentController.clear();
                               });
