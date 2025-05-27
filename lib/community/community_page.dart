@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:society_gate/bloc/homepage_bloc.dart';
 import 'package:society_gate/community/bloc/community_bloc.dart';
 import 'package:society_gate/community/network/community_apis.dart';
 import 'package:society_gate/constents/sizedbox.dart';
@@ -224,9 +223,9 @@ class _CommunityPageState extends State<CommunityPage> {
         });
   }
 
-  void showCommentsBottomSheet(List<Comment> initialComments, String postId) {
+  void showCommentsBottomSheet(List<Comment> comments, String postId) {
     TextEditingController commentController = TextEditingController();
-    List<Comment> comments = List.from(initialComments); // Make it mutable
+    // List<Comment> comments = List.from(initialComments); // Make it mutable
 
     showModalBottomSheet(
       context: context,
@@ -307,6 +306,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                   comment: commentText,
                                   memberName: getLoginModel.user!.uname,
                                 ));
+
                                 commentController.clear();
                               });
                             },
