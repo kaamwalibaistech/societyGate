@@ -59,7 +59,7 @@ Future<CommentsModel?> getCommentsApi(
   return null;
 }
 
-Future<InsertComment?> insertComment(
+Future<void> insertComment(
   String communitypostid,
   String societyid,
   String memberid,
@@ -79,14 +79,14 @@ Future<InsertComment?> insertComment(
   try {
     final response = await http.post(url, body: body);
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
+      // final Map<String, dynamic> data = jsonDecode(response.body);
       //data.forEach((key, value) => log('$key: $value'));
-      return InsertComment.fromJson(data);
+      // return InsertComment.fromJson(data);
     } else {
       log(response.body.toString());
     }
   } catch (e) {
     throw Exception(e.toString());
   }
-  return null;
+  // return null;
 }

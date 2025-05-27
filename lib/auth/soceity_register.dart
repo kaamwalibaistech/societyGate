@@ -605,14 +605,82 @@ class _SocietyRegister extends State<SocietyRegister> {
                                   setState(() {
                                     moreChecked = newValue;
                                     if (moreChecked == true) {
-                                      amenities.add("More");
+                                      amenities.add("Club House");
                                     } else {
-                                      amenities.remove("More");
+                                      amenities.remove("Club House");
                                     }
                                   });
                                 }),
                             const Text(
-                              "More",
+                              "Club House",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Checkbox(
+                                side: const BorderSide(color: Colors.white),
+                                value: gymChecked,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    gymChecked = newValue;
+                                    if (gymChecked == true) {
+                                      amenities.add("Spa");
+                                    } else {
+                                      amenities.remove("Spa");
+                                    }
+                                  });
+                                }),
+                            const Text(
+                              "Spa",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Checkbox(
+                                side: const BorderSide(color: Colors.white),
+                                value: playGroundChecked,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    playGroundChecked = newValue;
+                                    if (playGroundChecked == true) {
+                                      amenities.add("Building Wi-Fi");
+                                    } else {
+                                      amenities.remove("Building Wi-Fi");
+                                    }
+                                  });
+                                }),
+                            const Text(
+                              "Building Wi-Fi",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Checkbox(
+                                side: const BorderSide(color: Colors.white),
+                                value: moreChecked,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    moreChecked = newValue;
+                                    if (moreChecked == true) {
+                                      amenities.add(" Rooftop Garden");
+                                    } else {
+                                      amenities.remove(" Rooftop Garden");
+                                    }
+                                  });
+                                }),
+                            const Text(
+                              " Rooftop Garden",
                               style: TextStyle(color: Colors.white),
                             )
                           ],
