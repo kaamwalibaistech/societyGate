@@ -49,13 +49,74 @@ class _CommunityPageState extends State<CommunityPage> {
             builder: (context, state) {
               if (state is CommunityPostInitial ||
                   state is CommunityPostLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return _loading();
               } else if (state is CommunityPostSuccess) {
                 return _post(state.communityModel, state.commentsList);
               } else {
                 return Center(child: Text(state.toString()));
               }
             }));
+  }
+
+  Widget _loading() {
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(width: 120, height: 12, color: Colors.grey[300]),
+                const SizedBox(height: 6),
+                Container(width: 80, height: 10, color: Colors.grey[300]),
+              ],
+            ),
+          ]),
+          const SizedBox(height: 12),
+          Container(
+              width: double.infinity, height: 14, color: Colors.grey[300]),
+          const SizedBox(height: 4),
+          Container(width: 160, height: 10, color: Colors.grey[300]),
+          const SizedBox(height: 12),
+          Container(
+              width: double.infinity, height: 300, color: Colors.grey[300]),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: List.generate(
+                    3,
+                    (index) => Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Container(
+                              width: 20, height: 20, color: Colors.grey[300]),
+                        )),
+              ),
+              Container(width: 20, height: 20, color: Colors.grey[300]),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Container(
+              width: double.infinity, height: 40, color: Colors.grey[300]),
+          const SizedBox(height: 12),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(width: 80, height: 20, color: Colors.grey[300]),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _post(CommunityModel? communityModel, List<Comment> commentsList) {

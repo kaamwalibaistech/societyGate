@@ -180,7 +180,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withAlpha(20),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -219,7 +219,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withAlpha(30),
                           blurRadius: 10,
                           offset: const Offset(0, 5),
                         ),
@@ -245,8 +245,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                 trailing: Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF6B4EFF)
-                                        .withOpacity(0.1),
+                                    color:
+                                        const Color(0xFF6B4EFF).withAlpha(100),
                                     shape: BoxShape.circle,
                                   ),
                                   child: const Icon(
@@ -295,7 +295,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFF6B4EFF)
-                                          .withOpacity(0.1),
+                                          .withAlpha(100),
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Icon(
@@ -331,7 +331,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withAlpha(30),
                                 blurRadius: 10,
                                 offset: const Offset(0, 5),
                                 spreadRadius: 0,
