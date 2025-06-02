@@ -161,13 +161,13 @@ class _CommunityPageState extends State<CommunityPage> {
                               color: Colors.blueGrey,
                             ),
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.share,
-                              color: Colors.blueGrey,
-                            ),
-                          ),
+                          // IconButton(
+                          //   onPressed: () {},
+                          //   icon: const Icon(
+                          //     Icons.share,
+                          //     color: Colors.blueGrey,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

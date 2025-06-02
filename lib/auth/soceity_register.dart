@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:society_gate/auth/amenities_add.dart';
 
-import '../api/api_repository.dart';
 import '../constents/sizedbox.dart';
-import '../models/admin_register_model.dart';
 import 'login_screen.dart';
 
 class SocietyRegister extends StatefulWidget {
@@ -25,12 +23,7 @@ class _SocietyRegister extends State<SocietyRegister> {
   final TextEditingController flatNoController = TextEditingController();
   final TextEditingController floorNoNoController = TextEditingController();
   final TextEditingController blockController = TextEditingController();
-  bool? swimmingPoolChecked = false;
-  bool? gardenChecked = false;
-  bool? parkingChecked = false;
-  bool? gymChecked = false;
-  bool? playGroundChecked = false;
-  bool? moreChecked = false;
+
   final _formkey = GlobalKey<FormState>();
   String? validateEmail(String? email) {
     RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
@@ -39,10 +32,10 @@ class _SocietyRegister extends State<SocietyRegister> {
     return null;
   }
 
-  List<String> amenities = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: const Color(0xfff0f3fa),
       body: Stack(children: [
         Form(
@@ -119,7 +112,7 @@ class _SocietyRegister extends State<SocietyRegister> {
                     ),
                     SizedBox(
                       child: TextFormField(
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.name,
                         controller: nameController,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -298,15 +291,15 @@ class _SocietyRegister extends State<SocietyRegister> {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.25,
                                 child: TextFormField(
-                                  keyboardType: TextInputType.number,
+                                  keyboardType: TextInputType.emailAddress,
                                   controller: blockController,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return "Enter block";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
+                                  // validator: (value) {
+                                  //   if (value!.isEmpty) {
+                                  //     return "Enter block";
+                                  //   } else {
+                                  //     return null;
+                                  //   }
+                                  // },
                                   decoration: const InputDecoration(
                                     fillColor: Colors.white,
                                     filled: true,
@@ -476,217 +469,6 @@ class _SocietyRegister extends State<SocietyRegister> {
                         ],
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 15.0),
-                      child: Text(
-                        "amenities",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                                side: const BorderSide(color: Colors.white),
-                                value: swimmingPoolChecked,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    swimmingPoolChecked = newValue;
-                                    if (swimmingPoolChecked == true) {
-                                      amenities.add("Swimming Pool");
-                                    } else {
-                                      amenities.remove("Swimming Pool");
-                                    }
-                                  });
-                                }),
-                            const Text(
-                              "Swimming Pool",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                                side: const BorderSide(color: Colors.white),
-                                value: gardenChecked,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    gardenChecked = newValue;
-                                    if (gardenChecked == true) {
-                                      amenities.add("Garden");
-                                    } else {
-                                      amenities.remove("Garden");
-                                    }
-                                  });
-                                }),
-                            const Text(
-                              "Garden",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                                side: const BorderSide(color: Colors.white),
-                                value: parkingChecked,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    parkingChecked = newValue;
-                                    if (parkingChecked == true) {
-                                      amenities.add("Parking");
-                                    } else {
-                                      amenities.remove("Parking");
-                                    }
-                                  });
-                                }),
-                            const Text(
-                              "Parking",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                                side: const BorderSide(color: Colors.white),
-                                value: gymChecked,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    gymChecked = newValue;
-                                    if (gymChecked == true) {
-                                      amenities.add("Gym");
-                                    } else {
-                                      amenities.remove("Gym");
-                                    }
-                                  });
-                                }),
-                            const Text(
-                              "Gym",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                                side: const BorderSide(color: Colors.white),
-                                value: playGroundChecked,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    playGroundChecked = newValue;
-                                    if (playGroundChecked == true) {
-                                      amenities.add("Playground");
-                                    } else {
-                                      amenities.remove("Playground");
-                                    }
-                                  });
-                                }),
-                            const Text(
-                              "Playground",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                                side: const BorderSide(color: Colors.white),
-                                value: moreChecked,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    moreChecked = newValue;
-                                    if (moreChecked == true) {
-                                      amenities.add("Club House");
-                                    } else {
-                                      amenities.remove("Club House");
-                                    }
-                                  });
-                                }),
-                            const Text(
-                              "Club House",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                                side: const BorderSide(color: Colors.white),
-                                value: gymChecked,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    gymChecked = newValue;
-                                    if (gymChecked == true) {
-                                      amenities.add("Spa");
-                                    } else {
-                                      amenities.remove("Spa");
-                                    }
-                                  });
-                                }),
-                            const Text(
-                              "Spa",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                                side: const BorderSide(color: Colors.white),
-                                value: playGroundChecked,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    playGroundChecked = newValue;
-                                    if (playGroundChecked == true) {
-                                      amenities.add("Building Wi-Fi");
-                                    } else {
-                                      amenities.remove("Building Wi-Fi");
-                                    }
-                                  });
-                                }),
-                            const Text(
-                              "Building Wi-Fi",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                                side: const BorderSide(color: Colors.white),
-                                value: moreChecked,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    moreChecked = newValue;
-                                    if (moreChecked == true) {
-                                      amenities.add(" Rooftop Garden");
-                                    } else {
-                                      amenities.remove(" Rooftop Garden");
-                                    }
-                                  });
-                                }),
-                            const Text(
-                              " Rooftop Garden",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -710,7 +492,28 @@ class _SocietyRegister extends State<SocietyRegister> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        adminRegisterMethod();
+                        if (_formkey.currentState!.validate()) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AmenitiesAdd(
+                                      societyNameController:
+                                          societyNameController.text,
+                                      societyAddressController:
+                                          societyAddressController.text,
+                                      totalwingsController:
+                                          totalwingsController.text,
+                                      totalFlatController:
+                                          totalFlatController.text,
+                                      nameController: nameController.text,
+                                      emailController: emailController.text,
+                                      mobileNoController:
+                                          mobileNoController.text,
+                                      flatNoController: flatNoController.text,
+                                      blockController: blockController.text,
+                                      floorNoNoController:
+                                          floorNoNoController.text)));
+                        }
                       },
                       child: Center(
                         child: Container(
@@ -721,14 +524,14 @@ class _SocietyRegister extends State<SocietyRegister> {
                               borderRadius: BorderRadius.circular(30)),
                           child: const Center(
                               child: Text(
-                            "Register",
+                            "Add Amenities",
                             style: TextStyle(color: Colors.white),
                           )),
                         ),
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     )
                   ],
                 ),
@@ -750,42 +553,5 @@ class _SocietyRegister extends State<SocietyRegister> {
         ),
       ]),
     );
-  }
-
-  void adminRegisterMethod() async {
-    String finalAmenities = "";
-    String add;
-    for (int i = 0; i < amenities.length; i++) {
-      if (finalAmenities == "") {
-        add = "";
-      } else {
-        add = ", ";
-      }
-      finalAmenities = "$finalAmenities $add ${amenities[i]}";
-      print(finalAmenities);
-    }
-    try {
-      if (_formkey.currentState!.validate()) {
-        ApiRepository apiRepository = ApiRepository();
-        AdminRegister? data = await apiRepository.registerSocietyAdmin(
-            societyNameController.text,
-            societyAddressController.text,
-            totalwingsController.text,
-            totalFlatController.text,
-            finalAmenities.toString(),
-            nameController.text,
-            emailController.text,
-            mobileNoController.text,
-            flatNoController.text,
-            blockController.text,
-            floorNoNoController.text);
-        Fluttertoast.showToast(msg: data!.message.toString());
-        Navigator.pop(context);
-
-        // Navigator.pop(context);
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
   }
 }

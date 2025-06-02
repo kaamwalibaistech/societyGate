@@ -4,7 +4,9 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/create_post.dart';
 
 import 'api/api_repository.dart';
@@ -16,7 +18,6 @@ import 'dashboard/notice_board/notice_board_screen.dart';
 import 'dashboard/visitors/visitors_page.dart';
 import 'models/homepage_model.dart';
 import 'models/login_model.dart';
-import 'payments_screen/payment_screen.dart';
 import 'scanner_page.dart';
 import 'shops/dailyneeds_tab.dart';
 
@@ -39,6 +40,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
     super.initState();
     getData();
     getuserPhoto();
+    FirebaseApi().initNotification();
   }
 
   void getuserPhoto() {
@@ -173,25 +175,30 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           ],
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.notifications_outlined,
-                          color: loginType == "watchman"
-                              ? const Color(0xFFFF9933)
-                              : const Color(0xFF6B4EFF),
-                          size: 20,
+                      GestureDetector(
+                        onTap: () {
+                          Fluttertoast.showToast(msg: "No Notifications");
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.notifications_outlined,
+                            color: loginType == "watchman"
+                                ? const Color(0xFFFF9933)
+                                : const Color(0xFF6B4EFF),
+                            size: 20,
+                          ),
                         ),
                       ),
                     ],
@@ -489,18 +496,18 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                               ),
                                             ),
                                           ),
-                                          const Spacer(),
-                                          Icon(
-                                            Icons.bookmark_border_rounded,
-                                            color: Colors.grey[400],
-                                            size: 18,
-                                          ),
-                                          const SizedBox(width: 12),
-                                          Icon(
-                                            Icons.share_outlined,
-                                            color: Colors.grey[400],
-                                            size: 18,
-                                          ),
+                                          // const Spacer(),
+                                          // Icon(
+                                          //   Icons.bookmark_border_rounded,
+                                          //   color: Colors.grey[400],
+                                          //   size: 18,
+                                          // ),
+                                          // const SizedBox(width: 12),
+                                          // Icon(
+                                          //   Icons.share_outlined,
+                                          //   color: Colors.grey[400],
+                                          //   size: 18,
+                                          // ),
                                         ],
                                       ),
                                     ],
@@ -603,11 +610,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                           const NoticeBoardScreen()));
                               break;
                             case 3:
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PaymentScreen()));
+                              Fluttertoast.showToast(msg: "Comming Soon");
                               break;
                             case 4:
                               Navigator.push(
