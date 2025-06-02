@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'api/api_repository.dart';
 import 'constents/local_storage.dart';
-import 'constents/sizedbox.dart';
 import 'models/add_daily_help_model.dart';
-import 'models/add_family_member_model.dart';
 import 'models/add_vehicle_model.dart';
 import 'models/get_daily_help_model.dart';
 import 'models/get_family_members_model.dart';
@@ -277,10 +274,9 @@ class _AccountScreenState extends State<AccountScreen>
                               color: const Color(
                                   0xFFFFF3E0), // Very light orange background
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.person_rounded,
-                              color:
-                                  const Color(0xFFFF9800), // Light orange icon
+                              color: Color(0xFFFF9800), // Light orange icon
                               size: 30,
                             ),
                           ),
@@ -324,10 +320,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFE0F2F1), // Very light teal background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.settings_rounded,
-                                color:
-                                    const Color(0xFF009688), // Light teal icon
+                                color: Color(0xFF009688), // Light teal icon
                                 size: 24,
                               ),
                             ),
@@ -343,9 +338,9 @@ class _AccountScreenState extends State<AccountScreen>
                         ),
                         child: Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.apartment_rounded,
-                              color: const Color(0xFFE91E63), // Light pink
+                              color: Color(0xFFE91E63), // Light pink
                               size: 22,
                             ),
                             const SizedBox(width: 12),
@@ -425,10 +420,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFE8F5E9), // Very light green background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.family_restroom_rounded,
-                                color:
-                                    const Color(0xFF4CAF50), // Light green icon
+                                color: Color(0xFF4CAF50), // Light green icon
                                 size: 24,
                               ),
                             ),
@@ -563,10 +557,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFE3F2FD), // Very light blue background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.cleaning_services_rounded,
-                                color:
-                                    const Color(0xFF2196F3), // Light blue icon
+                                color: Color(0xFF2196F3), // Light blue icon
                                 size: 24,
                               ),
                             ),
@@ -712,10 +705,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFF3E5F5), // Very light purple background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.directions_car_rounded,
-                                color: const Color(
-                                    0xFF9C27B0), // Light purple icon
+                                color: Color(0xFF9C27B0), // Light purple icon
                                 size: 24,
                               ),
                             ),
@@ -879,10 +871,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFE8F5E9), // Very light green background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.family_restroom_rounded,
-                                color:
-                                    const Color(0xFF4CAF50), // Light green icon
+                                color: Color(0xFF4CAF50), // Light green icon
                                 size: 24,
                               ),
                             ),
@@ -1084,10 +1075,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFE3F2FD), // Very light blue background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.cleaning_services_rounded,
-                                color:
-                                    const Color(0xFF2196F3), // Light blue icon
+                                color: Color(0xFF2196F3), // Light blue icon
                                 size: 24,
                               ),
                             ),
@@ -1273,10 +1263,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFF3E5F5), // Very light purple background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.directions_car_rounded,
-                                color: const Color(
-                                    0xFF9C27B0), // Light purple icon
+                                color: Color(0xFF9C27B0), // Light purple icon
                                 size: 24,
                               ),
                             ),
@@ -1409,6 +1398,7 @@ class _AccountScreenState extends State<AccountScreen>
     int? maxLength,
     bool isPassword = false,
     String? Function(String?)? validator,
+    bool obscureText = true,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1426,9 +1416,20 @@ class _AccountScreenState extends State<AccountScreen>
           controller: controller,
           keyboardType: keyboardType,
           maxLength: maxLength,
-          obscureText: isPassword,
+          obscureText: obscureText,
           validator: validator,
           decoration: InputDecoration(
+            suffixIcon: isPassword
+                ? GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        obscureText = !obscureText;
+                      });
+                    },
+                    child: obscureText
+                        ? const Icon(Icons.visibility)
+                        : const Icon(Icons.visibility_off_outlined))
+                : const SizedBox.shrink(),
             hintText: hint,
             hintStyle: TextStyle(
               color: Colors.grey[400],

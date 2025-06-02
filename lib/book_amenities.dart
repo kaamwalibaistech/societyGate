@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 
 class BookAmenities extends StatefulWidget {
@@ -64,7 +65,19 @@ class _BookAmenitiesState extends State<BookAmenities> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Choose Amenities"),
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
+        title: const Text(
+          "Choose Amenities",
+          style: TextStyle(fontSize: 25, color: Colors.white),
+        ),
         backgroundColor: Colors.pink,
         elevation: 0,
         actions: [
@@ -112,10 +125,11 @@ class _BookAmenitiesState extends State<BookAmenities> {
                     ),
                   ),
                   onPressed: () {
-                    final selected = selectedAmenities.toList();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("Selected: ${selected.join(', ')}"),
-                    ));
+                    // final selected = selectedAmenities.toList();
+                    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    //   content: Text("Selected: ${selected.join(', ')}"),
+                    // ));
+                    Fluttertoast.showToast(msg: "Working on This");
                   },
                   child: const Text("Pay for Amenities"),
                 ),
