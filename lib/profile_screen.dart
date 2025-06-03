@@ -476,17 +476,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   phone,
                 );
                 if (dataa?.status == 200) {
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  }
-
+                  // if (context.mounted) {
+                  //   Navigator.pop(context);
+                  //   Navigator.pop(context);
+                  // }
                   Fluttertoast.showToast(msg: dataa!.message.toString());
 
                   if (context.mounted) {
                     BlocProvider.of<LoginBloc>(context).add(
                       LoginButtonEvent(phone, passwordController.text),
                     );
+                  }
+                } else {
+                  Fluttertoast.showToast(msg: dataa!.message.toString());
+                  if (context.mounted) {
+                    Navigator.pop(context);
                   }
                 }
               }
