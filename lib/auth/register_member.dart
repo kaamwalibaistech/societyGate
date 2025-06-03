@@ -380,10 +380,6 @@ class _RegisterMemberState extends State<RegisterMember> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Text(
-        //   title,
-        //   style: const TextStyle(fontSize: 16, color: Colors.white60),
-        // ),
         sizedBoxH10(context),
         SizedBox(
           child: TextFormField(
@@ -395,7 +391,9 @@ class _RegisterMemberState extends State<RegisterMember> {
             decoration: InputDecoration(
               fillColor: Colors.white,
               filled: true,
-              border: const OutlineInputBorder(borderSide: BorderSide.none),
+              border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(22)),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
               counterText: "",
