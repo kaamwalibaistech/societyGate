@@ -103,7 +103,7 @@ class RegisterScreen extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const RegisterMember()));
+                            builder: (context) => const SocietyRegister()));
                   },
                   child: Container(
                     height: 45,
@@ -113,7 +113,7 @@ class RegisterScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20)),
                     child: const Center(
                         child: Text(
-                      "Register as a Member",
+                      "Register your Society",
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     )),
@@ -127,18 +127,19 @@ class RegisterScreen extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SocietyRegister()));
+                            builder: (context) => const RegisterMember()));
                   },
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.05,
                     child: RichText(
                         text: const TextSpan(
-                            text: "Want to Register your Society?",
+                            text: "Become a member here? ",
                             style: TextStyle(color: Colors.white70),
                             children: [
                           TextSpan(
                               text: " Register here!",
-                              style: TextStyle(color: Colors.white))
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15))
                         ])),
                   ),
                 ),

@@ -19,13 +19,11 @@ class Navigationscreen extends StatefulWidget {
 
 class _Navigationscreen extends State<Navigationscreen> {
   int selectedIndex = 0;
-  late final PageController _pageController;
   Uint8List? _userPhoto;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: selectedIndex);
     getuserPhoto();
   }
 
@@ -41,18 +39,7 @@ class _Navigationscreen extends State<Navigationscreen> {
   void changeTab(int index) {
     setState(() {
       selectedIndex = index;
-      _pageController.animateToPage(
-        index,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
     });
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   @override
@@ -71,25 +58,11 @@ class _Navigationscreen extends State<Navigationscreen> {
         }
       },
       child: Scaffold(
-        body: PageView(
-          controller: _pageController,
-          onPageChanged: (index) {
-            setState(() => selectedIndex = index);
-          },
-          children: [
-            const HomepageScreen(),
-            const DailyneedsTab(),
-            const CommunityPage(),
-            loginModel!.user!.role != "watchman"
-                ? const AccountScreen()
-                : const WatchmanProfilePage()
-          ],
-        ),
+        body: _getSelectedScreen(selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: selectedIndex,
-          onTap: changeTab, // Update PageView when tapping tabs
+          onTap: changeTab,
           type: BottomNavigationBarType.fixed,
-          // backgroundColor: Colors.amber,
           showSelectedLabels: false,
           showUnselectedLabels: false,
           iconSize: 30,
@@ -97,57 +70,61 @@ class _Navigationscreen extends State<Navigationscreen> {
           unselectedItemColor: Colors.blueGrey,
           items: [
             const BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined),
-                label: "Home",
-                activeIcon: Icon(Icons.home_rounded)),
+              icon: Icon(Icons.home_outlined),
+              label: "Home",
+              activeIcon: Icon(Icons.home_rounded),
+            ),
             const BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_bag_outlined),
-                label: "Needs",
-                activeIcon: Icon(Icons.shopping_bag_rounded)),
+              icon: Icon(Icons.shopping_bag_outlined),
+              label: "Needs",
+              activeIcon: Icon(Icons.shopping_bag_rounded),
+            ),
             const BottomNavigationBarItem(
-                icon: Icon(Icons.message_outlined),
-                label: "Messege",
-                activeIcon: Icon(Icons.message)),
+              icon: Icon(Icons.message_outlined),
+              label: "Message",
+              activeIcon: Icon(Icons.message),
+            ),
             BottomNavigationBarItem(
-                icon: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(
-                          width: 0.5, color: Colors.deepOrangeAccent)),
-                  child: Container(
-                      child: _userPhoto != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.memory(
-                                _userPhoto!,
-                                fit: BoxFit.cover,
-                                width: 30,
-                                height: 30,
-                              ),
-                            )
-                          : const Icon(Icons.person)),
+              icon: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  border:
+                      Border.all(width: 0.5, color: Colors.deepOrangeAccent),
                 ),
-                label: "Profile",
-                activeIcon: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(
-                          width: 0.5, color: Colors.deepOrangeAccent)),
-                  child: Container(
-                      child: _userPhoto != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.memory(
-                                _userPhoto!,
-                                fit: BoxFit.cover,
-                                width: 30,
-                                height: 30,
-                              ),
-                            )
-                          : const Icon(Icons.person)),
-                )),
+                child: _userPhoto != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.memory(
+                          _userPhoto!,
+                          fit: BoxFit.cover,
+                          width: 30,
+                          height: 30,
+                        ),
+                      )
+                    : const Icon(Icons.person),
+              ),
+              label: "Profile",
+              activeIcon: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  border:
+                      Border.all(width: 0.5, color: Colors.deepOrangeAccent),
+                ),
+                child: _userPhoto != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.memory(
+                          _userPhoto!,
+                          fit: BoxFit.cover,
+                          width: 30,
+                          height: 30,
+                        ),
+                      )
+                    : const Icon(Icons.person),
+              ),
+            ),
           ],
         ),
       ),
@@ -173,5 +150,22 @@ class _Navigationscreen extends State<Navigationscreen> {
           ),
         ) ??
         false;
+  }
+
+  Widget _getSelectedScreen(int index) {
+    switch (index) {
+      case 0:
+        return const HomepageScreen();
+      case 1:
+        return const DailyneedsTab();
+      case 2:
+        return const CommunityPage();
+      case 3:
+        return loginModel!.user!.role != "watchman"
+            ? const AccountScreen()
+            : const WatchmanProfilePage();
+      default:
+        return const HomepageScreen();
+    }
   }
 }
