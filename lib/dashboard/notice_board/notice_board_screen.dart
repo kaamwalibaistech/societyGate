@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
 import 'package:society_gate/bloc/homepage_event.dart';
 import 'package:society_gate/bloc/homepage_state.dart';
-
 import '../../constents/local_storage.dart';
 import 'add_notice_screen.dart';
 
@@ -25,144 +24,134 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
   Widget build(BuildContext context) {
     final logInData = LocalStoragePref().getLoginModel();
     return Scaffold(
+      backgroundColor: Colors.white,
       floatingActionButton: logInData!.user!.role == "admin"
           ? FloatingActionButton(
-              child: const Icon(Icons.add),
+              backgroundColor: Colors.blue,
+              child: const Icon(Icons.add, color: Colors.white),
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AddNoticeScreen()));
-              })
+                  context,
+                  MaterialPageRoute(builder: (_) => const AddNoticeScreen()),
+                );
+              },
+            )
           : const SizedBox.shrink(),
       appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
+        backgroundColor: Colors.white,
+        elevation: 1,
+        title: const Text(
+          "Notice Board",
+          style: TextStyle(
+            color: Colors.black87,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 19, 52, 84),
-        title: const Text(
-          "All Notices",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
         centerTitle: true,
-        elevation: 10,
+        leading: BackButton(color: Colors.black87),
       ),
       body: BlocBuilder<HomepageBloc, HomepageState>(
         builder: (context, state) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 10.0, left: 8),
-              //   child: Container(
-              //     height: MediaQuery.of(context).size.height * 0.05,
-              //     width: MediaQuery.of(context).size.width * 0.25,
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(5),
-              //       color: const Color.fromARGB(255, 19, 52, 84),
-              //     ),
-              //     child: const Center(
-              //       child: Text(
-              //         "Add New ",
-              //         style: TextStyle(color: Colors.white),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              if (state is HomePageLoadedState)
-                state.mydata!.data.announcements.isNotEmpty
-                    ? Expanded(
-                        child: ListView.builder(
-                            itemCount: state.mydata!.data.announcements.length,
-                            itemBuilder: (context, index) => Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color:
-                                          const Color.fromARGB(255, 19, 52, 84),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Center(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 5.0),
-                                              child: Text(
-                                                textAlign: TextAlign.center,
-                                                state.mydata!.data
-                                                    .announcements[index].title,
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            // maxLines: 2,
-                                            // overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.center,
-                                            state
-                                                .mydata!
-                                                .data
-                                                .announcements[index]
-                                                .description,
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 5.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  textAlign: TextAlign.center,
-                                                  "Created At : ${state.mydata!.data.announcements[index].createdAt}"
-                                                      .toString(),
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                                Text(
-                                                  textAlign: TextAlign.center,
-                                                  state
-                                                      .mydata!
-                                                      .data
-                                                      .announcements[index]
-                                                      .announcementType,
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )),
-                      )
-                    : const Center(
-                        child: Padding(
-                        padding: EdgeInsets.only(top: 320.0),
-                        child: Text("No Notices"),
-                      ))
-            ],
-          );
+          if (state is HomePageLoadedState) {
+            final notices = state.mydata?.data.announcements ?? [];
+            if (notices.isEmpty) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 300),
+                  child: Text(
+                    "No Notices Available",
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ),
+              );
+            }
+
+            return ListView.builder(
+              padding: const EdgeInsets.all(12),
+              itemCount: notices.length,
+              itemBuilder: (context, index) {
+                final notice = notices[index];
+
+                // Set colors based on type
+                Color typeColor = Colors.blue;
+                if (notice.announcementType
+                    .toLowerCase()
+                    .contains('emergency')) {
+                  typeColor = Colors.red;
+                } else if (notice.announcementType
+                    .toLowerCase()
+                    .contains('maintenance')) {
+                  typeColor = Colors.green;
+                }
+
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          notice.title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          notice.description,
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.black54),
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Created: ${notice.createdAt}",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: typeColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                    color: typeColor.withOpacity(0.5)),
+                              ),
+                              child: Text(
+                                notice.announcementType,
+                                style: TextStyle(
+                                  color: typeColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+
+          if (state is HomePageLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return const Center(child: Text("Failed to load notices."));
         },
       ),
     );
