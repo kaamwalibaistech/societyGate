@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:society_gate/models/comments_model.dart';
-import 'package:society_gate/models/insert_comment_models.dart';
 
 import '../../../api/api_constant.dart';
 import '../../models/community_model.dart';

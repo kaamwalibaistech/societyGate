@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:society_gate/auth/amenities_add.dart';
 
-import '../api/api_repository.dart';
 import '../constents/sizedbox.dart';
-import '../models/admin_register_model.dart';
 import 'login_screen.dart';
 
 class SocietyRegister extends StatefulWidget {
@@ -25,12 +23,7 @@ class _SocietyRegister extends State<SocietyRegister> {
   final TextEditingController flatNoController = TextEditingController();
   final TextEditingController floorNoNoController = TextEditingController();
   final TextEditingController blockController = TextEditingController();
-  bool? swimmingPoolChecked = false;
-  bool? gardenChecked = false;
-  bool? parkingChecked = false;
-  bool? gymChecked = false;
-  bool? playGroundChecked = false;
-  bool? moreChecked = false;
+
   final _formkey = GlobalKey<FormState>();
   String? validateEmail(String? email) {
     RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
@@ -39,10 +32,10 @@ class _SocietyRegister extends State<SocietyRegister> {
     return null;
   }
 
-  List<String> amenities = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: const Color(0xfff0f3fa),
       body: SafeArea(
         child: Stack(children: [
@@ -180,6 +173,7 @@ class _SocietyRegister extends State<SocietyRegister> {
                           ),
                         ),
                       ),
+
                       const SizedBox(
                         height: 15,
                       ),
@@ -206,6 +200,7 @@ class _SocietyRegister extends State<SocietyRegister> {
                             hintText: "Enter Email Address",
                             hintStyle: const TextStyle(color: Colors.grey),
                           ),
+
                         ),
                       ),
                       Padding(
@@ -576,9 +571,44 @@ class _SocietyRegister extends State<SocietyRegister> {
                                     });
                                   }),
                               const Text(
-                                "Parking",
-                                style: TextStyle(color: Colors.white),
-                              )
+// <<<<<<< anil
+//                                 "Parking",
+//                                 style: TextStyle(color: Colors.white),
+//                               )
+// =======
+                                "block",
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.emailAddress,
+                                  controller: blockController,
+                                  // validator: (value) {
+                                  //   if (value!.isEmpty) {
+                                  //     return "Enter block";
+                                  //   } else {
+                                  //     return null;
+                                  //   }
+                                  // },
+                                  decoration: const InputDecoration(
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide.none),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 10),
+                                    counterText: "",
+                                    hintText: "block/wing",
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                              ),
+// >>>>>>> final
                             ],
                           ),
                         ],
@@ -719,12 +749,29 @@ class _SocietyRegister extends State<SocietyRegister> {
                           ),
                         ],
                       ),
+/*<<<<<<< anil
                       const SizedBox(
                         height: 10,
                       ),
                       Center(
                           child: Text(
                         "By Creating account, you agree to our",
+=======*/
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                        child: Text(
+                      "By Creating account, you agree to our",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    )),
+                    Center(
+                      child: Text(
+                        "Terms & Conditions",
+// >>>>>>> final
                         style: TextStyle(
                           color: Theme.of(context).primaryColor,
                         ),
@@ -737,6 +784,7 @@ class _SocietyRegister extends State<SocietyRegister> {
                           ),
                         ),
                       ),
+/*<<<<<<< anil
                       const SizedBox(
                         height: 10,
                       ),
@@ -764,6 +812,56 @@ class _SocietyRegister extends State<SocietyRegister> {
                       )
                     ],
                   ),
+=======*/
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        if (_formkey.currentState!.validate()) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AmenitiesAdd(
+                                      societyNameController:
+                                          societyNameController.text,
+                                      societyAddressController:
+                                          societyAddressController.text,
+                                      totalwingsController:
+                                          totalwingsController.text,
+                                      totalFlatController:
+                                          totalFlatController.text,
+                                      nameController: nameController.text,
+                                      emailController: emailController.text,
+                                      mobileNoController:
+                                          mobileNoController.text,
+                                      flatNoController: flatNoController.text,
+                                      blockController: blockController.text,
+                                      floorNoNoController:
+                                          floorNoNoController.text)));
+                        }
+                      },
+                      child: Center(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.06,
+                          width: MediaQuery.of(context).size.width * 0.75,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              borderRadius: BorderRadius.circular(30)),
+                          child: const Center(
+                              child: Text(
+                            "Add Amenities",
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    )
+                  ],
+// >>>>>>> final
                 ),
               ),
             ),
@@ -783,42 +881,5 @@ class _SocietyRegister extends State<SocietyRegister> {
         ]),
       ),
     );
-  }
-
-  void adminRegisterMethod() async {
-    String finalAmenities = "";
-    String add;
-    for (int i = 0; i < amenities.length; i++) {
-      if (finalAmenities == "") {
-        add = "";
-      } else {
-        add = ", ";
-      }
-      finalAmenities = "$finalAmenities $add ${amenities[i]}";
-      print(finalAmenities);
-    }
-    try {
-      if (_formkey.currentState!.validate()) {
-        ApiRepository apiRepository = ApiRepository();
-        AdminRegister? data = await apiRepository.registerSocietyAdmin(
-            societyNameController.text,
-            societyAddressController.text,
-            totalwingsController.text,
-            totalFlatController.text,
-            finalAmenities.toString(),
-            nameController.text,
-            emailController.text,
-            mobileNoController.text,
-            flatNoController.text,
-            blockController.text,
-            floorNoNoController.text);
-        Fluttertoast.showToast(msg: data!.message.toString());
-        Navigator.pop(context);
-
-        // Navigator.pop(context);
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
   }
 }
