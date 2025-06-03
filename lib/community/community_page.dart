@@ -176,10 +176,15 @@ class _CommunityPageState extends State<CommunityPage> {
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10),
                           ),
-                          child: Image.asset(
-                            'lib/assets/girlphoto1.jpg',
+                          child: Image.network(
+                            post?.photo ??
+                                "https://green-delta.com/wp-content/uploads/2021/07/not-available.png",
                             fit: BoxFit.fill,
                           ),
+                          //  Image.asset(
+                          //   'lib/assets/girlphoto1.jpg',
+                          //   fit: BoxFit.fill,
+                          // ),
                         )),
                     Container(
                       height: 50,

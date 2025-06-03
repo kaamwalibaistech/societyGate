@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -37,7 +38,7 @@ class ApiRepository {
     // Map<String, String> queryParameters = {};
     // queryParameters.addAll({"API-KEY": dotenv.get('API-KEY')});
 
-    Uri url = Uri.parse("https://blingbroomcleaning.com/api/signup");
+    Uri url = Uri.parse("https://thesocietygate.com/api/signup");
 
     final body = {
       'sname': sname,
@@ -72,7 +73,7 @@ class ApiRepository {
 
   Future<MemberRegisterModel?> memberRegister(
       uname, uemail, uphone, sregistrationNo, flatNumber, block, floor) async {
-    final url = Uri.parse("https://blingbroomcleaning.com/api/memberregister");
+    final url = Uri.parse("https://thesocietygate.com/api/memberregister");
     final body = {
       'uname': uname,
       'uemail': uemail,
@@ -98,7 +99,7 @@ class ApiRepository {
   }
 
   Future<FlatIdModel?> getFlatId(societyId, flatNo, block, floor) async {
-    final url = Uri.parse("https://blingbroomcleaning.com/api/flatsidsearch");
+    final url = Uri.parse("https://thesocietygate.com/api/flatsidsearch");
     final body = {
       'society_id': societyId,
       'flat_number': flatNo,
@@ -121,7 +122,7 @@ class ApiRepository {
   }
 
   Future<UserApprove?> getUserApproval(userId) async {
-    final url = Uri.parse("https://blingbroomcleaning.com/api/userapprove");
+    final url = Uri.parse("https://thesocietygate.com/api/userapprove");
     final body = {
       'user_id': userId,
     };
@@ -141,7 +142,7 @@ class ApiRepository {
   }
 
   Future<Homepagemodel?> getHomePageData(societyId) async {
-    final url = Uri.parse("https://blingbroomcleaning.com/api/homepage");
+    final url = Uri.parse("https://thesocietygate.com/api/homepage");
     final body = {
       'society_id': societyId,
     };
@@ -162,8 +163,7 @@ class ApiRepository {
 
   Future<int?> communityPost(
       societyId, adminId, title, description, photo) async {
-    final url =
-        Uri.parse("https://blingbroomcleaning.com/api/communitypostinsert");
+    final url = Uri.parse("https://thesocietygate.com/api/communitypostinsert");
     final body = {
       'society_id': societyId,
       'admin_id': adminId,
@@ -186,8 +186,7 @@ class ApiRepository {
 
   Future<AddFamilyMemberModel?> addFamilyMembers(societyid, flatid, memberid,
       uname, uemail, uphone, relation, password) async {
-    final url =
-        Uri.parse("https://blingbroomcleaning.com/api/familymembersadd");
+    final url = Uri.parse("https://thesocietygate.com/api/familymembersadd");
     final body = {
       'society_id': societyid,
       'flat_id': flatid,
@@ -214,8 +213,7 @@ class ApiRepository {
   }
 
   Future<GetFamilyMemberModel?> getFamilyMembers(flatid) async {
-    final url =
-        Uri.parse("https://blingbroomcleaning.com/api/familymembersget");
+    final url = Uri.parse("https://thesocietygate.com/api/familymembersget");
     final body = {
       'flat_id': flatid,
     };
@@ -235,8 +233,7 @@ class ApiRepository {
   }
 
   Future<GetVehicleDetailsModel?> getVehicleDetails(flatid) async {
-    final url =
-        Uri.parse("https://blingbroomcleaning.com/api/getvehicleparking");
+    final url = Uri.parse("https://thesocietygate.com/api/getvehicleparking");
     final body = {
       'flat_id': flatid,
     };
@@ -256,7 +253,7 @@ class ApiRepository {
   }
 
   Future<UpdateUserModel?> updateUser(userId, name, email, number) async {
-    final url = Uri.parse("https://blingbroomcleaning.com/api/userupdate");
+    final url = Uri.parse("https://thesocietygate.com/api/userupdate");
     final body = {
       'user_id': userId,
       'uname': name,
@@ -269,10 +266,12 @@ class ApiRepository {
         final Map<String, dynamic> data = jsonDecode(response.body);
         if (data['status'] == 200) {
           return UpdateUserModel.fromJson(data);
+        } else {
+          return UpdateUserModel.fromJson(data);
         }
-        return UpdateUserModel.fromJson(data);
       }
     } catch (e) {
+      log(e.toString());
       throw Exception(e.toString());
     }
     return null;
@@ -280,7 +279,7 @@ class ApiRepository {
 
   Future<HelpSupportModel?> postSupportMessage(
       societyId, userId, title, message) async {
-    final url = Uri.parse("https://blingbroomcleaning.com/api/supportinsert");
+    final url = Uri.parse("https://thesocietygate.com/api/supportinsert");
     final body = {
       'society_id': societyId,
       'user_id': userId,
@@ -304,7 +303,7 @@ class ApiRepository {
 
   Future<AddDailyHelpModel?> addDailyHelpMembers(
       societyid, memberid, flatid, name, phone, address, emptype) async {
-    final url = Uri.parse("https://blingbroomcleaning.com/api/employmentadd");
+    final url = Uri.parse("https://thesocietygate.com/api/employmentadd");
     final body = {
       'society_id': societyid,
       'member_id': memberid,
@@ -331,7 +330,7 @@ class ApiRepository {
 
   Future<WatchManAddModel?> addWatchman(
       societyid, name, email, phoneNo, password) async {
-    final url = Uri.parse("https://blingbroomcleaning.com/api/watchmenadd");
+    final url = Uri.parse("https://thesocietygate.com/api/watchmenadd");
     final body = {
       'society_id': societyid,
       'uname': name,
@@ -355,7 +354,7 @@ class ApiRepository {
   }
 
   Future<GetDailyHelpModel?> getDailyHelpMembers(societyid, flatid) async {
-    final url = Uri.parse("https://blingbroomcleaning.com/api/employmentget");
+    final url = Uri.parse("https://thesocietygate.com/api/employmentget");
     final body = {
       'society_id': societyid,
       'flat_id': flatid,
@@ -376,7 +375,7 @@ class ApiRepository {
   }
 
   Future<WatchManDeleteModel?> deleteWatchman(userId) async {
-    final url = Uri.parse("https://blingbroomcleaning.com/api/watchmendelete");
+    final url = Uri.parse("https://thesocietygate.com/api/watchmendelete");
     final body = {
       'user_id': userId,
     };
@@ -405,7 +404,7 @@ class ApiRepository {
     String? slotNumber,
   ) async {
     final url =
-        Uri.parse("https://blingbroomcleaning.com/api/insertvehicleparking");
+        Uri.parse("https://thesocietygate.com/api/insertvehicleparking");
     final body = {
       'society_id': societyid,
       "member_id": memberId,
@@ -468,8 +467,7 @@ class ApiRepository {
 
   Future<AddNoticeModel?> addNotices(societyid, memberId, String title,
       String description, String announcementType) async {
-    final url =
-        Uri.parse("https://blingbroomcleaning.com/api/announcementsadd");
+    final url = Uri.parse("https://thesocietygate.com/api/announcementsadd");
     final body = {
       'society_id': societyid,
       "user_id": memberId,
