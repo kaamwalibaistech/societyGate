@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/models/homepage_model.dart';
 
 import '../../constents/local_storage.dart';
 import '../../constents/sizedbox.dart';
@@ -18,12 +19,21 @@ class MembersPage extends StatefulWidget {
 }
 
 class _MembersPageState extends State<MembersPage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController mobileNoController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   LoginModel? loginModel;
   WatchManAddModel? watchmanData;
+  Homepagemodel? data;
+  // LoginModel? loginModel;
+  String? loginType;
   @override
   void initState() {
     super.initState();
     getUserData();
+    getData();
   }
 
   getUserData() {
@@ -37,6 +47,20 @@ class _MembersPageState extends State<MembersPage> {
     } else {
       debugPrint("LoginModel not found in local storage.");
     }
+  }
+
+  getData() async {
+    final getLoginModel = LocalStoragePref().getLoginModel();
+
+    ApiRepository apiRepositiory = ApiRepository();
+    Homepagemodel? mydata = await apiRepositiory
+        .getHomePageData(getLoginModel!.user!.societyId.toString());
+    setState(() {
+      loginModel = getLoginModel;
+      data = mydata;
+      loginType = loginModel?.user?.role ?? "NA";
+      // uiPhoto = loginModel?.user?.uname ?? "User";
+    });
   }
 
   @override
@@ -365,79 +389,95 @@ class _MembersPageState extends State<MembersPage> {
                       decoration: BoxDecoration(
                           color: Colors.purple.shade50,
                           borderRadius: BorderRadius.circular(20)),
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    content: Container(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      width: MediaQuery.of(context).size.width,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.2,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          const Text(
-                                            "Are you sure you want to delete",
-                                            style: TextStyle(fontSize: 20),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text("cancel")),
-                                              const SizedBox(
-                                                width: 15,
-                                              ),
-                                              GestureDetector(
-                                                  onTap: () async {
-                                                    final societyId = loginModel
-                                                        ?.user!.societyId;
-                                                    ApiRepository
-                                                        apiRepository =
-                                                        ApiRepository();
+                      child: ListTile(
+                        trailing: loginType == "admin"
+                            ? GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                            content: Container(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.2,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  const Text(
+                                                    "Are you sure you want to delete",
+                                                    style:
+                                                        TextStyle(fontSize: 20),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: const Text(
+                                                              "cancel")),
+                                                      const SizedBox(
+                                                        width: 15,
+                                                      ),
+                                                      GestureDetector(
+                                                          onTap: () async {
+                                                            final societyId =
+                                                                loginModel
+                                                                    ?.user!
+                                                                    .societyId;
+                                                            ApiRepository
+                                                                apiRepository =
+                                                                ApiRepository();
 
-                                                    await apiRepository
-                                                        .deleteWatchman(
-                                                            watchmen[index]
-                                                                .userId
-                                                                .toString());
-                                                    context
-                                                        .read<MembersBloc>()
-                                                        .add(GetMemberListEvent(
-                                                            soceityId: societyId
-                                                                .toString()));
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text("Delete"))
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ));
-                        },
-                        child: ListTile(
-                          trailing: const Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                          ),
-                          leading: const CircleAvatar(
-                            foregroundImage:
-                                AssetImage("lib/assets/watchman.jpg"),
-                            radius: 30,
-                          ),
-                          title: Text(watchmenList.uname ?? "No Name"),
-                          subtitle:
-                              Text(watchmenList.uphone ?? "Not Available"),
+                                                            await apiRepository
+                                                                .deleteWatchman(
+                                                                    watchmen[
+                                                                            index]
+                                                                        .userId
+                                                                        .toString());
+                                                            context
+                                                                .read<
+                                                                    MembersBloc>()
+                                                                .add(GetMemberListEvent(
+                                                                    soceityId:
+                                                                        societyId
+                                                                            .toString()));
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: const Text(
+                                                              "Delete"))
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ));
+                                },
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                        leading: const CircleAvatar(
+                          foregroundImage:
+                              AssetImage("lib/assets/watchman.jpg"),
+                          radius: 30,
                         ),
+                        title: Text(watchmenList.uname ?? "No Name"),
+                        subtitle: Text(watchmenList.uphone ?? "Not Available"),
                       ));
                 }),
           ],
@@ -455,11 +495,6 @@ class _MembersPageState extends State<MembersPage> {
       return null;
     }
 
-    TextEditingController nameController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController mobileNoController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController confirmPasswordController = TextEditingController();
     return showModalBottomSheet(
         context: context,
         builder: (context) {
