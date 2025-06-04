@@ -1,61 +1,59 @@
-// To parse this JSON data, do
-//
-//     final getVehicleDetailsModel = getVehicleDetailsModelFromJson(jsonString);
-
 import 'dart:convert';
 
-GetVehicleDetailsModel getVehicleDetailsModelFromJson(String str) =>
-    GetVehicleDetailsModel.fromJson(json.decode(str));
+GetVehicleDetailsModel? getVehicleDetailsModelFromJson(String str) =>
+    str.isEmpty ? null : GetVehicleDetailsModel.fromJson(json.decode(str));
 
-String getVehicleDetailsModelToJson(GetVehicleDetailsModel data) =>
-    json.encode(data.toJson());
+String getVehicleDetailsModelToJson(GetVehicleDetailsModel? data) =>
+    json.encode(data?.toJson() ?? {});
 
 class GetVehicleDetailsModel {
-  int status;
-  String message;
-  List<Datum> data;
+  int? status;
+  String? message;
+  List<Datum>? data;
 
   GetVehicleDetailsModel({
-    required this.status,
-    required this.message,
-    required this.data,
+    this.status,
+    this.message,
+    this.data,
   });
 
   factory GetVehicleDetailsModel.fromJson(Map<String, dynamic> json) =>
       GetVehicleDetailsModel(
         status: json["status"],
         message: json["message"],
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: json["data"] != null
+            ? List<Datum>.from(json["data"].map((x) => Datum.fromJson(x)))
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "data": data?.map((x) => x.toJson()).toList(),
       };
 }
 
 class Datum {
-  int vehicleId;
-  int societyId;
-  int memberId;
-  int flatId;
-  String vehicleNo;
-  String type;
-  String model;
-  String status;
-  Parking parking;
+  int? vehicleId;
+  int? societyId;
+  int? memberId;
+  int? flatId;
+  String? vehicleNo;
+  String? type;
+  String? model;
+  String? status;
+  Parking? parking;
 
   Datum({
-    required this.vehicleId,
-    required this.societyId,
-    required this.memberId,
-    required this.flatId,
-    required this.vehicleNo,
-    required this.type,
-    required this.model,
-    required this.status,
-    required this.parking,
+    this.vehicleId,
+    this.societyId,
+    this.memberId,
+    this.flatId,
+    this.vehicleNo,
+    this.type,
+    this.model,
+    this.status,
+    this.parking,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -67,7 +65,8 @@ class Datum {
         type: json["type"],
         model: json["model"],
         status: json["status"],
-        parking: Parking.fromJson(json["parking"]),
+        parking:
+            json["parking"] != null ? Parking.fromJson(json["parking"]) : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -79,25 +78,25 @@ class Datum {
         "type": type,
         "model": model,
         "status": status,
-        "parking": parking.toJson(),
+        "parking": parking?.toJson(),
       };
 }
 
 class Parking {
-  int parkingId;
-  int flatId;
-  int vehicleId;
+  int? parkingId;
+  int? flatId;
+  int? vehicleId;
   String? slotNumber;
-  String status;
-  int societyId;
+  String? status;
+  int? societyId;
 
   Parking({
-    required this.parkingId,
-    required this.flatId,
-    required this.vehicleId,
-    required this.slotNumber,
-    required this.status,
-    required this.societyId,
+    this.parkingId,
+    this.flatId,
+    this.vehicleId,
+    this.slotNumber,
+    this.status,
+    this.societyId,
   });
 
   factory Parking.fromJson(Map<String, dynamic> json) => Parking(

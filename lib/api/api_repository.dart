@@ -244,7 +244,7 @@ class ApiRepository {
         if (data['status'] == 200) {
           return GetVehicleDetailsModel.fromJson(data);
         }
-        return null;
+        return GetVehicleDetailsModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

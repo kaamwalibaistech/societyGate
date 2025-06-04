@@ -749,7 +749,7 @@ class _AccountScreenState extends State<AccountScreen>
                             vertical: 10,
                           ),
                           scrollDirection: Axis.horizontal,
-                          itemCount: getVehicledetails?.data.length ?? 2,
+                          itemCount: getVehicledetails?.data?.length ?? 2,
                           itemBuilder: (context, index) {
                             return Container(
                               margin: const EdgeInsets.only(right: 15),
@@ -784,7 +784,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    getVehicledetails?.data[index].vehicleNo ??
+                                    getVehicledetails?.data?[index].vehicleNo ??
                                         "",
                                     style: const TextStyle(
                                       color: Colors.black,
@@ -795,7 +795,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    getVehicledetails?.data[index].model ?? "",
+                                    getVehicledetails?.data?[index].model ?? "",
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey[600],
