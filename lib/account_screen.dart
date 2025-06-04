@@ -979,23 +979,31 @@ class _AccountScreenState extends State<AccountScreen>
                           height: 50,
                           child: ElevatedButton(
                             onPressed: () async {
-                              if (formKey.currentState!.validate()) {
-                                final data =
-                                    LocalStoragePref.instance!.getLoginModel();
-                                ApiRepository apiRepository = ApiRepository();
-                                await apiRepository.addFamilyMembers(
-                                  data!.user!.societyId.toString(),
-                                  data.user!.flatId.toString(),
-                                  data.user!.userId.toString(),
-                                  familyNameController.text,
-                                  familyEmailController.text,
-                                  familyMobileNoController.text,
-                                  familyRelationController.text,
-                                  familyPasswordController.text,
-                                );
+                              try {
+                                if (formKey.currentState!.validate()) {
+                                  final data = LocalStoragePref.instance!
+                                      .getLoginModel();
+                                  ApiRepository apiRepository = ApiRepository();
+                                  final dataa =
+                                      await apiRepository.addFamilyMembers(
+                                    data!.user!.societyId.toString(),
+                                    data.user!.flatId.toString(),
+                                    data.user!.userId.toString(),
+                                    familyNameController.text,
+                                    familyEmailController.text,
+                                    familyMobileNoController.text,
+                                    familyRelationController.text,
+                                    familyPasswordController.text,
+                                  );
+                                  getfamilymembers();
+                                  Navigator.pop(context);
+                                  Fluttertoast.showToast(
+                                      msg: dataa!.message.toString());
+                                }
+                              } catch (e) {
                                 Navigator.pop(context);
                                 Fluttertoast.showToast(
-                                    msg: "Family Member Added Successfully");
+                                    msg: "Phone Number is Already Taken");
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -1180,6 +1188,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   dailyHelpAddressController.text,
                                   dailyHelpTypeController.text,
                                 );
+                                getDailyHelpmembers();
                                 Navigator.pop(context);
                                 Fluttertoast.showToast(
                                     msg: dailyHelpData!.message.toString());
@@ -1360,6 +1369,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   vehicleModelController.text,
                                   vehicleParkingSlotController.text,
                                 );
+                                getVehicleData();
                                 Navigator.pop(context);
                                 Fluttertoast.showToast(
                                     msg: addVehicleData!.message.toString());
@@ -1401,7 +1411,7 @@ class _AccountScreenState extends State<AccountScreen>
     int? maxLength,
     bool isPassword = false,
     String? Function(String?)? validator,
-    bool obscureText = true,
+    // bool obscureText = true,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1419,20 +1429,20 @@ class _AccountScreenState extends State<AccountScreen>
           controller: controller,
           keyboardType: keyboardType,
           maxLength: maxLength,
-          obscureText: obscureText,
+          // obscureText: obscureText,
           validator: validator,
           decoration: InputDecoration(
-            suffixIcon: isPassword
-                ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        obscureText = !obscureText;
-                      });
-                    },
-                    child: obscureText
-                        ? const Icon(Icons.visibility)
-                        : const Icon(Icons.visibility_off_outlined))
-                : const SizedBox.shrink(),
+            // suffixIcon: isPassword
+            // ? GestureDetector(
+            //     onTap: () {
+            //       setState(() {
+            //         obscureText = !obscureText;
+            //       });
+            //     },
+            //     child: obscureText
+            //         ? const Icon(Icons.visibility)
+            //         : const Icon(Icons.visibility_off_outlined))
+            // : const SizedBox.shrink(),
             hintText: hint,
             hintStyle: TextStyle(
               color: Colors.grey[400],
