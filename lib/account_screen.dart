@@ -455,7 +455,7 @@ class _AccountScreenState extends State<AccountScreen>
                       ),
                       const Divider(height: 1),
                       SizedBox(
-                        height: 120,
+                        height: MediaQuery.of(context).size.height * 0.15,
                         child: ListView.builder(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
@@ -505,6 +505,8 @@ class _AccountScreenState extends State<AccountScreen>
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                     ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
                                   ),
                                   const SizedBox(height: 2),
@@ -785,6 +787,7 @@ class _AccountScreenState extends State<AccountScreen>
                                     getVehicledetails?.data[index].vehicleNo ??
                                         "",
                                     style: const TextStyle(
+                                      color: Colors.black,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                     ),

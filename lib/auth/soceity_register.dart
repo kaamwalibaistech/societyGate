@@ -490,43 +490,46 @@ class _SocietyRegister extends State<SocietyRegister> {
                     const SizedBox(
                       height: 10,
                     ),
-                    GestureDetector(
-                      onTap: () async {
-                        if (_formkey.currentState!.validate()) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AmenitiesAdd(
-                                      societyNameController:
-                                          societyNameController.text,
-                                      societyAddressController:
-                                          societyAddressController.text,
-                                      totalwingsController:
-                                          totalwingsController.text,
-                                      totalFlatController:
-                                          totalFlatController.text,
-                                      nameController: nameController.text,
-                                      emailController: emailController.text,
-                                      mobileNoController:
-                                          mobileNoController.text,
-                                      flatNoController: flatNoController.text,
-                                      blockController: blockController.text,
-                                      floorNoNoController:
-                                          floorNoNoController.text)));
-                        }
-                      },
-                      child: Center(
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          width: MediaQuery.of(context).size.width * 0.75,
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.circular(30)),
-                          child: const Center(
-                              child: Text(
-                            "Add Amenities",
-                            style: TextStyle(color: Colors.white),
-                          )),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (_formkey.currentState!.validate()) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AmenitiesAdd(
+                                        societyNameController:
+                                            societyNameController.text,
+                                        societyAddressController:
+                                            societyAddressController.text,
+                                        totalwingsController:
+                                            totalwingsController.text,
+                                        totalFlatController:
+                                            totalFlatController.text,
+                                        nameController: nameController.text,
+                                        emailController: emailController.text,
+                                        mobileNoController:
+                                            mobileNoController.text,
+                                        flatNoController: flatNoController.text,
+                                        blockController: blockController.text,
+                                        floorNoNoController:
+                                            floorNoNoController.text)));
+                          }
+                        },
+                        child: Center(
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.06,
+                            width: MediaQuery.of(context).size.width * 0.75,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(30)),
+                            child: const Center(
+                                child: Text(
+                              "Add Amenities",
+                              style: TextStyle(color: Colors.white),
+                            )),
+                          ),
                         ),
                       ),
                     ),
