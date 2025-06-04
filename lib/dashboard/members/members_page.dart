@@ -76,6 +76,8 @@ class _MembersPageState extends State<MembersPage> {
                 ),
                 labelColor: Colors.white,
                 unselectedLabelColor: const Color(0xFF6B4EFF),
+                indicatorPadding:
+                    EdgeInsets.symmetric(horizontal: -20, vertical: 5),
                 tabs: const [
                   Tab(text: "Members"),
                   Tab(text: "Watchman"),
@@ -137,13 +139,11 @@ class _MembersPageState extends State<MembersPage> {
                     width: 1.5,
                   ),
                 ),
-                child: const CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Color(0xFFF0F2FF),
-                  child: Icon(
-                    Icons.admin_panel_settings,
-                    color: Color(0xFF6B4EFF),
-                    size: 30,
+                child: ClipOval(
+                  child: Image.network(
+                    "https://ui-avatars.com/api/?background=random&name=$adminName.",
+                    height: 50,
+                    width: 50,
                   ),
                 ),
               ),
@@ -309,9 +309,12 @@ class _MembersPageState extends State<MembersPage> {
                     color: Colors.purple.shade50,
                     borderRadius: BorderRadius.circular(20)),
                 child: ListTile(
-                  leading: const CircleAvatar(
-                    foregroundImage: AssetImage("lib/assets/girlphoto2.jpg"),
-                    radius: 30,
+                  leading: ClipOval(
+                    child: Image.network(
+                      "https://ui-avatars.com/api/?background=random&name=${memberList.uname}.",
+                      height: 50,
+                      width: 50,
+                    ),
                   ),
                   title: Text(memberList.uname),
                   subtitle: Text(memberList.uname),
@@ -429,7 +432,15 @@ class _MembersPageState extends State<MembersPage> {
                             Icons.delete,
                             color: Colors.red,
                           ),
-                          leading: const CircleAvatar(
+                          leading:
+                              // ClipOval(
+                              //   child: Image.network(
+                              //     "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}.",
+                              //     height: 50,
+                              //     width: 50,
+                              //   ),
+                              // ),
+                              const CircleAvatar(
                             foregroundImage:
                                 AssetImage("lib/assets/watchman.jpg"),
                             radius: 30,
