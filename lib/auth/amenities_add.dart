@@ -403,20 +403,20 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
     }
     try {
       if (v != "p") {
-        ApiRepository apiRepository = ApiRepository();
-        AdminRegister? data = await apiRepository.registerSocietyAdmin(
-            widget.societyNameController,
-            widget.societyAddressController,
-            widget.totalwingsController,
-            widget.totalFlatController,
-            finalAmenities.toString(),
-            widget.nameController,
-            widget.emailController,
-            widget.mobileNoController,
-            widget.flatNoController,
-            widget.blockController,
-            widget.floorNoNoController);
-        Fluttertoast.showToast(msg: data!.message.toString());
+        // ApiRepository apiRepository = ApiRepository();
+        // AdminRegister? data = await apiRepository.registerSocietyAdmin(
+        //     widget.societyNameController,
+        //     widget.societyAddressController,
+        //     widget.totalwingsController,
+        //     widget.totalFlatController,
+        //     finalAmenities.toString(),
+        //     widget.nameController,
+        //     widget.emailController,
+        //     widget.mobileNoController,
+        //     widget.flatNoController,
+        //     widget.blockController,
+        //     widget.floorNoNoController);
+        // Fluttertoast.showToast(msg: data!.message.toString());
         Navigator.pop(context);
 
         // Navigator.pop(context);

@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final adminRegister = adminRegisterFromJson(jsonString);
-
 import 'dart:convert';
 
 AdminRegister adminRegisterFromJson(String str) =>
@@ -11,7 +7,7 @@ String adminRegisterToJson(AdminRegister data) => json.encode(data.toJson());
 
 class AdminRegister {
   int status;
-  String? message;
+  dynamic message; // Can be String or Map<String, List<String>>
   Data? data;
 
   AdminRegister({
@@ -22,13 +18,15 @@ class AdminRegister {
 
   factory AdminRegister.fromJson(Map<String, dynamic> json) => AdminRegister(
         status: json["status"] ?? 0,
-        message: json["message"] ?? "",
-        data: Data.fromJson(json["data"] ?? {}),
+        message: json["message"],
+        data: json["data"] != null && json["data"].isNotEmpty
+            ? Data.fromJson(json["data"])
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
-        "message": message ?? "",
+        "message": message,
         "data": data?.toJson() ?? {},
       };
 }
@@ -36,20 +34,25 @@ class AdminRegister {
 class Data {
   Society? society;
   User? user;
+  Flat? flat;
 
   Data({
-    required this.society,
-    required this.user,
+    this.society,
+    this.user,
+    this.flat,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        society: Society.fromJson(json["society"] ?? {}),
-        user: User.fromJson(json["user"] ?? {}),
+        society:
+            json["society"] != null ? Society.fromJson(json["society"]) : null,
+        user: json["user"] != null ? User.fromJson(json["user"]) : null,
+        flat: json["flat"] != null ? Flat.fromJson(json["flat"]) : null,
       );
 
   Map<String, dynamic> toJson() => {
         "society": society?.toJson() ?? {},
         "user": user?.toJson() ?? {},
+        "flat": flat?.toJson() ?? {},
       };
 }
 
@@ -59,19 +62,17 @@ class Society {
   String? registrationNo;
   String? totalWings;
   String? totalFlats;
-  dynamic aminities;
   String? approvalStatus;
   int? societyId;
 
   Society({
-    required this.name,
-    required this.address,
-    required this.registrationNo,
-    required this.totalWings,
-    required this.totalFlats,
-    required this.aminities,
-    required this.approvalStatus,
-    required this.societyId,
+    this.name,
+    this.address,
+    this.registrationNo,
+    this.totalWings,
+    this.totalFlats,
+    this.approvalStatus,
+    this.societyId,
   });
 
   factory Society.fromJson(Map<String, dynamic> json) => Society(
@@ -80,7 +81,6 @@ class Society {
         registrationNo: json["registration_no"] ?? "",
         totalWings: json["total_wings"] ?? "",
         totalFlats: json["total_flats"] ?? "",
-        aminities: json["aminities"],
         approvalStatus: json["approval_status"] ?? "",
         societyId: json["society_id"] ?? 0,
       );
@@ -91,7 +91,6 @@ class Society {
         "registration_no": registrationNo,
         "total_wings": totalWings,
         "total_flats": totalFlats,
-        "aminities": aminities,
         "approval_status": approvalStatus,
         "society_id": societyId,
       };
@@ -108,14 +107,14 @@ class User {
   int? userId;
 
   User({
-    required this.societyId,
-    required this.urole,
-    required this.uname,
-    required this.uemail,
-    required this.upassword,
-    required this.uphone,
-    required this.approvalStatus,
-    required this.userId,
+    this.societyId,
+    this.urole,
+    this.uname,
+    this.uemail,
+    this.upassword,
+    this.uphone,
+    this.approvalStatus,
+    this.userId,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -138,5 +137,65 @@ class User {
         "uphone": uphone,
         "approval_status": approvalStatus,
         "user_id": userId,
+      };
+}
+
+class Flat {
+  int? societyId;
+  int? memberId;
+  String? ownerName;
+  String? phone;
+  String? flatNumber;
+  String? block;
+  String? floor;
+  String? occupancy;
+  String? status;
+  String? updatedAt;
+  String? createdAt;
+  int? flatId;
+
+  Flat({
+    this.societyId,
+    this.memberId,
+    this.ownerName,
+    this.phone,
+    this.flatNumber,
+    this.block,
+    this.floor,
+    this.occupancy,
+    this.status,
+    this.updatedAt,
+    this.createdAt,
+    this.flatId,
+  });
+
+  factory Flat.fromJson(Map<String, dynamic> json) => Flat(
+        societyId: json["society_id"] ?? 0,
+        memberId: json["member_id"] ?? 0,
+        ownerName: json["owner_name"] ?? "",
+        phone: json["phone"] ?? "",
+        flatNumber: json["flat_number"] ?? "",
+        block: json["block"],
+        floor: json["floor"] ?? "",
+        occupancy: json["occupancy"] ?? "",
+        status: json["status"] ?? "",
+        updatedAt: json["updated_at"] ?? "",
+        createdAt: json["created_at"] ?? "",
+        flatId: json["flat_id"] ?? 0,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "society_id": societyId,
+        "member_id": memberId,
+        "owner_name": ownerName,
+        "phone": phone,
+        "flat_number": flatNumber,
+        "block": block,
+        "floor": floor,
+        "occupancy": occupancy,
+        "status": status,
+        "updated_at": updatedAt,
+        "created_at": createdAt,
+        "flat_id": flatId,
       };
 }
