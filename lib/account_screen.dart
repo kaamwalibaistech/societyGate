@@ -455,7 +455,7 @@ class _AccountScreenState extends State<AccountScreen>
                       ),
                       const Divider(height: 1),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.15,
+                        height: MediaQuery.of(context).size.height * 0.18,
                         child: ListView.builder(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
@@ -463,7 +463,7 @@ class _AccountScreenState extends State<AccountScreen>
                           ),
                           scrollDirection: Axis.horizontal,
                           itemCount:
-                              getFamilyMemberData?.familyMembers.length ?? 2,
+                              getFamilyMemberData?.familyMembers?.length ?? 2,
                           itemBuilder: (context, index) {
                             return Container(
                               margin: const EdgeInsets.only(right: 15),
@@ -499,7 +499,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   const SizedBox(height: 8),
                                   Text(
                                     getFamilyMemberData
-                                            ?.familyMembers[index].uname ??
+                                            ?.familyMembers?[index].uname ??
                                         "",
                                     style: const TextStyle(
                                       fontSize: 14,
@@ -512,7 +512,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   const SizedBox(height: 2),
                                   Text(
                                     getFamilyMemberData
-                                            ?.familyMembers[index].relation ??
+                                            ?.familyMembers?[index].relation ??
                                         "",
                                     style: TextStyle(
                                       fontSize: 12,
@@ -749,7 +749,7 @@ class _AccountScreenState extends State<AccountScreen>
                             vertical: 10,
                           ),
                           scrollDirection: Axis.horizontal,
-                          itemCount: getVehicledetails?.data.length ?? 2,
+                          itemCount: getVehicledetails?.data?.length ?? 2,
                           itemBuilder: (context, index) {
                             return Container(
                               margin: const EdgeInsets.only(right: 15),
@@ -784,7 +784,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    getVehicledetails?.data[index].vehicleNo ??
+                                    getVehicledetails?.data?[index].vehicleNo ??
                                         "",
                                     style: const TextStyle(
                                       color: Colors.black,
@@ -795,7 +795,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    getVehicledetails?.data[index].model ?? "",
+                                    getVehicledetails?.data?[index].model ?? "",
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey[600],
@@ -960,19 +960,19 @@ class _AccountScreenState extends State<AccountScreen>
                             return null;
                           },
                         ),
-                        const SizedBox(height: 15),
-                        _buildTextField(
-                          controller: familyPasswordController,
-                          label: "Password",
-                          hint: "Enter password",
-                          isPassword: true,
-                          validator: (value) {
-                            if (value!.length < 6) {
-                              return "Password should be at least 6 characters";
-                            }
-                            return null;
-                          },
-                        ),
+                        // const SizedBox(height: 15),
+                        // _buildTextField(
+                        //   controller: familyPasswordController,
+                        //   label: "Password",
+                        //   hint: "Enter password",
+                        //   isPassword: true,
+                        //   validator: (value) {
+                        //     if (value!.length < 6) {
+                        //       return "Password should be at least 6 characters";
+                        //     }
+                        //     return null;
+                        //   },
+                        // ),
                         const SizedBox(height: 25),
                         SizedBox(
                           width: double.infinity,
@@ -993,7 +993,6 @@ class _AccountScreenState extends State<AccountScreen>
                                     familyEmailController.text,
                                     familyMobileNoController.text,
                                     familyRelationController.text,
-                                    familyPasswordController.text,
                                   );
                                   getfamilymembers();
                                   Navigator.pop(context);
@@ -1001,9 +1000,9 @@ class _AccountScreenState extends State<AccountScreen>
                                       msg: dataa!.message.toString());
                                 }
                               } catch (e) {
-                                Navigator.pop(context);
                                 Fluttertoast.showToast(
-                                    msg: "Phone Number is Already Taken");
+                                    msg:
+                                        "Phone Number or Email is Already Taken");
                               }
                             },
                             style: ElevatedButton.styleFrom(

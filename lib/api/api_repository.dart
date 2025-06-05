@@ -175,9 +175,22 @@ class ApiRepository {
     return null;
   }
 
-  Future<AddFamilyMemberModel?> addFamilyMembers(societyid, flatid, memberid,
-      uname, uemail, uphone, relation, password) async {
-    final url = Uri.parse("${baseUrl}familymembersadd");
+// <<<<<<< anil
+//   Future<AddFamilyMemberModel?> addFamilyMembers(societyid, flatid, memberid,
+//       uname, uemail, uphone, relation, password) async {
+//     final url = Uri.parse("${baseUrl}familymembersadd");
+// // =======
+  Future<AddFamilyMemberModel?> addFamilyMembers(
+    societyid,
+    flatid,
+    memberid,
+    uname,
+    uemail,
+    uphone,
+    relation,
+  ) async {
+    final url = Uri.parse("https://thesocietygate.com/api/familymembersadd");
+// >>>>>>> final
     final body = {
       'society_id': societyid,
       'flat_id': flatid,
@@ -186,7 +199,7 @@ class ApiRepository {
       'uemail': uemail,
       'uphone': uphone,
       'relation': relation,
-      'password': password,
+      // 'password': password,
     };
     try {
       final response = await http.post(url, body: body);
@@ -215,7 +228,7 @@ class ApiRepository {
         if (data['status'] == 200) {
           return GetFamilyMemberModel.fromJson(data);
         }
-        return null;
+        return GetFamilyMemberModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());
@@ -235,7 +248,7 @@ class ApiRepository {
         if (data['status'] == 200) {
           return GetVehicleDetailsModel.fromJson(data);
         }
-        return null;
+        return GetVehicleDetailsModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

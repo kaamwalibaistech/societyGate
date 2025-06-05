@@ -27,6 +27,8 @@ class _MembersPageState extends State<MembersPage> {
   LoginModel? loginModel;
   WatchManAddModel? watchmanData;
   Homepagemodel? data;
+  String? adminName;
+  String? adminEmail;
   // LoginModel? loginModel;
   String? loginType;
   @override
@@ -86,27 +88,94 @@ class _MembersPageState extends State<MembersPage> {
           ),
           centerTitle: true,
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(48),
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF0F2FF),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: TabBar(
-                indicator: BoxDecoration(
-                  color: const Color(0xFF6B4EFF),
-                  borderRadius: BorderRadius.circular(12),
+            preferredSize: const Size.fromHeight(160),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.only(bottom: 25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        // padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: const Color(0xFF6B4EFF),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: Image.network(
+                            "https://ui-avatars.com/api/?background=random&name=$adminName.",
+                            height: 50,
+                            width: 50,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              adminName ?? "No Admin",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1A1A1A),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              adminEmail ?? "Not Available",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                labelColor: Colors.white,
-                unselectedLabelColor: const Color(0xFF6B4EFF),
-                indicatorPadding:
-                    EdgeInsets.symmetric(horizontal: -20, vertical: 5),
-                tabs: const [
-                  Tab(text: "Members"),
-                  Tab(text: "Watchman"),
-                ],
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF0F2FF),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: TabBar(
+                      indicator: BoxDecoration(
+                        color: const Color(0xFF6B4EFF),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      labelColor: Colors.white,
+                      unselectedLabelColor: const Color(0xFF6B4EFF),
+                      indicatorPadding: const EdgeInsets.symmetric(
+                          horizontal: -20, vertical: 5),
+                      tabs: const [
+                        Tab(text: "Members"),
+                        Tab(text: "Watchman"),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -127,9 +196,9 @@ class _MembersPageState extends State<MembersPage> {
     );
   }
 
-  Widget getUi(MemberlistModel? memberlistModel) {
-    String? adminName;
-    String? adminEmail;
+  Widget getUi(
+    MemberlistModel? memberlistModel,
+  ) {
     if (memberlistModel?.users?.admins?.isNotEmpty ?? false) {
       adminName = memberlistModel!.users!.admins!.first.uname;
       adminEmail = memberlistModel.users!.admins!.first.uemail;
@@ -138,66 +207,6 @@ class _MembersPageState extends State<MembersPage> {
     return Column(
       children: [
         // Admin Card
-        Container(
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: const Color(0xFF6B4EFF),
-                    width: 1.5,
-                  ),
-                ),
-                child: ClipOval(
-                  child: Image.network(
-                    "https://ui-avatars.com/api/?background=random&name=$adminName.",
-                    height: 50,
-                    width: 50,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      adminName ?? "No Admin",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A1A),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      adminEmail ?? "Not Available",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
 
         // Tab Content
         Expanded(
@@ -230,7 +239,10 @@ class _MembersPageState extends State<MembersPage> {
 
               // Watchman Tab
               (memberlistModel?.users?.watchmen?.isNotEmpty ?? false)
-                  ? getWatchmanWidget(context, memberlistModel?.users!.watchmen)
+                  ? getWatchmanWidget(
+                      context,
+                      memberlistModel?.users!.watchmen,
+                    )
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -373,11 +385,13 @@ class _MembersPageState extends State<MembersPage> {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () {
-              modelBottomsheet();
-            }),
+        floatingActionButton: loginType == "admin"
+            ? FloatingActionButton(
+                child: const Icon(Icons.add),
+                onPressed: () {
+                  modelBottomsheet();
+                })
+            : const SizedBox.shrink(),
         body: Column(
           children: [
             ListView.builder(
