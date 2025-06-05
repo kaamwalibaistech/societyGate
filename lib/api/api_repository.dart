@@ -23,29 +23,21 @@ import '../models/watchman_delete_model.dart';
 import 'api_constant.dart';
 
 class ApiRepository {
-  Future<AdminRegister?> registerSocietyAdmin(
-      sname,
-      saddress,
-      totalwings,
-      totalflat,
-      amenities,
-      uname,
-      uemail,
-      uphone,
-      flatNumber,
-      block,
-      floor) async {
+  String baseUrl = "https://thesocietygate.com/api/";
+
+  Future<AdminRegister?> registerSocietyAdmin(sname, saddress, totalwings,
+      totalflat, uname, uemail, uphone, flatNumber, block, floor) async {
     // Map<String, String> queryParameters = {};
     // queryParameters.addAll({"API-KEY": dotenv.get('API-KEY')});
 
-    Uri url = Uri.parse("https://thesocietygate.com/api/signup");
+    Uri url = Uri.parse("${baseUrl}signup");
 
     final body = {
       'sname': sname,
       'saddress': saddress,
       'total_wings': totalwings,
       'total_flats': totalflat,
-      'amenities': amenities ?? "",
+      'amenities': "",
       'uname': uname,
       'uemail': uemail,
       'uphone': uphone,
@@ -60,11 +52,10 @@ class ApiRepository {
         if (data['status'] == 200) {
           return AdminRegister.fromJson(data);
         } else {
-          final Map<String, dynamic> data = jsonDecode(response.body);
-
           return AdminRegister.fromJson(data);
         }
       }
+      log(response.body);
     } catch (e) {
       throw Exception();
     }
@@ -73,7 +64,7 @@ class ApiRepository {
 
   Future<MemberRegisterModel?> memberRegister(
       uname, uemail, uphone, sregistrationNo, flatNumber, block, floor) async {
-    final url = Uri.parse("https://thesocietygate.com/api/memberregister");
+    final url = Uri.parse("${baseUrl}memberregister");
     final body = {
       'uname': uname,
       'uemail': uemail,
@@ -99,7 +90,7 @@ class ApiRepository {
   }
 
   Future<FlatIdModel?> getFlatId(societyId, flatNo, block, floor) async {
-    final url = Uri.parse("https://thesocietygate.com/api/flatsidsearch");
+    final url = Uri.parse("${baseUrl}flatsidsearch");
     final body = {
       'society_id': societyId,
       'flat_number': flatNo,
@@ -122,7 +113,7 @@ class ApiRepository {
   }
 
   Future<UserApprove?> getUserApproval(userId) async {
-    final url = Uri.parse("https://thesocietygate.com/api/userapprove");
+    final url = Uri.parse("${baseUrl}userapprove");
     final body = {
       'user_id': userId,
     };
@@ -142,7 +133,7 @@ class ApiRepository {
   }
 
   Future<Homepagemodel?> getHomePageData(societyId) async {
-    final url = Uri.parse("https://thesocietygate.com/api/homepage");
+    final url = Uri.parse("${baseUrl}homepage");
     final body = {
       'society_id': societyId,
     };
@@ -163,7 +154,7 @@ class ApiRepository {
 
   Future<int?> communityPost(
       societyId, adminId, title, description, photo) async {
-    final url = Uri.parse("https://thesocietygate.com/api/communitypostinsert");
+    final url = Uri.parse("${baseUrl}communitypostinsert");
     final body = {
       'society_id': societyId,
       'admin_id': adminId,
@@ -186,7 +177,7 @@ class ApiRepository {
 
   Future<AddFamilyMemberModel?> addFamilyMembers(societyid, flatid, memberid,
       uname, uemail, uphone, relation, password) async {
-    final url = Uri.parse("https://thesocietygate.com/api/familymembersadd");
+    final url = Uri.parse("${baseUrl}familymembersadd");
     final body = {
       'society_id': societyid,
       'flat_id': flatid,
@@ -213,7 +204,7 @@ class ApiRepository {
   }
 
   Future<GetFamilyMemberModel?> getFamilyMembers(flatid) async {
-    final url = Uri.parse("https://thesocietygate.com/api/familymembersget");
+    final url = Uri.parse("${baseUrl}familymembersget");
     final body = {
       'flat_id': flatid,
     };
@@ -233,7 +224,7 @@ class ApiRepository {
   }
 
   Future<GetVehicleDetailsModel?> getVehicleDetails(flatid) async {
-    final url = Uri.parse("https://thesocietygate.com/api/getvehicleparking");
+    final url = Uri.parse("${baseUrl}getvehicleparking");
     final body = {
       'flat_id': flatid,
     };
@@ -253,7 +244,7 @@ class ApiRepository {
   }
 
   Future<UpdateUserModel?> updateUser(userId, name, email, number) async {
-    final url = Uri.parse("https://thesocietygate.com/api/userupdate");
+    final url = Uri.parse("${baseUrl}userupdate");
     final body = {
       'user_id': userId,
       'uname': name,
@@ -279,7 +270,7 @@ class ApiRepository {
 
   Future<HelpSupportModel?> postSupportMessage(
       societyId, userId, title, message) async {
-    final url = Uri.parse("https://thesocietygate.com/api/supportinsert");
+    final url = Uri.parse("${baseUrl}supportinsert");
     final body = {
       'society_id': societyId,
       'user_id': userId,
@@ -303,7 +294,7 @@ class ApiRepository {
 
   Future<AddDailyHelpModel?> addDailyHelpMembers(
       societyid, memberid, flatid, name, phone, address, emptype) async {
-    final url = Uri.parse("https://thesocietygate.com/api/employmentadd");
+    final url = Uri.parse("${baseUrl}employmentadd");
     final body = {
       'society_id': societyid,
       'member_id': memberid,
@@ -330,7 +321,7 @@ class ApiRepository {
 
   Future<WatchManAddModel?> addWatchman(
       societyid, name, email, phoneNo, password) async {
-    final url = Uri.parse("https://thesocietygate.com/api/watchmenadd");
+    final url = Uri.parse("${baseUrl}watchmenadd");
     final body = {
       'society_id': societyid,
       'uname': name,
@@ -354,7 +345,7 @@ class ApiRepository {
   }
 
   Future<GetDailyHelpModel?> getDailyHelpMembers(societyid, flatid) async {
-    final url = Uri.parse("https://thesocietygate.com/api/employmentget");
+    final url = Uri.parse("${baseUrl}employmentget");
     final body = {
       'society_id': societyid,
       'flat_id': flatid,
@@ -375,7 +366,7 @@ class ApiRepository {
   }
 
   Future<WatchManDeleteModel?> deleteWatchman(userId) async {
-    final url = Uri.parse("https://thesocietygate.com/api/watchmendelete");
+    final url = Uri.parse("${baseUrl}watchmendelete");
     final body = {
       'user_id': userId,
     };
@@ -403,8 +394,7 @@ class ApiRepository {
     model,
     String? slotNumber,
   ) async {
-    final url =
-        Uri.parse("https://thesocietygate.com/api/insertvehicleparking");
+    final url = Uri.parse("${baseUrl}insertvehicleparking");
     final body = {
       'society_id': societyid,
       "member_id": memberId,
@@ -467,7 +457,7 @@ class ApiRepository {
 
   Future<AddNoticeModel?> addNotices(societyid, memberId, String title,
       String description, String announcementType) async {
-    final url = Uri.parse("https://thesocietygate.com/api/announcementsadd");
+    final url = Uri.parse("${baseUrl}announcementsadd");
     final body = {
       'society_id': societyid,
       "user_id": memberId,
