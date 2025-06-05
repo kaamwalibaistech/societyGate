@@ -11,68 +11,71 @@ String addFamilyMemberModelToJson(AddFamilyMemberModel data) =>
     json.encode(data.toJson());
 
 class AddFamilyMemberModel {
-  int status;
-  String message;
-  FamilyMember familyMember;
+  int? status;
+  String? message;
+  FamilyMember? familyMember;
 
   AddFamilyMemberModel({
-    required this.status,
-    required this.message,
-    required this.familyMember,
+    this.status,
+    this.message,
+    this.familyMember,
   });
 
   factory AddFamilyMemberModel.fromJson(Map<String, dynamic> json) =>
       AddFamilyMemberModel(
         status: json["status"],
         message: json["message"],
-        familyMember: FamilyMember.fromJson(json["family_member"]),
+        familyMember: json["family_member"] == null
+            ? null
+            : FamilyMember.fromJson(json["family_member"]),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "family_member": familyMember.toJson(),
+        "family_member": familyMember?.toJson(),
       };
 }
 
 class FamilyMember {
-  String societyId;
-  String flatId;
-  String memberId;
-  int submemberId;
-  String uname;
-  String uemail;
-  String uphone;
-  String relation;
-  DateTime updatedAt;
-  DateTime createdAt;
-  int familyMemberId;
+  String? societyId;
+  String? flatId;
+  String? memberId;
+  String? uname;
+  String? uemail;
+  String? uphone;
+  String? relation;
+  DateTime? updatedAt;
+  DateTime? createdAt;
+  int? familyMemberId;
 
   FamilyMember({
-    required this.societyId,
-    required this.flatId,
-    required this.memberId,
-    required this.submemberId,
-    required this.uname,
-    required this.uemail,
-    required this.uphone,
-    required this.relation,
-    required this.updatedAt,
-    required this.createdAt,
-    required this.familyMemberId,
+    this.societyId,
+    this.flatId,
+    this.memberId,
+    this.uname,
+    this.uemail,
+    this.uphone,
+    this.relation,
+    this.updatedAt,
+    this.createdAt,
+    this.familyMemberId,
   });
 
   factory FamilyMember.fromJson(Map<String, dynamic> json) => FamilyMember(
         societyId: json["society_id"],
         flatId: json["flat_id"],
         memberId: json["member_id"],
-        submemberId: json["submember_id"],
         uname: json["uname"],
         uemail: json["uemail"],
         uphone: json["uphone"],
         relation: json["relation"],
-        updatedAt: DateTime.parse(json["updated_at"]),
-        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
         familyMemberId: json["family_member_id"],
       );
 
@@ -80,13 +83,12 @@ class FamilyMember {
         "society_id": societyId,
         "flat_id": flatId,
         "member_id": memberId,
-        "submember_id": submemberId,
         "uname": uname,
         "uemail": uemail,
         "uphone": uphone,
         "relation": relation,
-        "updated_at": updatedAt.toIso8601String(),
-        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "created_at": createdAt?.toIso8601String(),
         "family_member_id": familyMemberId,
       };
 }

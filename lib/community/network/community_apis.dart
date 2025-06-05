@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:society_gate/models/comments_model.dart';
-import 'package:society_gate/models/insert_comment_models.dart';
 
 import '../../../api/api_constant.dart';
 import '../../models/community_model.dart';
@@ -59,7 +58,7 @@ Future<CommentsModel?> getCommentsApi(
   return null;
 }
 
-Future<InsertComment?> insertComment(
+Future<void> insertComment(
   String communitypostid,
   String societyid,
   String memberid,
@@ -79,14 +78,14 @@ Future<InsertComment?> insertComment(
   try {
     final response = await http.post(url, body: body);
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
+      // final Map<String, dynamic> data = jsonDecode(response.body);
       //data.forEach((key, value) => log('$key: $value'));
-      return InsertComment.fromJson(data);
+      // return InsertComment.fromJson(data);
     } else {
       log(response.body.toString());
     }
   } catch (e) {
     throw Exception(e.toString());
   }
-  return null;
+  // return null;
 }

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'api/api_repository.dart';
 import 'constents/local_storage.dart';
-import 'constents/sizedbox.dart';
 import 'models/add_daily_help_model.dart';
-import 'models/add_family_member_model.dart';
 import 'models/add_vehicle_model.dart';
 import 'models/get_daily_help_model.dart';
 import 'models/get_family_members_model.dart';
@@ -277,10 +274,9 @@ class _AccountScreenState extends State<AccountScreen>
                               color: const Color(
                                   0xFFFFF3E0), // Very light orange background
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.person_rounded,
-                              color:
-                                  const Color(0xFFFF9800), // Light orange icon
+                              color: Color(0xFFFF9800), // Light orange icon
                               size: 30,
                             ),
                           ),
@@ -324,10 +320,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFE0F2F1), // Very light teal background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.settings_rounded,
-                                color:
-                                    const Color(0xFF009688), // Light teal icon
+                                color: Color(0xFF009688), // Light teal icon
                                 size: 24,
                               ),
                             ),
@@ -343,9 +338,9 @@ class _AccountScreenState extends State<AccountScreen>
                         ),
                         child: Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.apartment_rounded,
-                              color: const Color(0xFFE91E63), // Light pink
+                              color: Color(0xFFE91E63), // Light pink
                               size: 22,
                             ),
                             const SizedBox(width: 12),
@@ -425,10 +420,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFE8F5E9), // Very light green background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.family_restroom_rounded,
-                                color:
-                                    const Color(0xFF4CAF50), // Light green icon
+                                color: Color(0xFF4CAF50), // Light green icon
                                 size: 24,
                               ),
                             ),
@@ -461,7 +455,7 @@ class _AccountScreenState extends State<AccountScreen>
                       ),
                       const Divider(height: 1),
                       SizedBox(
-                        height: 120,
+                        height: MediaQuery.of(context).size.height * 0.18,
                         child: ListView.builder(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
@@ -469,7 +463,7 @@ class _AccountScreenState extends State<AccountScreen>
                           ),
                           scrollDirection: Axis.horizontal,
                           itemCount:
-                              getFamilyMemberData?.familyMembers.length ?? 2,
+                              getFamilyMemberData?.familyMembers?.length ?? 2,
                           itemBuilder: (context, index) {
                             return Container(
                               margin: const EdgeInsets.only(right: 15),
@@ -505,18 +499,20 @@ class _AccountScreenState extends State<AccountScreen>
                                   const SizedBox(height: 8),
                                   Text(
                                     getFamilyMemberData
-                                            ?.familyMembers[index].uname ??
+                                            ?.familyMembers?[index].uname ??
                                         "",
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                     ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
                                     getFamilyMemberData
-                                            ?.familyMembers[index].relation ??
+                                            ?.familyMembers?[index].relation ??
                                         "",
                                     style: TextStyle(
                                       fontSize: 12,
@@ -563,10 +559,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFE3F2FD), // Very light blue background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.cleaning_services_rounded,
-                                color:
-                                    const Color(0xFF2196F3), // Light blue icon
+                                color: Color(0xFF2196F3), // Light blue icon
                                 size: 24,
                               ),
                             ),
@@ -712,10 +707,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFF3E5F5), // Very light purple background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.directions_car_rounded,
-                                color: const Color(
-                                    0xFF9C27B0), // Light purple icon
+                                color: Color(0xFF9C27B0), // Light purple icon
                                 size: 24,
                               ),
                             ),
@@ -755,7 +749,7 @@ class _AccountScreenState extends State<AccountScreen>
                             vertical: 10,
                           ),
                           scrollDirection: Axis.horizontal,
-                          itemCount: getVehicledetails?.data.length ?? 2,
+                          itemCount: getVehicledetails?.data?.length ?? 2,
                           itemBuilder: (context, index) {
                             return Container(
                               margin: const EdgeInsets.only(right: 15),
@@ -790,9 +784,10 @@ class _AccountScreenState extends State<AccountScreen>
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    getVehicledetails?.data[index].vehicleNo ??
+                                    getVehicledetails?.data?[index].vehicleNo ??
                                         "",
                                     style: const TextStyle(
+                                      color: Colors.black,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -800,7 +795,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    getVehicledetails?.data[index].model ?? "",
+                                    getVehicledetails?.data?[index].model ?? "",
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey[600],
@@ -879,10 +874,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFE8F5E9), // Very light green background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.family_restroom_rounded,
-                                color:
-                                    const Color(0xFF4CAF50), // Light green icon
+                                color: Color(0xFF4CAF50), // Light green icon
                                 size: 24,
                               ),
                             ),
@@ -966,42 +960,49 @@ class _AccountScreenState extends State<AccountScreen>
                             return null;
                           },
                         ),
-                        const SizedBox(height: 15),
-                        _buildTextField(
-                          controller: familyPasswordController,
-                          label: "Password",
-                          hint: "Enter password",
-                          isPassword: true,
-                          validator: (value) {
-                            if (value!.length < 6) {
-                              return "Password should be at least 6 characters";
-                            }
-                            return null;
-                          },
-                        ),
+                        // const SizedBox(height: 15),
+                        // _buildTextField(
+                        //   controller: familyPasswordController,
+                        //   label: "Password",
+                        //   hint: "Enter password",
+                        //   isPassword: true,
+                        //   validator: (value) {
+                        //     if (value!.length < 6) {
+                        //       return "Password should be at least 6 characters";
+                        //     }
+                        //     return null;
+                        //   },
+                        // ),
                         const SizedBox(height: 25),
                         SizedBox(
                           width: double.infinity,
                           height: 50,
                           child: ElevatedButton(
                             onPressed: () async {
-                              if (formKey.currentState!.validate()) {
-                                final data =
-                                    LocalStoragePref.instance!.getLoginModel();
-                                ApiRepository apiRepository = ApiRepository();
-                                await apiRepository.addFamilyMembers(
-                                  data!.user!.societyId.toString(),
-                                  data.user!.flatId.toString(),
-                                  data.user!.userId.toString(),
-                                  familyNameController.text,
-                                  familyEmailController.text,
-                                  familyMobileNoController.text,
-                                  familyRelationController.text,
-                                  familyPasswordController.text,
-                                );
-                                Navigator.pop(context);
+                              try {
+                                if (formKey.currentState!.validate()) {
+                                  final data = LocalStoragePref.instance!
+                                      .getLoginModel();
+                                  ApiRepository apiRepository = ApiRepository();
+                                  final dataa =
+                                      await apiRepository.addFamilyMembers(
+                                    data!.user!.societyId.toString(),
+                                    data.user!.flatId.toString(),
+                                    data.user!.userId.toString(),
+                                    familyNameController.text,
+                                    familyEmailController.text,
+                                    familyMobileNoController.text,
+                                    familyRelationController.text,
+                                  );
+                                  getfamilymembers();
+                                  Navigator.pop(context);
+                                  Fluttertoast.showToast(
+                                      msg: dataa!.message.toString());
+                                }
+                              } catch (e) {
                                 Fluttertoast.showToast(
-                                    msg: "Family Member Added Successfully");
+                                    msg:
+                                        "Phone Number or Email is Already Taken");
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -1084,10 +1085,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFE3F2FD), // Very light blue background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.cleaning_services_rounded,
-                                color:
-                                    const Color(0xFF2196F3), // Light blue icon
+                                color: Color(0xFF2196F3), // Light blue icon
                                 size: 24,
                               ),
                             ),
@@ -1187,6 +1187,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   dailyHelpAddressController.text,
                                   dailyHelpTypeController.text,
                                 );
+                                getDailyHelpmembers();
                                 Navigator.pop(context);
                                 Fluttertoast.showToast(
                                     msg: dailyHelpData!.message.toString());
@@ -1273,10 +1274,9 @@ class _AccountScreenState extends State<AccountScreen>
                                     0xFFF3E5F5), // Very light purple background
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.directions_car_rounded,
-                                color: const Color(
-                                    0xFF9C27B0), // Light purple icon
+                                color: Color(0xFF9C27B0), // Light purple icon
                                 size: 24,
                               ),
                             ),
@@ -1368,6 +1368,7 @@ class _AccountScreenState extends State<AccountScreen>
                                   vehicleModelController.text,
                                   vehicleParkingSlotController.text,
                                 );
+                                getVehicleData();
                                 Navigator.pop(context);
                                 Fluttertoast.showToast(
                                     msg: addVehicleData!.message.toString());
@@ -1409,6 +1410,7 @@ class _AccountScreenState extends State<AccountScreen>
     int? maxLength,
     bool isPassword = false,
     String? Function(String?)? validator,
+    // bool obscureText = true,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1426,9 +1428,20 @@ class _AccountScreenState extends State<AccountScreen>
           controller: controller,
           keyboardType: keyboardType,
           maxLength: maxLength,
-          obscureText: isPassword,
+          // obscureText: obscureText,
           validator: validator,
           decoration: InputDecoration(
+            // suffixIcon: isPassword
+            // ? GestureDetector(
+            //     onTap: () {
+            //       setState(() {
+            //         obscureText = !obscureText;
+            //       });
+            //     },
+            //     child: obscureText
+            //         ? const Icon(Icons.visibility)
+            //         : const Icon(Icons.visibility_off_outlined))
+            // : const SizedBox.shrink(),
             hintText: hint,
             hintStyle: TextStyle(
               color: Colors.grey[400],

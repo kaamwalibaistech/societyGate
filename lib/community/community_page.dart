@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:society_gate/bloc/homepage_bloc.dart';
 import 'package:society_gate/community/bloc/community_bloc.dart';
 import 'package:society_gate/community/network/community_apis.dart';
 import 'package:society_gate/constents/sizedbox.dart';
@@ -50,13 +49,74 @@ class _CommunityPageState extends State<CommunityPage> {
             builder: (context, state) {
               if (state is CommunityPostInitial ||
                   state is CommunityPostLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return _loading();
               } else if (state is CommunityPostSuccess) {
                 return _post(state.communityModel, state.commentsList);
               } else {
                 return Center(child: Text(state.toString()));
               }
             }));
+  }
+
+  Widget _loading() {
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(width: 120, height: 12, color: Colors.grey[300]),
+                const SizedBox(height: 6),
+                Container(width: 80, height: 10, color: Colors.grey[300]),
+              ],
+            ),
+          ]),
+          const SizedBox(height: 12),
+          Container(
+              width: double.infinity, height: 14, color: Colors.grey[300]),
+          const SizedBox(height: 4),
+          Container(width: 160, height: 10, color: Colors.grey[300]),
+          const SizedBox(height: 12),
+          Container(
+              width: double.infinity, height: 300, color: Colors.grey[300]),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: List.generate(
+                    3,
+                    (index) => Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Container(
+                              width: 20, height: 20, color: Colors.grey[300]),
+                        )),
+              ),
+              Container(width: 20, height: 20, color: Colors.grey[300]),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Container(
+              width: double.infinity, height: 40, color: Colors.grey[300]),
+          const SizedBox(height: 12),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(width: 80, height: 20, color: Colors.grey[300]),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _post(CommunityModel? communityModel, List<Comment> commentsList) {
@@ -116,10 +176,15 @@ class _CommunityPageState extends State<CommunityPage> {
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10),
                           ),
-                          child: Image.asset(
-                            'lib/assets/girlphoto1.jpg',
+                          child: Image.network(
+                            post?.photo ??
+                                "https://green-delta.com/wp-content/uploads/2021/07/not-available.png",
                             fit: BoxFit.fill,
                           ),
+                          //  Image.asset(
+                          //   'lib/assets/girlphoto1.jpg',
+                          //   fit: BoxFit.fill,
+                          // ),
                         )),
                     Container(
                       height: 50,
@@ -162,13 +227,13 @@ class _CommunityPageState extends State<CommunityPage> {
                               color: Colors.blueGrey,
                             ),
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.share,
-                              color: Colors.blueGrey,
-                            ),
-                          ),
+                          // IconButton(
+                          //   onPressed: () {},
+                          //   icon: const Icon(
+                          //     Icons.share,
+                          //     color: Colors.blueGrey,
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -224,9 +289,9 @@ class _CommunityPageState extends State<CommunityPage> {
         });
   }
 
-  void showCommentsBottomSheet(List<Comment> initialComments, String postId) {
+  void showCommentsBottomSheet(List<Comment> comments, String postId) {
     TextEditingController commentController = TextEditingController();
-    List<Comment> comments = List.from(initialComments); // Make it mutable
+    // List<Comment> comments = List.from(initialComments); // Make it mutable
 
     showModalBottomSheet(
       context: context,
@@ -303,10 +368,13 @@ class _CommunityPageState extends State<CommunityPage> {
                                   postId, societyId, memberId, commentText);
 
                               setState(() {
-                                comments.add(Comment(
-                                  comment: commentText,
-                                  memberName: getLoginModel.user!.uname,
-                                ));
+                                comments.insert(
+                                    0,
+                                    Comment(
+                                      comment: commentText,
+                                      memberName: getLoginModel.user!.uname,
+                                    ));
+
                                 commentController.clear();
                               });
                             },

@@ -4,7 +4,9 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/create_post.dart';
 
 import 'api/api_repository.dart';
@@ -16,7 +18,6 @@ import 'dashboard/notice_board/notice_board_screen.dart';
 import 'dashboard/visitors/visitors_page.dart';
 import 'models/homepage_model.dart';
 import 'models/login_model.dart';
-import 'payments_screen/payment_screen.dart';
 import 'scanner_page.dart';
 import 'shops/dailyneeds_tab.dart';
 
@@ -39,6 +40,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
     super.initState();
     getData();
     getuserPhoto();
+    FirebaseApi().initNotification();
   }
 
   void getuserPhoto() {
@@ -173,6 +175,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           ],
                         ),
                       ),
+/*<<<<<<< anil
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
@@ -180,7 +183,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withAlpha(20),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -192,6 +195,32 @@ class _HomepageScreenState extends State<HomepageScreen> {
                               ? const Color(0xFFFF9933)
                               : const Color(0xFF6B4EFF),
                           size: 20,
+=======*/
+                      GestureDetector(
+                        onTap: () {
+                          Fluttertoast.showToast(msg: "No Notifications");
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.notifications_outlined,
+                            color: loginType == "watchman"
+                                ? const Color(0xFFFF9933)
+                                : const Color(0xFF6B4EFF),
+                            size: 20,
+                          ),
+// >>>>>>> final
                         ),
                       ),
                     ],
@@ -219,7 +248,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withAlpha(30),
                           blurRadius: 10,
                           offset: const Offset(0, 5),
                         ),
@@ -245,8 +274,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                 trailing: Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF6B4EFF)
-                                        .withOpacity(0.1),
+                                    color:
+                                        const Color(0xFF6B4EFF).withAlpha(100),
                                     shape: BoxShape.circle,
                                   ),
                                   child: const Icon(
@@ -295,7 +324,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFF6B4EFF)
-                                          .withOpacity(0.1),
+                                          .withAlpha(100),
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Icon(
@@ -331,7 +360,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withAlpha(30),
                                 blurRadius: 10,
                                 offset: const Offset(0, 5),
                                 spreadRadius: 0,
@@ -489,18 +518,18 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                               ),
                                             ),
                                           ),
-                                          const Spacer(),
-                                          Icon(
-                                            Icons.bookmark_border_rounded,
-                                            color: Colors.grey[400],
-                                            size: 18,
-                                          ),
-                                          const SizedBox(width: 12),
-                                          Icon(
-                                            Icons.share_outlined,
-                                            color: Colors.grey[400],
-                                            size: 18,
-                                          ),
+                                          // const Spacer(),
+                                          // Icon(
+                                          //   Icons.bookmark_border_rounded,
+                                          //   color: Colors.grey[400],
+                                          //   size: 18,
+                                          // ),
+                                          // const SizedBox(width: 12),
+                                          // Icon(
+                                          //   Icons.share_outlined,
+                                          //   color: Colors.grey[400],
+                                          //   size: 18,
+                                          // ),
                                         ],
                                       ),
                                     ],
@@ -529,32 +558,48 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
                 // Scanner Section (if watchman)
                 if (loginType == "watchman")
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ScannerPage()),
-                        );
-                      },
-                      child: Container(
-                        height: 160,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.04),
-                              blurRadius: 6,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.30,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.04),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
                         ),
-                        child: Lottie.asset(
-                          "lib/assets/lottie_json/scan.json",
-                          fit: BoxFit.contain,
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ScannerPage()),
+                          );
+                        },
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.20,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Lottie.asset(
+                            "lib/assets/lottie_json/scan.json",
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                     ),
@@ -603,11 +648,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                           const NoticeBoardScreen()));
                               break;
                             case 3:
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PaymentScreen()));
+                              Fluttertoast.showToast(msg: "Comming Soon");
                               break;
                             case 4:
                               Navigator.push(

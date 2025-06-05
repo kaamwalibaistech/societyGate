@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:in_app_update/in_app_update.dart';
-import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
 import 'package:society_gate/firebase_options.dart';
 
@@ -34,7 +33,7 @@ Future<void> main() async {
   await LocalStoragePref.instance!.initPrefBox();
   await dotenv.load(fileName: ".env");
   checkForUpdates();
-  FirebaseApi().initNotification();
+
   runApp(const MyApp());
   configLoading();
 }
@@ -44,14 +43,7 @@ void configLoading() {
     ..displayDuration = const Duration(milliseconds: 2000)
     ..indicatorType = EasyLoadingIndicatorType.fadingCircle
     ..loadingStyle = EasyLoadingStyle.dark
-    ..indicatorSize = 45.0
-    ..radius = 10.0
-    ..progressColor = Colors.yellow
-    ..backgroundColor = Colors.green
-    ..indicatorColor = Colors.yellow
-    ..textColor = Colors.yellow
-    ..maskColor = Colors.blue.withOpacity(0.5)
-    ..userInteractions = true
+    ..maskType = EasyLoadingMaskType.black
     ..dismissOnTap = false;
 }
 

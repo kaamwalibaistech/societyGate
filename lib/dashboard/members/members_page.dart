@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/models/homepage_model.dart';
 
 import '../../constents/local_storage.dart';
 import '../../constents/sizedbox.dart';
@@ -18,12 +19,23 @@ class MembersPage extends StatefulWidget {
 }
 
 class _MembersPageState extends State<MembersPage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController mobileNoController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   LoginModel? loginModel;
   WatchManAddModel? watchmanData;
+  Homepagemodel? data;
+  String? adminName;
+  String? adminEmail;
+  // LoginModel? loginModel;
+  String? loginType;
   @override
   void initState() {
     super.initState();
     getUserData();
+    getData();
   }
 
   getUserData() {
@@ -37,6 +49,20 @@ class _MembersPageState extends State<MembersPage> {
     } else {
       debugPrint("LoginModel not found in local storage.");
     }
+  }
+
+  getData() async {
+    final getLoginModel = LocalStoragePref().getLoginModel();
+
+    ApiRepository apiRepositiory = ApiRepository();
+    Homepagemodel? mydata = await apiRepositiory
+        .getHomePageData(getLoginModel!.user!.societyId.toString());
+    setState(() {
+      loginModel = getLoginModel;
+      data = mydata;
+      loginType = loginModel?.user?.role ?? "NA";
+      // uiPhoto = loginModel?.user?.uname ?? "User";
+    });
   }
 
   @override
@@ -62,25 +88,94 @@ class _MembersPageState extends State<MembersPage> {
           ),
           centerTitle: true,
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(48),
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF0F2FF),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: TabBar(
-                indicator: BoxDecoration(
-                  color: const Color(0xFF6B4EFF),
-                  borderRadius: BorderRadius.circular(12),
+            preferredSize: const Size.fromHeight(160),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.only(bottom: 25),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        // padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: const Color(0xFF6B4EFF),
+                            width: 1.5,
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: Image.network(
+                            "https://ui-avatars.com/api/?background=random&name=$adminName.",
+                            height: 50,
+                            width: 50,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              adminName ?? "No Admin",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF1A1A1A),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              adminEmail ?? "Not Available",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                labelColor: Colors.white,
-                unselectedLabelColor: const Color(0xFF6B4EFF),
-                tabs: const [
-                  Tab(text: "Members"),
-                  Tab(text: "Watchman"),
-                ],
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF0F2FF),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: TabBar(
+                      indicator: BoxDecoration(
+                        color: const Color(0xFF6B4EFF),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      labelColor: Colors.white,
+                      unselectedLabelColor: const Color(0xFF6B4EFF),
+                      indicatorPadding: const EdgeInsets.symmetric(
+                          horizontal: -20, vertical: 5),
+                      tabs: const [
+                        Tab(text: "Members"),
+                        Tab(text: "Watchman"),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -101,9 +196,9 @@ class _MembersPageState extends State<MembersPage> {
     );
   }
 
-  Widget getUi(MemberlistModel? memberlistModel) {
-    String? adminName;
-    String? adminEmail;
+  Widget getUi(
+    MemberlistModel? memberlistModel,
+  ) {
     if (memberlistModel?.users?.admins?.isNotEmpty ?? false) {
       adminName = memberlistModel!.users!.admins!.first.uname;
       adminEmail = memberlistModel.users!.admins!.first.uemail;
@@ -112,68 +207,6 @@ class _MembersPageState extends State<MembersPage> {
     return Column(
       children: [
         // Admin Card
-        Container(
-          margin: const EdgeInsets.all(16),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: const Color(0xFF6B4EFF),
-                    width: 1.5,
-                  ),
-                ),
-                child: const CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Color(0xFFF0F2FF),
-                  child: Icon(
-                    Icons.admin_panel_settings,
-                    color: Color(0xFF6B4EFF),
-                    size: 30,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      adminName ?? "No Admin",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A1A),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      adminEmail ?? "Not Available",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
 
         // Tab Content
         Expanded(
@@ -206,7 +239,10 @@ class _MembersPageState extends State<MembersPage> {
 
               // Watchman Tab
               (memberlistModel?.users?.watchmen?.isNotEmpty ?? false)
-                  ? getWatchmanWidget(context, memberlistModel?.users!.watchmen)
+                  ? getWatchmanWidget(
+                      context,
+                      memberlistModel?.users!.watchmen,
+                    )
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -309,9 +345,12 @@ class _MembersPageState extends State<MembersPage> {
                     color: Colors.purple.shade50,
                     borderRadius: BorderRadius.circular(20)),
                 child: ListTile(
-                  leading: const CircleAvatar(
-                    foregroundImage: AssetImage("lib/assets/girlphoto2.jpg"),
-                    radius: 30,
+                  leading: ClipOval(
+                    child: Image.network(
+                      "https://ui-avatars.com/api/?background=random&name=${memberList.uname}.",
+                      height: 50,
+                      width: 50,
+                    ),
                   ),
                   title: Text(memberList.uname),
                   subtitle: Text(memberList.uname),
@@ -346,11 +385,13 @@ class _MembersPageState extends State<MembersPage> {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () {
-              modelBottomsheet();
-            }),
+        floatingActionButton: loginType == "admin"
+            ? FloatingActionButton(
+                child: const Icon(Icons.add),
+                onPressed: () {
+                  modelBottomsheet();
+                })
+            : const SizedBox.shrink(),
         body: Column(
           children: [
             ListView.builder(
@@ -365,79 +406,139 @@ class _MembersPageState extends State<MembersPage> {
                       decoration: BoxDecoration(
                           color: Colors.purple.shade50,
                           borderRadius: BorderRadius.circular(20)),
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    content: Container(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      width: MediaQuery.of(context).size.width,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.2,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          const Text(
-                                            "Are you sure you want to delete",
-                                            style: TextStyle(fontSize: 20),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text("cancel")),
-                                              const SizedBox(
-                                                width: 15,
-                                              ),
-                                              GestureDetector(
-                                                  onTap: () async {
-                                                    final societyId = loginModel
-                                                        ?.user!.societyId;
-                                                    ApiRepository
-                                                        apiRepository =
-                                                        ApiRepository();
+                      child: ListTile(
+                        trailing: loginType == "admin"
+                            ? GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                            content: Container(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.2,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  const Text(
+                                                    "Are you sure you want to delete",
+                                                    style:
+                                                        TextStyle(fontSize: 20),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: const Text(
+                                                              "cancel")),
+                                                      const SizedBox(
+                                                        width: 15,
+                                                      ),
+                                                      GestureDetector(
+                                                          onTap: () async {
+                                                            final societyId =
+                                                                loginModel
+                                                                    ?.user!
+                                                                    .societyId;
+                                                            ApiRepository
+                                                                apiRepository =
+                                                                ApiRepository();
 
-                                                    await apiRepository
-                                                        .deleteWatchman(
-                                                            watchmen[index]
-                                                                .userId
-                                                                .toString());
-                                                    context
-                                                        .read<MembersBloc>()
-                                                        .add(GetMemberListEvent(
-                                                            soceityId: societyId
-                                                                .toString()));
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text("Delete"))
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ));
-                        },
-                        child: ListTile(
-                          trailing: const Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                          ),
-                          leading: const CircleAvatar(
-                            foregroundImage:
-                                AssetImage("lib/assets/watchman.jpg"),
-                            radius: 30,
-                          ),
-                          title: Text(watchmenList.uname ?? "No Name"),
-                          subtitle:
-                              Text(watchmenList.uphone ?? "Not Available"),
+// <<<<<<< anil
+//                                                     await apiRepository
+//                                                         .deleteWatchman(
+//                                                             watchmen[index]
+//                                                                 .userId
+//                                                                 .toString());
+//                                                     context
+//                                                         .read<MembersBloc>()
+//                                                         .add(GetMemberListEvent(
+//                                                             soceityId: societyId
+//                                                                 .toString()));
+//                                                     Navigator.pop(context);
+//                                                   },
+//                                                   child: const Text("Delete"))
+//                                             ],
+//                                           )
+//                                         ],
+//                                       ),
+//                                     ),
+//                                   ));
+//                         },
+//                         child: ListTile(
+//                           trailing: const Icon(
+//                             Icons.delete,
+//                             color: Colors.red,
+//                           ),
+//                           leading:
+//                               // ClipOval(
+//                               //   child: Image.network(
+//                               //     "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}.",
+//                               //     height: 50,
+//                               //     width: 50,
+//                               //   ),
+//                               // ),
+//                               const CircleAvatar(
+//                             foregroundImage:
+//                                 AssetImage("lib/assets/watchman.jpg"),
+//                             radius: 30,
+//                           ),
+//                           title: Text(watchmenList.uname ?? "No Name"),
+//                           subtitle:
+//                               Text(watchmenList.uphone ?? "Not Available"),
+// =======
+                                                            await apiRepository
+                                                                .deleteWatchman(
+                                                                    watchmen[
+                                                                            index]
+                                                                        .userId
+                                                                        .toString());
+                                                            context
+                                                                .read<
+                                                                    MembersBloc>()
+                                                                .add(GetMemberListEvent(
+                                                                    soceityId:
+                                                                        societyId
+                                                                            .toString()));
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: const Text(
+                                                              "Delete"))
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ));
+                                },
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                        leading: const CircleAvatar(
+                          foregroundImage:
+                              AssetImage("lib/assets/watchman.jpg"),
+                          radius: 30,
+// >>>>>>> final
                         ),
+                        title: Text(watchmenList.uname ?? "No Name"),
+                        subtitle: Text(watchmenList.uphone ?? "Not Available"),
                       ));
                 }),
           ],
@@ -455,11 +556,6 @@ class _MembersPageState extends State<MembersPage> {
       return null;
     }
 
-    TextEditingController nameController = TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController mobileNoController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController confirmPasswordController = TextEditingController();
     return showModalBottomSheet(
         context: context,
         builder: (context) {
