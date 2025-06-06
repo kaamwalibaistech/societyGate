@@ -1,13 +1,14 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'account_screen.dart';
+import 'community/community_page.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/watchman_profile_page.dart';
 import 'homepage_screen.dart';
-import 'community/community_page.dart';
 import 'shops/dailyneeds_tab.dart';
 
 class Navigationscreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class Navigationscreen extends StatefulWidget {
 class _Navigationscreen extends State<Navigationscreen> {
   int selectedIndex = 0;
   Uint8List? _userPhoto;
+  String uiPhoto = "";
 
   @override
   void initState() {
@@ -31,6 +33,7 @@ class _Navigationscreen extends State<Navigationscreen> {
     final data = LocalStoragePref.instance!.getUserPhoto();
     setState(() {
       _userPhoto = data;
+      uiPhoto = loginModel?.user?.uname ?? "User";
     });
   }
 
@@ -92,17 +95,21 @@ class _Navigationscreen extends State<Navigationscreen> {
                   border:
                       Border.all(width: 0.5, color: Colors.deepOrangeAccent),
                 ),
-                child: _userPhoto != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.memory(
-                          _userPhoto!,
-                          fit: BoxFit.cover,
-                          width: 30,
-                          height: 30,
-                        ),
-                      )
-                    : const Icon(Icons.person),
+                child: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: _userPhoto != null
+                        ? MemoryImage(_userPhoto!)
+                        : CachedNetworkImageProvider(
+                            "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")
+                    // child: _userPhoto != null
+                    //     ? Image.memory(_userPhoto!)
+                    //     : ClipOval(
+                    //         child: Image.network(
+                    //             "https://ui-avatars.com/api/?background=random&name=$uiPhoto."
+                    //             // "https://ui-avatars.com/api/?background=random&name=$uiPhoto",
+                    //             ),
+                    //       ),
+                    ),
               ),
               label: "Profile",
               activeIcon: Container(

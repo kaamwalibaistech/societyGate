@@ -30,31 +30,55 @@ class _CreateNewAccountState extends State<LoginScreen> {
   //   if (!isEmailValid) return "please  Enter a valid email";
   //   return null;
   // }
+  void showMobileNotRegisteredPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Mobile Number Error'),
+        content: const Text('The mobile number you entered is not registered.'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(left: 80.0),
+            child: Row(
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    // const RegisterMember();
+                    _mobileNoController.clear();
+                    _passwordController.clear();
+                    return const RegisterMember();
+                  })),
+                  child: const Text('Register here'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) async {
-        if (state is LoginLoadingState) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (_) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        } else if (state is LoginSuccessState) {
+        if (state is LoginSuccessState) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const LoginSuccess()),
           );
         } else if (state is LoginErrorState) {
-          Navigator.of(context).pop();
           Fluttertoast.showToast(
-            msg: state.errMsg,
+            msg: "Mobile Number is Not Register",
             backgroundColor: Colors.red,
             textColor: Colors.white,
           );
+          showMobileNotRegisteredPopup(context);
         }
       },
       child: Scaffold(
