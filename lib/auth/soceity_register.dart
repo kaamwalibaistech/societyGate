@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:society_gate/auth/amenities_add.dart';
+import 'package:society_gate/auth/register_waiting_page.dart';
 import 'package:society_gate/models/admin_register_model.dart';
 
 import '../api/api_repository.dart';
 import 'login_screen.dart';
-import 'register_waiting_page.dart';
 
 class SocietyRegister extends StatefulWidget {
   const SocietyRegister({super.key});
@@ -27,6 +26,11 @@ class _SocietyRegister extends State<SocietyRegister> {
   final TextEditingController flatNoController = TextEditingController();
   final TextEditingController floorNoNoController = TextEditingController();
   final TextEditingController blockController = TextEditingController();
+
+  Map<String, dynamic> datamap = {
+    'sname': '',
+    'uphone': '',
+  };
 
   final _formkey = GlobalKey<FormState>();
   String? validateEmail(String? email) {
@@ -55,6 +59,43 @@ class _SocietyRegister extends State<SocietyRegister> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text("Close"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void approvalDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        title: const Text(
+          "Registration Successful",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: const Text(
+          "Your society is registered successfully.\nPlease wait for approval.",
+          style: TextStyle(fontSize: 16),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              nameController.clear();
+              mobileNoController.clear();
+              emailController.clear();
+              societyNameController.clear();
+              societyAddressController.clear();
+              totalFlatController.clear();
+              totalwingsController.clear();
+              flatNoController.clear();
+              floorNoNoController.clear();
+              blockController.clear();
+              Navigator.pop(context);
+            },
+            child: const Text("OK"),
           ),
         ],
       ),
@@ -539,7 +580,7 @@ class _SocietyRegister extends State<SocietyRegister> {
                     GestureDetector(
                       onTap: () async {
                         if (_formkey.currentState!.validate()) {
-                          AdminRegister? data = await ApiRepository()
+                          AdminRegister? dataa = await ApiRepository()
                               .registerSocietyAdmin(
                                   societyNameController.text,
                                   societyAddressController.text,
@@ -551,16 +592,21 @@ class _SocietyRegister extends State<SocietyRegister> {
                                   flatNoController.text,
                                   blockController.text,
                                   floorNoNoController.text);
-                          Fluttertoast.showToast(msg: data!.message.toString());
+                          Fluttertoast.showToast(
+                              msg: dataa!.message.toString());
                           if (context.mounted) {
-                            if (data.status == 200) {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => RegisterWaitingPage(
-                                            data: data,
-                                          )));
+                            if (dataa.status == 200) {
+                              // Navigator.pushReplacement(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => RegisterWaitingPage(
+                              //               data: dataa,
+                              //             )));
+                              approvalDialog();
                             } else {
+                              setState(() {
+                                datamap = dataa.message;
+                              });
                               // errorPopUp(data.message);
                               showDialog(
                                 context: context,
@@ -570,13 +616,16 @@ class _SocietyRegister extends State<SocietyRegister> {
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: data.message.values
-                                          .expand((list) =>
-                                              list) // Flatten all error messages
-                                          .map((msg) => Text(msg,
-                                              style: const TextStyle(
-                                                  color: Colors.red)))
-                                          .toList(),
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 20.0),
+                                          child: Text((datamap["sname"] as List)
+                                              .join(", ")),
+                                        ),
+                                        Text((datamap["uphone"] as List)
+                                            .join(", ")),
+                                      ],
                                     ),
                                   ),
                                   actions: [
@@ -590,25 +639,6 @@ class _SocietyRegister extends State<SocietyRegister> {
                             }
                           }
                           // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => AmenitiesAdd(
-                          //             societyNameController:
-                          //                 societyNameController.text,
-                          //             societyAddressController:
-                          //                 societyAddressController.text,
-                          //             totalwingsController:
-                          //                 totalwingsController.text,
-                          //             totalFlatController:
-                          //                 totalFlatController.text,
-                          //             nameController: nameController.text,
-                          //             emailController: emailController.text,
-                          //             mobileNoController:
-                          //                 mobileNoController.text,
-                          //             flatNoController: flatNoController.text,
-                          //             blockController: blockController.text,
-                          //             floorNoNoController:
-                          //                 floorNoNoController.text)));
                         } else {
                           EasyLoading.showToast("Fill all mandatory feilds!");
                         }
@@ -636,11 +666,20 @@ class _SocietyRegister extends State<SocietyRegister> {
                         color: Colors.black54,
                       ),
                     )),
-                    Center(
-                      child: Text(
-                        "Terms & Conditions",
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ApprovalPendingPage()));
+                      },
+                      child: Center(
+                        child: Text(
+                          "Terms & Conditions",
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                       ),
                     ),

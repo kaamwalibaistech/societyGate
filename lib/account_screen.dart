@@ -454,78 +454,93 @@ class _AccountScreenState extends State<AccountScreen>
                         ),
                       ),
                       const Divider(height: 1),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.18,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
-                          ),
-                          scrollDirection: Axis.horizontal,
-                          itemCount:
-                              getFamilyMemberData?.familyMembers?.length ?? 2,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: const EdgeInsets.only(right: 15),
-                              width: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[50],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
+                      if (getFamilyMemberData?.familyMembers?.isNotEmpty ??
+                          false)
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.18,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 10,
+                            ),
+                            scrollDirection: Axis.horizontal,
+                            itemCount:
+                                getFamilyMemberData?.familyMembers?.length ?? 2,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: const EdgeInsets.only(right: 15),
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: loginType == "watchman"
+                                              ? const Color(0xFFFF9933)
+                                                  .withOpacity(0.2)
+                                              : const Color(0xFF6B4EFF)
+                                                  .withOpacity(0.2),
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        Icons.person_rounded,
                                         color: loginType == "watchman"
                                             ? const Color(0xFFFF9933)
-                                                .withOpacity(0.2)
-                                            : const Color(0xFF6B4EFF)
-                                                .withOpacity(0.2),
+                                            : const Color(0xFF6B4EFF),
+                                        size: 24,
                                       ),
                                     ),
-                                    child: Icon(
-                                      Icons.person_rounded,
-                                      color: loginType == "watchman"
-                                          ? const Color(0xFFFF9933)
-                                          : const Color(0xFF6B4EFF),
-                                      size: 24,
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      getFamilyMemberData
+                                              ?.familyMembers?[index].uname ??
+                                          "",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    getFamilyMemberData
-                                            ?.familyMembers?[index].uname ??
-                                        "",
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      getFamilyMemberData?.familyMembers?[index]
+                                              .relation ??
+                                          "",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    getFamilyMemberData
-                                            ?.familyMembers?[index].relation ??
-                                        "",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[600],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      else
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Center(
+                            child: Text(
+                              "No Family members added",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),

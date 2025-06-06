@@ -70,7 +70,7 @@ class RegisterScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20)),
                     child: Center(
                         child: Text(
-                      "Log in",
+                      "User Login",
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold),
