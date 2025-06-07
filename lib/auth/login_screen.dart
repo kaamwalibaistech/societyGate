@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
-import 'package:society_gate/auth/amenities_add.dart';
+import 'package:society_gate/amenities/amenities_add.dart';
 import 'package:society_gate/auth/register_waiting_page.dart';
 import 'package:society_gate/navigation_screen.dart';
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:society_gate/amenities/amenities_add.dart';
 import 'package:society_gate/auth/register_screen.dart';
 import 'package:society_gate/help_support.dart';
 import 'package:society_gate/profile_screen.dart';
@@ -77,6 +78,22 @@ class _SettingScreenState extends State<SettingScreen> {
                     },
                     loginType: loginType,
                   ),
+                  loginType == "admin"
+                      ? _buildSettingTile(
+                          icon: Icons.pool,
+                          title: "Edit Amenities",
+                          subtitle: "Update amenities lists, prices and more!",
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AmenitiesAdd(),
+                              ),
+                            );
+                          },
+                          loginType: loginType,
+                        )
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),

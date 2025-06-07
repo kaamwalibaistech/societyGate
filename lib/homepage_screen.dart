@@ -10,13 +10,13 @@ import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/create_post.dart';
 
 import 'api/api_repository.dart';
-import 'book_amenities.dart';
+import 'amenities/book_amenities.dart';
 import 'community/community_page.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/members/members_page.dart';
 import 'dashboard/notice_board/notice_board_screen.dart';
 import 'dashboard/visitors/visitors_page.dart';
-import 'models/homepage_model.dart';
+import 'models/announcements_model.dart';
 import 'models/login_model.dart';
 import 'scanner_page.dart';
 import 'shops/dailyneeds_tab.dart';
@@ -29,7 +29,7 @@ class HomepageScreen extends StatefulWidget {
 }
 
 class _HomepageScreenState extends State<HomepageScreen> {
-  Homepagemodel? data;
+  Announcementmodel? data;
   LoginModel? loginModel;
   String? loginType;
   Uint8List? _userPhoto;
@@ -54,7 +54,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
     final getLoginModel = LocalStoragePref().getLoginModel();
 
     ApiRepository apiRepositiory = ApiRepository();
-    Homepagemodel? mydata = await apiRepositiory
+    Announcementmodel? mydata = await apiRepositiory
         .getHomePageData(getLoginModel!.user!.societyId.toString());
     setState(() {
       loginModel = getLoginModel;
@@ -346,12 +346,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 5),
                     child: CarouselSlider.builder(
-                      itemCount: (data?.data.announcements.isNotEmpty ?? false)
-                          ? data!.data.announcements.length
+                      itemCount: (data?.announcements?.isNotEmpty ?? false)
+                          ? data!.announcements?.length
                           : 1,
                       itemBuilder: (context, index, realIndex) {
                         bool hasAnnouncements =
-                            data?.data.announcements.isNotEmpty ?? false;
+                            data?.announcements?.isNotEmpty ?? false;
                         return Container(
                           margin: const EdgeInsets.symmetric(
                               horizontal: 4, vertical: 8),
@@ -385,25 +385,26 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     Icon(
                                       Icons.campaign_rounded,
                                       color: hasAnnouncements
-                                          ? _getAnnouncementColor(data!
-                                              .data
-                                              .announcements[index]
-                                              .announcementType)
+                                          ? _getAnnouncementColor(data
+                                                  ?.announcements?[index]
+                                                  .announcementType ??
+                                              "")
                                           : const Color(0xFF6B4EFF),
                                       size: 18,
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
                                       hasAnnouncements
-                                          ? data!.data.announcements[index]
-                                              .announcementType
+                                          ? data?.announcements![index]
+                                                  .announcementType ??
+                                              ""
                                           : "Notice",
                                       style: TextStyle(
                                         color: hasAnnouncements
                                             ? _getAnnouncementColor(data!
-                                                .data
-                                                .announcements[index]
-                                                .announcementType)
+                                                    .announcements![index]
+                                                    .announcementType ??
+                                                "")
                                             : const Color(0xFF6B4EFF),
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
@@ -450,8 +451,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     children: [
                                       Text(
                                         hasAnnouncements
-                                            ? data!
-                                                .data.announcements[index].title
+                                            ? data?.announcements![index]
+                                                    .title ??
+                                                ""
                                             : "No Notices",
                                         style: TextStyle(
                                           fontSize: 15,
@@ -463,8 +465,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                       if (hasAnnouncements)
                                         Expanded(
                                           child: Text(
-                                            data!.data.announcements[index]
-                                                .description,
+                                            data!.announcements![index]
+                                                    .description ??
+                                                "",
                                             style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.grey[600],

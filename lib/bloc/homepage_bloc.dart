@@ -4,7 +4,7 @@ import 'package:society_gate/bloc/homepage_state.dart';
 
 import '../api/api_repository.dart';
 import '../constents/local_storage.dart';
-import '../models/homepage_model.dart';
+import '../models/announcements_model.dart';
 
 class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
   HomepageBloc() : super(HomePageInitialState()) {
@@ -17,7 +17,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
       final getLoginModel = LocalStoragePref().getLoginModel();
 
       ApiRepository apiRepositiory = ApiRepository();
-      Homepagemodel? mydata = await apiRepositiory
+      Announcementmodel? mydata = await apiRepositiory
           .getHomePageData(getLoginModel!.user!.societyId.toString());
 
       if (mydata!.status == 200) {
