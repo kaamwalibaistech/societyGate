@@ -25,3 +25,19 @@ class LoginErrorState extends LoginState {
   @override
   List<Object> get props => [errMsg];
 }
+
+class LoginNotApproveState extends LoginState {
+  final String approvemsg;
+  const LoginNotApproveState({required this.approvemsg});
+
+  @override
+  List<Object> get props => [approvemsg];
+}
+
+class IsAmenitiesAvailableState extends LoginState {
+  final bool isAmenitiesAvailable;
+  const IsAmenitiesAvailableState({required this.isAmenitiesAvailable});
+
+  @override
+  List<Object> get props => [isAmenitiesAvailable];
+}
