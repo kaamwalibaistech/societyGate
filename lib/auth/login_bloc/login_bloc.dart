@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:society_gate/api/api_repository.dart';
 
 import '../../constents/local_storage.dart';
 import '../../models/login_model.dart';
@@ -19,6 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   void _loginMethod(LoginButtonEvent event, Emitter<LoginState> emit) async {
     emit(LoginLoadingState());
     try {
+      ApiRepository apiRepository = ApiRepository();
       final loginData =
           await login(event.phoneNo.toString(), event.password.toString());
       _loginModel = loginData;
@@ -32,8 +34,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         log(" Model : ${_loginModel?.user?.societyName}");
 
         emit(LoginSuccessState(loginModel: _loginModel!));
-      } else {
+
+        final approveStatus = await apiRepository
+            .getExistingAmenitiesData(loginData!.user!.societyId);
+
+        emit(IsAmenitiesAvailableState(isAmenitiesAvailable: approveStatus!));
+      } else if (_loginModel!.status == 403) {
         log(" error");
+        emit(LoginNotApproveState(approvemsg: _loginModel!.message.toString()));
+      } else if (_loginModel!.status == 401 || _loginModel!.status == 404) {
         emit(LoginErrorState(errMsg: _loginModel!.message.toString()));
       }
     } catch (e) {

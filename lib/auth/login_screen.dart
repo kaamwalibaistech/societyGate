@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:society_gate/amenities/amenities_add.dart';
+import 'package:society_gate/auth/register_waiting_page.dart';
+import 'package:society_gate/navigation_screen.dart';
 
 import '../constents/sizedbox.dart';
 import 'login_bloc/login_bloc.dart';
-import 'login_success.dart';
 import 'register_member.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -30,31 +32,72 @@ class _CreateNewAccountState extends State<LoginScreen> {
   //   if (!isEmailValid) return "please  Enter a valid email";
   //   return null;
   // }
+  void showMobileNotRegisteredPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Mobile Number Error'),
+        content: const Text('The mobile number you entered is not registered.'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(left: 80.0),
+            child: Row(
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    // const RegisterMember();
+                    _mobileNoController.clear();
+                    _passwordController.clear();
+                    return const RegisterMember();
+                  })),
+                  child: const Text('Register here'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) async {
-        if (state is LoginLoadingState) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (_) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        } else if (state is LoginSuccessState) {
+        if (state is LoginSuccessState) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => const LoginSuccess()),
+            MaterialPageRoute(builder: (_) => const AmenitiesAdd()),
           );
+        } else if (state is LoginNotApproveState) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const ApprovalPendingPage()),
+          );
+        } else if (state is IsAmenitiesAvailableState) {
+          if (state.isAmenitiesAvailable == true) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const Navigationscreen()),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const ApprovalPendingPage()),
+            );
+          }
         } else if (state is LoginErrorState) {
-          Navigator.of(context).pop();
           Fluttertoast.showToast(
             msg: state.errMsg,
             backgroundColor: Colors.red,
             textColor: Colors.white,
           );
+          // showMobileNotRegisteredPopup(context);
         }
       },
       child: Scaffold(

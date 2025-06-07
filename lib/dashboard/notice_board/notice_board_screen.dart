@@ -49,12 +49,12 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
           ),
         ),
         centerTitle: true,
-        leading: BackButton(color: Colors.black87),
+        leading: const BackButton(color: Colors.black87),
       ),
       body: BlocBuilder<HomepageBloc, HomepageState>(
         builder: (context, state) {
           if (state is HomePageLoadedState) {
-            final notices = state.mydata?.data.announcements ?? [];
+            final notices = state.mydata?.announcements ?? [];
             if (notices.isEmpty) {
               return const Center(
                 child: Padding(
@@ -75,11 +75,10 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
 
                 // Set colors based on type
                 Color typeColor = Colors.blue;
-                if (notice.announcementType
-                    .toLowerCase()
-                    .contains('emergency')) {
+
+                if (notice.announcementType!.contains('emergency')) {
                   typeColor = Colors.red;
-                } else if (notice.announcementType
+                } else if (notice.announcementType!
                     .toLowerCase()
                     .contains('maintenance')) {
                   typeColor = Colors.green;
@@ -96,7 +95,7 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          notice.title,
+                          notice.title ?? "",
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
@@ -105,7 +104,7 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          notice.description,
+                          notice.description ?? "",
                           style: const TextStyle(
                               fontSize: 14, color: Colors.black54),
                         ),
@@ -130,7 +129,7 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                                     color: typeColor.withOpacity(0.5)),
                               ),
                               child: Text(
-                                notice.announcementType,
+                                notice.announcementType ?? "",
                                 style: TextStyle(
                                   color: typeColor,
                                   fontWeight: FontWeight.bold,
