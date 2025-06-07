@@ -112,6 +112,22 @@ class ApiRepository {
     return null;
   }
 
+  Future<bool?> getExistingAmenitiesData(societyId) async {
+    final url = Uri.parse("${baseUrl}check-amenity/$societyId");
+
+    try {
+      final response = await http.post(url);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return data['exists'];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<UserApprove?> getUserApproval(userId) async {
     final url = Uri.parse("${baseUrl}userapprove");
     final body = {

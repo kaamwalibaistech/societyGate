@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:society_gate/auth/amenities_add.dart';
+import 'package:society_gate/auth/register_waiting_page.dart';
+import 'package:society_gate/navigation_screen.dart';
 
 import '../constents/sizedbox.dart';
 import 'login_bloc/login_bloc.dart';
-import 'login_success.dart';
 import 'register_member.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -70,15 +72,32 @@ class _CreateNewAccountState extends State<LoginScreen> {
         if (state is LoginSuccessState) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => const LoginSuccess()),
+            MaterialPageRoute(builder: (_) => const AmenitiesAdd()),
           );
+        } else if (state is LoginNotApproveState) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const ApprovalPendingPage()),
+          );
+        } else if (state is IsAmenitiesAvailableState) {
+          if (state.isAmenitiesAvailable == true) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const Navigationscreen()),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const ApprovalPendingPage()),
+            );
+          }
         } else if (state is LoginErrorState) {
           Fluttertoast.showToast(
-            msg: "Mobile Number is Not Register",
+            msg: state.errMsg,
             backgroundColor: Colors.red,
             textColor: Colors.white,
           );
-          showMobileNotRegisteredPopup(context);
+          // showMobileNotRegisteredPopup(context);
         }
       },
       child: Scaffold(
