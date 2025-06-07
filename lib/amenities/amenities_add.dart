@@ -2,35 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 
 class AmenitiesAdd extends StatefulWidget {
-  // final String societyNameController;
-
-  // final String societyAddressController;
-
-  // final String totalwingsController;
-
-  // final String totalFlatController;
-
-  // final String nameController;
-
-  // final String emailController;
-
-  // final String mobileNoController;
-  // final String flatNoController;
-  // final String blockController;
-  // final String floorNoNoController;
-
   const AmenitiesAdd({
     super.key,
-    // required this.societyNameController,
-    // required this.societyAddressController,
-    // required this.totalwingsController,
-    // required this.totalFlatController,
-    // required this.nameController,
-    // required this.emailController,
-    // required this.mobileNoController,
-    // required this.flatNoController,
-    // required this.blockController,
-    // required this.floorNoNoController
   });
 
   @override

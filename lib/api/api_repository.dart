@@ -15,7 +15,7 @@ import '../models/flat_id_model.dart';
 import '../models/get_daily_help_model.dart';
 import '../models/get_family_members_model.dart';
 import '../models/get_vehicle_detail_model.dart';
-import '../models/homepage_model.dart';
+import '../models/announcements_model.dart';
 import '../models/member_register_model.dart';
 import '../models/user_approve.dart';
 import '../models/watchman_add_model.dart';
@@ -148,8 +148,8 @@ class ApiRepository {
     return null;
   }
 
-  Future<Homepagemodel?> getHomePageData(societyId) async {
-    final url = Uri.parse("${baseUrl}homepage");
+  Future<Announcementmodel?> getHomePageData(societyId) async {
+    final url = Uri.parse("${baseUrl}getannouncement");
     final body = {
       'society_id': societyId,
     };
@@ -158,9 +158,9 @@ class ApiRepository {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         if (data['status'] == 200) {
-          return Homepagemodel.fromJson(data);
+          return Announcementmodel.fromJson(data);
         }
-        return Homepagemodel.fromJson(data);
+        return Announcementmodel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());
