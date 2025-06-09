@@ -13,7 +13,9 @@ final class LoginLoadingState extends LoginState {}
 
 class LoginSuccessState extends LoginState {
   final LoginModel loginModel;
-  const LoginSuccessState({required this.loginModel});
+  final bool isAmenitiesAvailable;
+  const LoginSuccessState(
+      {required this.loginModel, required this.isAmenitiesAvailable});
   @override
   List<Object> get props => [loginModel];
 }
@@ -34,10 +36,10 @@ class LoginNotApproveState extends LoginState {
   List<Object> get props => [approvemsg];
 }
 
-class IsAmenitiesAvailableState extends LoginState {
-  final bool isAmenitiesAvailable;
-  const IsAmenitiesAvailableState({required this.isAmenitiesAvailable});
+// class IsAmenitiesAvailableState extends LoginState {
+//   final bool isAmenitiesAvailable;
+//   const IsAmenitiesAvailableState({required this.isAmenitiesAvailable});
 
-  @override
-  List<Object> get props => [isAmenitiesAvailable];
-}
+//   @override
+//   List<Object> get props => [isAmenitiesAvailable];
+// }
