@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -5,6 +7,7 @@ import 'package:society_gate/constents/sizedbox.dart';
 import 'package:society_gate/models/amenities_model.dart';
 
 import 'bloc/amenities_bloc.dart';
+import 'confirm_amenities_buy.dart';
 
 class BookAmenities extends StatefulWidget {
   const BookAmenities({super.key});
@@ -26,9 +29,13 @@ class _BookAmenitiesState extends State<BookAmenities> {
     context.read<AllAmenitiesBloc>().add(GetAllAmenities());
   }
 
-  int total = 0;
-  String DefaultImg = "lib/assets/help_desk.png";
+  double total = 0;
+  String defaultImg = "lib/assets/store.png";
   final List<Map<String, dynamic>> amenitiesImage = [
+    {
+      'name': 'Club House',
+      'image': "lib/assets/club.png",
+    },
     {
       'name': 'Swimming Pool',
       'image': "lib/assets/swimming-pool.png",
@@ -67,7 +74,12 @@ class _BookAmenitiesState extends State<BookAmenities> {
     },
   ];
 
-  final Set<String> selectedAmenities = {};
+  // final Set<String> selectedAmenities = {};
+  List<Map<String, String>> selectedAmenitiesList = [];
+
+  Map<String, String> toMap(String name, String price, String duration) {
+    return {'amenity_name': name, 'amount': price, 'duration': duration};
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,11 +145,21 @@ class _BookAmenitiesState extends State<BookAmenities> {
                     ),
                   ),
                   onPressed: () {
-                    // final selected = selectedAmenities.toList();
-                    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    //   content: Text("Selected: ${selected.join(', ')}"),
-                    // ));
-                    Fluttertoast.showToast(msg: "Working on This");
+                    if (total != 0.0) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ConfirmAmenitiesBuy(
+                                    selectedAmenitiesList:
+                                        selectedAmenitiesList,
+                                    total: total,
+                                  )));
+                      // selectedAmenitiesList = list;
+                    } else {
+                      Fluttertoast.showToast(
+                          backgroundColor: Colors.red,
+                          msg: "Please select an amenities!");
+                    }
                   },
                   child: const Text("Pay for Amenities"),
                 ),
@@ -155,11 +177,11 @@ class _BookAmenitiesState extends State<BookAmenities> {
                     mainAxisSpacing: 16,
                     childAspectRatio: 1,
                     children: List.generate(
-                        6,
+                        4,
                         (context) => Container(
                               // duration: const Duration(milliseconds: 250),
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
+                                color: Colors.grey.shade100,
                                 borderRadius: BorderRadius.circular(16),
                               ),
                             )),
@@ -176,24 +198,54 @@ class _BookAmenitiesState extends State<BookAmenities> {
                       ),
                       itemBuilder: (context, index) {
                         final amenitiesList = state.amenitiesModel.data?[index];
-                        final isSelected = selectedAmenities
-                            .contains(amenitiesList?.amenityName ?? "");
 
-                        bool imageName = amenitiesImage[index]['name']
-                            .contains(amenitiesList?.amenityName ?? "");
+                        bool isSelected = selectedAmenitiesList.any(
+                          (item) =>
+                              item['amenity_name'] ==
+                              amenitiesList?.amenityName,
+                        );
+
+                        String getAmenityImage(String amenityName) {
+                          final amenity = amenitiesImage.firstWhere(
+                            (item) =>
+                                item['name']?.toLowerCase() ==
+                                amenityName.toLowerCase(),
+                            orElse: () => {'image': defaultImg},
+                          );
+                          return amenity['image'];
+                        }
+
                         return GestureDetector(
                           onTap: () {
+                            final ameList = toMap(
+                              amenitiesList?.amenityName ?? "",
+                              amenitiesList?.amount ?? "",
+                              amenitiesList?.duration ?? "",
+                            );
+
                             setState(() {
-                              // if (isSelected) {
-                              //   selectedAmenities.remove(amenity['name']);
-                              // } else {
-                              //   selectedAmenities.add(amenity['name']);
-                              // }
-                              // total = total +
-                              //     (isSelected
-                              //         ? -amenity['price']
-                              //         : amenity['price']) as int;
+                              final alreadySelected = selectedAmenitiesList.any(
+                                (item) =>
+                                    item['amenity_name'] ==
+                                    amenitiesList?.amenityName,
+                              );
+
+                              if (alreadySelected) {
+                                selectedAmenitiesList.removeWhere(
+                                  (item) =>
+                                      item['amenity_name'] ==
+                                      amenitiesList?.amenityName,
+                                );
+                                total -=
+                                    double.parse(amenitiesList?.amount ?? '0');
+                              } else {
+                                selectedAmenitiesList.add(ameList);
+                                total +=
+                                    double.parse(amenitiesList?.amount ?? '0');
+                              }
                             });
+
+                            log(selectedAmenitiesList.toString());
                           },
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 250),
@@ -223,9 +275,8 @@ class _BookAmenitiesState extends State<BookAmenities> {
                                 CircleAvatar(
                                   radius: 40,
                                   child: Image.asset(
-                                    imageName == true
-                                        ? amenitiesImage[index]['image']
-                                        : DefaultImg,
+                                    getAmenityImage(
+                                        amenitiesList?.amenityName ?? ""),
                                     height: 60,
                                     // width: 60,
                                     // fit: BoxFit.cover,
@@ -253,7 +304,8 @@ class _BookAmenitiesState extends State<BookAmenities> {
                                             fontWeight: FontWeight.bold),
                                         children: [
                                       TextSpan(
-                                        text: " /month",
+                                        text:
+                                            " / ${amenitiesList?.duration ?? ""}",
                                         style: TextStyle(
                                             color: isSelected
                                                 ? Colors.deepOrange
