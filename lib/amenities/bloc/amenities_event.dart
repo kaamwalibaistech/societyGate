@@ -3,10 +3,8 @@ part of 'amenities_bloc.dart';
 abstract class AmenitiesEvent extends Equatable {}
 
 class GetAllAmenities extends AmenitiesEvent {
-  final String societyId;
-  GetAllAmenities({required this.societyId});
   @override
-  List<Object?> get props => [societyId];
+  List<Object?> get props => [];
 }
 
 class GetMyAmenities extends AmenitiesEvent {
