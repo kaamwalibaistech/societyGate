@@ -53,6 +53,17 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
   bool? clubHouse = false;
   TextEditingController otherAmenitiesName = TextEditingController();
   TextEditingController otherAmenitiesPrice = TextEditingController();
+
+  //
+  String? gardernSelectedDuration;
+  String? playGroungSelectedDuration;
+  String? clubHouseSelectedDuration;
+  String? swimmingPoolSelectedDuration;
+  String? parkingSelectedDuration;
+  String? gymSelectedDuration;
+  String? spaSelectedDuration;
+  String? wifiSelectedDuration;
+  String? roofTopGardernSelectedDuration;
   String? otherAmenitiesDuration;
 
   List<Map<String, dynamic>> otherAminitiesDataList = [];
@@ -425,8 +436,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
   }
 
   Widget swimmingPoolMethod() {
-    String? swimmingPoolSelectedDuration;
-
     final List<String> durations = [
       'Monthly',
       '3 Months',
@@ -501,8 +510,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
   }
 
   Widget gardenMethod() {
-    String? gardernSelectedDuration;
-
     final List<String> durations = [
       'Monthly',
       '3 Months',
@@ -577,8 +584,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
   }
 
   Widget parkingMethod() {
-    String? parkingSelectedDuration;
-
     final List<String> durations = [
       'Monthly',
       '3 Months',
@@ -653,8 +658,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
   }
 
   Widget gymMethod() {
-    String? gymSelectedDuration;
-
     final List<String> durations = [
       'Monthly',
       '3 Months',
@@ -730,8 +733,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
   }
 
   Widget playgroundMethod() {
-    String? playGroungSelectedDuration;
-
     final List<String> durations = [
       'Monthly',
       '3 Months',
@@ -806,8 +807,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
   }
 
   Widget clubHouseMethod() {
-    String? clubHouseSelectedDuration;
-
     final List<String> durations = [
       'Monthly',
       '3 Months',
@@ -882,8 +881,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
   }
 
   Widget spaMethod() {
-    String? spaSelectedDuration;
-
     final List<String> durations = [
       'Monthly',
       '3 Months',
@@ -958,8 +955,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
   }
 
   Widget wifiMethod() {
-    String? wifiSelectedDuration;
-
     final List<String> durations = [
       'Monthly',
       '3 Months',
@@ -1034,8 +1029,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
   }
 
   Widget roofTopGardenMethod() {
-    String? roofTopGardernSelectedDuration;
-
     final List<String> durations = [
       'Monthly',
       '3 Months',
