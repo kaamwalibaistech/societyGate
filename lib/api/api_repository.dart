@@ -11,6 +11,7 @@ import '../models/add_family_member_model.dart';
 import '../models/add_notices_model.dart';
 import '../models/add_vehicle_model.dart';
 import '../models/admin_register_model.dart';
+import '../models/amenities_model.dart';
 import '../models/flat_id_model.dart';
 import '../models/get_daily_help_model.dart';
 import '../models/get_family_members_model.dart';
@@ -502,6 +503,26 @@ class ApiRepository {
           return AddNoticeModel.fromJson(data);
         }
         return AddNoticeModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<AmenitiesModel?> fetchAmenities(societyid) async {
+    final url = Uri.parse("${baseUrl}getamenitiesbysociety");
+    final body = {
+      'society_id': societyid.toString(),
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return AmenitiesModel.fromJson(data);
+        }
+        return AmenitiesModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

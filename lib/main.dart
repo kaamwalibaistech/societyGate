@@ -11,6 +11,7 @@ import 'package:society_gate/firebase_options.dart';
 
 // import 'package:society_gate/firebase_options.dart';
 
+import 'amenities/bloc/amenities_bloc.dart';
 import 'auth/login_bloc/login_bloc.dart';
 import 'auth/register_screen.dart';
 import 'community/bloc/community_bloc.dart';
@@ -95,6 +96,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<DailyneedsBloc>(create: (context) => DailyneedsBloc()),
         BlocProvider<PaymentsBloc>(create: (context) => PaymentsBloc()),
         BlocProvider<CommunityBloc>(create: (context) => CommunityBloc()),
+        BlocProvider<AllAmenitiesBloc>(create: (context) => AllAmenitiesBloc()),
+        BlocProvider<AmenitiesOFMemberBloc>(
+            create: (context) => AmenitiesOFMemberBloc()),
         BlocProvider<VisitorsDetailBloc>(
             create: (context) => VisitorsDetailBloc()),
         BlocProvider<HomepageBloc>(create: (context) => HomepageBloc())

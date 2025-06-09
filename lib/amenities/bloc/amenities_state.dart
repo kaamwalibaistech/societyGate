@@ -15,7 +15,10 @@ final class GetAllAmenitiesLoading extends GetAllAmenitiesState {}
 final class GetAllAmenitiesFailure extends GetAllAmenitiesState {}
 
 final class GetAllAmenitiesSuccess extends GetAllAmenitiesState {
-  const GetAllAmenitiesSuccess();
+  final AmenitiesModel amenitiesModel;
+  const GetAllAmenitiesSuccess({required this.amenitiesModel});
+  @override
+  List<Object> get props => [amenitiesModel];
 }
 
 //-------- Get Amenities for a member ------------
