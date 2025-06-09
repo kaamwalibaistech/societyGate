@@ -529,4 +529,19 @@ class ApiRepository {
     }
     return null;
   }
+
+  Future<String?> bookAmenities(Map<String, String> amenitiesMap) async {
+    final url = Uri.parse("${baseUrl}book-amenities");
+    final body = {};
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return data['message'];
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
 }
