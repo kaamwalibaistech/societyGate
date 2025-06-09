@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:society_gate/amenities/user_amenities_page.dart';
 
 import 'api/api_repository.dart';
 import 'constents/local_storage.dart';
@@ -370,6 +371,44 @@ class _AccountScreenState extends State<AccountScreen>
                           ],
                         ),
                       ),
+                      ListTile(
+                        // contentPadding: const EdgeInsets.symmetric(
+                        //     horizontal: 20, vertical: 10),
+                        leading: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.ac_unit_sharp,
+                              color: Colors.blue),
+                        ),
+                        title: const Text(
+                          "My Amenities",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_sharp,
+                            color: Colors.grey),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const UserAmenitiesPage(
+                                amenities: [
+                                  'Wi-Fi',
+                                  'Parking',
+                                  'Swimming Pool',
+                                  'Gym'
+                                ],
+                              ),
+                            ),
+                          );
+
+                          // Add navigation or action here
+                        },
+                      )
                     ],
                   ),
                 ),
@@ -756,73 +795,89 @@ class _AccountScreenState extends State<AccountScreen>
                         ),
                       ),
                       const Divider(height: 1),
-                      SizedBox(
-                        height: 120,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
-                          ),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: getVehicledetails?.data?.length ?? 2,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: const EdgeInsets.only(right: 15),
-                              width: 140,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[50],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
+                      if (getVehicledetails?.data!.isNotEmpty ?? false)
+                        SizedBox(
+                          height: 120,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 10,
+                            ),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: getVehicledetails?.data?.length ?? 2,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: const EdgeInsets.only(right: 15),
+                                width: 140,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: loginType == "watchman"
+                                              ? const Color(0xFFFF9933)
+                                                  .withOpacity(0.2)
+                                              : const Color(0xFF6B4EFF)
+                                                  .withOpacity(0.2),
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        Icons.directions_car_rounded,
                                         color: loginType == "watchman"
                                             ? const Color(0xFFFF9933)
-                                                .withOpacity(0.2)
-                                            : const Color(0xFF6B4EFF)
-                                                .withOpacity(0.2),
+                                            : const Color(0xFF6B4EFF),
+                                        size: 24,
                                       ),
                                     ),
-                                    child: Icon(
-                                      Icons.directions_car_rounded,
-                                      color: loginType == "watchman"
-                                          ? const Color(0xFFFF9933)
-                                          : const Color(0xFF6B4EFF),
-                                      size: 24,
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      getVehicledetails
+                                              ?.data?[index].vehicleNo ??
+                                          "",
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    getVehicledetails?.data?[index].vehicleNo ??
-                                        "",
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      getVehicledetails?.data?[index].model ??
+                                          "",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    getVehicledetails?.data?[index].model ?? "",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[600],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      else
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Center(
+                            child: Text(
+                              "No Vehicle added",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'package:society_gate/models/help_support_model.dart';
 import 'package:society_gate/models/update_user_model.dart';
 
@@ -12,11 +13,11 @@ import '../models/add_notices_model.dart';
 import '../models/add_vehicle_model.dart';
 import '../models/admin_register_model.dart';
 import '../models/amenities_model.dart';
+import '../models/announcements_model.dart';
 import '../models/flat_id_model.dart';
 import '../models/get_daily_help_model.dart';
 import '../models/get_family_members_model.dart';
 import '../models/get_vehicle_detail_model.dart';
-import '../models/announcements_model.dart';
 import '../models/member_register_model.dart';
 import '../models/user_approve.dart';
 import '../models/watchman_add_model.dart';
@@ -117,7 +118,7 @@ class ApiRepository {
     final url = Uri.parse("${baseUrl}check-amenity/$societyId");
 
     try {
-      final response = await http.post(url);
+      final response = await http.get(url);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         return data['exists'];
@@ -246,6 +247,28 @@ class ApiRepository {
           return GetFamilyMemberModel.fromJson(data);
         }
         return GetFamilyMemberModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<GetUserPurchaseAmenitiesModel?> getFamilyMemGetUserPurchaseAmenities(
+      societyId, userId) async {
+    final url = Uri.parse("${baseUrl}getamenitiesbyuser");
+    final body = {
+      'society_id': societyId,
+      'user_id': userId,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return GetUserPurchaseAmenitiesModel.fromJson(data);
+        }
+        return GetUserPurchaseAmenitiesModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

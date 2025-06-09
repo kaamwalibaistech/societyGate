@@ -10,3 +10,11 @@ class LoginButtonEvent extends LoginEvent {
   @override
   List<Object?> get props => [phoneNo, password];
 }
+
+// class AmenitiesChecker extends LoginEvent {
+//   // final bool isAmenitiesAvailable;
+//   AmenitiesChecker();
+
+//   @override
+//   List<Object?> get props => [];
+// }
