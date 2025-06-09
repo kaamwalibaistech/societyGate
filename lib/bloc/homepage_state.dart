@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../models/homepage_model.dart';
+import '../models/announcements_model.dart';
 
 abstract class HomepageState extends Equatable {}
 
@@ -15,7 +15,7 @@ final class HomePageLoadingState extends HomepageState {
 }
 
 final class HomePageLoadedState extends HomepageState {
-  final Homepagemodel? mydata;
+  final Announcementmodel? mydata;
   HomePageLoadedState({required this.mydata});
   @override
   List<Object?> get props => [mydata];

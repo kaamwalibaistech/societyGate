@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/api/api_repository.dart';
-import 'package:society_gate/models/homepage_model.dart';
+import 'package:society_gate/models/announcements_model.dart';
 
 import '../../constents/local_storage.dart';
 import '../../constents/sizedbox.dart';
@@ -26,7 +26,7 @@ class _MembersPageState extends State<MembersPage> {
   TextEditingController confirmPasswordController = TextEditingController();
   LoginModel? loginModel;
   WatchManAddModel? watchmanData;
-  Homepagemodel? data;
+  Announcementmodel? data;
   String? adminName;
   String? adminEmail;
   // LoginModel? loginModel;
@@ -55,7 +55,7 @@ class _MembersPageState extends State<MembersPage> {
     final getLoginModel = LocalStoragePref().getLoginModel();
 
     ApiRepository apiRepositiory = ApiRepository();
-    Homepagemodel? mydata = await apiRepositiory
+    Announcementmodel? mydata = await apiRepositiory
         .getHomePageData(getLoginModel!.user!.societyId.toString());
     setState(() {
       loginModel = getLoginModel;

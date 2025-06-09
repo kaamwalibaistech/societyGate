@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:society_gate/constents/sizedbox.dart';
 
-class BookAmenities extends StatefulWidget {
-  const BookAmenities({super.key});
+import '../constents/sizedbox.dart';
+
+class EditAmenities extends StatefulWidget {
+  const EditAmenities({super.key});
 
   @override
-  State<BookAmenities> createState() => _BookAmenitiesState();
+  State<EditAmenities> createState() => _EditAmenitiesState();
 }
 
-class _BookAmenitiesState extends State<BookAmenities> {
+class _EditAmenitiesState extends State<EditAmenities> {
   int total = 0;
   final List<Map<String, dynamic>> amenities = [
     {
