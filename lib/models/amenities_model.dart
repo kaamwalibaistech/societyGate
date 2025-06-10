@@ -30,29 +30,41 @@ class Data {
   String? amenityName;
   String? amount;
   String? duration;
+  String? createdAt;
+  String? updatedAt;
+  String? error;
 
   Data(
       {this.amenityId,
       this.societyId,
       this.amenityName,
       this.amount,
-      this.duration});
+      this.duration,
+      this.createdAt,
+      this.updatedAt,
+      this.error});
 
   Data.fromJson(Map<String, dynamic> json) {
     amenityId = json['amenity_id'];
     societyId = json['society_id'];
-    amenityName = json['amenity_name'];
+    amenityName = json['name'];
     amount = json['amount'];
     duration = json['duration'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    error = json['error'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['amenity_id'] = amenityId;
     data['society_id'] = societyId;
-    data['amenity_name'] = amenityName;
+    data['name'] = amenityName;
     data['amount'] = amount;
     data['duration'] = duration;
+    data['created_at'] = duration;
+    data['updated_at'] = duration;
+    data['error'] = error;
     return data;
   }
 }

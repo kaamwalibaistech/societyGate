@@ -23,8 +23,15 @@ class AllAmenitiesBloc extends Bloc<AmenitiesEvent, GetAllAmenitiesState> {
           (LocalStoragePref().getLoginModel()?.user?.societyId ?? "0")
               .toString();
       final amenities = await ApiRepository().fetchAmenities(societyId);
-      // emit(GetAllAmenitiesLoading());
-      emit(GetAllAmenitiesSuccess(amenitiesModel: amenities as AmenitiesModel));
+
+      if (amenities?.status == 200) {
+        emit(GetAllAmenitiesSuccess(
+            amenitiesModel: amenities as AmenitiesModel));
+      } else if (amenities?.status == 404) {
+        emit(GetAllAmenitiesFailure());
+      } else {
+        emit(GetAllAmenitiesLoading());
+      }
     } catch (e) {
       log(e.toString());
       emit(GetAllAmenitiesFailure());
