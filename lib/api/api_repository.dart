@@ -534,7 +534,7 @@ class ApiRepository {
   }
 
   Future<AmenitiesModel?> fetchAmenities(societyid) async {
-    final url = Uri.parse("${baseUrl}getamenitiesbysociety");
+    final url = Uri.parse("${baseUrl}get-amenities-by-societyid");
     final body = {
       'society_id': societyid.toString(),
     };
@@ -542,9 +542,7 @@ class ApiRepository {
       final response = await http.post(url, body: body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-        if (data['status'] == 200) {
-          return AmenitiesModel.fromJson(data);
-        }
+        log("Api DATA: ${data.toString()}");
         return AmenitiesModel.fromJson(data);
       }
     } catch (e) {

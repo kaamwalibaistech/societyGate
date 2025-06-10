@@ -171,21 +171,24 @@ class _BookAmenitiesState extends State<BookAmenities> {
                   builder: (context, state) {
                 if (state is GetAllAmenitiesInitial ||
                     state is GetAllAmenitiesLoading) {
-                  return GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1,
-                    children: List.generate(
-                        4,
-                        (context) => Container(
-                              // duration: const Duration(milliseconds: 250),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            )),
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
+                  // return GridView.count(
+                  //   crossAxisCount: 2,
+                  //   crossAxisSpacing: 16,
+                  //   mainAxisSpacing: 16,
+                  //   childAspectRatio: 1,
+                  //   children: List.generate(
+                  //       4,
+                  //       (context) => Container(
+                  //             // duration: const Duration(milliseconds: 250),
+                  //             decoration: BoxDecoration(
+                  //               color: Colors.grey.shade100,
+                  //               borderRadius: BorderRadius.circular(16),
+                  //             ),
+                  //           )),
+                  // );
                 } else if (state is GetAllAmenitiesSuccess) {
                   return GridView.builder(
                       itemCount: state.amenitiesModel.data?.length ?? 0,
@@ -320,9 +323,14 @@ class _BookAmenitiesState extends State<BookAmenities> {
                         );
                       });
                 } else if (state is GetAllAmenitiesFailure) {
-                  return const Text("data");
+                  return const Center(
+                      child: Text(
+                    "Your Society does not providing any amenities!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ));
                 } else {
-                  return const Text("data");
+                  return const Text("No amenities found in your society!");
                 }
               }),
             ),
