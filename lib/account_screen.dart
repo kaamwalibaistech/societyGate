@@ -519,7 +519,7 @@ class _AccountScreenState extends State<AccountScreen>
                                     Container(
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
+                                        color: Colors.blue.shade50,
                                         shape: BoxShape.circle,
                                         border: Border.all(
                                           color: loginType == "watchman"

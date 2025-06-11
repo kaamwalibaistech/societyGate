@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 import 'package:society_gate/models/amenities_model.dart';
 
+import 'amenities_images.dart';
 import 'bloc/amenities_bloc.dart';
 import 'confirm_amenities_buy.dart';
 
@@ -30,49 +31,6 @@ class _BookAmenitiesState extends State<BookAmenities> {
   }
 
   double total = 0;
-  String defaultImg = "lib/assets/store.png";
-  final List<Map<String, dynamic>> amenitiesImage = [
-    {
-      'name': 'Club House',
-      'image': "lib/assets/club.png",
-    },
-    {
-      'name': 'Swimming Pool',
-      'image': "lib/assets/swimming-pool.png",
-    },
-    {
-      'name': 'Garden',
-      'image': "lib/assets/garden.png",
-    },
-    {
-      'name': 'Parking',
-      'image': "lib/assets/parking.png",
-    },
-    {
-      'name': 'Gym',
-      'image': "lib/assets/gym.png",
-    },
-    {
-      'name': 'Playground',
-      'image': "lib/assets/playground.png",
-    },
-    {
-      'name': 'Clubhouse',
-      'image': "lib/assets/club.png",
-    },
-    {
-      'name': 'Spa',
-      'image': "lib/assets/spa.png",
-    },
-    {
-      'name': 'Building Wi-Fi',
-      'image': "lib/assets/wifi.png",
-    },
-    {
-      'name': 'Rooftop Garden',
-      'image': "lib/assets/roof-top.png",
-    },
-  ];
 
   // final Set<String> selectedAmenities = {};
   List<Map<String, String>> selectedAmenitiesList = [];
@@ -208,15 +166,15 @@ class _BookAmenitiesState extends State<BookAmenities> {
                               amenitiesList?.amenityName,
                         );
 
-                        String getAmenityImage(String amenityName) {
-                          final amenity = amenitiesImage.firstWhere(
-                            (item) =>
-                                item['name']?.toLowerCase() ==
-                                amenityName.toLowerCase(),
-                            orElse: () => {'image': defaultImg},
-                          );
-                          return amenity['image'];
-                        }
+                        // String getAmenityImage(String amenityName) {
+                        //   final amenity = amenitiesImage.firstWhere(
+                        //     (item) =>
+                        //         item['name']?.toLowerCase() ==
+                        //         amenityName.toLowerCase(),
+                        //     orElse: () => {'image': defaultImg},
+                        //   );
+                        //   return amenity['image'];
+                        // }
 
                         return GestureDetector(
                           onTap: () {

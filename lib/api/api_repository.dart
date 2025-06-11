@@ -256,10 +256,10 @@ class ApiRepository {
 
   Future<GetUserPurchaseAmenitiesModel?> getFamilyMemGetUserPurchaseAmenities(
       societyId, userId) async {
-    final url = Uri.parse("${baseUrl}getamenitiesbyuser");
+    final url = Uri.parse("${baseUrl}get-amenities-by-userid");
     final body = {
-      'society_id': societyId,
       'user_id': userId,
+      'society_id': societyId,
     };
     try {
       final response = await http.post(url, body: body);
@@ -544,21 +544,6 @@ class ApiRepository {
         final Map<String, dynamic> data = jsonDecode(response.body);
         log("Api DATA: ${data.toString()}");
         return AmenitiesModel.fromJson(data);
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-    return null;
-  }
-
-  Future<String?> bookAmenities(Map<String, String> amenitiesMap) async {
-    final url = Uri.parse("${baseUrl}book-amenities");
-    final body = {};
-    try {
-      final response = await http.post(url, body: body);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        return data['message'];
       }
     } catch (e) {
       throw Exception(e.toString());
