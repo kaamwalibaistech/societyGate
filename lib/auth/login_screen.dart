@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/amenities/amenities_add.dart';
-import 'package:society_gate/auth/login_success.dart';
 import 'package:society_gate/auth/register_waiting_page.dart';
+import 'package:society_gate/navigation_screen.dart';
 
 import '../constents/sizedbox.dart';
 import 'login_bloc/login_bloc.dart';
@@ -76,7 +76,7 @@ class _CreateNewAccountState extends State<LoginScreen> {
           if (state.isAmenitiesAvailable == true) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const LoginSuccess()),
+              MaterialPageRoute(builder: (_) => const Navigationscreen()),
             );
           } else {
             Navigator.pushReplacement(
