@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:society_gate/auth/register_waiting_page.dart';
+import 'package:society_gate/amenities/amenities_add.dart';
 import 'package:society_gate/models/admin_register_model.dart';
 
 import '../api/api_repository.dart';
@@ -671,8 +671,7 @@ class _SocietyRegister extends State<SocietyRegister> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const ApprovalPendingPage()));
+                                builder: (context) => const AmenitiesAdd()));
                       },
                       child: Center(
                         child: Text(
