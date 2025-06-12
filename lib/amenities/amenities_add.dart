@@ -1,4 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/auth/login_success.dart';
+import 'package:society_gate/constents/local_storage.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 
 class AmenitiesAdd extends StatefulWidget {
@@ -11,8 +17,8 @@ class AmenitiesAdd extends StatefulWidget {
 }
 
 class _AmenitiesAddState extends State<AmenitiesAdd> {
-  List<String> amenities = [];
-  String v = "c";
+  List<Map<String, dynamic>> amenities = [];
+  // String v = "c";
   bool? swimmingPoolChecked = false;
   bool? gardenChecked = false;
   bool? parkingChecked = false;
@@ -24,8 +30,11 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
 
   bool? spa = false;
   bool? clubHouse = false;
+
+  //
   TextEditingController otherAmenitiesName = TextEditingController();
   TextEditingController otherAmenitiesPrice = TextEditingController();
+  TextEditingController selectedAmenitiesPrice = TextEditingController();
 
   //
   String? gardernSelectedDuration;
@@ -39,7 +48,49 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
   String? roofTopGardernSelectedDuration;
   String? otherAmenitiesDuration;
 
-  List<Map<String, dynamic>> otherAminitiesDataList = [];
+  //
+  String? selectedAmenitiesDuration;
+
+  //
+  TextEditingController swimmingPoolPriceController = TextEditingController();
+  TextEditingController gardernPriceController = TextEditingController();
+  TextEditingController parkingPriceController = TextEditingController();
+  TextEditingController gymPriceController = TextEditingController();
+  TextEditingController playGroundPriceController = TextEditingController();
+  TextEditingController clubHouseController = TextEditingController();
+  TextEditingController spaPriceController = TextEditingController();
+  TextEditingController wifiPriceController = TextEditingController();
+  TextEditingController roofTopPriceController = TextEditingController();
+
+  String? amenitiesSelectedOption;
+  final List<String> amenitiesList = [
+    'Swimming Pool',
+    'Garden',
+    'Parking',
+    'Gym',
+    'Playground',
+    'Club House',
+    'Spa',
+    'Building Wi-Fi',
+    'Rooftop Garden',
+    // '',
+  ];
+  final List<String> durations = [
+    'Monthly',
+    '3 Months',
+    '6 Months',
+    'Yearly',
+  ];
+
+  //
+  final formKey = GlobalKey<FormState>();
+  final _formKeyOtherButton = GlobalKey<FormState>();
+
+  //
+
+  List<Map<String, dynamic>> selectedAmenitiesList = [];
+  // List<Map<String, dynamic>> otherAminitiesDataList = [];
+  // List<Map<String, dynamic>> finalAminitiesList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -70,287 +121,296 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
           Padding(
             padding: const EdgeInsets.only(top: 40.0),
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      "Amenities",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                  ),
-                  sizedBoxH20(context),
-                  Row(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Checkbox(
-                          side: const BorderSide(color: Colors.white),
-                          value: swimmingPoolChecked,
-                          onChanged: (newValue) {
-                            setState(() {
-                              swimmingPoolChecked = newValue;
-                              if (swimmingPoolChecked == true) {
-                                amenities.add("Swimming Pool");
-                              } else {
-                                amenities.remove("Swimming Pool");
-                              }
-                            });
-                          }),
-                      const Text(
-                        "Swimming Pool",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  swimmingPoolChecked == true
-                      ? swimmingPoolMethod()
-                      : const SizedBox.shrink(),
-                  Row(
-                    children: [
-                      Checkbox(
-                          side: const BorderSide(color: Colors.white),
-                          value: gardenChecked,
-                          onChanged: (newValue) {
-                            setState(() {
-                              gardenChecked = newValue;
-                              if (gardenChecked == true) {
-                                amenities.add("Garden");
-                              } else {
-                                amenities.remove("Garden");
-                              }
-                            });
-                          }),
-                      const Text(
-                        "Garden",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  gardenChecked == true
-                      ? gardenMethod()
-                      : const SizedBox.shrink(),
-                  Row(
-                    children: [
-                      Checkbox(
-                          side: const BorderSide(color: Colors.white),
-                          value: parkingChecked,
-                          onChanged: (newValue) {
-                            setState(() {
-                              parkingChecked = newValue;
-                              if (parkingChecked == true) {
-                                amenities.add("Parking");
-                              } else {
-                                amenities.remove("Parking");
-                              }
-                            });
-                          }),
-                      const Text(
-                        "Parking",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  parkingChecked == true
-                      ? parkingMethod()
-                      : const SizedBox.shrink(),
-                  Row(
-                    children: [
-                      Checkbox(
-                          side: const BorderSide(color: Colors.white),
-                          value: gymChecked,
-                          onChanged: (newValue) {
-                            setState(() {
-                              gymChecked = newValue;
-                              if (gymChecked == true) {
-                                amenities.add("Gym");
-                              } else {
-                                amenities.remove("Gym");
-                              }
-                            });
-                          }),
-                      const Text(
-                        "Gym",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  gymChecked == true ? gymMethod() : const SizedBox.shrink(),
-                  Row(
-                    children: [
-                      Checkbox(
-                          side: const BorderSide(color: Colors.white),
-                          value: playGroundChecked,
-                          onChanged: (newValue) {
-                            setState(() {
-                              playGroundChecked = newValue;
-                              if (playGroundChecked == true) {
-                                amenities.add("Playground");
-                              } else {
-                                amenities.remove("Playground");
-                              }
-                            });
-                          }),
-                      const Text(
-                        "Playground",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  playGroundChecked == true
-                      ? playgroundMethod()
-                      : const SizedBox.shrink(),
-                  Row(
-                    children: [
-                      Checkbox(
-                          side: const BorderSide(color: Colors.white),
-                          value: clubHouse,
-                          onChanged: (newValue) {
-                            setState(() {
-                              clubHouse = newValue;
-                              if (clubHouse == true) {
-                                amenities.add("Club House");
-                              } else {
-                                amenities.remove("Club House");
-                              }
-                            });
-                          }),
-                      const Text(
-                        "Club House",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  clubHouse == true
-                      ? clubHouseMethod()
-                      : const SizedBox.shrink(),
-                  Row(
-                    children: [
-                      Checkbox(
-                          side: const BorderSide(color: Colors.white),
-                          value: spa,
-                          onChanged: (newValue) {
-                            setState(() {
-                              spa = newValue;
-                              if (spa == true) {
-                                amenities.add("Spa");
-                              } else {
-                                amenities.remove("Spa");
-                              }
-                            });
-                          }),
-                      const Text(
-                        "Spa",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  spa == true ? spaMethod() : const SizedBox.shrink(),
-                  Row(
-                    children: [
-                      Checkbox(
-                          side: const BorderSide(color: Colors.white),
-                          value: buildingWifi,
-                          onChanged: (newValue) {
-                            setState(() {
-                              buildingWifi = newValue;
-                              if (buildingWifi == true) {
-                                amenities.add("Building Wi-Fi");
-                              } else {
-                                amenities.remove("Building Wi-Fi");
-                              }
-                            });
-                          }),
-                      const Text(
-                        "Building Wi-Fi",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  buildingWifi == true ? wifiMethod() : const SizedBox.shrink(),
-                  Row(
-                    children: [
-                      Checkbox(
-                          side: const BorderSide(color: Colors.white),
-                          value: rooftopGarden,
-                          onChanged: (newValue) {
-                            setState(() {
-                              rooftopGarden = newValue;
-                              if (rooftopGarden == true) {
-                                amenities.add(" Rooftop Garden");
-                              } else {
-                                amenities.remove(" Rooftop Garden");
-                              }
-                            });
-                          }),
-                      const Text(
-                        " Rooftop Garden",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  rooftopGarden == true
-                      ? roofTopGardenMethod()
-                      : const SizedBox.shrink(),
-                  Row(
-                    children: [
-                      Checkbox(
-                          side: const BorderSide(color: Colors.white),
-                          value: other,
-                          onChanged: (newValue) {
-                            setState(() {
-                              other = newValue;
-                              if (other == true) {
-                                amenities.add("Other");
-                              } else {
-                                amenities.remove("Other");
-                              }
-                            });
-                          }),
-                      const Text(
-                        "Others",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  other == true ? others() : const SizedBox.shrink(),
-                  other == true ? otherAddButton() : const SizedBox.shrink(),
-                  other == true
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15.0, vertical: 10),
-                          child: Row(
-                            children: [
-                              Text(
-                                otherAminitiesDataList
-                                    .asMap()
-                                    .entries
-                                    .map((entry) =>
-                                        "${entry.key + 1}. ${entry.value['name']} - ${entry.value['price']} (${entry.value['duration']})")
-                                    .join("\n"),
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ],
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10.0),
+                        child: Center(
+                          child: Text(
+                            "Amenities",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
-                        )
-                      : const SizedBox.shrink(),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0, bottom: 20),
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.06,
-                        width: MediaQuery.of(context).size.width * 0.75,
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            borderRadius: BorderRadius.circular(30)),
-                        child: const Center(
-                            child: Text(
-                          "Register",
-                          style: TextStyle(color: Colors.white),
-                        )),
+                        ),
                       ),
-                    ),
+                      other == true
+                          ? const SizedBox.shrink()
+                          : sizedBoxH20(context),
+                      other == true
+                          ? const SizedBox.shrink()
+                          : SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.70,
+                              child: DropdownButtonFormField<String>(
+                                validator: (value) {
+                                  if (value == null) {
+                                    return "Please Select";
+                                  }
+                                  return null;
+                                },
+                                dropdownColor: Colors.black,
+                                decoration: const InputDecoration(
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.white, width: 2),
+                                  ),
+                                  labelText: 'Select Amenities',
+                                  labelStyle: TextStyle(color: Colors.white),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.white, width: 2)),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 10),
+                                ),
+                                value: amenitiesSelectedOption,
+                                style: const TextStyle(color: Colors.white),
+                                items: amenitiesList.map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    amenitiesSelectedOption = newValue;
+                                  });
+                                },
+                              ),
+                            ),
+                      other == true
+                          ? const SizedBox.shrink()
+                          : sizedBoxH10(context),
+                      other == true
+                          ? const SizedBox.shrink()
+                          : Row(
+                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.32,
+                                  child: TextFormField(
+                                    keyboardType: TextInputType.number,
+                                    controller: selectedAmenitiesPrice,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return "please enter Price!";
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                    decoration: const InputDecoration(
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide.none),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 12, horizontal: 10),
+                                      counterText: "",
+                                      hintText: "Eg-Rs 2000/--",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.06,
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.32,
+                                  child: DropdownButtonFormField<String>(
+                                    validator: (value) {
+                                      if (value == null) {
+                                        return "Please Select";
+                                      }
+                                      return null;
+                                    },
+                                    dropdownColor: Colors.black,
+                                    decoration: const InputDecoration(
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.white, width: 2),
+                                      ),
+                                      labelText: 'Select Duration',
+                                      labelStyle:
+                                          TextStyle(color: Colors.white),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.white, width: 2)),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 10),
+                                    ),
+                                    value: selectedAmenitiesDuration,
+                                    style: const TextStyle(color: Colors.white),
+                                    items: durations.map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(
+                                          value,
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        selectedAmenitiesDuration = newValue;
+                                      });
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                      other == true
+                          ? const SizedBox.shrink()
+                          : Padding(
+                              padding: const EdgeInsets.only(
+                                top: 10.0,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (formKey.currentState!.validate() &&
+                                      amenitiesSelectedOption
+                                          .toString()
+                                          .isNotEmpty &&
+                                      selectedAmenitiesPrice.text.isNotEmpty &&
+                                      selectedAmenitiesDuration
+                                          .toString()
+                                          .isNotEmpty) {
+                                    setState(() {
+                                      selectedAmenitiesList.add({
+                                        'name':
+                                            amenitiesSelectedOption.toString(),
+                                        'amount': selectedAmenitiesPrice.text,
+                                        'duration': selectedAmenitiesDuration
+                                            .toString(),
+                                      });
+                                    });
+                                    selectedAmenitiesDuration = null;
+                                    selectedAmenitiesPrice.clear();
+                                    Fluttertoast.showToast(
+                                        msg: "Added Successfully");
+                                  }
+
+                                  log(selectedAmenitiesList.toString());
+                                },
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.06,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.27,
+                                  decoration: BoxDecoration(
+                                      color: Theme.of(context).primaryColor,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: const Center(
+                                      child: Text(
+                                    "Add",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                                ),
+                              ),
+                            ),
+                      sizedBoxH10(context),
+                      Row(
+                        children: [
+                          Checkbox(
+                              side: const BorderSide(color: Colors.white),
+                              value: other,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  other = newValue;
+                                  if (other == false) {
+                                    selectedAmenitiesList.clear();
+                                  }
+                                });
+                              }),
+                          const Text(
+                            "Others",
+                            style: TextStyle(color: Colors.white),
+                          )
+                        ],
+                      ),
+                      other == true ? others() : const SizedBox.shrink(),
+                      other == true
+                          ? otherAddButton()
+                          : const SizedBox.shrink(),
+                      other == true
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    selectedAmenitiesList
+                                        .asMap()
+                                        .entries
+                                        .map((entry) =>
+                                            "${entry.key + 1}. ${entry.value['name']} - ${entry.value['amount']} (${entry.value['duration']})")
+                                        .join("\n"),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                      if (amenitiesSelectedOption != null || other == true)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0, bottom: 20),
+                          child: GestureDetector(
+                            onTap: () async {
+                              if (other == true ||
+                                  selectedAmenitiesList.isNotEmpty) {
+                                final loginModel =
+                                    LocalStoragePref().getLoginModel();
+                                ApiRepository apiRepository = ApiRepository();
+
+                                final dataa =
+                                    await apiRepository.amenitiesSendRawJson(
+                                        selectedAmenitiesList,
+                                        loginModel?.user?.societyId);
+                                if (dataa?["status"] == 200) {
+                                  Fluttertoast.showToast(
+                                      msg: dataa?["message"] ??
+                                          "Something Went Wrong!");
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginSuccess()));
+                                } else {
+                                  log(selectedAmenitiesList.toString());
+                                  Fluttertoast.showToast(
+                                      msg: dataa?["message"] ??
+                                          "Something Went Wrong!");
+                                }
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Selected Amenities are not Added");
+                              }
+                            },
+                            child: Center(
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.06,
+                                width: MediaQuery.of(context).size.width * 0.75,
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.circular(30)),
+                                child: const Center(
+                                    child: Text(
+                                  "Register",
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
@@ -371,710 +431,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
     );
   }
 
-  void adminRegisterMethod() async {
-    String finalAmenities = "";
-    String add;
-    for (int i = 0; i < amenities.length; i++) {
-      if (finalAmenities == "") {
-        add = "";
-      } else {
-        add = ", ";
-      }
-      finalAmenities = "$finalAmenities $add ${amenities[i]}";
-      print(finalAmenities);
-    }
-    try {
-      if (v != "p") {
-        // ApiRepository apiRepository = ApiRepository();
-        // AdminRegister? data = await apiRepository.registerSocietyAdmin(
-        //     widget.societyNameController,
-        //     widget.societyAddressController,
-        //     widget.totalwingsController,
-        //     widget.totalFlatController,
-        //     finalAmenities.toString(),
-        //     widget.nameController,
-        //     widget.emailController,
-        //     widget.mobileNoController,
-        //     widget.flatNoController,
-        //     widget.blockController,
-        //     widget.floorNoNoController);
-        // Fluttertoast.showToast(msg: data!.message.toString());
-        Navigator.pop(context);
-
-        // Navigator.pop(context);
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-  }
-
-  Widget swimmingPoolMethod() {
-    final List<String> durations = [
-      'Monthly',
-      '3 Months',
-      '6 Months',
-      'Yearly',
-    ];
-    TextEditingController swimmingPoolPriceController = TextEditingController();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: swimmingPoolPriceController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "please enter Price!";
-                } else {
-                  return null;
-                }
-              },
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                counterText: "",
-                hintText: "Eg-Rs 2000/--",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: DropdownButtonFormField<String>(
-              dropdownColor: Colors.black,
-              decoration: const InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
-                ),
-                labelText: 'Select Duration',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white)),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              ),
-              value: swimmingPoolSelectedDuration,
-              style: const TextStyle(color: Colors.white),
-              items: durations.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                  ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  swimmingPoolSelectedDuration = newValue;
-                });
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget gardenMethod() {
-    final List<String> durations = [
-      'Monthly',
-      '3 Months',
-      '6 Months',
-      'Yearly',
-    ];
-    TextEditingController gardernPriceController = TextEditingController();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: gardernPriceController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "please enter Price!";
-                } else {
-                  return null;
-                }
-              },
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                counterText: "",
-                hintText: "Eg-Rs 2000/--",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: DropdownButtonFormField<String>(
-              dropdownColor: Colors.black,
-              decoration: const InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
-                ),
-                labelText: 'Select Duration',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2)),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              ),
-              value: gardernSelectedDuration,
-              style: const TextStyle(color: Colors.white),
-              items: durations.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                  ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  gardernSelectedDuration = newValue;
-                });
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget parkingMethod() {
-    final List<String> durations = [
-      'Monthly',
-      '3 Months',
-      '6 Months',
-      'Yearly',
-    ];
-    TextEditingController parkingPriceController = TextEditingController();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: parkingPriceController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "please enter Price!";
-                } else {
-                  return null;
-                }
-              },
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                counterText: "",
-                hintText: "Eg-Rs 2000/--",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: DropdownButtonFormField<String>(
-              dropdownColor: Colors.black,
-              decoration: const InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
-                ),
-                labelText: 'Select Duration',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2)),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              ),
-              value: parkingSelectedDuration,
-              style: const TextStyle(color: Colors.white),
-              items: durations.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                  ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  parkingSelectedDuration = newValue;
-                });
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget gymMethod() {
-    final List<String> durations = [
-      'Monthly',
-      '3 Months',
-      '6 Months',
-      'Yearly',
-    ];
-
-    TextEditingController gymPriceController = TextEditingController();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: gymPriceController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "please enter Price!";
-                } else {
-                  return null;
-                }
-              },
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                counterText: "",
-                hintText: "Eg-Rs 2000/--",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: DropdownButtonFormField<String>(
-              dropdownColor: Colors.black,
-              decoration: const InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
-                ),
-                labelText: 'Select Duration',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2)),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              ),
-              value: gymSelectedDuration,
-              style: const TextStyle(color: Colors.white),
-              items: durations.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                  ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  gymSelectedDuration = newValue;
-                });
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget playgroundMethod() {
-    final List<String> durations = [
-      'Monthly',
-      '3 Months',
-      '6 Months',
-      'Yearly',
-    ];
-    TextEditingController playGroundPriceController = TextEditingController();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: playGroundPriceController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "please enter Price!";
-                } else {
-                  return null;
-                }
-              },
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                counterText: "",
-                hintText: "Eg-Rs 2000/--",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: DropdownButtonFormField<String>(
-              dropdownColor: Colors.black,
-              decoration: const InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
-                ),
-                labelText: 'Select Duration',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2)),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              ),
-              value: playGroungSelectedDuration,
-              style: const TextStyle(color: Colors.white),
-              items: durations.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                  ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  playGroungSelectedDuration = newValue;
-                });
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget clubHouseMethod() {
-    final List<String> durations = [
-      'Monthly',
-      '3 Months',
-      '6 Months',
-      'Yearly',
-    ];
-    TextEditingController clubHouseController = TextEditingController();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: clubHouseController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "please enter Price!";
-                } else {
-                  return null;
-                }
-              },
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                counterText: "",
-                hintText: "Eg-Rs 2000/--",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: DropdownButtonFormField<String>(
-              dropdownColor: Colors.black,
-              decoration: const InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
-                ),
-                labelText: 'Select Duration',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2)),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              ),
-              value: clubHouseSelectedDuration,
-              style: const TextStyle(color: Colors.white),
-              items: durations.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                  ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  clubHouseSelectedDuration = newValue;
-                });
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget spaMethod() {
-    final List<String> durations = [
-      'Monthly',
-      '3 Months',
-      '6 Months',
-      'Yearly',
-    ];
-    TextEditingController spaPriceController = TextEditingController();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: spaPriceController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "please enter Price!";
-                } else {
-                  return null;
-                }
-              },
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                counterText: "",
-                hintText: "Eg-Rs 2000/--",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: DropdownButtonFormField<String>(
-              dropdownColor: Colors.black,
-              decoration: const InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
-                ),
-                labelText: 'Select Duration',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2)),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              ),
-              value: spaSelectedDuration,
-              style: const TextStyle(color: Colors.white),
-              items: durations.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                  ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  spaSelectedDuration = newValue;
-                });
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget wifiMethod() {
-    final List<String> durations = [
-      'Monthly',
-      '3 Months',
-      '6 Months',
-      'Yearly',
-    ];
-    TextEditingController wifiPriceController = TextEditingController();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: wifiPriceController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "please enter Price!";
-                } else {
-                  return null;
-                }
-              },
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                counterText: "",
-                hintText: "Eg-Rs 2000/--",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: DropdownButtonFormField<String>(
-              dropdownColor: Colors.black,
-              decoration: const InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
-                ),
-                labelText: 'Select Duration',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2)),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              ),
-              value: wifiSelectedDuration,
-              style: const TextStyle(color: Colors.white),
-              items: durations.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                  ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  wifiSelectedDuration = newValue;
-                });
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget roofTopGardenMethod() {
-    final List<String> durations = [
-      'Monthly',
-      '3 Months',
-      '6 Months',
-      'Yearly',
-    ];
-    TextEditingController roofTopPriceController = TextEditingController();
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: roofTopPriceController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "please enter Price!";
-                } else {
-                  return null;
-                }
-              },
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                counterText: "",
-                hintText: "Eg-Rs 2000/--",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.45,
-            child: DropdownButtonFormField<String>(
-              dropdownColor: Colors.black,
-              decoration: const InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
-                ),
-                labelText: 'Select Duration',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2)),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              ),
-              value: roofTopGardernSelectedDuration,
-              style: const TextStyle(color: Colors.white),
-              items: durations.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                  ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  roofTopGardernSelectedDuration = newValue;
-                });
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget others() {
     final List<String> durations = [
       'Monthly',
@@ -1083,13 +439,13 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
       'Yearly',
     ];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+    return Form(
+      key: _formKeyOtherButton,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.30,
+            width: MediaQuery.of(context).size.width * 0.27,
             child: TextFormField(
               keyboardType: TextInputType.text,
               controller: otherAmenitiesName,
@@ -1113,7 +469,7 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
             ),
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.30,
+            width: MediaQuery.of(context).size.width * 0.27,
             child: TextFormField(
               keyboardType: TextInputType.number,
               controller: otherAmenitiesPrice,
@@ -1137,8 +493,14 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
             ),
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.30,
+            width: MediaQuery.of(context).size.width * 0.27,
             child: DropdownButtonFormField<String>(
+              validator: (value) {
+                if (value == null) {
+                  return "Please Select";
+                }
+                return null;
+              },
               dropdownColor: Colors.black,
               decoration: const InputDecoration(
                 focusedBorder: OutlineInputBorder(
@@ -1149,7 +511,7 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
                 border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white, width: 2)),
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    EdgeInsets.symmetric(horizontal: 7, vertical: 10),
               ),
               value: otherAmenitiesDuration,
               style: const TextStyle(color: Colors.white),
@@ -1177,26 +539,27 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
     return Row(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 10.0, left: 10),
+          padding: const EdgeInsets.only(
+            top: 10.0,
+          ),
           child: GestureDetector(
             onTap: () {
-              if (otherAmenitiesName.text.isNotEmpty &&
+              if (_formKeyOtherButton.currentState!.validate() &&
+                  otherAmenitiesName.text.isNotEmpty &&
                   otherAmenitiesPrice.text.isNotEmpty &&
                   otherAmenitiesDuration.toString().isNotEmpty) {
-                otherAminitiesDataList.add({
+                selectedAmenitiesList.add({
                   'name': otherAmenitiesName.text,
-                  'price': otherAmenitiesPrice.text,
+                  'amount': otherAmenitiesPrice.text,
                   'duration': otherAmenitiesDuration.toString(),
                 });
-
-                otherAmenitiesName.clear();
-                otherAmenitiesPrice.clear();
               }
               setState(() {});
+              log(selectedAmenitiesList.toString());
             },
             child: Container(
               height: MediaQuery.of(context).size.height * 0.06,
-              width: MediaQuery.of(context).size.width * 0.32,
+              width: MediaQuery.of(context).size.width * 0.27,
               decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.circular(10)),
