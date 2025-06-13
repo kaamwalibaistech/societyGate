@@ -10,21 +10,33 @@ class GetVehicleDetailsModel {
   int? status;
   String? message;
   List<Datum>? data;
+  final List<String>? errors; // new field for validation errors
 
-  GetVehicleDetailsModel({
-    this.status,
-    this.message,
-    this.data,
-  });
+  GetVehicleDetailsModel({this.status, this.message, this.data, this.errors});
 
-  factory GetVehicleDetailsModel.fromJson(Map<String, dynamic> json) =>
-      GetVehicleDetailsModel(
-        status: json["status"],
-        message: json["message"],
-        data: json["data"] != null
-            ? List<Datum>.from(json["data"].map((x) => Datum.fromJson(x)))
-            : null,
-      );
+  factory GetVehicleDetailsModel.fromJson(Map<String, dynamic> json) {
+    final dataField = json["data"];
+
+    List<Datum>? dataList;
+    List<String>? errorList;
+
+    if (dataField is List && dataField.isNotEmpty) {
+      if (dataField.first is Map) {
+        // It's a List of Maps — success case
+        dataList = dataField.map((x) => Datum.fromJson(x)).toList();
+      } else if (dataField.first is String) {
+        // It's a List of Strings — validation error case
+        errorList = List<String>.from(dataField);
+      }
+    }
+
+    return GetVehicleDetailsModel(
+      status: json["status"],
+      message: json["message"],
+      data: dataList,
+      errors: errorList,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "status": status,
