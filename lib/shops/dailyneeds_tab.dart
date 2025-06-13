@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-
 import 'package:society_gate/shops/bloc/dailyneeds_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -92,89 +91,93 @@ class DailyneedsTabState extends State<DailyneedsTab> {
 
   Widget buildSuccessWidget(ShopListModel? shopListModel) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      child: GridView.builder(
-        itemCount: shopListModel?.data?.length ?? 0,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 15,
-          mainAxisSpacing: 20,
-          childAspectRatio: 0.8,
-        ),
-        itemBuilder: (context, index) {
-          final shop = shopListModel?.data?[index];
-          String fullName = shop?.shopName ?? "Shop";
-          List<String> nameParts = fullName.split(" ");
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: shopListModel!.data!.isNotEmpty
+            ? GridView.builder(
+                itemCount: shopListModel.data?.length ?? 0,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 0.8,
+                ),
+                itemBuilder: (context, index) {
+                  final shop = shopListModel.data?[index];
+                  String fullName = shop?.shopName ?? "Shop";
+                  List<String> nameParts = fullName.split(" ");
 
-          String firstName = nameParts.isNotEmpty ? nameParts[0] : "";
-          String lastName = nameParts.length > 1 ? nameParts[1] : "";
+                  String firstName = nameParts.isNotEmpty ? nameParts[0] : "";
+                  String lastName = nameParts.length > 1 ? nameParts[1] : "";
 
-          return Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 35,
-                    backgroundImage: NetworkImage(
-                      'https://ui-avatars.com/api/?name=$firstName+$lastName&background=random&bold=true',
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    overflow: TextOverflow.ellipsis,
-                    shop?.shopName ?? "N/A",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    shop?.name ?? "N/A",
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade700,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  GestureDetector(
-                      onTap: () {
-                        double num = double.parse(
-                            shopListModel?.data?[index].phone.toString() ?? "");
-                        final phoneUri = Uri(
-                          scheme: 'tel',
-                          path: "$num",
-                        );
-                        launchUrl(phoneUri);
-                      },
-                      child: Lottie.asset('lib/assets/lottie_json/call.json',
-                          height: 50)
-                      // Container(
-                      //   margin: EdgeInsets.only(left: 10),
-                      //   padding: EdgeInsets.all(5),
-                      //   decoration: BoxDecoration(
-                      //       color: Colors.blue,
-                      //       borderRadius: BorderRadius.circular(100)),
-                      //   child: Icon(
-                      //     Icons.call,
-                      //     color: Colors.white,
-                      //   ),
-                      // ),
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 35,
+                            backgroundImage: NetworkImage(
+                              'https://ui-avatars.com/api/?name=$firstName+$lastName&background=random&bold=true',
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            overflow: TextOverflow.ellipsis,
+                            shop?.shopName ?? "N/A",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            shop?.name ?? "N/A",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          GestureDetector(
+                              onTap: () {
+                                int num = int.parse(shopListModel
+                                        .data?[index].phone
+                                        .toString() ??
+                                    "");
+                                final phoneUri = Uri(
+                                  scheme: 'tel',
+                                  path: "$num",
+                                );
+                                launchUrl(phoneUri);
+                              },
+                              child: Lottie.asset(
+                                  'lib/assets/lottie_json/call.json',
+                                  height: 50)
+                              // Container(
+                              //   margin: EdgeInsets.only(left: 10),
+                              //   padding: EdgeInsets.all(5),
+                              //   decoration: BoxDecoration(
+                              //       color: Colors.blue,
+                              //       borderRadius: BorderRadius.circular(100)),
+                              //   child: Icon(
+                              //     Icons.call,
+                              //     color: Colors.white,
+                              //   ),
+                              // ),
+                              ),
+                        ],
                       ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
+                    ),
+                  );
+                },
+              )
+            : const Center(child: Text("No Shops Added")));
   }
 }
