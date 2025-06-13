@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/auth/login_success.dart';
+import 'package:society_gate/auth/register_screen.dart';
 import 'package:society_gate/constents/local_storage.dart';
 import 'package:society_gate/constents/sizedbox.dart';
+
+import '../navigation_screen.dart';
 
 class AmenitiesAdd extends StatefulWidget {
   const AmenitiesAdd({
@@ -117,6 +120,29 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: true,
+          title: const Text("Amenities"),
+          centerTitle: true,
+          // elevation: 100,
+          foregroundColor: Colors.white,
+          actions: [
+            OutlinedButton(
+                onPressed: () {
+                  LocalStoragePref().setAmenitiesBool(true);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Navigationscreen()));
+                },
+                child: const Text(
+                  "SKIP",
+                  style: TextStyle(color: Colors.white),
+                )),
+            sizedBoxW10(context)
+          ],
+        ),
         body: Stack(children: [
           Padding(
             padding: const EdgeInsets.only(top: 40.0),
@@ -128,15 +154,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Center(
-                          child: Text(
-                            "Amenities",
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                        ),
-                      ),
                       other == true
                           ? const SizedBox.shrink()
                           : sizedBoxH20(context),
@@ -416,18 +433,18 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 12.0, top: 40),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 12.0, top: 40),
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       Navigator.pop(context);
+          //     },
+          //     child: const Icon(
+          //       Icons.arrow_back,
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          // ),
         ]),
       ),
     );
