@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/create_post.dart';
+import 'package:society_gate/payments_screen/payment_screen.dart';
 
 import 'api/api_repository.dart';
 import 'amenities/book_amenities.dart';
@@ -651,7 +652,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                           const NoticeBoardScreen()));
                               break;
                             case 3:
-                              Fluttertoast.showToast(msg: "Comming Soon");
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PaymentScreen()));
                               break;
                             case 4:
                               Navigator.push(
