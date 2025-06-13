@@ -375,7 +375,9 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
                                   Fluttertoast.showToast(
                                       msg: dataa?["message"] ??
                                           "Something Went Wrong!");
+                                  LocalStoragePref().setAmenitiesBool(true);
                                   Navigator.pushReplacement(
+                                      // ignore: use_build_context_synchronously
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>

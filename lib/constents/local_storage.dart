@@ -86,10 +86,19 @@ class LocalStoragePref {
   bool? getLoginBool() {
     return storage?.getBool(LocalStorageKeys.isLoggedIn);
   }
+
+  Future<void> setAmenitiesBool(bool value) async {
+    await storage?.setBool(LocalStorageKeys.isAmenitiesAdded, value);
+  }
+
+  bool? getAmenitiesBool() {
+    return storage?.getBool(LocalStorageKeys.isAmenitiesAdded);
+  }
 }
 
 class LocalStorageKeys {
   static const userProfile = 'user_profile';
   static const isLoggedIn = 'isLoggedIn';
   static const userPhoto = 'user_photo';
+  static const isAmenitiesAdded = 'is_amenities_added';
 }

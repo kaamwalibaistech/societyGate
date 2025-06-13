@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:society_gate/amenities/amenities_add.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
 import 'package:society_gate/firebase_options.dart';
 
@@ -75,6 +76,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool? isLoggedin;
+  bool? isAmenitiesAdded;
 
   @override
   void initState() {
@@ -84,6 +86,7 @@ class _MyAppState extends State<MyApp> {
 
   void checkData() {
     isLoggedin = LocalStoragePref().getLoginBool();
+    isAmenitiesAdded = LocalStoragePref().getAmenitiesBool();
   }
 
   @override
@@ -109,7 +112,9 @@ class _MyAppState extends State<MyApp> {
             useMaterial3: true,
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
         home: isLoggedin == true
-            ? const Navigationscreen()
+            ? isAmenitiesAdded == true
+                ? const Navigationscreen()
+                : const AmenitiesAdd()
             : const RegisterScreen(),
         builder: EasyLoading.init(),
       ),
