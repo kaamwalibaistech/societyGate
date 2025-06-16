@@ -205,25 +205,46 @@ class ApiRepository {
   }
 
   Future<int?> communityPost(
-      societyId, adminId, title, description, photo) async {
+    String societyId,
+    String adminId,
+    String title,
+    String description,
+    String photoPath, // <- pass file path here
+  ) async {
     final url = Uri.parse("${baseUrl}communitypostinsert");
-    final body = {
-      'society_id': societyId,
-      'admin_id': adminId,
-      'title': title,
-      'description': description,
-      'photo': photo,
-    };
-    try {
-      final response = await http.post(url, body: body);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
 
+    try {
+      final request = http.MultipartRequest("POST", url);
+
+      request.fields['society_id'] = societyId;
+      request.fields['admin_id'] = adminId;
+      request.fields['title'] = title;
+      request.fields['description'] = description;
+
+      // Add the image file
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'photo',
+          photoPath,
+          // contentType: MediaType(
+          //     'image', 'jpeg'), // Optional: adjust based on your file type
+        ),
+      );
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        final Map<String, dynamic> data = jsonDecode(responseBody);
         return data['status'];
+      } else {
+        print('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
+      print('Error: $e');
       throw Exception(e.toString());
     }
+
     return null;
   }
 
