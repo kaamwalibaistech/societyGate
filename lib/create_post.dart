@@ -260,7 +260,7 @@ class _CreatePostState extends State<CreatePost> {
           getLoginModel.user!.userId.toString(),
           title,
           description,
-          _image!.path);
+          _image!.path.toString());
 
       if (status == 200) {
         EasyLoading.showSuccess("Community post created successfully");

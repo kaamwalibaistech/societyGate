@@ -620,47 +620,40 @@ class _SocietyRegister extends State<SocietyRegister> {
                                   blockController.text,
                                   floorNoNoController.text);
 
-                          if (context.mounted) {
-                            if (dataa?.status == 200) {
-                              // Navigator.pushReplacement(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => RegisterWaitingPage(
-                              //               data: dataa,
-                              //             )));
-                              approvalDialog();
-                            } else {
-                              setState(() {
-                                datamap = dataa?.message;
-                              });
-                              // errorPopUp(data.message);
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text("Something went wrong!"),
-                                  content: SingleChildScrollView(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text((datamap["sname"] ?? [""])
-                                            .join(", ")),
-                                        Text((datamap["uphone"] ?? [""])
-                                            .join(", ")),
-                                        Text((datamap["uemail"] ?? [""])
-                                            .join(", ")),
-                                      ],
-                                    ),
+                          if (dataa?.status == 200) {
+                            approvalDialog();
+                            return;
+                          } else {
+                            setState(() {
+                              datamap = dataa?.message;
+                            });
+
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text("Something went wrong!"),
+                                content: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text((datamap["sname"] ?? [""])
+                                          .join(", ")),
+                                      Text((datamap["uphone"] ?? [""])
+                                          .join(", ")),
+                                      Text((datamap["uemail"] ?? [""])
+                                          .join(", ")),
+                                    ],
                                   ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text("Close"),
-                                    ),
-                                  ],
                                 ),
-                              );
-                            }
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text("Close"),
+                                  ),
+                                ],
+                              ),
+                            );
                           }
                           // Navigator.push(
                         } else {
