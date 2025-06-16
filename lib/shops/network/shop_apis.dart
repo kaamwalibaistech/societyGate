@@ -32,7 +32,8 @@ Future<AddShopModel?> addShopAPI(
     String shopType,
     String ownerName,
     String shopPhone,
-    String shopAddress) async {
+    String shopAddress,
+    String image) async {
   String api = ApiConstant.addShop;
   String baseUrl = ApiConstant.baseUrl;
   Uri url = Uri.parse(baseUrl + api);
@@ -43,7 +44,8 @@ Future<AddShopModel?> addShopAPI(
     'shop_type': shopType,
     'name': ownerName,
     'phone': shopPhone,
-    'address': shopAddress
+    'address': shopAddress,
+    'image': image
   };
   try {
     final response = await http.post(url, body: body);

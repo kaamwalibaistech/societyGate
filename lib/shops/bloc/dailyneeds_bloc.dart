@@ -40,12 +40,14 @@ class DailyneedsBloc extends Bloc<DailyneedsEvent, DailyneedsState> {
     try {
       LoginModel? loginModel = LocalStoragePref().getLoginModel();
       addShopModel = await addShopAPI(
-          loginModel!.user!.societyId.toString(),
-          event.shopName,
-          event.shopType,
-          event.ownerName,
-          event.shopPhone,
-          event.shopAddress);
+        loginModel!.user!.societyId.toString(),
+        event.shopName,
+        event.shopType,
+        event.ownerName,
+        event.shopPhone,
+        event.shopAddress,
+        "",
+      );
 
       if (addShopModel?.status == 200) {
         emit(ShopAddSuccessState());
