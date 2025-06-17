@@ -34,7 +34,6 @@ class DailyneedsBloc extends Bloc<DailyneedsEvent, DailyneedsState> {
   }
 
   void _addShopList(AddShopEvent event, Emitter<DailyneedsState> emit) async {
-    // emit(DailyneedsInitial());
     AddShopModel? addShopModel;
 
     try {

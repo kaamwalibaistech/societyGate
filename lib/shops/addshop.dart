@@ -395,12 +395,12 @@ class _AddingShopState extends State<AddingShop> {
   void initState() {
     super.initState();
     context.read<DailyneedsBloc>().add(AddShopEvent(
-          image: widget.image,
           shopName: widget.shopName,
           shopType: widget.shopType,
           ownerName: widget.ownerName,
           shopPhone: widget.phone,
           shopAddress: widget.shopAddress,
+          image: widget.image,
         ));
   }
 
