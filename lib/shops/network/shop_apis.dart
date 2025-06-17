@@ -38,20 +38,34 @@ Future<AddShopModel?> addShopAPI(
   String baseUrl = ApiConstant.baseUrl;
   Uri url = Uri.parse(baseUrl + api);
 
-  final body = {
-    'society_id': societyId,
-    'shop_name': shopName,
-    'shop_type': shopType,
-    'name': ownerName,
-    'phone': shopPhone,
-    'address': shopAddress,
-    'image': image
-  };
+  // final body = {
+  //   'society_id': societyId,
+  //   'shop_name': shopName,
+  //   'shop_type': shopType,
+  //   'name': ownerName,
+  //   'phone': shopPhone,
+  //   'address': shopAddress,
+  //   'image': image
+  // };
   try {
-    final response = await http.post(url, body: body);
+    final request = http.MultipartRequest("POST", url);
+
+    request.fields['society_id'] = societyId;
+    request.fields['shop_name'] = shopName;
+    request.fields['shop_type'] = shopType;
+    request.fields['name'] = ownerName;
+    request.fields['phone'] = shopPhone;
+    request.fields['address'] = shopAddress;
+
+    request.files.add(await http.MultipartFile.fromPath('image', image));
+
+    final response = await request.send();
+
+    // final response = await http.post(url, body: body);
     if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonData = jsonDecode(response.body);
-      return AddShopModel.fromJson(jsonData);
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> data = jsonDecode(responseBody);
+      return AddShopModel.fromJson(data);
     }
   } catch (e) {
     throw Exception(e);
@@ -74,13 +88,14 @@ class AddShopModel {
 }
 
 Future<int?> updateShopAPI(
-    String shopId,
-    String societyId,
-    String shopName,
-    String shopType,
-    String ownerName,
-    String shopPhone,
-    String shopAddress) async {
+  String shopId,
+  String societyId,
+  String shopName,
+  String shopType,
+  String ownerName,
+  String shopPhone,
+  String shopAddress,
+) async {
   String api = ApiConstant.updateShop;
   String baseUrl = ApiConstant.baseUrl;
   Uri url = Uri.parse(baseUrl + api);

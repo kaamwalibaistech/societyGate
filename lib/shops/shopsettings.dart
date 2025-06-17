@@ -198,7 +198,8 @@ class _ShopSettingsState extends State<ShopSettings> {
                   CircleAvatar(
                     radius: 35,
                     backgroundImage: NetworkImage(
-                      'https://ui-avatars.com/api/?name=$firstName+$lastName&background=random&bold=true',
+                      shop?.image ??
+                          'https://ui-avatars.com/api/?name=$firstName+$lastName&background=random&bold=true',
                     ),
                   ),
                   const SizedBox(height: 10),

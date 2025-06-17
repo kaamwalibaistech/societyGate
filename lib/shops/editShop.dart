@@ -1,8 +1,11 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../constents/local_storage.dart';
 import '../constents/sizedbox.dart';
@@ -41,6 +44,35 @@ class _EditshopState extends State<Editshop> {
       phone = widget.shopListModel!.data![widget.index].phone.toString();
       address = widget.shopListModel!.data![widget.index].address.toString();
     });
+  }
+
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final pickedFile = await _picker.pickImage(source: source);
+
+      if (pickedFile != null) {
+        setState(() {
+          _image = File(pickedFile.path);
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No image selected.')),
+        );
+      }
+    } on PlatformException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.message}')),
+      );
+      print('PlatformException: ${e.code} - ${e.message}');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An unexpected error occurred.')),
+      );
+      print('Unexpected error: $e');
+    }
   }
 
   @override

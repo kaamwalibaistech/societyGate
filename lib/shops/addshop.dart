@@ -1,6 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,8 +22,37 @@ class _AddShopState extends State<AddShop> {
   final PageController _pageController = PageController();
   final _formKey = GlobalKey<FormState>();
 
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final pickedFile = await _picker.pickImage(source: source);
+
+      if (pickedFile != null) {
+        setState(() {
+          _image = File(pickedFile.path);
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No image selected.')),
+        );
+      }
+    } on PlatformException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.message}')),
+      );
+      print('PlatformException: ${e.code} - ${e.message}');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An unexpected error occurred.')),
+      );
+      print('Unexpected error: $e');
+    }
+  }
+
   int _currentStep = 0;
-  final int totalSteps = 5;
+  final int totalSteps = 6;
 
   String shopName = "", shopType = "", ownerName = "", phone = "", address = "";
 
@@ -96,6 +128,7 @@ class _AddShopState extends State<AddShop> {
                   controller: _pageController,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
+                    selectImage(),
                     buildStep("Shop Name", "Enter shop name",
                         (val) => shopName = val),
                     buildStep("Shop Type", "Enter shop type",
@@ -146,7 +179,8 @@ class _AddShopState extends State<AddShop> {
                           backgroundColor: Colors.deepPurple.shade400,
                           foregroundColor: Colors.white),
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate() &&
+                            _image != null) {
                           if (_currentStep < totalSteps - 1) {
                             setState(() {
                               _currentStep++;
@@ -162,6 +196,7 @@ class _AddShopState extends State<AddShop> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => AddingShop(
+                                          image: _image!.path.toString(),
                                           shopName: shopName,
                                           shopType: shopType,
                                           ownerName: ownerName,
@@ -169,6 +204,8 @@ class _AddShopState extends State<AddShop> {
                                           shopAddress: address,
                                         )));
                           }
+                        } else {
+                          log("form key not validate");
                         }
                       },
                       child: Text(
@@ -264,13 +301,84 @@ class _AddShopState extends State<AddShop> {
       ),
     );
   }
+
+  Widget selectImage() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          _image != null
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.file(
+                    _image!,
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : Container(
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'No image selected.',
+                      style: TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                  ),
+                ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => _pickImage(ImageSource.gallery),
+                  icon: const Icon(Icons.photo_library),
+                  label: const Text('Gallery'),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => _pickImage(ImageSource.camera),
+                  icon: const Icon(
+                    Icons.camera_alt,
+                  ),
+                  label: const Text('Camera',
+                      style: TextStyle(color: Colors.black)),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class AddingShop extends StatefulWidget {
-  final String shopName, shopType, ownerName, phone, shopAddress;
+  final String image, shopName, shopType, ownerName, phone, shopAddress;
 
   const AddingShop({
     super.key,
+    required this.image,
     required this.shopName,
     required this.shopType,
     required this.ownerName,
@@ -285,9 +393,9 @@ class AddingShop extends StatefulWidget {
 class _AddingShopState extends State<AddingShop> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.read<DailyneedsBloc>().add(AddShopEvent(
+          image: widget.image,
           shopName: widget.shopName,
           shopType: widget.shopType,
           ownerName: widget.ownerName,
