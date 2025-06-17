@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -30,14 +31,12 @@ class DailyneedsTabState extends State<DailyneedsTab> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.orange.shade50,
+          backgroundColor: Colors.green.shade400,
+          foregroundColor: Colors.white,
           // automaticallyImplyLeading: false,
           title: const Text(
             "DAILY NEEDS",
-            style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.blueGrey),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           actions: [
@@ -54,7 +53,6 @@ class DailyneedsTabState extends State<DailyneedsTab> {
                   padding: EdgeInsets.only(right: 20),
                   child: Icon(
                     Icons.settings,
-                    color: Colors.deepOrangeAccent,
                   ),
                 ),
               ),
@@ -118,19 +116,17 @@ class DailyneedsTabState extends State<DailyneedsTab> {
                     elevation: 4,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            shop?.image ??
+                          child: CachedNetworkImage(
+                            imageUrl: shop?.image ??
                                 'https://ui-avatars.com/api/?name=$firstName+$lastName&background=random&bold=true',
                             height: MediaQuery.of(context).size.height * 0.135,
                             fit: BoxFit.cover,
                             width: double.infinity,
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Column(
@@ -148,7 +144,7 @@ class DailyneedsTabState extends State<DailyneedsTab> {
                               Text(
                                 shop?.shopType ?? "N/A",
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.red,
                                 ),
@@ -164,7 +160,6 @@ class DailyneedsTabState extends State<DailyneedsTab> {
                             ],
                           ),
                         ),
-                        // const SizedBox(height: 6),
                         GestureDetector(
                             onTap: () {
                               int num = int.parse(
@@ -177,8 +172,9 @@ class DailyneedsTabState extends State<DailyneedsTab> {
                               launchUrl(phoneUri);
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              margin: EdgeInsets.symmetric(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              margin: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
                               width: double.infinity,
                               height: MediaQuery.of(context).size.height * 0.05,
@@ -189,7 +185,7 @@ class DailyneedsTabState extends State<DailyneedsTab> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Contact",
                                     style: TextStyle(color: Colors.black87),
                                   ),
@@ -198,19 +194,7 @@ class DailyneedsTabState extends State<DailyneedsTab> {
                                   )
                                 ],
                               ),
-                            )
-                            // Container(
-                            //   margin: EdgeInsets.only(left: 10),
-                            //   padding: EdgeInsets.all(5),
-                            //   decoration: BoxDecoration(
-                            //       color: Colors.blue,
-                            //       borderRadius: BorderRadius.circular(100)),
-                            //   child: Icon(
-                            //     Icons.call,
-                            //     color: Colors.white,
-                            //   ),
-                            // ),
-                            ),
+                            )),
                       ],
                     ),
                   );

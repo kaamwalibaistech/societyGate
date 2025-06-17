@@ -277,7 +277,9 @@ class _EditshopState extends State<Editshop> {
                               bootomSheet();
                             } else {
                               Fluttertoast.showToast(
-                                  msg: "Error! Please try again.");
+                                  msg: status == 400
+                                      ? "The phone number is already taken!"
+                                      : "Error! Please try again.");
                             }
                           },
                           child: const Text(
@@ -313,6 +315,7 @@ class _EditshopState extends State<Editshop> {
           child: TextFormField(
             initialValue: initialValue,
             keyboardType: isPhone ? TextInputType.phone : TextInputType.text,
+            maxLength: isPhone ? 10 : 100,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return "This field cannot be empty!";

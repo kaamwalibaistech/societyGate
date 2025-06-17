@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:society_gate/models/login_model.dart';
 
 import 'account_screen.dart';
 import 'community/community_page.dart';
@@ -20,8 +21,9 @@ class Navigationscreen extends StatefulWidget {
 
 class _Navigationscreen extends State<Navigationscreen> {
   int selectedIndex = 0;
-  Uint8List? _userPhoto;
-  String uiPhoto = "";
+  LoginModel? getLoginModel;
+  String userPhoto = 'https://ui-avatars.com/api/?background=random&name=ABC.';
+  // String uiPhoto = "";
 
   @override
   void initState() {
@@ -30,14 +32,17 @@ class _Navigationscreen extends State<Navigationscreen> {
   }
 
   void getuserPhoto() {
-    final data = LocalStoragePref.instance!.getUserPhoto();
+    // final data = LocalStoragePref.instance!.getUserPhoto();
+    getLoginModel = LocalStoragePref().getLoginModel();
+
     setState(() {
-      _userPhoto = data;
-      uiPhoto = loginModel?.user?.uname ?? "User";
+      userPhoto = getLoginModel?.user?.profile_iamge ??
+          "https://ui-avatars.com/api/?name=username.";
+      // uiPhoto = loginModel?.user?.uname ?? "User";
     });
   }
 
-  final loginModel = LocalStoragePref().getLoginModel();
+  // final loginModel = LocalStoragePref().getLoginModel();
 
   void changeTab(int index) {
     setState(() {
@@ -80,7 +85,10 @@ class _Navigationscreen extends State<Navigationscreen> {
             const BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag_outlined),
               label: "Needs",
-              activeIcon: Icon(Icons.shopping_bag_rounded),
+              activeIcon: Icon(
+                Icons.shopping_bag_rounded,
+                color: Colors.green,
+              ),
             ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.message_outlined),
@@ -97,10 +105,7 @@ class _Navigationscreen extends State<Navigationscreen> {
                 ),
                 child: CircleAvatar(
                     radius: 20,
-                    backgroundImage: _userPhoto != null
-                        ? MemoryImage(_userPhoto!)
-                        : CachedNetworkImageProvider(
-                            "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")
+                    backgroundImage: CachedNetworkImageProvider(userPhoto)
                     // child: _userPhoto != null
                     //     ? Image.memory(_userPhoto!)
                     //     : ClipOval(
@@ -112,25 +117,25 @@ class _Navigationscreen extends State<Navigationscreen> {
                     ),
               ),
               label: "Profile",
-              activeIcon: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  border:
-                      Border.all(width: 0.5, color: Colors.deepOrangeAccent),
-                ),
-                child: _userPhoto != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.memory(
-                          _userPhoto!,
-                          fit: BoxFit.cover,
-                          width: 30,
-                          height: 30,
-                        ),
-                      )
-                    : const Icon(Icons.person),
-              ),
+              // activeIcon: Container(
+              //   padding: const EdgeInsets.all(4),
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(100),
+              //     border:
+              //         Border.all(width: 0.5, color: Colors.deepOrangeAccent),
+              //   ),
+              //   child: _userPhoto != null
+              //       ? ClipRRect(
+              //           borderRadius: BorderRadius.circular(100),
+              //           child: Image.memory(
+              //             _userPhoto!,
+              //             fit: BoxFit.cover,
+              //             width: 30,
+              //             height: 30,
+              //           ),
+              //         )
+              //       : const Icon(Icons.person),
+              // ),
             ),
           ],
         ),
@@ -168,7 +173,7 @@ class _Navigationscreen extends State<Navigationscreen> {
       case 2:
         return const CommunityPage();
       case 3:
-        return loginModel!.user!.role != "watchman"
+        return getLoginModel?.user?.role != "watchman"
             ? const AccountScreen()
             : const WatchmanProfilePage();
       default:

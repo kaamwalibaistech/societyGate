@@ -17,7 +17,7 @@ class CommunityBloc extends Bloc<CommunityEvent, CommunityPostState> {
 
   void _fetchAllPosts(
       CommunityPostEvent event, Emitter<CommunityPostState> emit) async {
-    emit(CommunityPostLoading());
+    // emit(CommunityPostLoading());
     try {
       List<Comment> commentsList = [];
       final communityModel = await getCommunityPosts(event.page, "10");

@@ -44,7 +44,7 @@ void configLoading() {
   EasyLoading.instance
     ..displayDuration = const Duration(milliseconds: 2000)
     ..indicatorType = EasyLoadingIndicatorType.fadingCircle
-    ..loadingStyle = EasyLoadingStyle.dark
+    ..loadingStyle = EasyLoadingStyle.light
     ..maskType = EasyLoadingMaskType.black
     ..dismissOnTap = false;
 }
