@@ -111,6 +111,7 @@ class DailyneedsTabState extends State<DailyneedsTab> {
 
                   return Card(
                     // color: Colors.amber,
+                    shadowColor: Colors.green.shade50,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

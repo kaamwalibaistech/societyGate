@@ -110,25 +110,128 @@ class _EditshopState extends State<Editshop> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(
-                child: Stack(children: [
-                  CircleAvatar(
-                    radius: 80,
-                    child: Image.asset(
-                      'lib/assets/store.png',
-                      scale: 0.7,
+              GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(20)),
                     ),
-                  ),
-                  const Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Icon(
-                      Icons.photo_library_rounded,
-                      size: 40,
-                      color: Colors.blue,
-                    ),
-                  )
-                ]),
+                    backgroundColor: Colors.white,
+                    builder: (context) {
+                      return SizedBox(
+                        height: 300,
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 24, horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Choose Image Source',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueAccent,
+                                ),
+                              ),
+                              const SizedBox(height: 30),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {
+                                        _pickImage(ImageSource.gallery);
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(
+                                          Icons.photo_library_rounded,
+                                          color: Colors.white),
+                                      label: const Text(
+                                        'Gallery',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blueAccent,
+                                        foregroundColor: Colors.white,
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: ElevatedButton.icon(
+                                      onPressed: () =>
+                                          _pickImage(ImageSource.camera),
+                                      icon: const Icon(Icons.camera_alt_rounded,
+                                          color: Colors.white),
+                                      label: const Text(
+                                        'Camera',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.lightBlue,
+                                        foregroundColor: Colors.white,
+                                        elevation: 5,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(14),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Center(
+                  child: Stack(children: [
+                    _image != null
+                        ? CircleAvatar(
+                            radius: 80,
+                            backgroundImage: FileImage(
+                              _image!,
+                            ),
+                          )
+                        : CircleAvatar(
+                            radius: 80,
+                            child: Image.asset(
+                              'lib/assets/store.png',
+                              scale: 0.7,
+                            ),
+                          ),
+                    const Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Icon(
+                        Icons.photo_library_rounded,
+                        size: 40,
+                        color: Colors.blue,
+                      ),
+                    )
+                  ]),
+                ),
               ),
               sizedBoxH15(context),
               Form(
@@ -159,15 +262,17 @@ class _EditshopState extends State<Editshop> {
                             final LoginModel =
                                 LocalStoragePref().getLoginModel();
                             final status = await updateShopAPI(
-                                widget.shopListModel?.data?[widget.index].shopId
-                                        .toString() ??
-                                    "",
-                                LoginModel?.user?.societyId.toString() ?? '',
-                                shopName,
-                                shopType,
-                                ownerName,
-                                phone,
-                                address);
+                              widget.shopListModel?.data?[widget.index].shopId
+                                      .toString() ??
+                                  "",
+                              LoginModel?.user?.societyId.toString() ?? '',
+                              shopName,
+                              shopType,
+                              ownerName,
+                              phone,
+                              address,
+                              _image!.path.toString(),
+                            );
                             if (status == 200) {
                               bootomSheet();
                             } else {
