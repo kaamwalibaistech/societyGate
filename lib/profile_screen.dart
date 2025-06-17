@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:society_gate/api/api_repository.dart';
-import 'package:society_gate/auth/login_bloc/login_bloc.dart';
+import 'package:society_gate/auth/network/login_api.dart';
 import 'package:society_gate/constents/local_storage.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -466,33 +465,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
           TextButton(
             onPressed: () async {
               if (passwordController.text.isNotEmpty) {
-                ApiRepository apiRepository = ApiRepository();
-                final data = LocalStoragePref.instance!.getLoginModel();
+                final data = LocalStoragePref().getLoginModel();
+                final loginData =
+                    await login(data!.user!.uphone, passwordController.text);
 
-                final dataa = await apiRepository.updateUser(
-                  data!.user!.userId.toString(),
-                  name,
-                  email,
-                  phone,
-                );
-                if (dataa?.status == 200) {
-                  // if (context.mounted) {
-                  //   Navigator.pop(context);
-                  //   Navigator.pop(context);
-                  // }
+                if (loginData!.status == 200) {
+                  ApiRepository apiRepository = ApiRepository();
+                  final dataa = await apiRepository.updateUser(
+                    data.user!.userId.toString(),
+                    name,
+                    email,
+                    phone,
+                  );
+                  await LocalStoragePref().storeLoginModel(loginData);
+
                   Fluttertoast.showToast(msg: dataa!.message.toString());
 
-                  if (context.mounted) {
-                    BlocProvider.of<LoginBloc>(context).add(
-                      LoginButtonEvent(phone, passwordController.text),
-                    );
-                  }
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                 } else {
-                  Fluttertoast.showToast(msg: dataa!.message.toString());
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
+                  Fluttertoast.showToast(msg: "password is Incorrect");
                 }
+
+//
               }
             },
             child: const Text(

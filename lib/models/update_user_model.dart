@@ -11,51 +11,49 @@ String updateUserModelToJson(UpdateUserModel data) =>
     json.encode(data.toJson());
 
 class UpdateUserModel {
-  int status;
-  String message;
-  User user;
+  int? status;
+  String? message;
+  User? user;
 
   UpdateUserModel({
-    required this.status,
-    required this.message,
-    required this.user,
+    this.status,
+    this.message,
+    this.user,
   });
 
   factory UpdateUserModel.fromJson(Map<String, dynamic> json) =>
       UpdateUserModel(
         status: json["status"],
         message: json["message"],
-        user: User.fromJson(json["user"]),
+        user: json["user"] == null ? null : User.fromJson(json["user"]),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "user": user.toJson(),
+        "user": user?.toJson(),
       };
 }
 
 class User {
-  int userId;
-  int societyId;
-  String urole;
-  String uname;
-  String uemail;
-  String upassword;
-  String uphone;
-  String approvalStatus;
-  DateTime createdAt;
+  int? userId;
+  int? societyId;
+  String? urole;
+  String? uname;
+  String? uemail;
+  String? uphone;
+  String? profileImage;
+  String? approvalStatus;
 
   User({
-    required this.userId,
-    required this.societyId,
-    required this.urole,
-    required this.uname,
-    required this.uemail,
-    required this.upassword,
-    required this.uphone,
-    required this.approvalStatus,
-    required this.createdAt,
+    this.userId,
+    this.societyId,
+    this.urole,
+    this.uname,
+    this.uemail,
+    this.uphone,
+    this.profileImage,
+    this.approvalStatus,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -64,10 +62,9 @@ class User {
         urole: json["urole"],
         uname: json["uname"],
         uemail: json["uemail"],
-        upassword: json["upassword"],
         uphone: json["uphone"],
+        profileImage: json["profile_image"],
         approvalStatus: json["approval_status"],
-        createdAt: DateTime.parse(json["created_at"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -76,9 +73,8 @@ class User {
         "urole": urole,
         "uname": uname,
         "uemail": uemail,
-        "upassword": upassword,
         "uphone": uphone,
+        "profile_image": profileImage,
         "approval_status": approvalStatus,
-        "created_at": createdAt.toIso8601String(),
       };
 }
