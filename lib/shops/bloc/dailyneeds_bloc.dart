@@ -46,7 +46,7 @@ class DailyneedsBloc extends Bloc<DailyneedsEvent, DailyneedsState> {
         event.ownerName,
         event.shopPhone,
         event.shopAddress,
-        "",
+        event.image,
       );
 
       if (addShopModel?.status == 200) {
