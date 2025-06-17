@@ -30,35 +30,34 @@ class _CommunityPageState extends State<CommunityPage> {
     CommunityBloc communityBloc = BlocProvider.of<CommunityBloc>(context);
     communityBloc.add(CommunityPostEvent(page: '1'));
     final getLoginModel = LocalStoragePref().getLoginModel();
-    setState(() {
-      societyId = getLoginModel!.user!.societyId;
-      log(societyId.toString());
-    });
+    societyId = getLoginModel!.user!.societyId;
+    log(societyId.toString());
+    // setState(() {
+
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: BlocBuilder<CommunityBloc, CommunityPostState>(
-            bloc: communityBloc,
-            buildWhen: (previous, current) =>
-                current is CommunityPostInitial ||
-                current is CommunityPostLoading ||
-                current is CommunityPostSuccess ||
-                current is CommunityPostError,
-            builder: (context, state) {
-              if (state is CommunityPostInitial ||
-                  state is CommunityPostLoading) {
-                return _loading();
-              } else if (state is CommunityPostSuccess) {
-                return _post(state.communityModel, state.commentsList);
-              } else {
-                return Center(child: Text(state.toString()));
-              }
-            }));
+    return Scaffold(body: BlocBuilder<CommunityBloc, CommunityPostState>(
+        builder: (context, state) {
+      if (state is CommunityPostInitial) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is CommunityPostLoading) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is CommunityPostSuccess) {
+        return _post(state.communityModel, state.commentsList);
+      } else {
+        return Center(child: Text(state.toString()));
+      }
+    }));
   }
 
-  Widget _loading() {
+/*  Widget _loading() {
     return SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,7 +116,7 @@ class _CommunityPageState extends State<CommunityPage> {
         ],
       ),
     );
-  }
+  }*/
 
   Widget _post(CommunityModel? communityModel, List<Comment> commentsList) {
     return ListView.builder(
@@ -132,8 +131,8 @@ class _CommunityPageState extends State<CommunityPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                  leading: const CircleAvatar(
-                    foregroundImage: NetworkImage(
+                  leading: CircleAvatar(
+                    foregroundImage: NetworkImage(post?.profileImage ??
                         "https://ui-avatars.com/api/?background=random&name=User+Names"),
                   ),
                   title: Text(post?.societyName ?? ""),
@@ -371,12 +370,14 @@ class _CommunityPageState extends State<CommunityPage> {
                                 comments.insert(
                                     0,
                                     Comment(
-                                      comment: commentText,
-                                      memberName: getLoginModel.user!.uname,
-                                    ));
+                                        comment: commentText,
+                                        memberName: getLoginModel.user!.uname,
+                                        profile:
+                                            getLoginModel.user!.profile_iamge));
 
                                 commentController.clear();
                               });
+                              setState(() {});
                             },
                             child: Container(
                               padding: const EdgeInsets.all(8),
@@ -410,9 +411,9 @@ class _CommunityPageState extends State<CommunityPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-            leading: const CircleAvatar(
+            leading: CircleAvatar(
               radius: 15,
-              foregroundImage: NetworkImage(
+              foregroundImage: NetworkImage(comments.profile ??
                   "https://ui-avatars.com/api/?background=random&name=User+Namez"),
             ),
             title: Text(

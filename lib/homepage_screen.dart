@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -7,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/api/firebase_api.dart';
-import 'package:society_gate/create_post.dart';
+import 'package:society_gate/community/community_post_add.dart';
 import 'package:society_gate/payments_screen/payment_screen.dart';
 
 import 'api/api_repository.dart';
@@ -33,22 +32,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
   Announcementmodel? data;
   LoginModel? loginModel;
   String? loginType;
-  Uint8List? _userPhoto;
-  String uiPhoto = "";
+  String profilePhoto = "";
+  // "https://ui-avatars.com/api/?background=random&name=uiPhoto.";
 
   @override
   void initState() {
     super.initState();
     getData();
-    getuserPhoto();
     FirebaseApi().initNotification();
-  }
-
-  void getuserPhoto() {
-    final data = LocalStoragePref.instance!.getUserPhoto();
-    setState(() {
-      _userPhoto = data;
-    });
   }
 
   getData() async {
@@ -61,9 +52,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
       loginModel = getLoginModel;
       data = mydata;
       loginType = loginModel?.user?.role ?? "NA";
-      uiPhoto = loginModel?.user?.uname ?? "User";
+      profilePhoto = loginModel?.user?.profile_iamge ?? "";
+      // "https://ui-avatars.com/api/?name=username.";
     });
+    log(profilePhoto);
     log(loginType ?? "No data");
+    ;
     log(loginModel?.user?.role ?? "NA");
   }
 
@@ -138,20 +132,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           ),
                         ),
                         child: CircleAvatar(
-                            radius: 20,
-                            backgroundImage: _userPhoto == null
-                                ? CachedNetworkImageProvider(
-                                    "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")
-                                : MemoryImage(_userPhoto!)
-                            // child: _userPhoto != null
-                            //     ? Image.memory(_userPhoto!)
-                            //     : ClipOval(
-                            //         child: Image.network(
-                            //             "https://ui-avatars.com/api/?background=random&name=$uiPhoto."
-                            //             // "https://ui-avatars.com/api/?background=random&name=$uiPhoto",
-                            //             ),
-                            //       ),
-                            ),
+                          radius: 20,
+                          backgroundImage: CachedNetworkImageProvider(
+                            profilePhoto,
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(

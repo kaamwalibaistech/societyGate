@@ -36,6 +36,7 @@ class User {
   final String uname;
   final String uemail;
   final String uphone;
+  final String profile_iamge;
   final String createdAt;
 
   User({
@@ -49,6 +50,7 @@ class User {
     required this.uname,
     required this.uemail,
     required this.uphone,
+    required this.profile_iamge,
     required this.createdAt,
   });
 
@@ -64,6 +66,7 @@ class User {
       uname: json['uname'] ?? "No Name",
       uemail: json['uemail'] ?? "No Email",
       uphone: json['uphone'] ?? "No Phone",
+      profile_iamge: json['profile_image'] ?? "No Phone",
       createdAt: json['created_at'] ?? "N/A",
     );
   }
@@ -80,6 +83,7 @@ class User {
       'uname': uname,
       'uemail': uemail,
       'uphone': uphone,
+      'profile_image': profile_iamge,
       'created_at': createdAt,
     };
   }
