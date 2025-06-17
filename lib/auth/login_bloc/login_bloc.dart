@@ -50,6 +50,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (loginData?.status == 200 && loginData?.user?.role == "admin") {
           approveStatus = await ApiRepository()
               .getExistingAmenitiesData(_loginModel!.user!.societyId);
+        } else {
+          approveStatus = true;
         }
         // emit(IsAmenitiesAvailableState(isAmenitiesAvailable: approveStatus!));
 
