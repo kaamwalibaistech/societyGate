@@ -20,4 +20,5 @@ class ApiConstant {
   static const String getCommunityPosts = "communitypostget";
   static const String getComments = "community_commentget";
   static const String insertComment = "community_commentinsert";
+  static const String deleteComment = "community_commentdelete";
 }
