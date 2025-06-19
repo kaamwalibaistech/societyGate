@@ -88,24 +88,31 @@ class _Navigationscreen extends State<Navigationscreen> {
           currentIndex: selectedIndex,
           onTap: changeTab,
           type: BottomNavigationBarType.fixed,
-          showSelectedLabels: false,
+          showSelectedLabels: true,
           showUnselectedLabels: false,
+          elevation: 20,
+          useLegacyColorScheme: false,
           iconSize: 30,
-          selectedItemColor: Colors.deepOrangeAccent,
-          unselectedItemColor: Colors.blueGrey,
+          unselectedItemColor: Colors.grey,
+          selectedItemColor: selectedIndex == 0
+              ? Colors.deepOrangeAccent
+              : selectedIndex == 1
+                  ? Colors.green
+                  : selectedIndex == 2
+                      ? Colors.blueAccent
+                      : Colors.black87,
           items: [
             const BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
+              icon: Icon(
+                Icons.home_outlined,
+              ),
               label: "Home",
               activeIcon: Icon(Icons.home_rounded),
             ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag_outlined),
               label: "Needs",
-              activeIcon: Icon(
-                Icons.shopping_bag_rounded,
-                color: Colors.green,
-              ),
+              activeIcon: Icon(Icons.shopping_bag_rounded),
             ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.message_outlined),
@@ -114,19 +121,17 @@ class _Navigationscreen extends State<Navigationscreen> {
             ),
             BottomNavigationBarItem(
               icon: Container(
-                padding: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  border:
-                      Border.all(width: 0.5, color: Colors.deepOrangeAccent),
+                  shape: BoxShape.circle,
+                  border: Border.all(width: 1, color: Colors.green),
                 ),
-// <<<<<<< ritesh
                 child: loginModel?.user?.profileImage != null
                     ? ClipOval(
                         child: CachedNetworkImage(
                           imageUrl: loginModel!.user!.profileImage!,
-                          width: 40,
-                          height: 40,
+                          width: 35,
+                          height: 35,
                           fit: BoxFit.cover,
                           placeholder: (context, url) =>
                               const CircularProgressIndicator(),
@@ -135,36 +140,35 @@ class _Navigationscreen extends State<Navigationscreen> {
                         ),
                       )
                     : CircleAvatar(
-                        radius: 20,
+                        radius: 18,
                         backgroundImage: CachedNetworkImageProvider(
-                            "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")),
+                            "https://ui-avatars.com/api/?background=edbdff&name=$uiPhoto.")),
               ),
               label: "Profile",
-              activeIcon: loginModel?.user?.profileImage != null
-                  ? Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        border: Border.all(
-                            width: 0.5, color: Colors.deepOrangeAccent),
-                      ),
-                      child: ClipOval(
-                        child: CachedNetworkImage(
-                          imageUrl: loginModel!.user!.profileImage!,
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        ),
-                      ),
-                    )
-                  : CircleAvatar(
-                      radius: 20,
-                      backgroundImage: CachedNetworkImageProvider(
-                          "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")),
+              // activeIcon: loginModel?.user?.profileImage != null
+              //     ? Container(
+              //         padding: const EdgeInsets.all(4),
+              //         decoration: BoxDecoration(
+              //           shape: BoxShape.circle,
+              //           border: Border.all(width: 1, color: Colors.blue),
+              //         ),
+              //         child: ClipOval(
+              //           child: CachedNetworkImage(
+              //             imageUrl: loginModel!.user!.profileImage!,
+              //             width: 35,
+              //             height: 35,
+              //             fit: BoxFit.cover,
+              //             placeholder: (context, url) =>
+              //                 const CircularProgressIndicator(),
+              //             errorWidget: (context, url, error) =>
+              //                 const Icon(Icons.error),
+              //           ),
+              //         ),
+              //       )
+              //     : CircleAvatar(
+              //         radius: 18,
+              //         backgroundImage: CachedNetworkImageProvider(
+              //             "https://ui-avatars.com/api/?background=edbdff&name=$uiPhoto.")),
             )
 // =======
 //                 child: CircleAvatar(
