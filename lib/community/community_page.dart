@@ -449,7 +449,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                         comment: commentText,
                                         memberName: getLoginModel.user!.uname,
                                         profile:
-                                            getLoginModel.user!.profile_iamge));
+                                            getLoginModel.user!.profileImage));
 
                                 commentController.clear();
                               });

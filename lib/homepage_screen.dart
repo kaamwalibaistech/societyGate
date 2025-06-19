@@ -36,7 +36,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
   String? _userPhoto;
   String uiPhoto = "";
 // =======
-//   String profilePhoto = "";
+  String profilePhoto = "";
 //   // "https://ui-avatars.com/api/?background=random&name=uiPhoto.";
 // >>>>>>> final
 
@@ -71,12 +71,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
       loginModel = getLoginModel;
       data = mydata;
       loginType = loginModel?.user?.role ?? "NA";
-      profilePhoto = loginModel?.user?.profile_iamge ?? "";
+      profilePhoto = loginModel?.user?.profileImage ?? "";
       // "https://ui-avatars.com/api/?name=username.";
     });
     log(profilePhoto);
     log(loginType ?? "No data");
-    ;
     log(loginModel?.user?.role ?? "NA");
   }
 
