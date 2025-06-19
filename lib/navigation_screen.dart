@@ -25,10 +25,10 @@ class _Navigationscreen extends State<Navigationscreen> {
   // String? _userPhoto;
   String uiPhoto = "";
   LoginModel? loginModel;
-   String userPhoto = 'https://ui-avatars.com/api/?background=random&name=ABC.';
+  String userPhoto = 'https://ui-avatars.com/api/?background=random&name=ABC.';
 // =======
-//   LoginModel? getLoginModel;
- 
+  LoginModel? getLoginModel;
+
 //   // String uiPhoto = "";
 // >>>>>>> final
 
@@ -181,26 +181,26 @@ class _Navigationscreen extends State<Navigationscreen> {
 //                     ),
 //               ),
 //               label: "Profile",
-              // activeIcon: Container(
-              //   padding: const EdgeInsets.all(4),
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(100),
-              //     border:
-              //         Border.all(width: 0.5, color: Colors.deepOrangeAccent),
-              //   ),
-              //   child: _userPhoto != null
-              //       ? ClipRRect(
-              //           borderRadius: BorderRadius.circular(100),
-              //           child: Image.memory(
-              //             _userPhoto!,
-              //             fit: BoxFit.cover,
-              //             width: 30,
-              //             height: 30,
-              //           ),
-              //         )
-              //       : const Icon(Icons.person),
-              // ),
-            ),
+            // activeIcon: Container(
+            //   padding: const EdgeInsets.all(4),
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(100),
+            //     border:
+            //         Border.all(width: 0.5, color: Colors.deepOrangeAccent),
+            //   ),
+            //   child: _userPhoto != null
+            //       ? ClipRRect(
+            //           borderRadius: BorderRadius.circular(100),
+            //           child: Image.memory(
+            //             _userPhoto!,
+            //             fit: BoxFit.cover,
+            //             width: 30,
+            //             height: 30,
+            //           ),
+            //         )
+            //       : const Icon(Icons.person),
+            // ),
+
 // >>>>>>> final
           ],
         ),
