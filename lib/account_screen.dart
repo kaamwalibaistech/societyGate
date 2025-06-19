@@ -452,6 +452,7 @@ class _AccountScreenState extends State<AccountScreen>
                 // Family Members Section
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
@@ -464,7 +465,9 @@ class _AccountScreenState extends State<AccountScreen>
                     ],
                   ),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
+                      // Top section
                       Padding(
                         padding: const EdgeInsets.all(15),
                         child: Row(
@@ -472,13 +475,12 @@ class _AccountScreenState extends State<AccountScreen>
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: const Color(
-                                    0xFFE8F5E9), // Very light green background
+                                color: const Color(0xFFE8F5E9),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: const Icon(
                                 Icons.family_restroom_rounded,
-                                color: Color(0xFF4CAF50), // Light green icon
+                                color: Color(0xFF4CAF50),
                                 size: 24,
                               ),
                             ),
@@ -510,15 +512,15 @@ class _AccountScreenState extends State<AccountScreen>
                         ),
                       ),
                       const Divider(height: 1),
+
+                      // Family Members
                       if (getFamilyMemberData?.familyMembers?.isNotEmpty ??
                           false)
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.18,
+                          height: 140, // fixed and sufficient height
                           child: ListView.builder(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 10,
-                            ),
+                                horizontal: 15, vertical: 10),
                             scrollDirection: Axis.horizontal,
                             itemCount:
                                 getFamilyMemberData?.familyMembers?.length ?? 2,
@@ -585,14 +587,14 @@ class _AccountScreenState extends State<AccountScreen>
                           ),
                         )
                       else
-                        Padding(
-                          padding: const EdgeInsets.all(15),
+                        const Padding(
+                          padding: EdgeInsets.all(15),
                           child: Center(
                             child: Text(
                               "No Family members added",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.grey[600],
+                                color: Colors.grey,
                               ),
                             ),
                           ),

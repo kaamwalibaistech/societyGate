@@ -421,117 +421,135 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void passwordDialog(String name, String email, String phone) {
     TextEditingController passwordController = TextEditingController();
+    bool isPasswordVisible = false; // 👈 local variable
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        title: const Text(
-          "Confirm Update",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF2D3142),
-          ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Please enter your current password to confirm the changes:",
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xFF6C7A9C),
+      builder: (context) {
+        return StatefulBuilder(
+          // 👈 use this to manage dialog's local state
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: passwordController,
-              obscureText: true,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Color(0xFF2D3142),
-              ),
-              decoration: InputDecoration(
-                hintText: "Enter your password",
-                hintStyle: const TextStyle(
-                  color: Color(0xFF9E9E9E),
-                  fontSize: 16,
-                ),
-                prefixIcon: const Icon(
-                  Icons.lock_outline,
-                  color: Color(0xFF4A90E2),
-                ),
-                filled: true,
-                fillColor: const Color(0xFFF5F9FF),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 16,
+              title: const Text(
+                "Confirm Update",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF2D3142),
                 ),
               ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              "Cancel",
-              style: TextStyle(
-                color: Color(0xFF6C7A9C),
-                fontWeight: FontWeight.w500,
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Please enter your current password to confirm the changes:",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF6C7A9C),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: passwordController,
+                    obscureText: !isPasswordVisible,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF2D3142),
+                    ),
+                    decoration: InputDecoration(
+                      hintText: "Enter your password",
+                      hintStyle: const TextStyle(
+                        color: Color(0xFF9E9E9E),
+                        fontSize: 16,
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.lock_outline,
+                        color: Color(0xFF4A90E2),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isPasswordVisible = !isPasswordVisible;
+                          });
+                        },
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFFF5F9FF),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 16,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              if (passwordController.text.isNotEmpty) {
-                final loginData = await login(
-                    logInData!.user!.uphone.toString(),
-                    passwordController.text);
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: Color(0xFF6C7A9C),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    if (passwordController.text.isNotEmpty) {
+                      final loginData = await login(
+                          logInData!.user!.uphone.toString(),
+                          passwordController.text);
 
-                if (loginData!.status == 200) {
-                  ApiRepository apiRepository = ApiRepository();
-                  userData = await apiRepository.updateUser(
-                      logInData?.user?.userId.toString(),
-                      name,
-                      email,
-                      phone,
-                      imagee?.path);
-                  await LocalStoragePref().storeLoginModel(loginData);
-                  // LocalStoragePref.instance!
-                  //     .storeUserPhoto(userData?.user?.profileImage);
+                      if (loginData!.status == 200) {
+                        ApiRepository apiRepository = ApiRepository();
+                        userData = await apiRepository.updateUser(
+                            logInData?.user?.userId.toString(),
+                            name,
+                            email,
+                            phone,
+                            imagee?.path);
+                        await LocalStoragePref().storeLoginModel(loginData);
 
-                  Fluttertoast.showToast(
-                      msg: userData?.message.toString() ?? "");
+                        Fluttertoast.showToast(
+                            msg: userData?.message.toString() ?? "");
 
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                } else {
-                  Fluttertoast.showToast(msg: "password is Incorrect");
-                }
-
-//
-              } else {
-                Fluttertoast.showToast(msg: "Please Enter Password");
-              }
-            },
-            child: const Text(
-              "Confirm",
-              style: TextStyle(
-                color: Color(0xFF4A90E2),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
+                        Navigator.pop(context); // close dialog
+                        Navigator.pop(context); // go back
+                      } else {
+                        Fluttertoast.showToast(msg: "Password is Incorrect");
+                      }
+                    } else {
+                      Fluttertoast.showToast(msg: "Please Enter Password");
+                    }
+                  },
+                  child: const Text(
+                    "Confirm",
+                    style: TextStyle(
+                      color: Color(0xFF4A90E2),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }

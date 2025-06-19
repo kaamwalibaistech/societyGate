@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/auth/login_success.dart';
-import 'package:society_gate/auth/register_screen.dart';
 import 'package:society_gate/constents/local_storage.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 
