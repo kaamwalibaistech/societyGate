@@ -23,7 +23,7 @@ class VisitorsBloc extends Bloc<VisitorsEvent, VisitorsState> {
 
     try {
       if (loginModel!.user!.role == "watchman") {
-        log(loginModel.user!.role);
+        log(loginModel.user!.role.toString());
         final memberData =
             await visitorsListForWatchmanApi(event.soceityId, "1", "10");
         visitorsListModel = memberData;
@@ -50,7 +50,7 @@ class VisitorsBloc extends Bloc<VisitorsEvent, VisitorsState> {
 
     try {
       if (loginModel!.user!.role == "watchman") {
-        log(loginModel.user!.role);
+        log(loginModel.user!.role.toString());
         final memberData = await enteredVisitorsListForWatchmanApi(
             loginModel.user!.societyId.toString(), "1", "10");
         getManualvisitorsList = memberData;

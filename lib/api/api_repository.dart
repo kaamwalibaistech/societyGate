@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:society_gate/models/forget_password_model.dart';
 import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'package:society_gate/models/help_support_model.dart';
 import 'package:society_gate/models/update_user_model.dart';
@@ -351,28 +352,42 @@ class ApiRepository {
     return null;
   }
 
-  Future<UpdateUserModel?> updateUser(userId, name, email, number) async {
+  Future<UpdateUserModel?> updateUser(
+      userId, name, email, number, String? imagePath) async {
     final url = Uri.parse("${baseUrl}userupdate");
-    final body = {
-      'user_id': userId,
-      'uname': name,
-      'uemail': email,
-      'uphone': number,
-    };
+
     try {
-      final response = await http.post(url, body: body);
+      final request = http.MultipartRequest("POST", url);
+
+      request.fields['user_id'] = userId;
+      request.fields['uname'] = name;
+      request.fields['uemail'] = email;
+      request.fields['uphone'] = number;
+
+      // Add the image file
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'profile_image',
+          imagePath ?? "",
+          // contentType: MediaType(
+          //     'image', 'jpeg'), // Optional: adjust based on your file type
+        ),
+      );
+
+      final response = await request.send();
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        if (data['status'] == 200) {
-          return UpdateUserModel.fromJson(data);
-        } else {
-          return UpdateUserModel.fromJson(data);
-        }
+        final responseBody = await response.stream.bytesToString();
+        final Map<String, dynamic> data = jsonDecode(responseBody);
+        return UpdateUserModel.fromJson(data);
+      } else {
+        log('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
-      log(e.toString());
+      log('Error: $e');
       throw Exception(e.toString());
     }
+
     return null;
   }
 
@@ -393,6 +408,26 @@ class ApiRepository {
           return HelpSupportModel.fromJson(data);
         }
         return HelpSupportModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<ForgetPasswordModel?> getForgotPassword(email) async {
+    final url = Uri.parse("${baseUrl}forget-password");
+    final body = {
+      "uemail": email,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return ForgetPasswordModel.fromJson(data);
+        }
+        return ForgetPasswordModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

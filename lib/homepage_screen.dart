@@ -9,8 +9,8 @@ import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/community/community_post_add.dart';
 import 'package:society_gate/payments_screen/payment_screen.dart';
 
-import 'api/api_repository.dart';
 import 'amenities/book_amenities.dart';
+import 'api/api_repository.dart';
 import 'community/community_page.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/members/members_page.dart';
@@ -32,16 +32,35 @@ class _HomepageScreenState extends State<HomepageScreen> {
   Announcementmodel? data;
   LoginModel? loginModel;
   String? loginType;
-  String profilePhoto = "";
-  // "https://ui-avatars.com/api/?background=random&name=uiPhoto.";
+// <<<<<<< ritesh
+  String? _userPhoto;
+  String uiPhoto = "";
+// =======
+//   String profilePhoto = "";
+//   // "https://ui-avatars.com/api/?background=random&name=uiPhoto.";
+// >>>>>>> final
 
   @override
   void initState() {
     super.initState();
     getData();
+// <<<<<<< ritesh
+    // getuserPhoto();
     FirebaseApi().initNotification();
   }
 
+  // void getuserPhoto() {
+  //   final data = LocalStoragePref.instance!.getUserPhoto();
+  //   setState(() {
+  //     _userPhoto = data;
+  //   });
+  // }
+
+// =======
+//     FirebaseApi().initNotification();
+//   }
+
+// >>>>>>> final
   getData() async {
     final getLoginModel = LocalStoragePref().getLoginModel();
 
@@ -131,12 +150,42 @@ class _HomepageScreenState extends State<HomepageScreen> {
                             width: 1.5,
                           ),
                         ),
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundImage: CachedNetworkImageProvider(
-                            profilePhoto,
-                          ),
-                        ),
+// <<<<<<< ritesh
+                        child: loginModel?.user?.profileImage != null
+                            ? ClipOval(
+                                child: CachedNetworkImage(
+                                  imageUrl: loginModel!.user!.profileImage!,
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
+                              )
+                            : CircleAvatar(
+                                radius: 20,
+                                backgroundImage: CachedNetworkImageProvider(
+                                    "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")
+
+                                // child: _userPhoto != null
+                                //     ? Image.memory(_userPhoto!)
+                                //     : ClipOval(
+                                //         child: Image.network(
+                                //             "https://ui-avatars.com/api/?background=random&name=$uiPhoto."
+                                //             // "https://ui-avatars.com/api/?background=random&name=$uiPhoto",
+                                //             ),
+                                //       ),
+                                ),
+// =======
+//                         child: CircleAvatar(
+//                           radius: 20,
+//                           backgroundImage: CachedNetworkImageProvider(
+//                             profilePhoto,
+//                           ),
+//                         ),
+// >>>>>>> final
                       ),
                       const SizedBox(width: 12),
                       Expanded(

@@ -21,9 +21,16 @@ class Navigationscreen extends StatefulWidget {
 
 class _Navigationscreen extends State<Navigationscreen> {
   int selectedIndex = 0;
-  LoginModel? getLoginModel;
-  String userPhoto = 'https://ui-avatars.com/api/?background=random&name=ABC.';
-  // String uiPhoto = "";
+// <<<<<<< ritesh
+  // String? _userPhoto;
+  String uiPhoto = "";
+  LoginModel? loginModel;
+   String userPhoto = 'https://ui-avatars.com/api/?background=random&name=ABC.';
+// =======
+//   LoginModel? getLoginModel;
+ 
+//   // String uiPhoto = "";
+// >>>>>>> final
 
   @override
   void initState() {
@@ -33,17 +40,27 @@ class _Navigationscreen extends State<Navigationscreen> {
 
   void getuserPhoto() {
     // final data = LocalStoragePref.instance!.getUserPhoto();
-    getLoginModel = LocalStoragePref().getLoginModel();
-
+// <<<<<<< ritesh
     setState(() {
-      userPhoto = getLoginModel?.user?.profile_iamge ??
-          "https://ui-avatars.com/api/?name=username.";
-      // uiPhoto = loginModel?.user?.uname ?? "User";
+      // _userPhoto = data;
+      loginModel = LocalStoragePref().getLoginModel();
+      uiPhoto = loginModel?.user?.uname ?? "User";
     });
   }
 
-  // final loginModel = LocalStoragePref().getLoginModel();
+// =======
+//     getLoginModel = LocalStoragePref().getLoginModel();
 
+//     setState(() {
+//       userPhoto = getLoginModel?.user?.profile_iamge ??
+//           "https://ui-avatars.com/api/?name=username.";
+//       // uiPhoto = loginModel?.user?.uname ?? "User";
+//     });
+//   }
+
+//   // final loginModel = LocalStoragePref().getLoginModel();
+
+// >>>>>>> final
   void changeTab(int index) {
     setState(() {
       selectedIndex = index;
@@ -103,20 +120,67 @@ class _Navigationscreen extends State<Navigationscreen> {
                   border:
                       Border.all(width: 0.5, color: Colors.deepOrangeAccent),
                 ),
-                child: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: CachedNetworkImageProvider(userPhoto)
-                    // child: _userPhoto != null
-                    //     ? Image.memory(_userPhoto!)
-                    //     : ClipOval(
-                    //         child: Image.network(
-                    //             "https://ui-avatars.com/api/?background=random&name=$uiPhoto."
-                    //             // "https://ui-avatars.com/api/?background=random&name=$uiPhoto",
-                    //             ),
-                    //       ),
-                    ),
+// <<<<<<< ritesh
+                child: loginModel?.user?.profileImage != null
+                    ? ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: loginModel!.user!.profileImage!,
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      )
+                    : CircleAvatar(
+                        radius: 20,
+                        backgroundImage: CachedNetworkImageProvider(
+                            "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")),
               ),
               label: "Profile",
+              activeIcon: loginModel?.user?.profileImage != null
+                  ? Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                            width: 0.5, color: Colors.deepOrangeAccent),
+                      ),
+                      child: ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: loginModel!.user!.profileImage!,
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      ),
+                    )
+                  : CircleAvatar(
+                      radius: 20,
+                      backgroundImage: CachedNetworkImageProvider(
+                          "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")),
+            )
+// =======
+//                 child: CircleAvatar(
+//                     radius: 20,
+//                     backgroundImage: CachedNetworkImageProvider(userPhoto)
+//                     // child: _userPhoto != null
+//                     //     ? Image.memory(_userPhoto!)
+//                     //     : ClipOval(
+//                     //         child: Image.network(
+//                     //             "https://ui-avatars.com/api/?background=random&name=$uiPhoto."
+//                     //             // "https://ui-avatars.com/api/?background=random&name=$uiPhoto",
+//                     //             ),
+//                     //       ),
+//                     ),
+//               ),
+//               label: "Profile",
               // activeIcon: Container(
               //   padding: const EdgeInsets.all(4),
               //   decoration: BoxDecoration(
@@ -137,6 +201,7 @@ class _Navigationscreen extends State<Navigationscreen> {
               //       : const Icon(Icons.person),
               // ),
             ),
+// >>>>>>> final
           ],
         ),
       ),

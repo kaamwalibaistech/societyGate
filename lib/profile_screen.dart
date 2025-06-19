@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,44 +8,64 @@ import 'package:image_picker/image_picker.dart';
 import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/auth/network/login_api.dart';
 import 'package:society_gate/constents/local_storage.dart';
+import 'package:society_gate/models/login_model.dart';
+import 'package:society_gate/models/update_user_model.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final String? namee;
+  final String? phoneNumber;
+  final String? email;
+  const ProfileScreen(
+      {super.key,
+      required this.namee,
+      required this.phoneNumber,
+      required this.email});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+  late TextEditingController fullNameController;
+  late TextEditingController phoneController;
+  late TextEditingController emailAddressController;
+
+  final _formKey = GlobalKey<FormState>();
+  String? userPhoto;
+  UpdateUserModel? userData;
+  LoginModel? logInData;
 
   @override
   void initState() {
     super.initState();
-    getuserPhoto();
+    fullNameController = TextEditingController(text: widget.namee);
+    phoneController = TextEditingController(text: widget.phoneNumber);
+    emailAddressController = TextEditingController(text: widget.email);
+    getLogInModel();
   }
 
-  Uint8List? _userPhoto;
+  @override
+  void dispose() {
+    fullNameController.dispose();
+    phoneController.dispose();
+    emailAddressController.dispose();
+    super.dispose();
+  }
 
-  File? image;
-  final ImagePicker picker = ImagePicker();
-  // File? _userPhoto;
-  // Uint8List? bytes;
+  void getLogInModel() {
+    logInData = LocalStoragePref().getLoginModel();
+  }
+
+  File? imagee;
+  final ImagePicker _picker = ImagePicker();
 
   Future<void> pickImage(ImageSource source) async {
     try {
-      final pickedFile = await picker.pickImage(source: source);
+      final pickedFile = await _picker.pickImage(source: source);
 
       if (pickedFile != null) {
         setState(() {
-          image = File(pickedFile.path);
-          // LocalStoragePref prefs = LocalStoragePref();
-
-          LocalStoragePref.instance!.storeUserPhoto(image!);
-          getuserPhoto();
+          imagee = File(pickedFile.path);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -78,12 +99,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //   }
   // }
 
-  void getuserPhoto() {
-    final data = LocalStoragePref.instance!.getUserPhoto();
-    setState(() {
-      _userPhoto = data;
-    });
-  }
+  // void getuserPhoto() {
+  //   final data = LocalStoragePref.instance!.getUserPhoto();
+  //   setState(() {
+  //     _userPhoto = data;
+  //   });
+  // }
 
   void showImagePickerOptions() {
     showModalBottomSheet(
@@ -148,7 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
-          key: formKey,
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -160,38 +181,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Center(
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        height: MediaQuery.of(context).size.width * 0.3,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color(0xFF4A90E2),
-                            width: 3,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF4A90E2).withOpacity(0.3),
-                              spreadRadius: 2,
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: MediaQuery.of(context).size.width * 0.3,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFF4A90E2),
+                              width: 3,
                             ),
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.15,
-                          backgroundColor: const Color(0xFFE3F2FD),
-                          backgroundImage: _userPhoto != null
-                              ? MemoryImage(_userPhoto!)
-                              : null,
-                          child: _userPhoto == null
-                              ? const Icon(
-                                  Icons.person,
-                                  size: 60,
-                                  color: Color(0xFF4A90E2),
-                                )
-                              : null,
-                        ),
-                      ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF4A90E2).withOpacity(0.3),
+                                spreadRadius: 2,
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: imagee == null
+                              ? logInData?.user?.profileImage != null
+                                  ? ClipOval(
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            logInData!.user!.profileImage!,
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
+                                    )
+                                  : CircleAvatar(
+                                      radius: 50,
+                                      backgroundImage: FileImage(imagee!))
+                              : CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: FileImage(imagee!))),
                     ),
                     Center(
                       child: Padding(
@@ -233,13 +260,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 24),
               _buildTextField(
                 label: "Full Name",
-                controller: nameController,
-                // validator: (value) {
-                //   if (value!.isEmpty) {
-                //     return "Please enter your name";
-                //   }
-                //   return null;
-                // },
+                controller: fullNameController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter your name";
+                  }
+                  return null;
+                },
                 hintText: "Enter your full name",
                 prefixIcon: Icons.person_outline_rounded,
                 iconColor: const Color(0xFF4CAF50),
@@ -247,16 +274,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 16),
               _buildTextField(
                 label: "Phone Number",
-                controller: phoneNumberController,
-                // validator: (value) {
-                //   if (value!.isEmpty) {
-                //     return "Please enter your phone number";
-                //   }
-                //   if (value.length != 10) {
-                //     return "Please enter a valid 10-digit phone number";
-                //   }
-                //   return null;
-                // },
+                controller: phoneController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter your phone number";
+                  }
+                  if (value.length != 10) {
+                    return "Please enter a valid 10-digit phone number";
+                  }
+                  return null;
+                },
                 hintText: "[xxx] xx xxxxxx",
                 prefixIcon: Icons.phone_outlined,
                 keyboardType: TextInputType.phone,
@@ -266,16 +293,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 16),
               _buildTextField(
                 label: "Email Address",
-                controller: emailController,
-                // validator: (value) {
-                //   if (value!.isEmpty) {
-                //     return "Please enter your email";
-                //   }
-                //   if (!value.contains('@')) {
-                //     return "Please enter a valid email address";
-                //   }
-                //   return null;
-                // },
+                controller: emailAddressController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "Please enter your email";
+                  }
+                  if (!value.contains('@')) {
+                    return "Please enter a valid email address";
+                  }
+                  return null;
+                },
                 hintText: "example@gmail.com",
                 prefixIcon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
@@ -284,11 +311,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 32),
               GestureDetector(
                 onTap: () async {
-                  if (formKey.currentState!.validate()) {
+                  if (_formKey.currentState!.validate()) {
                     passwordDialog(
-                      nameController.text,
-                      emailController.text,
-                      phoneNumberController.text,
+                      fullNameController.text,
+                      emailAddressController.text,
+                      phoneController.text,
                     );
                   }
                 },
@@ -337,7 +364,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildTextField({
     required String label,
     required TextEditingController controller,
-    // required String? Function(String?)? validator,
+    required String? Function(String?)? validator,
     required String hintText,
     required IconData prefixIcon,
     Color? iconColor,
@@ -358,7 +385,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
-          // validator: validator,
+          validator: validator,
           // keyboardType: keyboardType,
           maxLength: maxLength,
           style: const TextStyle(
@@ -465,21 +492,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
           TextButton(
             onPressed: () async {
               if (passwordController.text.isNotEmpty) {
-                final data = LocalStoragePref().getLoginModel();
-                final loginData =
-                    await login(data!.user!.uphone, passwordController.text);
+                final loginData = await login(
+                    logInData!.user!.uphone.toString(),
+                    passwordController.text);
 
                 if (loginData!.status == 200) {
                   ApiRepository apiRepository = ApiRepository();
-                  final dataa = await apiRepository.updateUser(
-                    data.user!.userId.toString(),
-                    name,
-                    email,
-                    phone,
-                  );
+                  userData = await apiRepository.updateUser(
+                      logInData?.user?.userId.toString(),
+                      name,
+                      email,
+                      phone,
+                      imagee?.path);
                   await LocalStoragePref().storeLoginModel(loginData);
+                  // LocalStoragePref.instance!
+                  //     .storeUserPhoto(userData?.user?.profileImage);
 
-                  Fluttertoast.showToast(msg: dataa!.message.toString());
+                  Fluttertoast.showToast(
+                      msg: userData?.message.toString() ?? "");
 
                   Navigator.pop(context);
                   Navigator.pop(context);
@@ -488,6 +518,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
 
 //
+              } else {
+                Fluttertoast.showToast(msg: "Please Enter Password");
               }
             },
             child: const Text(

@@ -33,12 +33,19 @@ class _CommunityPageState extends State<CommunityPage> {
     CommunityBloc communityBloc = BlocProvider.of<CommunityBloc>(context);
     communityBloc.add(CommunityPostEvent(page: '1'));
     final getLoginModel = LocalStoragePref().getLoginModel();
-    societyId = getLoginModel!.user!.societyId;
-    memberId = getLoginModel.user!.userId;
-    log(societyId.toString());
-    // setState(() {
+// <<<<<<< ritesh
+    setState(() {
+      societyId = int.parse(getLoginModel!.user!.societyId.toString());
+      log(societyId.toString());
+    });
+// =======
+//     societyId = getLoginModel!.user!.societyId;
+//     memberId = getLoginModel.user!.userId;
+//     log(societyId.toString());
+//     // setState(() {
 
-    // });
+//     // });
+// >>>>>>> final
   }
 
   @override
