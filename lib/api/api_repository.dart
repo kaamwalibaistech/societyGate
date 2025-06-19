@@ -365,14 +365,15 @@ class ApiRepository {
       request.fields['uphone'] = number;
 
       // Add the image file
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'profile_image',
-          imagePath ?? "",
-          // contentType: MediaType(
-          //     'image', 'jpeg'), // Optional: adjust based on your file type
-        ),
-      );
+      if (imagePath != null && imagePath.isNotEmpty) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'profile_image',
+            imagePath,
+            // contentType: MediaType('image', 'jpeg'), // optional
+          ),
+        );
+      }
 
       final response = await request.send();
 
