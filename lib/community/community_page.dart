@@ -28,24 +28,20 @@ class _CommunityPageState extends State<CommunityPage> {
     super.initState();
     loadData();
   }
+  //mile jo khuda to bol du
 
   void loadData() {
     CommunityBloc communityBloc = BlocProvider.of<CommunityBloc>(context);
     communityBloc.add(CommunityPostEvent(page: '1'));
     final getLoginModel = LocalStoragePref().getLoginModel();
-// <<<<<<< ritesh
+
     setState(() {
-      societyId = int.parse(getLoginModel!.user!.societyId.toString());
+      societyId = getLoginModel?.user?.societyId ?? 0;
+      memberId = getLoginModel?.user?.userId ?? 0;
       log(societyId.toString());
     });
-// =======
-//     societyId = getLoginModel!.user!.societyId;
-//     memberId = getLoginModel.user!.userId;
-//     log(societyId.toString());
-//     // setState(() {
 
-//     // });
-// >>>>>>> final
+    log(societyId.toString());
   }
 
   @override

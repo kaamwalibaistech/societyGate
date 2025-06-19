@@ -29,54 +29,39 @@ class HomepageScreen extends StatefulWidget {
 }
 
 class _HomepageScreenState extends State<HomepageScreen> {
-  Announcementmodel? data;
+  Announcementmodel? announcementmodel;
   LoginModel? loginModel;
   String? loginType;
-// <<<<<<< ritesh
-  String? _userPhoto;
-  String uiPhoto = "";
-// =======
-  String profilePhoto = "";
-//   // "https://ui-avatars.com/api/?background=random&name=uiPhoto.";
-// >>>>>>> final
+
+  String profilePhoto = "https://ui-avatars.com/api/?background=edbdff&name=.";
 
   @override
   void initState() {
     super.initState();
     getData();
-// <<<<<<< ritesh
-    // getuserPhoto();
+
     FirebaseApi().initNotification();
   }
 
-  // void getuserPhoto() {
-  //   final data = LocalStoragePref.instance!.getUserPhoto();
-  //   setState(() {
-  //     _userPhoto = data;
-  //   });
-  // }
-
-// =======
-//     FirebaseApi().initNotification();
-//   }
-
-// >>>>>>> final
   getData() async {
-    final getLoginModel = LocalStoragePref().getLoginModel();
-
-    ApiRepository apiRepositiory = ApiRepository();
-    Announcementmodel? mydata = await apiRepositiory
-        .getHomePageData(getLoginModel!.user!.societyId.toString());
+    loginModel = LocalStoragePref().getLoginModel();
+    String name = loginModel?.user?.uname ?? "NA";
     setState(() {
-      loginModel = getLoginModel;
-      data = mydata;
-      loginType = loginModel?.user?.role ?? "NA";
-      profilePhoto = loginModel?.user?.profileImage ?? "";
-      // "https://ui-avatars.com/api/?name=username.";
+      profilePhoto = loginModel?.user?.profileImage ??
+          "https://ui-avatars.com/api/?background=edbdff&name=$name.";
     });
-    log(profilePhoto);
-    log(loginType ?? "No data");
-    log(loginModel?.user?.role ?? "NA");
+    ApiRepository apiRepositiory = ApiRepository();
+    announcementmodel = await apiRepositiory
+        .getHomePageData(loginModel?.user?.societyId.toString());
+    loginType = loginModel?.user?.role ?? "NA";
+
+    log("Profile url: $profilePhoto");
+    log("Role: $loginType");
+    log("Society Id: ${loginModel?.user?.societyId}");
+    log("Flat id: ${loginModel?.user?.flatId}");
+    log("Email: ${loginModel?.user?.uemail}");
+    log("Phone: ${loginModel?.user?.uphone}");
+    log("UserId: ${loginModel?.user?.userId}");
   }
 
   List<String> title = [
@@ -149,42 +134,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
                             width: 1.5,
                           ),
                         ),
-// <<<<<<< ritesh
-                        child: loginModel?.user?.profileImage != null
-                            ? ClipOval(
-                                child: CachedNetworkImage(
-                                  imageUrl: loginModel!.user!.profileImage!,
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      const CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                ),
-                              )
-                            : CircleAvatar(
-                                radius: 20,
-                                backgroundImage: CachedNetworkImageProvider(
-                                    "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")
-
-                                // child: _userPhoto != null
-                                //     ? Image.memory(_userPhoto!)
-                                //     : ClipOval(
-                                //         child: Image.network(
-                                //             "https://ui-avatars.com/api/?background=random&name=$uiPhoto."
-                                //             // "https://ui-avatars.com/api/?background=random&name=$uiPhoto",
-                                //             ),
-                                //       ),
-                                ),
-// =======
-//                         child: CircleAvatar(
-//                           radius: 20,
-//                           backgroundImage: CachedNetworkImageProvider(
-//                             profilePhoto,
-//                           ),
-//                         ),
-// >>>>>>> final
+                        child: CircleAvatar(
+                          radius: 25,
+                          backgroundImage: CachedNetworkImageProvider(
+                            profilePhoto,
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -209,27 +164,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           ],
                         ),
                       ),
-/*<<<<<<< anil
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withAlpha(20),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.notifications_outlined,
-                          color: loginType == "watchman"
-                              ? const Color(0xFFFF9933)
-                              : const Color(0xFF6B4EFF),
-                          size: 20,
-=======*/
                       GestureDetector(
                         onTap: () {
                           Fluttertoast.showToast(msg: "No Notifications");
@@ -254,19 +188,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                 : const Color(0xFF6B4EFF),
                             size: 20,
                           ),
-// >>>>>>> final
                         ),
                       ),
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                // Stats Section
-
-                // loginType !="watchman"?
-
                 GestureDetector(
                   onTap: () => Navigator.push(
                       context,
@@ -380,12 +307,15 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 5),
                     child: CarouselSlider.builder(
-                      itemCount: (data?.announcements?.isNotEmpty ?? false)
-                          ? data!.announcements?.length
-                          : 1,
+                      itemCount:
+                          (announcementmodel?.announcements?.isNotEmpty ??
+                                  false)
+                              ? announcementmodel?.announcements?.length
+                              : 1,
                       itemBuilder: (context, index, realIndex) {
                         bool hasAnnouncements =
-                            data?.announcements?.isNotEmpty ?? false;
+                            announcementmodel?.announcements?.isNotEmpty ??
+                                false;
                         return Container(
                           margin: const EdgeInsets.symmetric(
                               horizontal: 4, vertical: 8),
@@ -419,26 +349,29 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     Icon(
                                       Icons.campaign_rounded,
                                       color: hasAnnouncements
-                                          ? _getAnnouncementColor(data
-                                                  ?.announcements?[index]
-                                                  .announcementType ??
-                                              "")
+                                          ? _getAnnouncementColor(
+                                              announcementmodel
+                                                      ?.announcements?[index]
+                                                      .announcementType ??
+                                                  "")
                                           : const Color(0xFF6B4EFF),
                                       size: 18,
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
                                       hasAnnouncements
-                                          ? data?.announcements![index]
+                                          ? announcementmodel
+                                                  ?.announcements![index]
                                                   .announcementType ??
                                               ""
                                           : "Notice",
                                       style: TextStyle(
                                         color: hasAnnouncements
-                                            ? _getAnnouncementColor(data!
-                                                    .announcements![index]
-                                                    .announcementType ??
-                                                "")
+                                            ? _getAnnouncementColor(
+                                                announcementmodel!
+                                                        .announcements![index]
+                                                        .announcementType ??
+                                                    "")
                                             : const Color(0xFF6B4EFF),
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
@@ -485,7 +418,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     children: [
                                       Text(
                                         hasAnnouncements
-                                            ? data?.announcements![index]
+                                            ? announcementmodel
+                                                    ?.announcements![index]
                                                     .title ??
                                                 ""
                                             : "No Notices",
@@ -499,7 +433,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                       if (hasAnnouncements)
                                         Expanded(
                                           child: Text(
-                                            data!.announcements![index]
+                                            announcementmodel!
+                                                    .announcements![index]
                                                     .description ??
                                                 "",
                                             style: TextStyle(
@@ -555,18 +490,21 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                               ),
                                             ),
                                           ),
-                                          // const Spacer(),
-                                          // Icon(
-                                          //   Icons.bookmark_border_rounded,
-                                          //   color: Colors.grey[400],
-                                          //   size: 18,
-                                          // ),
-                                          // const SizedBox(width: 12),
-                                          // Icon(
-                                          //   Icons.share_outlined,
-                                          //   color: Colors.grey[400],
-                                          //   size: 18,
-                                          // ),
+
+                                          /*
+      ------------------------------     This is Save and Share Button -------------------------
+                                          const Spacer(),
+                                          Icon(
+                                            Icons.bookmark_border_rounded,
+                                            color: Colors.grey[400],
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Icon(
+                                            Icons.share_outlined,
+                                            color: Colors.grey[400],
+                                            size: 18,
+                                          ),*/
                                         ],
                                       ),
                                     ],
