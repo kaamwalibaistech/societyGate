@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -210,7 +211,7 @@ class ApiRepository {
     String adminId,
     String title,
     String description,
-    String photoPath, // <- pass file path here
+    String? photoPath, // <- pass file path here
   ) async {
     final url = Uri.parse("${baseUrl}communitypostinsert");
 
@@ -223,26 +224,35 @@ class ApiRepository {
       request.fields['description'] = description;
 
       // Add the image file
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'photo',
-          photoPath,
-          // contentType: MediaType(
-          //     'image', 'jpeg'), // Optional: adjust based on your file type
-        ),
-      );
+
+      if (photoPath != null &&
+          photoPath.isNotEmpty &&
+          File(photoPath).existsSync()) {
+        // String extension =
+        //     path.extension(photoPath).toLowerCase(); // .jpg or .png
+        // String mimeType = extension.contains('png') ? 'png' : 'jpeg';
+
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'photo', photoPath,
+            // contentType: MediaType('image', mimeType),
+            // contentType: MediaType('image', 'jpeg') // ✅ Correct!
+          ),
+        );
+      }
 
       final response = await request.send();
 
       if (response.statusCode == 200) {
         final responseBody = await response.stream.bytesToString();
+        log("Error response body: $responseBody");
         final Map<String, dynamic> data = jsonDecode(responseBody);
         return data['status'];
       } else {
-        print('Upload failed with status: ${response.statusCode}');
+        log('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error: $e');
+      log('Error: $e');
       throw Exception(e.toString());
     }
 
