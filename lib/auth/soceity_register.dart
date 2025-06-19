@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:society_gate/auth/register_waiting_page.dart';
 import 'package:society_gate/models/admin_register_model.dart';
 
 import '../api/api_repository.dart';
@@ -222,31 +220,60 @@ class _SocietyRegister extends State<SocietyRegister> {
                     const SizedBox(
                       height: 5,
                     ),
-                    SizedBox(
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        maxLength: 10,
-                        controller: mobileNoController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter Phone Number";
-                          } else {
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(12)),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 10),
-                          counterText: "",
-                          hintText: "+91",
-                          hintStyle: const TextStyle(color: Colors.grey),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const Center(
+                            child: Text(
+                              "+91",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          // keyboardType: TextInputType.number,
+                          // maxLength: 10,
+                          // controller: mobileNoController,
+                          // validator: (value) {
+                          //   if (value!.isEmpty) {
+                          //     return "Enter Phone Number";
+                          //   } else {
+                          //     return null;
+                          //   }
+                          // },
                         ),
-                      ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.77,
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            maxLength: 10,
+                            controller: mobileNoController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Enter Phone Number";
+                              } else {
+                                return null;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              fillColor: Colors.white,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(12)),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 10),
+                              counterText: "",
+                              // hintText: "+91",
+                              // hintStyle: const TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(
                       height: 15,
@@ -592,51 +619,41 @@ class _SocietyRegister extends State<SocietyRegister> {
                                   flatNoController.text,
                                   blockController.text,
                                   floorNoNoController.text);
-                          Fluttertoast.showToast(
-                              msg: dataa!.message.toString());
-                          if (context.mounted) {
-                            if (dataa.status == 200) {
-                              // Navigator.pushReplacement(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => RegisterWaitingPage(
-                              //               data: dataa,
-                              //             )));
-                              approvalDialog();
-                            } else {
-                              setState(() {
-                                datamap = dataa.message;
-                              });
-                              // errorPopUp(data.message);
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text("Something went wrong!"),
-                                  content: SingleChildScrollView(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 20.0),
-                                          child: Text((datamap["sname"] as List)
-                                              .join(", ")),
-                                        ),
-                                        Text((datamap["uphone"] as List)
-                                            .join(", ")),
-                                      ],
-                                    ),
+
+                          if (dataa?.status == 200) {
+                            approvalDialog();
+                            return;
+                          } else {
+                            setState(() {
+                              datamap = dataa?.message;
+                            });
+
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text("Something went wrong!"),
+                                content: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text((datamap["sname"] ?? [""])
+                                          .join(", ")),
+                                      Text((datamap["uphone"] ?? [""])
+                                          .join(", ")),
+                                      Text((datamap["uemail"] ?? [""])
+                                          .join(", ")),
+                                    ],
                                   ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text("Close"),
-                                    ),
-                                  ],
                                 ),
-                              );
-                            }
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text("Close"),
+                                  ),
+                                ],
+                              ),
+                            );
                           }
                           // Navigator.push(
                         } else {
@@ -668,11 +685,10 @@ class _SocietyRegister extends State<SocietyRegister> {
                     )),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ApprovalPendingPage()));
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const AmenitiesAdd()));
                       },
                       child: Center(
                         child: Text(

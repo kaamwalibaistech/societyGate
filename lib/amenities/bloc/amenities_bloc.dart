@@ -1,5 +1,11 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:society_gate/api/api_repository.dart';
+
+import '../../constents/local_storage.dart';
+import '../../models/amenities_model.dart';
 
 part 'amenities_event.dart';
 part 'amenities_state.dart';
@@ -10,10 +16,26 @@ class AllAmenitiesBloc extends Bloc<AmenitiesEvent, GetAllAmenitiesState> {
   }
 
   void _getAllAmenities(
-      GetAllAmenities event, Emitter<GetAllAmenitiesState> emit) {
+      GetAllAmenities event, Emitter<GetAllAmenitiesState> emit) async {
     emit(GetAllAmenitiesLoading());
-    emit(const GetAllAmenitiesSuccess());
-    emit(GetAllAmenitiesFailure());
+    try {
+      String societyId =
+          (LocalStoragePref().getLoginModel()?.user?.societyId ?? "0")
+              .toString();
+      final amenities = await ApiRepository().fetchAmenities(societyId);
+
+      if (amenities?.status == 200) {
+        emit(GetAllAmenitiesSuccess(
+            amenitiesModel: amenities as AmenitiesModel));
+      } else if (amenities?.status == 404) {
+        emit(GetAllAmenitiesFailure());
+      } else {
+        emit(GetAllAmenitiesLoading());
+      }
+    } catch (e) {
+      log(e.toString());
+      emit(GetAllAmenitiesFailure());
+    }
   }
 }
 

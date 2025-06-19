@@ -22,6 +22,7 @@ class Shop {
   final String? address;
   final String? createdAt;
   final String? updatedAt;
+  final String? image;
 
   Shop({
     this.shopId,
@@ -33,6 +34,7 @@ class Shop {
     this.address,
     this.createdAt,
     this.updatedAt,
+    this.image,
   });
 
   factory Shop.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,7 @@ class Shop {
       address: json['address'] as String?,
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
+      image: json['image'] as String?,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import '../../../api/api_constant.dart';
 import 'package:http/http.dart' as http;
@@ -32,24 +33,40 @@ Future<AddShopModel?> addShopAPI(
     String shopType,
     String ownerName,
     String shopPhone,
-    String shopAddress) async {
+    String shopAddress,
+    String image) async {
   String api = ApiConstant.addShop;
   String baseUrl = ApiConstant.baseUrl;
   Uri url = Uri.parse(baseUrl + api);
 
-  final body = {
-    'society_id': societyId,
-    'shop_name': shopName,
-    'shop_type': shopType,
-    'name': ownerName,
-    'phone': shopPhone,
-    'address': shopAddress
-  };
+  // final body = {
+  //   'society_id': societyId,
+  //   'shop_name': shopName,
+  //   'shop_type': shopType,
+  //   'name': ownerName,
+  //   'phone': shopPhone,
+  //   'address': shopAddress,
+  //   'image': image
+  // };
   try {
-    final response = await http.post(url, body: body);
+    final request = http.MultipartRequest("POST", url);
+
+    request.fields['society_id'] = societyId;
+    request.fields['shop_name'] = shopName;
+    request.fields['shop_type'] = shopType;
+    request.fields['name'] = ownerName;
+    request.fields['phone'] = shopPhone;
+    request.fields['address'] = shopAddress;
+
+    request.files.add(await http.MultipartFile.fromPath('image', image));
+
+    final response = await request.send();
+
+    // final response = await http.post(url, body: body);
     if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonData = jsonDecode(response.body);
-      return AddShopModel.fromJson(jsonData);
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> data = jsonDecode(responseBody);
+      return AddShopModel.fromJson(data);
     }
   } catch (e) {
     throw Exception(e);
@@ -72,31 +89,40 @@ class AddShopModel {
 }
 
 Future<int?> updateShopAPI(
-    String shopId,
-    String societyId,
-    String shopName,
-    String shopType,
-    String ownerName,
-    String shopPhone,
-    String shopAddress) async {
+  String shopId,
+  String societyId,
+  String shopName,
+  String shopType,
+  String ownerName,
+  String shopPhone,
+  String shopAddress,
+  String image,
+) async {
   String api = ApiConstant.updateShop;
   String baseUrl = ApiConstant.baseUrl;
   Uri url = Uri.parse(baseUrl + api);
 
-  final body = {
-    'shop_id': shopId,
-    'society_id': societyId,
-    'shop_name': shopName,
-    'shop_type': shopType,
-    'name': ownerName,
-    'phone': shopPhone,
-    'address': shopAddress
-  };
   try {
-    final response = await http.post(url, body: body);
+    final request = http.MultipartRequest("POST", url);
+
+    request.fields['shop_id'] = shopId;
+    request.fields['society_id'] = societyId;
+    request.fields['shop_name'] = shopName;
+    request.fields['shop_type'] = shopType;
+    request.fields['name'] = ownerName;
+    request.fields['phone'] = shopPhone;
+    request.fields['address'] = shopAddress;
+    request.fields['image'] = image;
+
+    request.files.add(await http.MultipartFile.fromPath('image', image));
+
+    final response = await request.send();
+
     if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonData = jsonDecode(response.body);
-      return jsonData['status'];
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> data = jsonDecode(responseBody);
+      log("$data");
+      return data['status'];
     }
   } catch (e) {
     throw Exception(e);

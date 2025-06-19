@@ -89,3 +89,45 @@ Future<void> insertComment(
   }
   // return null;
 }
+
+Future<String> deleteComment(
+  String id,
+) async {
+  String api = ApiConstant.deleteComment;
+  String baseUrl = ApiConstant.baseUrl;
+  Uri url = Uri.parse(baseUrl + api);
+
+  try {
+    final response = await http.post(url, body: {'id': id});
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return (data['message']);
+    } else {
+      log(response.body.toString());
+      return "Something wrong, try again!";
+    }
+  } catch (e) {
+    throw Exception(e.toString());
+  }
+}
+
+Future<String> deletePost(
+  String id,
+) async {
+  String api = ApiConstant.deleteCommunityPost;
+  String baseUrl = ApiConstant.baseUrl;
+  Uri url = Uri.parse(baseUrl + api);
+
+  try {
+    final response = await http.post(url, body: {'id': id});
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return (data['message']);
+    } else {
+      log(response.body.toString());
+      return "Something wrong, try again!";
+    }
+  } catch (e) {
+    throw Exception(e.toString());
+  }
+}

@@ -6,11 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:society_gate/amenities/amenities_add.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
 import 'package:society_gate/firebase_options.dart';
 
 // import 'package:society_gate/firebase_options.dart';
 
+import 'amenities/bloc/amenities_bloc.dart';
 import 'auth/login_bloc/login_bloc.dart';
 import 'auth/register_screen.dart';
 import 'community/bloc/community_bloc.dart';
@@ -32,7 +34,7 @@ Future<void> main() async {
 
   await LocalStoragePref.instance!.initPrefBox();
   await dotenv.load(fileName: ".env");
-  checkForUpdates();
+  // checkForUpdates();
 
   runApp(const MyApp());
   configLoading();
@@ -42,28 +44,28 @@ void configLoading() {
   EasyLoading.instance
     ..displayDuration = const Duration(milliseconds: 2000)
     ..indicatorType = EasyLoadingIndicatorType.fadingCircle
-    ..loadingStyle = EasyLoadingStyle.dark
+    ..loadingStyle = EasyLoadingStyle.light
     ..maskType = EasyLoadingMaskType.black
     ..dismissOnTap = false;
 }
 
 /// Function to check for updates at app startup
-void checkForUpdates() async {
-  try {
-    AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+// void checkForUpdates() async {
+//   try {
+//     AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
 
-    if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-      if (updateInfo.immediateUpdateAllowed) {
-        await InAppUpdate.performImmediateUpdate();
-      } else if (updateInfo.flexibleUpdateAllowed) {
-        await InAppUpdate.startFlexibleUpdate();
-        await InAppUpdate.completeFlexibleUpdate();
-      }
-    }
-  } catch (e) {
-    log("Error checking for updates: $e");
-  }
-}
+//     if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+//       if (updateInfo.immediateUpdateAllowed) {
+//         await InAppUpdate.performImmediateUpdate();
+//       } else if (updateInfo.flexibleUpdateAllowed) {
+//         await InAppUpdate.startFlexibleUpdate();
+//         await InAppUpdate.completeFlexibleUpdate();
+//       }
+//     }
+//   } catch (e) {
+//     log("Error checking for updates: $e");
+//   }
+// }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -74,6 +76,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool? isLoggedin;
+  bool? isAmenitiesAdded;
 
   @override
   void initState() {
@@ -83,6 +86,7 @@ class _MyAppState extends State<MyApp> {
 
   void checkData() {
     isLoggedin = LocalStoragePref().getLoginBool();
+    isAmenitiesAdded = LocalStoragePref().getAmenitiesBool();
   }
 
   @override
@@ -95,6 +99,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<DailyneedsBloc>(create: (context) => DailyneedsBloc()),
         BlocProvider<PaymentsBloc>(create: (context) => PaymentsBloc()),
         BlocProvider<CommunityBloc>(create: (context) => CommunityBloc()),
+        BlocProvider<AllAmenitiesBloc>(create: (context) => AllAmenitiesBloc()),
+        BlocProvider<AmenitiesOFMemberBloc>(
+            create: (context) => AmenitiesOFMemberBloc()),
         BlocProvider<VisitorsDetailBloc>(
             create: (context) => VisitorsDetailBloc()),
         BlocProvider<HomepageBloc>(create: (context) => HomepageBloc())
@@ -105,7 +112,9 @@ class _MyAppState extends State<MyApp> {
             useMaterial3: true,
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
         home: isLoggedin == true
-            ? const Navigationscreen()
+            ? isAmenitiesAdded == true
+                ? const Navigationscreen()
+                : const AmenitiesAdd()
             : const RegisterScreen(),
         builder: EasyLoading.init(),
       ),

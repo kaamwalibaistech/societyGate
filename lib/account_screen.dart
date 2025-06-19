@@ -1,5 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:society_gate/amenities/user_amenities_page.dart';
+import 'package:society_gate/models/login_model.dart';
 
 import 'api/api_repository.dart';
 import 'constents/local_storage.dart';
@@ -24,6 +27,7 @@ class _AccountScreenState extends State<AccountScreen>
   GetDailyHelpModel? getDailyHelpData;
   GetVehicleDetailsModel? getVehicledetails;
   String? loginType;
+  LoginModel? logInData;
 
   @override
   void initState() {
@@ -36,9 +40,9 @@ class _AccountScreenState extends State<AccountScreen>
 
   getfamilymembers() async {
     ApiRepository apiRepository = ApiRepository();
-    final data = LocalStoragePref.instance!.getLoginModel();
-    final getFamilyMember =
-        await apiRepository.getFamilyMembers(data!.user!.flatId.toString());
+    logInData = LocalStoragePref.instance!.getLoginModel();
+    final getFamilyMember = await apiRepository
+        .getFamilyMembers(logInData!.user!.flatId.toString());
     setState(() {
       getFamilyMemberData = getFamilyMember;
     });
@@ -266,20 +270,34 @@ class _AccountScreenState extends State<AccountScreen>
                     children: [
                       Row(
                         children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: const Color(
-                                  0xFFFFF3E0), // Very light orange background
-                            ),
-                            child: const Icon(
-                              Icons.person_rounded,
-                              color: Color(0xFFFF9800), // Light orange icon
-                              size: 30,
-                            ),
-                          ),
+                          logInData?.user?.profileImage != null
+                              ? ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: logInData!.user!.profileImage!,
+                                    width: 70,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
+                                )
+                              : Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: const Color(
+                                        0xFFFFF3E0), // Very light orange background
+                                  ),
+                                  child: const Icon(
+                                    Icons.person_rounded,
+                                    color:
+                                        Color(0xFFFF9800), // Light orange icon
+                                    size: 30,
+                                  ),
+                                ),
                           const SizedBox(width: 15),
                           Expanded(
                             child: Column(
@@ -370,6 +388,44 @@ class _AccountScreenState extends State<AccountScreen>
                           ],
                         ),
                       ),
+                      ListTile(
+                        // contentPadding: const EdgeInsets.symmetric(
+                        //     horizontal: 20, vertical: 10),
+                        leading: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.ac_unit_sharp,
+                              color: Colors.blue),
+                        ),
+                        title: const Text(
+                          "My Amenities",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_sharp,
+                            color: Colors.grey),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const UserAmenitiesPage(
+                                amenities: [
+                                  'Wi-Fi',
+                                  'Parking',
+                                  'Swimming Pool',
+                                  'Gym'
+                                ],
+                              ),
+                            ),
+                          );
+
+                          // Add navigation or action here
+                        },
+                      )
                     ],
                   ),
                 ),
@@ -396,6 +452,7 @@ class _AccountScreenState extends State<AccountScreen>
                 // Family Members Section
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
@@ -408,7 +465,9 @@ class _AccountScreenState extends State<AccountScreen>
                     ],
                   ),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
+                      // Top section
                       Padding(
                         padding: const EdgeInsets.all(15),
                         child: Row(
@@ -416,13 +475,12 @@ class _AccountScreenState extends State<AccountScreen>
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: const Color(
-                                    0xFFE8F5E9), // Very light green background
+                                color: const Color(0xFFE8F5E9),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: const Icon(
                                 Icons.family_restroom_rounded,
-                                color: Color(0xFF4CAF50), // Light green icon
+                                color: Color(0xFF4CAF50),
                                 size: 24,
                               ),
                             ),
@@ -454,15 +512,15 @@ class _AccountScreenState extends State<AccountScreen>
                         ),
                       ),
                       const Divider(height: 1),
+
+                      // Family Members
                       if (getFamilyMemberData?.familyMembers?.isNotEmpty ??
                           false)
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.18,
+                          height: 140, // fixed and sufficient height
                           child: ListView.builder(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 10,
-                            ),
+                                horizontal: 15, vertical: 10),
                             scrollDirection: Axis.horizontal,
                             itemCount:
                                 getFamilyMemberData?.familyMembers?.length ?? 2,
@@ -480,7 +538,7 @@ class _AccountScreenState extends State<AccountScreen>
                                     Container(
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
+                                        color: Colors.blue.shade50,
                                         shape: BoxShape.circle,
                                         border: Border.all(
                                           color: loginType == "watchman"
@@ -529,14 +587,14 @@ class _AccountScreenState extends State<AccountScreen>
                           ),
                         )
                       else
-                        Padding(
-                          padding: const EdgeInsets.all(15),
+                        const Padding(
+                          padding: EdgeInsets.all(15),
                           child: Center(
                             child: Text(
                               "No Family members added",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.grey[600],
+                                color: Colors.grey,
                               ),
                             ),
                           ),
@@ -756,73 +814,89 @@ class _AccountScreenState extends State<AccountScreen>
                         ),
                       ),
                       const Divider(height: 1),
-                      SizedBox(
-                        height: 120,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
-                          ),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: getVehicledetails?.data?.length ?? 2,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: const EdgeInsets.only(right: 15),
-                              width: 140,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[50],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
+                      if (getVehicledetails?.data?.isNotEmpty ?? false)
+                        SizedBox(
+                          height: 120,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 10,
+                            ),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: getVehicledetails?.data?.length ?? 2,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: const EdgeInsets.only(right: 15),
+                                width: 140,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: loginType == "watchman"
+                                              ? const Color(0xFFFF9933)
+                                                  .withOpacity(0.2)
+                                              : const Color(0xFF6B4EFF)
+                                                  .withOpacity(0.2),
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        Icons.directions_car_rounded,
                                         color: loginType == "watchman"
                                             ? const Color(0xFFFF9933)
-                                                .withOpacity(0.2)
-                                            : const Color(0xFF6B4EFF)
-                                                .withOpacity(0.2),
+                                            : const Color(0xFF6B4EFF),
+                                        size: 24,
                                       ),
                                     ),
-                                    child: Icon(
-                                      Icons.directions_car_rounded,
-                                      color: loginType == "watchman"
-                                          ? const Color(0xFFFF9933)
-                                          : const Color(0xFF6B4EFF),
-                                      size: 24,
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      getVehicledetails
+                                              ?.data?[index].vehicleNo ??
+                                          "",
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    getVehicledetails?.data?[index].vehicleNo ??
-                                        "",
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      getVehicledetails?.data?[index].model ??
+                                          "",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    getVehicledetails?.data?[index].model ?? "",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[600],
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      else
+                        Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Center(
+                            child: Text(
+                              "No Vehicle added",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),

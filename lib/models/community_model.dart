@@ -28,6 +28,7 @@ class CommunityPost {
   final int? societyId;
   final String? societyName;
   final String? adminName;
+  final String? profileImage;
   final String? title;
   final String? description;
   final String? photo;
@@ -40,6 +41,7 @@ class CommunityPost {
     this.societyId,
     this.societyName,
     this.adminName,
+    this.profileImage,
     this.title,
     this.description,
     this.photo,
@@ -54,6 +56,7 @@ class CommunityPost {
       societyId: json['society_id'],
       societyName: json['society_name'],
       adminName: json['admin_name'],
+      profileImage: json['profile_image'],
       title: json['title'],
       description: json['description'],
       photo: json['photo'],

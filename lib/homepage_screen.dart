@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -7,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/api/firebase_api.dart';
-import 'package:society_gate/create_post.dart';
+import 'package:society_gate/community/community_post_add.dart';
+import 'package:society_gate/payments_screen/payment_screen.dart';
 
-import 'api/api_repository.dart';
 import 'amenities/book_amenities.dart';
+import 'api/api_repository.dart';
 import 'community/community_page.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/members/members_page.dart';
@@ -29,41 +29,39 @@ class HomepageScreen extends StatefulWidget {
 }
 
 class _HomepageScreenState extends State<HomepageScreen> {
-  Announcementmodel? data;
+  Announcementmodel? announcementmodel;
   LoginModel? loginModel;
   String? loginType;
-  Uint8List? _userPhoto;
-  String uiPhoto = "";
+
+  String profilePhoto = "https://ui-avatars.com/api/?background=edbdff&name=.";
 
   @override
   void initState() {
     super.initState();
     getData();
-    getuserPhoto();
+
     FirebaseApi().initNotification();
   }
 
-  void getuserPhoto() {
-    final data = LocalStoragePref.instance!.getUserPhoto();
-    setState(() {
-      _userPhoto = data;
-    });
-  }
-
   getData() async {
-    final getLoginModel = LocalStoragePref().getLoginModel();
-
-    ApiRepository apiRepositiory = ApiRepository();
-    Announcementmodel? mydata = await apiRepositiory
-        .getHomePageData(getLoginModel!.user!.societyId.toString());
+    loginModel = LocalStoragePref().getLoginModel();
+    String name = loginModel?.user?.uname ?? "NA";
     setState(() {
-      loginModel = getLoginModel;
-      data = mydata;
-      loginType = loginModel?.user?.role ?? "NA";
-      uiPhoto = loginModel?.user?.uname ?? "User";
+      profilePhoto = loginModel?.user?.profileImage ??
+          "https://ui-avatars.com/api/?background=edbdff&name=$name.";
     });
-    log(loginType ?? "No data");
-    log(loginModel?.user?.role ?? "NA");
+    ApiRepository apiRepositiory = ApiRepository();
+    announcementmodel = await apiRepositiory
+        .getHomePageData(loginModel?.user?.societyId.toString());
+    loginType = loginModel?.user?.role ?? "NA";
+
+    log("Profile url: $profilePhoto");
+    log("Role: $loginType");
+    log("Society Id: ${loginModel?.user?.societyId}");
+    log("Flat id: ${loginModel?.user?.flatId}");
+    log("Email: ${loginModel?.user?.uemail}");
+    log("Phone: ${loginModel?.user?.uphone}");
+    log("UserId: ${loginModel?.user?.userId}");
   }
 
   List<String> title = [
@@ -137,20 +135,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           ),
                         ),
                         child: CircleAvatar(
-                            radius: 20,
-                            backgroundImage: _userPhoto == null
-                                ? CachedNetworkImageProvider(
-                                    "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")
-                                : MemoryImage(_userPhoto!)
-                            // child: _userPhoto != null
-                            //     ? Image.memory(_userPhoto!)
-                            //     : ClipOval(
-                            //         child: Image.network(
-                            //             "https://ui-avatars.com/api/?background=random&name=$uiPhoto."
-                            //             // "https://ui-avatars.com/api/?background=random&name=$uiPhoto",
-                            //             ),
-                            //       ),
-                            ),
+                          radius: 25,
+                          backgroundImage: CachedNetworkImageProvider(
+                            profilePhoto,
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -175,27 +164,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           ],
                         ),
                       ),
-/*<<<<<<< anil
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withAlpha(20),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.notifications_outlined,
-                          color: loginType == "watchman"
-                              ? const Color(0xFFFF9933)
-                              : const Color(0xFF6B4EFF),
-                          size: 20,
-=======*/
                       GestureDetector(
                         onTap: () {
                           Fluttertoast.showToast(msg: "No Notifications");
@@ -220,19 +188,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                 : const Color(0xFF6B4EFF),
                             size: 20,
                           ),
-// >>>>>>> final
                         ),
                       ),
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                // Stats Section
-
-                // loginType !="watchman"?
-
                 GestureDetector(
                   onTap: () => Navigator.push(
                       context,
@@ -346,12 +307,15 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 5),
                     child: CarouselSlider.builder(
-                      itemCount: (data?.announcements?.isNotEmpty ?? false)
-                          ? data!.announcements?.length
-                          : 1,
+                      itemCount:
+                          (announcementmodel?.announcements?.isNotEmpty ??
+                                  false)
+                              ? announcementmodel?.announcements?.length
+                              : 1,
                       itemBuilder: (context, index, realIndex) {
                         bool hasAnnouncements =
-                            data?.announcements?.isNotEmpty ?? false;
+                            announcementmodel?.announcements?.isNotEmpty ??
+                                false;
                         return Container(
                           margin: const EdgeInsets.symmetric(
                               horizontal: 4, vertical: 8),
@@ -385,26 +349,29 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     Icon(
                                       Icons.campaign_rounded,
                                       color: hasAnnouncements
-                                          ? _getAnnouncementColor(data
-                                                  ?.announcements?[index]
-                                                  .announcementType ??
-                                              "")
+                                          ? _getAnnouncementColor(
+                                              announcementmodel
+                                                      ?.announcements?[index]
+                                                      .announcementType ??
+                                                  "")
                                           : const Color(0xFF6B4EFF),
                                       size: 18,
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
                                       hasAnnouncements
-                                          ? data?.announcements![index]
+                                          ? announcementmodel
+                                                  ?.announcements![index]
                                                   .announcementType ??
                                               ""
                                           : "Notice",
                                       style: TextStyle(
                                         color: hasAnnouncements
-                                            ? _getAnnouncementColor(data!
-                                                    .announcements![index]
-                                                    .announcementType ??
-                                                "")
+                                            ? _getAnnouncementColor(
+                                                announcementmodel!
+                                                        .announcements![index]
+                                                        .announcementType ??
+                                                    "")
                                             : const Color(0xFF6B4EFF),
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
@@ -451,7 +418,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     children: [
                                       Text(
                                         hasAnnouncements
-                                            ? data?.announcements![index]
+                                            ? announcementmodel
+                                                    ?.announcements![index]
                                                     .title ??
                                                 ""
                                             : "No Notices",
@@ -465,7 +433,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                       if (hasAnnouncements)
                                         Expanded(
                                           child: Text(
-                                            data!.announcements![index]
+                                            announcementmodel!
+                                                    .announcements![index]
                                                     .description ??
                                                 "",
                                             style: TextStyle(
@@ -521,18 +490,21 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                               ),
                                             ),
                                           ),
-                                          // const Spacer(),
-                                          // Icon(
-                                          //   Icons.bookmark_border_rounded,
-                                          //   color: Colors.grey[400],
-                                          //   size: 18,
-                                          // ),
-                                          // const SizedBox(width: 12),
-                                          // Icon(
-                                          //   Icons.share_outlined,
-                                          //   color: Colors.grey[400],
-                                          //   size: 18,
-                                          // ),
+
+                                          /*
+      ------------------------------     This is Save and Share Button -------------------------
+                                          const Spacer(),
+                                          Icon(
+                                            Icons.bookmark_border_rounded,
+                                            color: Colors.grey[400],
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Icon(
+                                            Icons.share_outlined,
+                                            color: Colors.grey[400],
+                                            size: 18,
+                                          ),*/
                                         ],
                                       ),
                                     ],
@@ -651,7 +623,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                           const NoticeBoardScreen()));
                               break;
                             case 3:
-                              Fluttertoast.showToast(msg: "Comming Soon");
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PaymentScreen()));
                               break;
                             case 4:
                               Navigator.push(

@@ -69,10 +69,16 @@ class _SettingScreenState extends State<SettingScreen> {
                     title: "Edit Profile",
                     subtitle: "Update your personal information",
                     onTap: () {
+                      final userDetail =
+                          LocalStoragePref.instance!.getLoginModel();
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const ProfileScreen(),
+                          builder: (context) => ProfileScreen(
+                              namee: userDetail?.user?.uname,
+                              phoneNumber: userDetail?.user?.uphone,
+                              email: userDetail?.user?.uemail),
                         ),
                       );
                     },

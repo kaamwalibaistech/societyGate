@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:society_gate/models/forget_password_model.dart';
+import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'package:society_gate/models/help_support_model.dart';
 import 'package:society_gate/models/update_user_model.dart';
 
@@ -11,11 +13,12 @@ import '../models/add_family_member_model.dart';
 import '../models/add_notices_model.dart';
 import '../models/add_vehicle_model.dart';
 import '../models/admin_register_model.dart';
+import '../models/amenities_model.dart';
+import '../models/announcements_model.dart';
 import '../models/flat_id_model.dart';
 import '../models/get_daily_help_model.dart';
 import '../models/get_family_members_model.dart';
 import '../models/get_vehicle_detail_model.dart';
-import '../models/announcements_model.dart';
 import '../models/member_register_model.dart';
 import '../models/user_approve.dart';
 import '../models/watchman_add_model.dart';
@@ -59,6 +62,40 @@ class ApiRepository {
     } catch (e) {
       throw Exception();
     }
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> amenitiesSendRawJson(
+      List<Map<String, dynamic>> amenitiesList, societyId) async {
+    const url = 'https://thesocietygate.com/api/amenities-for-society';
+
+    final body = {
+      "society_id": societyId,
+      "amenities": amenitiesList,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'User-Agent': 'FlutterApp/1.0',
+        },
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return data;
+      } else {
+        log("Request failed with status: ${response.statusCode}");
+        log("Body: ${response.body}");
+      }
+    } catch (e) {
+      log("Error: $e");
+    }
+
     return null;
   }
 
@@ -116,7 +153,7 @@ class ApiRepository {
     final url = Uri.parse("${baseUrl}check-amenity/$societyId");
 
     try {
-      final response = await http.post(url);
+      final response = await http.get(url);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         return data['exists'];
@@ -169,25 +206,46 @@ class ApiRepository {
   }
 
   Future<int?> communityPost(
-      societyId, adminId, title, description, photo) async {
+    String societyId,
+    String adminId,
+    String title,
+    String description,
+    String photoPath, // <- pass file path here
+  ) async {
     final url = Uri.parse("${baseUrl}communitypostinsert");
-    final body = {
-      'society_id': societyId,
-      'admin_id': adminId,
-      'title': title,
-      'description': description,
-      'photo': photo,
-    };
-    try {
-      final response = await http.post(url, body: body);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
 
+    try {
+      final request = http.MultipartRequest("POST", url);
+
+      request.fields['society_id'] = societyId;
+      request.fields['admin_id'] = adminId;
+      request.fields['title'] = title;
+      request.fields['description'] = description;
+
+      // Add the image file
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'photo',
+          photoPath,
+          // contentType: MediaType(
+          //     'image', 'jpeg'), // Optional: adjust based on your file type
+        ),
+      );
+
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        final Map<String, dynamic> data = jsonDecode(responseBody);
         return data['status'];
+      } else {
+        print('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
+      print('Error: $e');
       throw Exception(e.toString());
     }
+
     return null;
   }
 
@@ -252,6 +310,28 @@ class ApiRepository {
     return null;
   }
 
+  Future<GetUserPurchaseAmenitiesModel?> getFamilyMemGetUserPurchaseAmenities(
+      societyId, userId) async {
+    final url = Uri.parse("${baseUrl}get-amenities-by-userid");
+    final body = {
+      'user_id': userId,
+      'society_id': societyId,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return GetUserPurchaseAmenitiesModel.fromJson(data);
+        }
+        return GetUserPurchaseAmenitiesModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
   Future<GetVehicleDetailsModel?> getVehicleDetails(flatid) async {
     final url = Uri.parse("${baseUrl}getvehicleparking");
     final body = {
@@ -272,28 +352,48 @@ class ApiRepository {
     return null;
   }
 
-  Future<UpdateUserModel?> updateUser(userId, name, email, number) async {
+  Future<UpdateUserModel?> updateUser(
+      userId, name, email, number, String? imagePath) async {
     final url = Uri.parse("${baseUrl}userupdate");
-    final body = {
-      'user_id': userId,
-      'uname': name,
-      'uemail': email,
-      'uphone': number,
-    };
+
     try {
-      final response = await http.post(url, body: body);
+      final request = http.MultipartRequest("POST", url);
+
+      request.fields['user_id'] = userId;
+      request.fields['uname'] = name;
+      request.fields['uemail'] = email;
+      request.fields['uphone'] = number;
+
+      // Add the image file
+      if (imagePath != null && imagePath.isNotEmpty) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'profile_image',
+            imagePath,
+            // contentType: MediaType('image', 'jpeg'), // optional
+          ),
+        );
+      }
+
+      final response = await request.send();
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
+        final responseBody = await response.stream.bytesToString();
+        final Map<String, dynamic> data = jsonDecode(responseBody);
         if (data['status'] == 200) {
           return UpdateUserModel.fromJson(data);
         } else {
+          log('Upload failed: $data');
           return UpdateUserModel.fromJson(data);
         }
+      } else {
+        log('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
-      log(e.toString());
+      log('Error: $e');
       throw Exception(e.toString());
     }
+
     return null;
   }
 
@@ -314,6 +414,26 @@ class ApiRepository {
           return HelpSupportModel.fromJson(data);
         }
         return HelpSupportModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<ForgetPasswordModel?> getForgotPassword(email) async {
+    final url = Uri.parse("${baseUrl}forget-password");
+    final body = {
+      "uemail": email,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return ForgetPasswordModel.fromJson(data);
+        }
+        return ForgetPasswordModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());
@@ -502,6 +622,24 @@ class ApiRepository {
           return AddNoticeModel.fromJson(data);
         }
         return AddNoticeModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<AmenitiesModel?> fetchAmenities(societyid) async {
+    final url = Uri.parse("${baseUrl}get-amenities-by-societyid");
+    final body = {
+      'society_id': societyid.toString(),
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        log("Api DATA: ${data.toString()}");
+        return AmenitiesModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

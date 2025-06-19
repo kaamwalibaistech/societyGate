@@ -16,6 +16,9 @@ class CreatePost extends StatefulWidget {
 }
 
 class _CreatePostState extends State<CreatePost> {
+  final formKey = GlobalKey<FormState>();
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
   File? _image;
   final ImagePicker _picker = ImagePicker();
 
@@ -47,10 +50,6 @@ class _CreatePostState extends State<CreatePost> {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    TextEditingController titleController = TextEditingController();
-    TextEditingController descriptionController = TextEditingController();
-
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -260,7 +259,7 @@ class _CreatePostState extends State<CreatePost> {
           getLoginModel.user!.userId.toString(),
           title,
           description,
-          _image!.path);
+          _image!.path.toString());
 
       if (status == 200) {
         EasyLoading.showSuccess("Community post created successfully");

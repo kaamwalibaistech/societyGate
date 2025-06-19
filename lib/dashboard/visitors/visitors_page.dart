@@ -46,7 +46,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3, // Number of tabs
+      length: 2, // Number of tabs
       child: Scaffold(
         floatingActionButton: loginModel?.user?.role != "watchman"
             ? FloatingActionButton(
@@ -79,7 +79,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(text: "Upcomming"),
-                      Tab(text: "Regular"),
+                      // Tab(text: "Regular"),
                       Tab(text: "Past"),
                     ],
                   ),
@@ -95,14 +95,14 @@ class _VisitorsPageState extends State<VisitorsPage> {
                                 state.visitorsListModel!.data?.upcomingVisitors
                                     ?.list)
                             : const Center(child: Text("No visitors today!")),
-                        (state.visitorsListModel?.data?.regularVisitors?.list
-                                    ?.isNotEmpty ??
-                                false)
-                            ? getRegularVisitorsWidget(
-                                context,
-                                state.visitorsListModel!.data!.regularVisitors!
-                                    .list)
-                            : const Center(child: Text("Not available!")),
+                        // (state.visitorsListModel?.data?.regularVisitors?.list
+                        //             ?.isNotEmpty ??
+                        //         false)
+                        // ? getRegularVisitorsWidget(
+                        //     context,
+                        //     state.visitorsListModel!.data!.regularVisitors!
+                        //         .list)
+                        // : const Center(child: Text("Not available!")),
                         (state.visitorsListModel?.data?.pastVisitors?.list
                                     ?.isNotEmpty ??
                                 false)

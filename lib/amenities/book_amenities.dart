@@ -1,6 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/constents/sizedbox.dart';
+import 'package:society_gate/models/amenities_model.dart';
+
+import 'amenities_images.dart';
+import 'bloc/amenities_bloc.dart';
+import 'confirm_amenities_buy.dart';
 
 class BookAmenities extends StatefulWidget {
   const BookAmenities({super.key});
@@ -10,56 +18,26 @@ class BookAmenities extends StatefulWidget {
 }
 
 class _BookAmenitiesState extends State<BookAmenities> {
-  int total = 0;
-  final List<Map<String, dynamic>> amenities = [
-    {
-      'name': 'Swimming Pool',
-      'price': 500,
-      'image': "lib/assets/swimming-pool.png",
-    },
-    {
-      'name': 'Garden',
-      'price': 300,
-      'image': "lib/assets/garden.png",
-    },
-    {
-      'name': 'Parking',
-      'price': 200,
-      'image': "lib/assets/parking.png",
-    },
-    {
-      'name': 'Gym',
-      'price': 400,
-      'image': "lib/assets/gym.png",
-    },
-    {
-      'name': 'Playground',
-      'price': 250,
-      'image': "lib/assets/playground.png",
-    },
-    {
-      'name': 'Club House',
-      'price': 600,
-      'image': "lib/assets/club.png",
-    },
-    {
-      'name': 'Spa',
-      'price': 450,
-      'image': "lib/assets/spa.png",
-    },
-    {
-      'name': 'Building Wi-Fi',
-      'price': 150,
-      'image': "lib/assets/wifi.png",
-    },
-    {
-      'name': 'Rooftop Garden',
-      'price': 350,
-      'image': "lib/assets/roof-top.png",
-    },
-  ];
+  AmenitiesModel? amenitiesModel;
 
-  final Set<String> selectedAmenities = {};
+  @override
+  void initState() {
+    super.initState();
+    fetchVisitors();
+  }
+
+  fetchVisitors() {
+    context.read<AllAmenitiesBloc>().add(GetAllAmenities());
+  }
+
+  double total = 0;
+
+  // final Set<String> selectedAmenities = {};
+  List<Map<String, String>> selectedAmenitiesList = [];
+
+  Map<String, String> toMap(String name, String price, String duration) {
+    return {'amenity_name': name, 'amount': price, 'duration': duration};
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,11 +103,21 @@ class _BookAmenitiesState extends State<BookAmenities> {
                     ),
                   ),
                   onPressed: () {
-                    // final selected = selectedAmenities.toList();
-                    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    //   content: Text("Selected: ${selected.join(', ')}"),
-                    // ));
-                    Fluttertoast.showToast(msg: "Working on This");
+                    if (total != 0.0) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ConfirmAmenitiesBuy(
+                                    selectedAmenitiesList:
+                                        selectedAmenitiesList,
+                                    total: total,
+                                  )));
+                      // selectedAmenitiesList = list;
+                    } else {
+                      Fluttertoast.showToast(
+                          backgroundColor: Colors.red,
+                          msg: "Please select an amenities!");
+                    }
                   },
                   child: const Text("Pay for Amenities"),
                 ),
@@ -137,99 +125,174 @@ class _BookAmenitiesState extends State<BookAmenities> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 1,
-                children: amenities.map((amenity) {
-                  final isSelected =
-                      selectedAmenities.contains(amenity['name']);
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isSelected) {
-                          selectedAmenities.remove(amenity['name']);
-                        } else {
-                          selectedAmenities.add(amenity['name']);
-                        }
-                        total = total +
-                            (isSelected
-                                ? -amenity['price']
-                                : amenity['price']) as int;
-                      });
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? Colors.white
-                            : Colors.white.withAlpha(100),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: isSelected ? Colors.white : Colors.white60,
-                          width: isSelected ? 2 : 1,
-                        ),
-                        boxShadow: isSelected
-                            ? [
-                                const BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 6,
-                                  offset: Offset(2, 2),
-                                )
-                              ]
-                            : [],
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                            radius: 40,
-                            child: Image.asset(
-                              amenity['image'],
-                              height: 60,
-                              // width: 60,
-                              // fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            amenity['name'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: isSelected
-                                  ? Colors.deepOrange
-                                  : Colors.black54,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                              text: TextSpan(
-                                  text: "₹${amenity['price']}",
-                                  style: TextStyle(
-                                      color: isSelected
-                                          ? Colors.deepOrange
-                                          : Colors.pinkAccent,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                  children: [
-                                TextSpan(
-                                  text: " /month",
-                                  style: TextStyle(
-                                      color: isSelected
-                                          ? Colors.deepOrange
-                                          : Colors.pinkAccent,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ])),
-                        ],
-                      ),
-                    ),
+              child: BlocBuilder<AllAmenitiesBloc, GetAllAmenitiesState>(
+                  builder: (context, state) {
+                if (state is GetAllAmenitiesInitial ||
+                    state is GetAllAmenitiesLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
-                }).toList(),
-              ),
+                  // return GridView.count(
+                  //   crossAxisCount: 2,
+                  //   crossAxisSpacing: 16,
+                  //   mainAxisSpacing: 16,
+                  //   childAspectRatio: 1,
+                  //   children: List.generate(
+                  //       4,
+                  //       (context) => Container(
+                  //             // duration: const Duration(milliseconds: 250),
+                  //             decoration: BoxDecoration(
+                  //               color: Colors.grey.shade100,
+                  //               borderRadius: BorderRadius.circular(16),
+                  //             ),
+                  //           )),
+                  // );
+                } else if (state is GetAllAmenitiesSuccess) {
+                  return GridView.builder(
+                      itemCount: state.amenitiesModel.data?.length ?? 0,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 1,
+                      ),
+                      itemBuilder: (context, index) {
+                        final amenitiesList = state.amenitiesModel.data?[index];
+
+                        bool isSelected = selectedAmenitiesList.any(
+                          (item) =>
+                              item['amenity_name'] ==
+                              amenitiesList?.amenityName,
+                        );
+
+                        // String getAmenityImage(String amenityName) {
+                        //   final amenity = amenitiesImage.firstWhere(
+                        //     (item) =>
+                        //         item['name']?.toLowerCase() ==
+                        //         amenityName.toLowerCase(),
+                        //     orElse: () => {'image': defaultImg},
+                        //   );
+                        //   return amenity['image'];
+                        // }
+
+                        return GestureDetector(
+                          onTap: () {
+                            final ameList = toMap(
+                              amenitiesList?.amenityName ?? "",
+                              amenitiesList?.amount ?? "",
+                              amenitiesList?.duration ?? "",
+                            );
+
+                            setState(() {
+                              final alreadySelected = selectedAmenitiesList.any(
+                                (item) =>
+                                    item['amenity_name'] ==
+                                    amenitiesList?.amenityName,
+                              );
+
+                              if (alreadySelected) {
+                                selectedAmenitiesList.removeWhere(
+                                  (item) =>
+                                      item['amenity_name'] ==
+                                      amenitiesList?.amenityName,
+                                );
+                                total -=
+                                    double.parse(amenitiesList?.amount ?? '0');
+                              } else {
+                                selectedAmenitiesList.add(ameList);
+                                total +=
+                                    double.parse(amenitiesList?.amount ?? '0');
+                              }
+                            });
+
+                            log(selectedAmenitiesList.toString());
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? Colors.white
+                                  : Colors.white.withAlpha(100),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color:
+                                    isSelected ? Colors.white : Colors.white60,
+                                width: isSelected ? 2 : 1,
+                              ),
+                              boxShadow: isSelected
+                                  ? [
+                                      const BoxShadow(
+                                        color: Colors.black26,
+                                        blurRadius: 6,
+                                        offset: Offset(2, 2),
+                                      )
+                                    ]
+                                  : [],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 40,
+                                  child: Image.asset(
+                                    getAmenityImage(
+                                        amenitiesList?.amenityName ?? ""),
+                                    height: 60,
+                                    // width: 60,
+                                    // fit: BoxFit.cover,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  amenitiesList?.amenityName ?? "",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: isSelected
+                                        ? Colors.deepOrange
+                                        : Colors.black54,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                RichText(
+                                    text: TextSpan(
+                                        text: "₹${amenitiesList?.amount ?? 0}",
+                                        style: TextStyle(
+                                            color: isSelected
+                                                ? Colors.deepOrange
+                                                : Colors.pinkAccent,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                        children: [
+                                      TextSpan(
+                                        text:
+                                            " / ${amenitiesList?.duration ?? ""}",
+                                        style: TextStyle(
+                                            color: isSelected
+                                                ? Colors.deepOrange
+                                                : Colors.pinkAccent,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ])),
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                } else if (state is GetAllAmenitiesFailure) {
+                  return const Center(
+                      child: Text(
+                    "Your Society does not providing any amenities!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ));
+                } else {
+                  return const Text("No amenities found in your society!");
+                }
+              }),
             ),
+            /*  ,*/
           ],
         ),
       ),
