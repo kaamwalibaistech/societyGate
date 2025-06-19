@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:society_gate/models/forget_password_model.dart';
 import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'package:society_gate/models/help_support_model.dart';
@@ -228,17 +229,15 @@ class ApiRepository {
       if (photoPath != null &&
           photoPath.isNotEmpty &&
           File(photoPath).existsSync()) {
-        // String extension =
-        //     path.extension(photoPath).toLowerCase(); // .jpg or .png
-        // String mimeType = extension.contains('png') ? 'png' : 'jpeg';
-
         request.files.add(
           await http.MultipartFile.fromPath(
-            'photo', photoPath,
-            // contentType: MediaType('image', mimeType),
-            // contentType: MediaType('image', 'jpeg') // ✅ Correct!
+            'photo',
+            photoPath,
+            contentType: MediaType('image', 'jpeg'),
           ),
         );
+      } else {
+        print("Invalid or missing image path: $photoPath");
       }
 
       final response = await request.send();
