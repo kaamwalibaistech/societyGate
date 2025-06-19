@@ -31,7 +31,7 @@ class _CommunityPageState extends State<CommunityPage> {
     communityBloc.add(CommunityPostEvent(page: '1'));
     final getLoginModel = LocalStoragePref().getLoginModel();
     setState(() {
-      societyId = getLoginModel!.user!.societyId;
+      societyId = int.parse(getLoginModel!.user!.societyId.toString());
       log(societyId.toString());
     });
   }

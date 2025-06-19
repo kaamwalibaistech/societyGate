@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/amenities/user_amenities_page.dart';
+import 'package:society_gate/models/login_model.dart';
 
 import 'api/api_repository.dart';
 import 'constents/local_storage.dart';
@@ -25,6 +27,7 @@ class _AccountScreenState extends State<AccountScreen>
   GetDailyHelpModel? getDailyHelpData;
   GetVehicleDetailsModel? getVehicledetails;
   String? loginType;
+  LoginModel? logInData;
 
   @override
   void initState() {
@@ -37,9 +40,9 @@ class _AccountScreenState extends State<AccountScreen>
 
   getfamilymembers() async {
     ApiRepository apiRepository = ApiRepository();
-    final data = LocalStoragePref.instance!.getLoginModel();
-    final getFamilyMember =
-        await apiRepository.getFamilyMembers(data!.user!.flatId.toString());
+    logInData = LocalStoragePref.instance!.getLoginModel();
+    final getFamilyMember = await apiRepository
+        .getFamilyMembers(logInData!.user!.flatId.toString());
     setState(() {
       getFamilyMemberData = getFamilyMember;
     });
@@ -267,20 +270,34 @@ class _AccountScreenState extends State<AccountScreen>
                     children: [
                       Row(
                         children: [
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: const Color(
-                                  0xFFFFF3E0), // Very light orange background
-                            ),
-                            child: const Icon(
-                              Icons.person_rounded,
-                              color: Color(0xFFFF9800), // Light orange icon
-                              size: 30,
-                            ),
-                          ),
+                          logInData?.user?.profileImage != null
+                              ? ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: logInData!.user!.profileImage!,
+                                    width: 70,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
+                                )
+                              : Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: const Color(
+                                        0xFFFFF3E0), // Very light orange background
+                                  ),
+                                  child: const Icon(
+                                    Icons.person_rounded,
+                                    color:
+                                        Color(0xFFFF9800), // Light orange icon
+                                    size: 30,
+                                  ),
+                                ),
                           const SizedBox(width: 15),
                           Expanded(
                             child: Column(

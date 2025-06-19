@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 
 // import 'dart:nativewrappers/_internal/vm/lib/math_patch.dart';
 
@@ -38,11 +36,11 @@ class LocalStoragePref {
   //   log(bytes);
   //   await storage?.setString(LocalStorageKeys.userPhoto, bytes);
   // }
-  Future<void> storeUserPhoto(File photo) async {
-    final bytes = await photo.readAsBytes(); // Convert to Uint8List
-    final base64String = base64Encode(bytes); // Encode to Base64
-    await storage?.setString(LocalStorageKeys.userPhoto, base64String);
-  }
+  // Future<void> storeUserPhoto(photo) async {
+  //   final userPhoto = await photo;
+
+  //   await storage?.setString(LocalStorageKeys.userPhotoo, userPhoto ?? "");
+  // }
 
   // String? getUserPhoto() {
   //   storage?.getString(LocalStorageKeys.userPhoto);
@@ -50,11 +48,11 @@ class LocalStoragePref {
   //   if (photoPath == null) return null;
   //   return photoPath;
   // }
-  Uint8List? getUserPhoto() {
-    final base64String = storage?.getString(LocalStorageKeys.userPhoto);
-    if (base64String == null) return null;
-    return base64Decode(base64String); // Convert Base64 back to Uint8List
-  }
+  // String? getUserPhoto() {
+  //   final userPhoto = storage?.getString(LocalStorageKeys.userPhotoo);
+  //   if (userPhoto == null) return null;
+  //   return userPhoto; // Convert Base64 back to Uint8List
+  // }
 
   LoginModel? getLoginModel() {
     final jsonStr = storage?.getString(LocalStorageKeys.userProfile);
@@ -99,6 +97,6 @@ class LocalStoragePref {
 class LocalStorageKeys {
   static const userProfile = 'user_profile';
   static const isLoggedIn = 'isLoggedIn';
-  static const userPhoto = 'user_photo';
+  static const userPhotoo = 'user_photo';
   static const isAmenitiesAdded = 'is_amenities_added';
 }

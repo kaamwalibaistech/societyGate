@@ -71,11 +71,14 @@ class _SettingScreenState extends State<SettingScreen> {
                     onTap: () {
                       final userDetail =
                           LocalStoragePref.instance!.getLoginModel();
-                      userDetail!.user!.uname;
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const ProfileScreen(),
+                          builder: (context) => ProfileScreen(
+                              namee: userDetail?.user?.uname,
+                              phoneNumber: userDetail?.user?.uphone,
+                              email: userDetail?.user?.uemail),
                         ),
                       );
                     },

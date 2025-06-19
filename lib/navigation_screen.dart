@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:society_gate/models/login_model.dart';
 
 import 'account_screen.dart';
 import 'community/community_page.dart';
@@ -20,8 +21,9 @@ class Navigationscreen extends StatefulWidget {
 
 class _Navigationscreen extends State<Navigationscreen> {
   int selectedIndex = 0;
-  Uint8List? _userPhoto;
+  // String? _userPhoto;
   String uiPhoto = "";
+  LoginModel? loginModel;
 
   @override
   void initState() {
@@ -30,14 +32,13 @@ class _Navigationscreen extends State<Navigationscreen> {
   }
 
   void getuserPhoto() {
-    final data = LocalStoragePref.instance!.getUserPhoto();
+    // final data = LocalStoragePref.instance!.getUserPhoto();
     setState(() {
-      _userPhoto = data;
+      // _userPhoto = data;
+      loginModel = LocalStoragePref().getLoginModel();
       uiPhoto = loginModel?.user?.uname ?? "User";
     });
   }
-
-  final loginModel = LocalStoragePref().getLoginModel();
 
   void changeTab(int index) {
     setState(() {
@@ -95,43 +96,51 @@ class _Navigationscreen extends State<Navigationscreen> {
                   border:
                       Border.all(width: 0.5, color: Colors.deepOrangeAccent),
                 ),
-                child: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: _userPhoto != null
-                        ? MemoryImage(_userPhoto!)
-                        : CachedNetworkImageProvider(
-                            "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")
-                    // child: _userPhoto != null
-                    //     ? Image.memory(_userPhoto!)
-                    //     : ClipOval(
-                    //         child: Image.network(
-                    //             "https://ui-avatars.com/api/?background=random&name=$uiPhoto."
-                    //             // "https://ui-avatars.com/api/?background=random&name=$uiPhoto",
-                    //             ),
-                    //       ),
-                    ),
-              ),
-              label: "Profile",
-              activeIcon: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  border:
-                      Border.all(width: 0.5, color: Colors.deepOrangeAccent),
-                ),
-                child: _userPhoto != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.memory(
-                          _userPhoto!,
+                child: loginModel?.user?.profileImage != null
+                    ? ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: loginModel!.user!.profileImage!,
+                          width: 40,
+                          height: 40,
                           fit: BoxFit.cover,
-                          width: 30,
-                          height: 30,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
                         ),
                       )
-                    : const Icon(Icons.person),
+                    : CircleAvatar(
+                        radius: 20,
+                        backgroundImage: CachedNetworkImageProvider(
+                            "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")),
               ),
-            ),
+              label: "Profile",
+              activeIcon: loginModel?.user?.profileImage != null
+                  ? Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                            width: 0.5, color: Colors.deepOrangeAccent),
+                      ),
+                      child: ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: loginModel!.user!.profileImage!,
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      ),
+                    )
+                  : CircleAvatar(
+                      radius: 20,
+                      backgroundImage: CachedNetworkImageProvider(
+                          "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")),
+            )
           ],
         ),
       ),
