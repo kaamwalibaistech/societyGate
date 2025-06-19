@@ -34,7 +34,7 @@ Future<void> main() async {
 
   await LocalStoragePref.instance!.initPrefBox();
   await dotenv.load(fileName: ".env");
-  checkForUpdates();
+  // checkForUpdates();
 
   runApp(const MyApp());
   configLoading();
@@ -50,22 +50,22 @@ void configLoading() {
 }
 
 /// Function to check for updates at app startup
-void checkForUpdates() async {
-  try {
-    AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+// void checkForUpdates() async {
+//   try {
+//     AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
 
-    if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-      if (updateInfo.immediateUpdateAllowed) {
-        await InAppUpdate.performImmediateUpdate();
-      } else if (updateInfo.flexibleUpdateAllowed) {
-        await InAppUpdate.startFlexibleUpdate();
-        await InAppUpdate.completeFlexibleUpdate();
-      }
-    }
-  } catch (e) {
-    log("Error checking for updates: $e");
-  }
-}
+//     if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+//       if (updateInfo.immediateUpdateAllowed) {
+//         await InAppUpdate.performImmediateUpdate();
+//       } else if (updateInfo.flexibleUpdateAllowed) {
+//         await InAppUpdate.startFlexibleUpdate();
+//         await InAppUpdate.completeFlexibleUpdate();
+//       }
+//     }
+//   } catch (e) {
+//     log("Error checking for updates: $e");
+//   }
+// }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

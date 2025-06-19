@@ -379,7 +379,12 @@ class ApiRepository {
       if (response.statusCode == 200) {
         final responseBody = await response.stream.bytesToString();
         final Map<String, dynamic> data = jsonDecode(responseBody);
-        return UpdateUserModel.fromJson(data);
+        if (data['status'] == 200) {
+          return UpdateUserModel.fromJson(data);
+        } else {
+          log('Upload failed: $data');
+          return UpdateUserModel.fromJson(data);
+        }
       } else {
         log('Upload failed with status: ${response.statusCode}');
       }
