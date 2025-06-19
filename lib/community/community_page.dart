@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:society_gate/community/bloc/community_bloc.dart';
 import 'package:society_gate/community/network/community_apis.dart';
 import 'package:society_gate/constents/sizedbox.dart';
@@ -20,6 +22,7 @@ class CommunityPage extends StatefulWidget {
 class _CommunityPageState extends State<CommunityPage> {
   CommunityBloc? communityBloc;
   late int societyId;
+  late int memberId;
   @override
   void initState() {
     super.initState();
@@ -30,91 +33,163 @@ class _CommunityPageState extends State<CommunityPage> {
     CommunityBloc communityBloc = BlocProvider.of<CommunityBloc>(context);
     communityBloc.add(CommunityPostEvent(page: '1'));
     final getLoginModel = LocalStoragePref().getLoginModel();
+// <<<<<<< ritesh
     setState(() {
       societyId = int.parse(getLoginModel!.user!.societyId.toString());
       log(societyId.toString());
     });
+// =======
+//     societyId = getLoginModel!.user!.societyId;
+//     memberId = getLoginModel.user!.userId;
+//     log(societyId.toString());
+//     // setState(() {
+
+//     // });
+// >>>>>>> final
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: BlocBuilder<CommunityBloc, CommunityPostState>(
-            bloc: communityBloc,
-            buildWhen: (previous, current) =>
-                current is CommunityPostInitial ||
-                current is CommunityPostLoading ||
-                current is CommunityPostSuccess ||
-                current is CommunityPostError,
-            builder: (context, state) {
-              if (state is CommunityPostInitial ||
-                  state is CommunityPostLoading) {
-                return _loading();
-              } else if (state is CommunityPostSuccess) {
-                return _post(state.communityModel, state.commentsList);
-              } else {
-                return Center(child: Text(state.toString()));
-              }
-            }));
+    return Scaffold(body: BlocBuilder<CommunityBloc, CommunityPostState>(
+        builder: (context, state) {
+      if (state is CommunityPostInitial || state is CommunityPostLoading) {
+        return _loading();
+      } else if (state is CommunityPostSuccess) {
+        return _post(state.communityModel, state.commentsList);
+      } else {
+        return Center(child: Text(state.toString()));
+      }
+    }));
   }
 
   Widget _loading() {
     return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(width: 120, height: 12, color: Colors.grey[300]),
-                const SizedBox(height: 6),
-                Container(width: 80, height: 10, color: Colors.grey[300]),
-              ],
-            ),
-          ]),
-          const SizedBox(height: 12),
-          Container(
-              width: double.infinity, height: 14, color: Colors.grey[300]),
-          const SizedBox(height: 4),
-          Container(width: 160, height: 10, color: Colors.grey[300]),
-          const SizedBox(height: 12),
-          Container(
-              width: double.infinity, height: 300, color: Colors.grey[300]),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        width: 120,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(5))),
+                    const SizedBox(height: 6),
+                    Container(
+                        width: 80,
+                        height: 15,
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(5))),
+                  ],
+                ),
+              ]),
+              const SizedBox(height: 12),
+              Container(
+                  width: double.infinity,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(5))),
+              const SizedBox(height: 10),
+              Container(
+                  height: 20,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(5))),
+              const SizedBox(height: 16),
+              Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10))),
+              const SizedBox(height: 18),
               Row(
-                children: List.generate(
-                    3,
-                    (index) => Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Container(
-                              width: 20, height: 20, color: Colors.grey[300]),
-                        )),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: List.generate(
+                        3,
+                        (index) => Padding(
+                              padding: const EdgeInsets.only(right: 12),
+                              child: Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(5))),
+                            )),
+                  ),
+                  Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(5))),
+                ],
               ),
-              Container(width: 20, height: 20, color: Colors.grey[300]),
+              const SizedBox(height: 12),
+              Container(
+                  width: double.infinity,
+                  height: 80,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(5))),
+              const SizedBox(height: 50),
+              Row(children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        width: 120,
+                        height: 20,
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(5))),
+                    const SizedBox(height: 6),
+                    Container(
+                        width: 80,
+                        height: 15,
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(5))),
+                  ],
+                ),
+              ]),
+              const SizedBox(height: 12),
+              Container(
+                  height: 30,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(5))),
             ],
           ),
-          const SizedBox(height: 12),
-          Container(
-              width: double.infinity, height: 40, color: Colors.grey[300]),
-          const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(width: 80, height: 20, color: Colors.grey[300]),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -132,10 +207,10 @@ class _CommunityPageState extends State<CommunityPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                  leading: const CircleAvatar(
-                    foregroundImage: NetworkImage(
-                        "https://ui-avatars.com/api/?background=random&name=User+Names"),
-                  ),
+                  leading: CircleAvatar(
+                      foregroundImage: CachedNetworkImageProvider(post
+                              ?.profileImage ??
+                          "https://ui-avatars.com/api/?background=random&name=User+Names")),
                   title: Text(post?.societyName ?? ""),
                   subtitle: Text(post?.adminName ?? "")),
               Padding(
@@ -371,12 +446,14 @@ class _CommunityPageState extends State<CommunityPage> {
                                 comments.insert(
                                     0,
                                     Comment(
-                                      comment: commentText,
-                                      memberName: getLoginModel.user!.uname,
-                                    ));
+                                        comment: commentText,
+                                        memberName: getLoginModel.user!.uname,
+                                        profile:
+                                            getLoginModel.user!.profile_iamge));
 
                                 commentController.clear();
                               });
+                              setState(() {});
                             },
                             child: Container(
                               padding: const EdgeInsets.all(8),
@@ -410,9 +487,9 @@ class _CommunityPageState extends State<CommunityPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-            leading: const CircleAvatar(
+            leading: CircleAvatar(
               radius: 15,
-              foregroundImage: NetworkImage(
+              foregroundImage: NetworkImage(comments.profile ??
                   "https://ui-avatars.com/api/?background=random&name=User+Namez"),
             ),
             title: Text(
@@ -420,23 +497,65 @@ class _CommunityPageState extends State<CommunityPage> {
               style: const TextStyle(fontSize: 12),
             ),
             trailing: PopupMenuButton(
+              color: Colors.white,
               icon: Icon(
                 Icons.more_vert_outlined,
                 size: 24,
                 color: Theme.of(context).colorScheme.primary,
               ),
               itemBuilder: (context) => [
-                const PopupMenuItem<int>(
-                  value: 1,
-                  child: Text("Delete"),
-                ),
+                memberId == comments.memberId
+                    ? const PopupMenuItem<int>(
+                        height: 25,
+                        value: 1,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.delete_outline,
+                              weight: 5,
+                              size: 20,
+                              color: Colors.red,
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              "Delete",
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
+                      )
+                    : const PopupMenuItem<int>(
+                        value: 2,
+                        height: 25,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.flag_sharp,
+                              weight: 5,
+                              size: 20,
+                              color: Colors.blue,
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              "Report",
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
+                      ),
               ],
-              onSelected: (value) {
+              onSelected: (value) async {
                 if (value == 1) {
-                  // context
-                  //     .read<HomepageBloc>()
-                  //     .add(HomepageSaveArticleEvent(articleModel: articleModel));
-                }
+                  String msg = await deleteComment(comments.id.toString());
+                  EasyLoading.showToast(msg);
+                  // setState(() {});
+                } else if (value == 2) {
+                  EasyLoading.showToast("Post reported soon.");
+                } //more in future
               },
             )),
         Padding(

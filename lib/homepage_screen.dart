@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/api/firebase_api.dart';
-import 'package:society_gate/create_post.dart';
+import 'package:society_gate/community/community_post_add.dart';
 import 'package:society_gate/payments_screen/payment_screen.dart';
 
 import 'amenities/book_amenities.dart';
@@ -32,13 +32,19 @@ class _HomepageScreenState extends State<HomepageScreen> {
   Announcementmodel? data;
   LoginModel? loginModel;
   String? loginType;
+// <<<<<<< ritesh
   String? _userPhoto;
   String uiPhoto = "";
+// =======
+//   String profilePhoto = "";
+//   // "https://ui-avatars.com/api/?background=random&name=uiPhoto.";
+// >>>>>>> final
 
   @override
   void initState() {
     super.initState();
     getData();
+// <<<<<<< ritesh
     // getuserPhoto();
     FirebaseApi().initNotification();
   }
@@ -50,6 +56,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
   //   });
   // }
 
+// =======
+//     FirebaseApi().initNotification();
+//   }
+
+// >>>>>>> final
   getData() async {
     final getLoginModel = LocalStoragePref().getLoginModel();
 
@@ -60,9 +71,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
       loginModel = getLoginModel;
       data = mydata;
       loginType = loginModel?.user?.role ?? "NA";
-      uiPhoto = loginModel?.user?.uname ?? "User";
+      profilePhoto = loginModel?.user?.profile_iamge ?? "";
+      // "https://ui-avatars.com/api/?name=username.";
     });
+    log(profilePhoto);
     log(loginType ?? "No data");
+    ;
     log(loginModel?.user?.role ?? "NA");
   }
 
@@ -136,6 +150,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                             width: 1.5,
                           ),
                         ),
+// <<<<<<< ritesh
                         child: loginModel?.user?.profileImage != null
                             ? ClipOval(
                                 child: CachedNetworkImage(
@@ -163,6 +178,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                 //             ),
                                 //       ),
                                 ),
+// =======
+//                         child: CircleAvatar(
+//                           radius: 20,
+//                           backgroundImage: CachedNetworkImageProvider(
+//                             profilePhoto,
+//                           ),
+//                         ),
+// >>>>>>> final
                       ),
                       const SizedBox(width: 12),
                       Expanded(

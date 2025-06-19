@@ -21,9 +21,16 @@ class Navigationscreen extends StatefulWidget {
 
 class _Navigationscreen extends State<Navigationscreen> {
   int selectedIndex = 0;
+// <<<<<<< ritesh
   // String? _userPhoto;
   String uiPhoto = "";
   LoginModel? loginModel;
+   String userPhoto = 'https://ui-avatars.com/api/?background=random&name=ABC.';
+// =======
+//   LoginModel? getLoginModel;
+ 
+//   // String uiPhoto = "";
+// >>>>>>> final
 
   @override
   void initState() {
@@ -33,6 +40,7 @@ class _Navigationscreen extends State<Navigationscreen> {
 
   void getuserPhoto() {
     // final data = LocalStoragePref.instance!.getUserPhoto();
+// <<<<<<< ritesh
     setState(() {
       // _userPhoto = data;
       loginModel = LocalStoragePref().getLoginModel();
@@ -40,6 +48,19 @@ class _Navigationscreen extends State<Navigationscreen> {
     });
   }
 
+// =======
+//     getLoginModel = LocalStoragePref().getLoginModel();
+
+//     setState(() {
+//       userPhoto = getLoginModel?.user?.profile_iamge ??
+//           "https://ui-avatars.com/api/?name=username.";
+//       // uiPhoto = loginModel?.user?.uname ?? "User";
+//     });
+//   }
+
+//   // final loginModel = LocalStoragePref().getLoginModel();
+
+// >>>>>>> final
   void changeTab(int index) {
     setState(() {
       selectedIndex = index;
@@ -81,7 +102,10 @@ class _Navigationscreen extends State<Navigationscreen> {
             const BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag_outlined),
               label: "Needs",
-              activeIcon: Icon(Icons.shopping_bag_rounded),
+              activeIcon: Icon(
+                Icons.shopping_bag_rounded,
+                color: Colors.green,
+              ),
             ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.message_outlined),
@@ -96,6 +120,7 @@ class _Navigationscreen extends State<Navigationscreen> {
                   border:
                       Border.all(width: 0.5, color: Colors.deepOrangeAccent),
                 ),
+// <<<<<<< ritesh
                 child: loginModel?.user?.profileImage != null
                     ? ClipOval(
                         child: CachedNetworkImage(
@@ -141,6 +166,42 @@ class _Navigationscreen extends State<Navigationscreen> {
                       backgroundImage: CachedNetworkImageProvider(
                           "https://ui-avatars.com/api/?background=random&name=$uiPhoto.")),
             )
+// =======
+//                 child: CircleAvatar(
+//                     radius: 20,
+//                     backgroundImage: CachedNetworkImageProvider(userPhoto)
+//                     // child: _userPhoto != null
+//                     //     ? Image.memory(_userPhoto!)
+//                     //     : ClipOval(
+//                     //         child: Image.network(
+//                     //             "https://ui-avatars.com/api/?background=random&name=$uiPhoto."
+//                     //             // "https://ui-avatars.com/api/?background=random&name=$uiPhoto",
+//                     //             ),
+//                     //       ),
+//                     ),
+//               ),
+//               label: "Profile",
+              // activeIcon: Container(
+              //   padding: const EdgeInsets.all(4),
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(100),
+              //     border:
+              //         Border.all(width: 0.5, color: Colors.deepOrangeAccent),
+              //   ),
+              //   child: _userPhoto != null
+              //       ? ClipRRect(
+              //           borderRadius: BorderRadius.circular(100),
+              //           child: Image.memory(
+              //             _userPhoto!,
+              //             fit: BoxFit.cover,
+              //             width: 30,
+              //             height: 30,
+              //           ),
+              //         )
+              //       : const Icon(Icons.person),
+              // ),
+            ),
+// >>>>>>> final
           ],
         ),
       ),
@@ -177,7 +238,7 @@ class _Navigationscreen extends State<Navigationscreen> {
       case 2:
         return const CommunityPage();
       case 3:
-        return loginModel!.user!.role != "watchman"
+        return getLoginModel?.user?.role != "watchman"
             ? const AccountScreen()
             : const WatchmanProfilePage();
       default:

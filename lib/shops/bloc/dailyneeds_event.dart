@@ -8,14 +8,15 @@ class GetShopsList extends DailyneedsEvent {
 }
 
 class AddShopEvent extends DailyneedsEvent {
-  final String shopName, shopType, ownerName, shopPhone, shopAddress;
+  final String image, shopName, shopType, ownerName, shopPhone, shopAddress;
   AddShopEvent(
-      {required this.shopName,
+      {required this.image,
+      required this.shopName,
       required this.shopType,
       required this.ownerName,
       required this.shopPhone,
       required this.shopAddress});
   @override
   List<Object?> get props =>
-      [shopName, shopType, ownerName, shopPhone, shopAddress];
+      [image, shopName, shopType, ownerName, shopPhone, shopAddress];
 }

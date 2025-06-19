@@ -40,6 +40,7 @@ class Comment {
   final int? societyId;
   final int? memberId;
   final String? memberName;
+  final String? profile;
   final String? comment;
   final String? createdAt;
 
@@ -49,6 +50,7 @@ class Comment {
     this.societyId,
     this.memberId,
     this.memberName,
+    this.profile,
     this.comment,
     this.createdAt,
   });
@@ -60,6 +62,7 @@ class Comment {
       societyId: json['society_id'] as int?,
       memberId: json['member_id'] as int?,
       memberName: json['member_name'] as String?,
+      profile: json['profile_image'] as String?,
       comment: json['comment'] as String?,
       createdAt: json['created_at'] as String?,
     );
@@ -71,6 +74,7 @@ class Comment {
         'society_id': societyId,
         'member_id': memberId,
         'member_name': memberName,
+        'profile_image': profile,
         'comment': comment,
         'created_at': createdAt,
       };
