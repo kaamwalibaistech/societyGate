@@ -139,7 +139,7 @@ class _RegisterMemberState extends State<RegisterMember> {
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 5.0),
                     child: Text(
-                      "Society Code ",
+                      "Society Registration Number ",
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ),
@@ -148,7 +148,7 @@ class _RegisterMemberState extends State<RegisterMember> {
                       "Enter Society Code",
                       societyCodeController,
                       societyValidator,
-                      TextInputType.phone),
+                      TextInputType.text),
                   // inputFeild("Password", "Enter password", passwordController,
                   //     passwordValidator, TextInputType.visiblePassword,
                   //     isPassword: true),
@@ -292,15 +292,15 @@ class _RegisterMemberState extends State<RegisterMember> {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.25,
                               child: TextFormField(
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.text,
                                 controller: blockController,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Enter block";
-                                  } else {
-                                    return null;
-                                  }
-                                },
+                                // validator: (value) {
+                                //   if (value!.isEmpty) {
+                                //     return "Enter block";
+                                //   } else {
+                                //     return null;
+                                //   }
+                                // },
                                 decoration: const InputDecoration(
                                   fillColor: Colors.white,
                                   filled: true,
@@ -338,10 +338,22 @@ class _RegisterMemberState extends State<RegisterMember> {
                                     blockController.text,
                                     floorNoNoController.text);
                             // All validations passed
-                            Fluttertoast.showToast(
-                                timeInSecForIosWeb: 2,
-                                msg: memberRegisterData!.message);
-                            Navigator.pop(context);
+                            if (memberRegisterData?.status == 200) {
+                              Fluttertoast.showToast(
+                                  timeInSecForIosWeb: 2,
+                                  msg: memberRegisterData?.message?.success
+                                          .toString() ??
+                                      "");
+
+                              Navigator.pop(context);
+                            } else {
+                              Fluttertoast.showToast(
+                                  timeInSecForIosWeb: 2,
+                                  msg:
+                                      "${memberRegisterData?.message?.sregistration_no} "
+                                      "${memberRegisterData?.message?.uemail}"
+                                      "${memberRegisterData?.message?.uphone}");
+                            }
                           }
                         },
                         child: Center(
