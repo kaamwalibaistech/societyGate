@@ -5,7 +5,6 @@ import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/models/announcements_model.dart';
 
 import '../../constents/local_storage.dart';
-import '../../constents/sizedbox.dart';
 import '../../models/login_model.dart';
 import '../../models/memberlist_model.dart';
 import '../../models/watchman_add_model.dart';
@@ -31,6 +30,8 @@ class _MembersPageState extends State<MembersPage> {
   String? adminEmail;
   // LoginModel? loginModel;
   String? loginType;
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
   @override
   void initState() {
     super.initState();
@@ -547,205 +548,121 @@ class _MembersPageState extends State<MembersPage> {
     );
   }
 
-  modelBottomsheet() {
+  void modelBottomsheet() {
     final formKey = GlobalKey<FormState>();
-    String? validateEmail(String? email) {
-      RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
-      final isEmailValid = emailRegEx.hasMatch(email ?? "");
-      if (!isEmailValid) return "please  Enter a valid email";
-      return null;
-    }
 
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: SingleChildScrollView(
-              child: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    sizedBoxH10(context),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                      child: Text(
-                        "Name",
-                        style: TextStyle(),
+    // String? validateEmail(String? email) {
+    //   RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
+    //   final isEmailValid = emailRegEx.hasMatch(email ?? "");
+    //   if (!isEmailValid) return "Please enter a valid email";
+    //   return null;
+    // }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Very important
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          return DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.85,
+            minChildSize: 0.5,
+            maxChildSize: 0.95,
+            builder: (context, scrollController) {
+              return SingleChildScrollView(
+                controller: scrollController,
+                padding: EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                  top: 20,
+                ),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildLabel("Name"),
+                      buildTextField(nameController, "Enter name",
+                          validator: (value) {
+                        if (value!.isEmpty || value.length < 2) {
+                          return "Enter a valid name";
+                        }
+                        return null;
+                      }),
+                      buildLabel("Email"),
+                      buildTextField(
+                        emailController, "Enter email",
+                        keyboardType: TextInputType.emailAddress,
+                        // validator: validateEmail
                       ),
-                    ),
-                    Center(
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              controller: nameController,
-                              validator: (value) {
-                                if (nameController.text.isEmpty &&
-                                    nameController.text.length < 2) {
-                                  return "Enter name";
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  hintText: "Enter name",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                    ),
-                    sizedBoxH10(context),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                      child: Text(
-                        "Email",
-                        style: TextStyle(),
+                      buildLabel("Mobile No."),
+                      buildTextField(
+                        mobileNoController,
+                        "Enter mobile no",
+                        keyboardType: TextInputType.number,
+                        maxLength: 10,
+                        validator: (value) {
+                          if (value!.length != 10) {
+                            return "Mobile no should be 10 digits";
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    Center(
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              controller: emailController,
-                              validator: validateEmail,
-                              decoration: const InputDecoration(
-                                  hintText: "Enter Email",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                    ),
-                    sizedBoxH10(context),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                      child: Text(
-                        "Mobile No.",
-                        style: TextStyle(),
+                      buildLabel("Password"),
+                      buildTextField(
+                        passwordController,
+                        "Enter password",
+                        isObscure: true,
+                        isTextVisible: _isPasswordVisible,
+                        toggleVisibility: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null || value.length < 2) {
+                            return "Enter password";
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    Center(
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              controller: mobileNoController,
-                              maxLength: 10,
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                if (value!.length < 10) {
-                                  return "Mobile no should be 10 in digits";
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  counterText: "",
-                                  hintText: "Enter mobile no",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                    ),
-                    sizedBoxH10(context),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                      child: Text(
-                        "password",
-                        style: TextStyle(),
+                      buildLabel("Confirm Password"),
+                      buildTextField(
+                        confirmPasswordController,
+                        "Enter confirm password",
+                        isObscure: true,
+                        isTextVisible: _isConfirmPasswordVisible,
+                        toggleVisibility: () {
+                          setState(() {
+                            _isConfirmPasswordVisible =
+                                !_isConfirmPasswordVisible;
+                          });
+                        },
+                        validator: (value) {
+                          if (value != passwordController.text) {
+                            return "Passwords do not match";
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    Center(
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              controller: passwordController,
-                              validator: (value) {
-                                if (passwordController.text.isEmpty &&
-                                    passwordController.text.length < 2) {
-                                  return "Enter password";
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  hintText: "Enter password",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                    ),
-                    sizedBoxH10(context),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                      child: Text(
-                        "confirm password",
-                        style: TextStyle(),
-                      ),
-                    ),
-                    Center(
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              controller: confirmPasswordController,
-                              validator: (value) {
-                                if (confirmPasswordController.text.isEmpty &&
-                                    confirmPasswordController.text.length < 2) {
-                                  return " Enter password";
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  hintText: "Enter confirm password",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: () async {
-                            if (formKey.currentState!.validate() &&
-                                passwordController.text ==
-                                    confirmPasswordController.text) {
+                      const SizedBox(height: 20),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
                               ApiRepository apiRepository = ApiRepository();
-
                               WatchManAddModel? watchmanData =
                                   await apiRepository.addWatchman(
-                                      loginModel!.user!.societyId.toString(),
-                                      nameController.text,
-                                      emailController.text,
-                                      mobileNoController.text,
-                                      passwordController.text);
+                                loginModel!.user!.societyId.toString(),
+                                nameController.text,
+                                emailController.text,
+                                mobileNoController.text,
+                                passwordController.text,
+                              );
                               final societyId = loginModel?.user!.societyId;
                               context.read<MembersBloc>().add(
                                   GetMemberListEvent(
@@ -755,28 +672,67 @@ class _MembersPageState extends State<MembersPage> {
                               Navigator.pop(context);
                             } else {
                               Fluttertoast.showToast(
-                                  msg: "password should be same");
+                                  msg: "All fields are Manditory");
                             }
                           },
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.05,
-                            width: MediaQuery.of(context).size.width * 0.30,
-                            decoration:
-                                const BoxDecoration(color: Colors.green),
-                            child: const Center(
-                                child: Text(
-                              "Add Watchman",
-                              style: TextStyle(),
-                            )),
-                          ),
+                          child: const Text("Add Watchman"),
                         ),
                       ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           );
-        });
+        },
+      ),
+    );
+  }
+
+  Widget buildLabel(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0, bottom: 6, left: 5),
+      child: Text(
+        text,
+        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+      ),
+    );
+  }
+
+  Widget buildTextField(
+    TextEditingController controller,
+    String hint, {
+    bool isObscure = false,
+    bool? isTextVisible,
+    VoidCallback? toggleVisibility,
+    int? maxLength,
+    TextInputType keyboardType = TextInputType.text,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: isObscure && !(isTextVisible ?? false),
+      maxLength: maxLength,
+      keyboardType: keyboardType,
+      validator: validator,
+      decoration: InputDecoration(
+        hintText: hint,
+        filled: true,
+        fillColor: Colors.white,
+        counterText: "",
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        border: const OutlineInputBorder(borderSide: BorderSide.none),
+        suffixIcon: isObscure
+            ? IconButton(
+                icon: Icon(
+                  isTextVisible ?? false
+                      ? Icons.visibility
+                      : Icons.visibility_off,
+                ),
+                onPressed: toggleVisibility,
+              )
+            : null,
+      ),
+    );
   }
 }
