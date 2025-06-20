@@ -11,6 +11,8 @@ import 'package:society_gate/models/comments_model.dart';
 import 'package:society_gate/models/community_model.dart';
 
 import '../constents/local_storage.dart';
+import 'comment_item.dart';
+import 'community_loading.dart';
 
 class CommunityPage extends StatefulWidget {
   const CommunityPage({super.key});
@@ -23,6 +25,7 @@ class _CommunityPageState extends State<CommunityPage> {
   CommunityBloc? communityBloc;
   late int societyId;
   late int memberId;
+  late String adminName;
   @override
   void initState() {
     super.initState();
@@ -31,13 +34,14 @@ class _CommunityPageState extends State<CommunityPage> {
   //mile jo khuda to bol du
 
   void loadData() {
-    CommunityBloc communityBloc = BlocProvider.of<CommunityBloc>(context);
-    communityBloc.add(CommunityPostEvent(page: '1'));
+    communityBloc = BlocProvider.of<CommunityBloc>(context);
+    communityBloc?.add(CommunityPostEvent(page: '1'));
     final getLoginModel = LocalStoragePref().getLoginModel();
 
     setState(() {
       societyId = getLoginModel?.user?.societyId ?? 0;
       memberId = getLoginModel?.user?.userId ?? 0;
+      adminName = getLoginModel?.user?.uname ?? "NA";
       log(societyId.toString());
     });
 
@@ -49,145 +53,13 @@ class _CommunityPageState extends State<CommunityPage> {
     return Scaffold(body: BlocBuilder<CommunityBloc, CommunityPostState>(
         builder: (context, state) {
       if (state is CommunityPostInitial || state is CommunityPostLoading) {
-        return _loading();
+        return const CommunityLoading();
       } else if (state is CommunityPostSuccess) {
         return _post(state.communityModel, state.commentsList);
       } else {
         return Center(child: Text(state.toString()));
       }
     }));
-  }
-
-  Widget _loading() {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        width: 120,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(5))),
-                    const SizedBox(height: 6),
-                    Container(
-                        width: 80,
-                        height: 15,
-                        decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(5))),
-                  ],
-                ),
-              ]),
-              const SizedBox(height: 12),
-              Container(
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(5))),
-              const SizedBox(height: 10),
-              Container(
-                  height: 20,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(5))),
-              const SizedBox(height: 16),
-              Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10))),
-              const SizedBox(height: 18),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: List.generate(
-                        3,
-                        (index) => Padding(
-                              padding: const EdgeInsets.only(right: 12),
-                              child: Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(5))),
-                            )),
-                  ),
-                  Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(5))),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Container(
-                  width: double.infinity,
-                  height: 80,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(5))),
-              const SizedBox(height: 50),
-              Row(children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        width: 120,
-                        height: 20,
-                        decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(5))),
-                    const SizedBox(height: 6),
-                    Container(
-                        width: 80,
-                        height: 15,
-                        decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(5))),
-                  ],
-                ),
-              ]),
-              const SizedBox(height: 12),
-              Container(
-                  height: 30,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(5))),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   Widget _post(CommunityModel? communityModel, List<Comment> commentsList) {
@@ -203,12 +75,79 @@ class _CommunityPageState extends State<CommunityPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                  leading: CircleAvatar(
-                      foregroundImage: CachedNetworkImageProvider(post
-                              ?.profileImage ??
-                          "https://ui-avatars.com/api/?background=random&name=User+Names")),
-                  title: Text(post?.societyName ?? ""),
-                  subtitle: Text(post?.adminName ?? "")),
+                leading: CircleAvatar(
+                    foregroundImage: CachedNetworkImageProvider(post
+                            ?.profileImage ??
+                        "https://ui-avatars.com/api/?background=random&name=User+Names")),
+                title: Text(post?.societyName ?? ""),
+                subtitle: Text(
+                    "${post?.adminName ?? "NA"}   • ${getTimeAgo(post?.createdAt)}"),
+                trailing: PopupMenuButton(
+                  color: Colors.white,
+                  icon: Icon(
+                    Icons.more_vert_outlined,
+                    size: 24,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  itemBuilder: (context) => [
+                    adminName == post?.adminName
+                        ? const PopupMenuItem<int>(
+                            height: 30,
+                            value: 1,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.delete_outline,
+                                  weight: 5,
+                                  size: 20,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  "Delete",
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                          )
+                        : const PopupMenuItem<int>(
+                            height: 0, value: 0, child: SizedBox.shrink()),
+                    const PopupMenuItem<int>(
+                      height: 30,
+                      value: 2,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.share,
+                            weight: 5,
+                            size: 20,
+                            color: Colors.blue,
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            "Share",
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                  onSelected: (value) async {
+                    if (value == 1) {
+                      EasyLoading.show();
+                      String msg = await deletePost(post?.id.toString() ?? "");
+                      EasyLoading.showToast(msg);
+                      communityBloc?.add(CommunityPostEvent(page: '1'));
+                    } else if (value == 2) {
+                      EasyLoading.showToast("Working on it");
+                    }
+                  },
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
@@ -250,12 +189,8 @@ class _CommunityPageState extends State<CommunityPage> {
                           child: Image.network(
                             post?.photo ??
                                 "https://green-delta.com/wp-content/uploads/2021/07/not-available.png",
-                            fit: BoxFit.fill,
+                            fit: BoxFit.fitWidth,
                           ),
-                          //  Image.asset(
-                          //   'lib/assets/girlphoto1.jpg',
-                          //   fit: BoxFit.fill,
-                          // ),
                         )),
                     Container(
                       height: 50,
@@ -272,7 +207,9 @@ class _CommunityPageState extends State<CommunityPage> {
                             child: Text(post!.like.toString()),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              EasyLoading.showToast("Working on it");
+                            },
                             icon: const Icon(
                               Icons.thumb_up_outlined,
                               color: Colors.blueGrey,
@@ -283,7 +220,9 @@ class _CommunityPageState extends State<CommunityPage> {
                             child: Text(post.dislike.toString()),
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              EasyLoading.showToast("Working on it");
+                            },
                             icon: const Icon(
                               Icons.thumb_down_outlined,
                               color: Colors.blueGrey,
@@ -299,7 +238,9 @@ class _CommunityPageState extends State<CommunityPage> {
                             ),
                           ),
                           // IconButton(
-                          //   onPressed: () {},
+                          //   onPressed: () {
+                          //     EasyLoading.showToast("Working on it");
+                          //   },
                           //   icon: const Icon(
                           //     Icons.share,
                           //     color: Colors.blueGrey,
@@ -322,7 +263,10 @@ class _CommunityPageState extends State<CommunityPage> {
                                     )),
                                 child: Column(
                                   children: [
-                                    commentTile(finalComments[0]),
+                                    CommentItem(
+                                      comments: finalComments[0],
+                                      memberId: memberId,
+                                    ),
                                     Padding(
                                       padding: const EdgeInsets.only(
                                           left: 10, right: 10, bottom: 8),
@@ -363,7 +307,6 @@ class _CommunityPageState extends State<CommunityPage> {
   void showCommentsBottomSheet(List<Comment> comments, String postId) {
     TextEditingController commentController = TextEditingController();
     // List<Comment> comments = List.from(initialComments); // Make it mutable
-
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
@@ -397,8 +340,11 @@ class _CommunityPageState extends State<CommunityPage> {
                           : ListView.builder(
                               itemCount: comments.length,
                               shrinkWrap: true,
-                              itemBuilder: (context, index) =>
-                                  commentTile(comments[index]),
+                              itemBuilder: (context, index) => CommentItem(
+                                comments: comments[index],
+                                memberId: memberId,
+                              ),
+                              // commentTile(comments[index]),
                             ),
                     ),
                     const SizedBox(height: 16),
@@ -478,6 +424,7 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 
+/*
   Widget commentTile(Comment comments) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -566,5 +513,28 @@ class _CommunityPageState extends State<CommunityPage> {
         ),
       ],
     );
+  }
+*/
+  // Widget _loading() {}
+
+  String getTimeAgo(String? pubDate) {
+    // Parse the published date as UTC
+    DateTime published = DateTime.parse(pubDate!).toUtc();
+    // Get current date in UTC
+    DateTime now = DateTime.now().toUtc();
+    // Calculate difference
+    Duration diff = now.difference(published);
+
+    if (diff.inDays > 1) {
+      return "${diff.inDays} days ago";
+    } else if (diff.inDays == 1) {
+      return "1 day ago";
+    } else if (diff.inHours >= 1) {
+      return "${diff.inHours} hours ago";
+    } else if (diff.inMinutes >= 1) {
+      return "${diff.inMinutes} minutes ago";
+    } else {
+      return "Just now";
+    }
   }
 }
