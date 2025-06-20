@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:society_gate/models/forget_password_model.dart';
 import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'package:society_gate/models/help_support_model.dart';
@@ -108,7 +110,7 @@ class ApiRepository {
       'uphone': uphone,
       'sregistration_no': sregistrationNo,
       'flat_number': flatNumber,
-      'block': block,
+      'block': block ?? "",
       'floor': floor,
     };
     try {
@@ -223,6 +225,20 @@ class ApiRepository {
       request.fields['description'] = description;
 
       // Add the image file
+
+      if (photoPath != null &&
+          photoPath.isNotEmpty &&
+          File(photoPath).existsSync()) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'photo',
+            photoPath,
+            contentType: MediaType('image', 'jpeg'),
+          ),
+        );
+      } else {
+        print("Invalid or missing image path: $photoPath");
+      }
       request.files.add(
         await http.MultipartFile.fromPath(
           'photo',
@@ -474,7 +490,7 @@ class ApiRepository {
     final body = {
       'society_id': societyid,
       'uname': name,
-      'uemail': email,
+      'uemail': email ?? "",
       'uphone': phoneNo,
       'upassword': password,
     };

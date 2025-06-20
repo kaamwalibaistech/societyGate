@@ -66,14 +66,15 @@ class Users {
 }
 
 class Members {
-  final int userId;
-  final int societyId;
-  final String urole;
-  final String uname;
-  final String uemail;
-  final String uphone;
-  final String approvalStatus;
-  final String createdAt;
+  final int? userId;
+  final int? societyId;
+  final String? urole;
+  final String? uname;
+  final String? uemail;
+  final String? uphone;
+  final String? approvalStatus;
+  final String? profileImage;
+  final String? createdAt;
 
   Members({
     required this.userId,
@@ -83,6 +84,7 @@ class Members {
     required this.uemail,
     required this.uphone,
     required this.approvalStatus,
+    required this.profileImage,
     required this.createdAt,
   });
 
@@ -94,6 +96,7 @@ class Members {
         uemail: json['uemail'],
         uphone: json['uphone'],
         approvalStatus: json['approval_status'],
+        profileImage: json['profile_image'],
         createdAt: json['created_at'],
       );
 
@@ -106,6 +109,7 @@ class Members {
     data['uemail'] = uemail;
     data['uphone'] = uphone;
     data['approval_status'] = approvalStatus;
+    data['profile_image'] = profileImage;
     data['created_at'] = createdAt;
     return data;
   }
@@ -119,6 +123,7 @@ class Admins {
   String? uemail;
   String? uphone;
   String? approvalStatus;
+  String? profileImage;
   String? createdAt;
 
   Admins(
@@ -129,6 +134,7 @@ class Admins {
       this.uemail,
       this.uphone,
       this.approvalStatus,
+      this.profileImage,
       this.createdAt});
 
   Admins.fromJson(Map<String, dynamic> json) {
@@ -139,6 +145,7 @@ class Admins {
     uemail = json['uemail'];
     uphone = json['uphone'];
     approvalStatus = json['approval_status'];
+    profileImage = json['profile_image'];
     createdAt = json['created_at'];
   }
 
@@ -151,6 +158,7 @@ class Admins {
     data['uemail'] = uemail;
     data['uphone'] = uphone;
     data['approval_status'] = approvalStatus;
+    data['profile_image'] = profileImage;
     data['created_at'] = createdAt;
     return data;
   }
@@ -164,6 +172,7 @@ class Watchmen {
   String? uemail;
   String? uphone;
   String? approvalStatus;
+  String? profileImage;
   String? createdAt;
 
   Watchmen(
@@ -174,6 +183,7 @@ class Watchmen {
       this.uemail,
       this.uphone,
       this.approvalStatus,
+      this.profileImage,
       this.createdAt});
 
   Watchmen.fromJson(Map<String, dynamic> json) {
@@ -184,6 +194,7 @@ class Watchmen {
     uemail = json['uemail'];
     uphone = json['uphone'];
     approvalStatus = json['approval_status'];
+    profileImage = json['profile_image'];
     createdAt = json['created_at'];
   }
 
@@ -196,6 +207,7 @@ class Watchmen {
     data['uemail'] = uemail;
     data['uphone'] = uphone;
     data['approval_status'] = approvalStatus;
+    data['profile_image'] = profileImage;
     data['created_at'] = createdAt;
     return data;
   }

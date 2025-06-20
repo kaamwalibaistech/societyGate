@@ -112,10 +112,7 @@ class _UserAmenitiesPageState extends State<UserAmenitiesPage> {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        getUserPurchaseAmenitiesData!
-                                                .data?[index].duration
-                                                .toString() ??
-                                            "",
+                                        "  Plan: ${getUserPurchaseAmenitiesData!.data?[index].duration.toString() ?? "NA"}",
                                         style: const TextStyle(
                                           fontSize: 14,
                                           color: Colors.grey,

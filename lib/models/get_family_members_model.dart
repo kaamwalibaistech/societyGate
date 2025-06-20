@@ -47,6 +47,7 @@ class FamilyMember {
   int? memberId;
   int? submemberId;
   String? uname;
+  String? photo;
   String? uemail;
   String? uphone;
   String? relation;
@@ -60,6 +61,7 @@ class FamilyMember {
     this.memberId,
     this.submemberId,
     this.uname,
+    this.photo,
     this.uemail,
     this.uphone,
     this.relation,
@@ -74,6 +76,7 @@ class FamilyMember {
         memberId: json["member_id"],
         submemberId: json["submember_id"],
         uname: json["uname"],
+        photo: json["profile_photo"],
         uemail: json["uemail"],
         uphone: json["uphone"],
         relation: json["relation"],
@@ -92,6 +95,7 @@ class FamilyMember {
         "member_id": memberId,
         "submember_id": submemberId,
         "uname": uname,
+        "profile_photo": photo,
         "uemail": uemail,
         "uphone": uphone,
         "relation": relation,

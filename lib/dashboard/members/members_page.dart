@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -26,11 +27,13 @@ class _MembersPageState extends State<MembersPage> {
   TextEditingController confirmPasswordController = TextEditingController();
   LoginModel? loginModel;
   WatchManAddModel? watchmanData;
-  Announcementmodel? data;
-  String? adminName;
-  String? adminEmail;
+  // Announcementmodel? data;
+  // String? adminName = "Anil";
+  // String? adminEmail = "Anil";
   // LoginModel? loginModel;
   String? loginType;
+  // String profilePhoto = "https://ui-avatars.com/api/?background=edbdff&name=.";
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +46,10 @@ class _MembersPageState extends State<MembersPage> {
 
     if (loginModel != null) {
       final societyId = loginModel?.user!.societyId;
+      // setState(() {
+      //   // profilePhoto = loginModel?.user?.profileImage ??
+      //   //     "https://ui-avatars.com/api/?background=edbdff&name=$adminName.";
+      // });
       context
           .read<MembersBloc>()
           .add(GetMemberListEvent(soceityId: societyId.toString()));
@@ -54,12 +61,12 @@ class _MembersPageState extends State<MembersPage> {
   getData() async {
     final getLoginModel = LocalStoragePref().getLoginModel();
 
-    ApiRepository apiRepositiory = ApiRepository();
-    Announcementmodel? mydata = await apiRepositiory
-        .getHomePageData(getLoginModel!.user!.societyId.toString());
+    // ApiRepository apiRepositiory = ApiRepository();
+    // Announcementmodel? mydata = await apiRepositiory
+    //     .getHomePageData(getLoginModel!.user!.societyId.toString());
     setState(() {
       loginModel = getLoginModel;
-      data = mydata;
+      // data = mydata;
       loginType = loginModel?.user?.role ?? "NA";
       // uiPhoto = loginModel?.user?.uname ?? "User";
     });
@@ -70,144 +77,159 @@ class _MembersPageState extends State<MembersPage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8F9FF),
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.purple.shade50,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF6B4EFF)),
+            icon: const Icon(Icons.arrow_back, color: Colors.purple),
             onPressed: () => Navigator.pop(context),
           ),
           title: const Text(
             "Members",
             style: TextStyle(
-              color: Color(0xFF1A1A1A),
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-            ),
+                color: Color(0xFF1A1A1A),
+                fontWeight: FontWeight.w600,
+                fontSize: 20),
           ),
           centerTitle: true,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(160),
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.only(bottom: 25),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        // padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color(0xFF6B4EFF),
-                            width: 1.5,
-                          ),
-                        ),
-                        child: ClipOval(
-                          child: Image.network(
-                            "https://ui-avatars.com/api/?background=random&name=$adminName.",
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              adminName ?? "No Admin",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF1A1A1A),
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              adminEmail ?? "Not Available",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF0F2FF),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: TabBar(
-                      indicator: BoxDecoration(
-                        color: const Color(0xFF6B4EFF),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      labelColor: Colors.white,
-                      unselectedLabelColor: const Color(0xFF6B4EFF),
-                      indicatorPadding: const EdgeInsets.symmetric(
-                          horizontal: -20, vertical: 5),
-                      tabs: const [
-                        Tab(text: "Members"),
-                        Tab(text: "Watchman"),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
-        body: BlocBuilder<MembersBloc, MembersState>(
-          builder: (context, state) {
-            if (state is MembersInitialState) {
-              return _buildShimmer();
-            } else if (state is MembersSuccessState) {
-              return getUi(state.memberlistModel);
-            } else if (state is MembersErrorState) {
-              return _buildError(state.msg);
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
+        body: Column(
+          children: [
+            SizedBox(
+              child: BlocBuilder<MembersBloc, MembersState>(
+                builder: (context, state) {
+                  if (state is MembersInitialState) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.purple.shade50,
+                      ),
+                    );
+                  } else if (state is MembersSuccessState) {
+                    String adminPhoto = state.memberlistModel?.users?.admins
+                            ?.first.profileImage ??
+                        "NA";
+                    String adminName =
+                        state.memberlistModel?.users?.admins?.first.uname ??
+                            "NA";
+                    String adminEmail =
+                        state.memberlistModel?.users?.admins?.first.uemail ??
+                            "NA";
+
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.blue.shade50),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: CachedNetworkImageProvider(
+                            adminPhoto,
+                          ),
+                        ),
+                        title: Text(
+                          adminName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF1A1A1A),
+                          ),
+                        ),
+                        subtitle: Text(
+                          adminEmail,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        trailing: const Text(
+                          "Society Admin",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    );
+
+                    // getUi(state.memberlistModel);
+                  } else if (state is MembersErrorState) {
+                    return Container(
+                      padding: const EdgeInsets.all(8),
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.red.shade50,
+                      ),
+                      child: Center(
+                        child: Text(state.msg),
+                      ),
+                    );
+                  } else {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.red.shade50,
+                      ),
+                      child: const Center(
+                        child: Text("Something wrong!"),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0F2FF),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TabBar(
+                  indicator: BoxDecoration(
+                    color: const Color(0xFF6B4EFF),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: const Color(0xFF6B4EFF),
+                  indicatorPadding:
+                      const EdgeInsets.symmetric(horizontal: -20, vertical: 5),
+                  tabs: const [
+                    Tab(text: "Members"),
+                    Tab(text: "Watchman"),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: BlocBuilder<MembersBloc, MembersState>(
+                builder: (context, state) {
+                  if (state is MembersInitialState) {
+                    return _buildShimmer();
+                  } else if (state is MembersSuccessState) {
+                    return getUi(state.memberlistModel);
+                  } else if (state is MembersErrorState) {
+                    return _buildError(state.msg);
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget getUi(
-    MemberlistModel? memberlistModel,
-  ) {
-    if (memberlistModel?.users?.admins?.isNotEmpty ?? false) {
-      adminName = memberlistModel!.users!.admins!.first.uname;
-      adminEmail = memberlistModel.users!.admins!.first.uemail;
-    }
-
+  Widget getUi(MemberlistModel? memberlistModel) {
     return Column(
       children: [
-        // Admin Card
-
         // Tab Content
         Expanded(
           child: TabBarView(
@@ -343,17 +365,16 @@ class _MembersPageState extends State<MembersPage> {
                 height: 75,
                 decoration: BoxDecoration(
                     color: Colors.purple.shade50,
-                    borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(12)),
                 child: ListTile(
-                  leading: ClipOval(
-                    child: Image.network(
-                      "https://ui-avatars.com/api/?background=random&name=${memberList.uname}.",
-                      height: 50,
-                      width: 50,
-                    ),
+                  leading: CircleAvatar(
+                    radius: 35,
+                    backgroundImage: CachedNetworkImageProvider(memberList
+                            .profileImage ??
+                        "https://ui-avatars.com/api/?background=random&name=${memberList.uname}."),
                   ),
-                  title: Text(memberList.uname),
-                  subtitle: Text(memberList.uname),
+                  title: Text(memberList.uname ?? ""),
+                  subtitle: Text(memberList.uname ?? ""),
                   trailing: GestureDetector(
                     onTap: () async {
                       if (loginModel!.user!.role == "admin") {
@@ -372,7 +393,7 @@ class _MembersPageState extends State<MembersPage> {
                       }
                     },
                     child: Text(
-                      memberList.approvalStatus,
+                      memberList.approvalStatus ?? "",
                       style: const TextStyle(fontSize: 14),
                     ),
                   ),
@@ -405,7 +426,7 @@ class _MembersPageState extends State<MembersPage> {
                       height: 75,
                       decoration: BoxDecoration(
                           color: Colors.purple.shade50,
-                          borderRadius: BorderRadius.circular(20)),
+                          borderRadius: BorderRadius.circular(12)),
                       child: ListTile(
                         trailing: loginType == "admin"
                             ? GestureDetector(
@@ -531,12 +552,19 @@ class _MembersPageState extends State<MembersPage> {
                                 ),
                               )
                             : const SizedBox.shrink(),
-                        leading: const CircleAvatar(
-                          foregroundImage:
-                              AssetImage("lib/assets/watchman.jpg"),
-                          radius: 30,
-// >>>>>>> final
+                        leading: CircleAvatar(
+                          radius: 35,
+                          backgroundImage: CachedNetworkImageProvider(watchmenList
+                                  .profileImage ??
+                              "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}."),
                         ),
+
+//                         const CircleAvatar(
+//                           foregroundImage:
+//                               AssetImage("lib/assets/watchman.jpg"),
+//                           radius: 30,
+// // >>>>>>> final
+//                         ),
                         title: Text(watchmenList.uname ?? "No Name"),
                         subtitle: Text(watchmenList.uphone ?? "Not Available"),
                       ));

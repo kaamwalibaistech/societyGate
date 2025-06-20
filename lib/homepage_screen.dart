@@ -49,11 +49,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
     setState(() {
       profilePhoto = loginModel?.user?.profileImage ??
           "https://ui-avatars.com/api/?background=edbdff&name=$name.";
+      loginType = loginModel?.user?.role ?? "NA";
     });
     ApiRepository apiRepositiory = ApiRepository();
     announcementmodel = await apiRepositiory
         .getHomePageData(loginModel?.user?.societyId.toString());
-    loginType = loginModel?.user?.role ?? "NA";
 
     log("Profile url: $profilePhoto");
     log("Role: $loginType");

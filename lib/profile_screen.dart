@@ -85,27 +85,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  //   final data = LocalStoragePref.instance!.getUserPhoto();
-  //   if (data != null) {
-  //     setState(() {
-  //       _userPhoto = File(data);
-  //       // bytes = Uint8List.fromList(utf8.encode(_userPhoto.toString()));
-  //     });
-  //   }
-  // else {
-  //     setState(() {
-  //       _userPhoto = null;
-  //     });
-  //   }
-  // }
-
-  // void getuserPhoto() {
-  //   final data = LocalStoragePref.instance!.getUserPhoto();
-  //   setState(() {
-  //     _userPhoto = data;
-  //   });
-  // }
-
   void showImagePickerOptions() {
     showModalBottomSheet(
       context: context,
