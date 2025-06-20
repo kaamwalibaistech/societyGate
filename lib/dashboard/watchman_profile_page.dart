@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:society_gate/auth/register_screen.dart';
+import 'package:society_gate/help_support.dart';
 import 'package:society_gate/terms_condition.dart';
 
 import '../constents/local_storage.dart';
@@ -111,19 +112,27 @@ class _WatchmanProfilePageState extends State<WatchmanProfilePage> {
                         ),
                       ),
                     ),
-                    const ListTile(
-                      leading: Icon(
-                        Icons.help_outline_outlined,
-                        //   color: Colors.black,
-                      ),
-                      title: Text(
-                        "Help & support",
-                        //  style: TextStyle(color: Colors.black),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_forward_ios_outlined,
-                        size: 18,
-                        // color: Colors.black,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const HelpSupport()));
+                      },
+                      child: const ListTile(
+                        leading: Icon(
+                          Icons.help_outline_outlined,
+                          //   color: Colors.black,
+                        ),
+                        title: Text(
+                          "Help & support",
+                          //  style: TextStyle(color: Colors.black),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          size: 18,
+                          // color: Colors.black,
+                        ),
                       ),
                     ),
                     GestureDetector(

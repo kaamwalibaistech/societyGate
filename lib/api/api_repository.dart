@@ -110,7 +110,7 @@ class ApiRepository {
       'uphone': uphone,
       'sregistration_no': sregistrationNo,
       'flat_number': flatNumber,
-      'block': block,
+      'block': block ?? "",
       'floor': floor,
     };
     try {
@@ -212,7 +212,7 @@ class ApiRepository {
     String adminId,
     String title,
     String description,
-    String? photoPath, // <- pass file path here
+    String photoPath, // <- pass file path here
   ) async {
     final url = Uri.parse("${baseUrl}communitypostinsert");
 
@@ -239,19 +239,26 @@ class ApiRepository {
       } else {
         print("Invalid or missing image path: $photoPath");
       }
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'photo',
+          photoPath,
+          // contentType: MediaType(
+          //     'image', 'jpeg'), // Optional: adjust based on your file type
+        ),
+      );
 
       final response = await request.send();
 
       if (response.statusCode == 200) {
         final responseBody = await response.stream.bytesToString();
-        log("Error response body: $responseBody");
         final Map<String, dynamic> data = jsonDecode(responseBody);
         return data['status'];
       } else {
-        log('Upload failed with status: ${response.statusCode}');
+        print('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
-      log('Error: $e');
+      print('Error: $e');
       throw Exception(e.toString());
     }
 
@@ -483,7 +490,7 @@ class ApiRepository {
     final body = {
       'society_id': societyid,
       'uname': name,
-      'uemail': email,
+      'uemail': email ?? "",
       'uphone': phoneNo,
       'upassword': password,
     };
