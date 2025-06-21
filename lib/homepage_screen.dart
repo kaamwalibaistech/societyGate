@@ -18,7 +18,7 @@ import 'dashboard/notice_board/notice_board_screen.dart';
 import 'dashboard/visitors/visitors_page.dart';
 import 'models/announcements_model.dart';
 import 'models/login_model.dart';
-import 'scanner_page.dart';
+import 'watchman_tools/scanner_page.dart';
 import 'shops/dailyneeds_tab.dart';
 
 class HomepageScreen extends StatefulWidget {

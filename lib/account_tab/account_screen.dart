@@ -4,14 +4,14 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/amenities/user_amenities_page.dart';
 import 'package:society_gate/models/login_model.dart';
 
-import 'api/api_repository.dart';
-import 'constents/local_storage.dart';
-import 'models/add_daily_help_model.dart';
-import 'models/add_vehicle_model.dart';
-import 'models/get_daily_help_model.dart';
-import 'models/get_family_members_model.dart';
-import 'models/get_vehicle_detail_model.dart';
-import 'setting_screen.dart';
+import '../api/api_repository.dart';
+import '../constents/local_storage.dart';
+import '../models/add_daily_help_model.dart';
+import '../models/add_vehicle_model.dart';
+import '../models/get_daily_help_model.dart';
+import '../models/get_family_members_model.dart';
+import '../models/get_vehicle_detail_model.dart';
+import 'settings_pages/setting_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
