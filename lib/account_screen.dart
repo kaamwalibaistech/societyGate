@@ -26,13 +26,13 @@ class _AccountScreenState extends State<AccountScreen>
   GetFamilyMemberModel? getFamilyMemberData;
   GetDailyHelpModel? getDailyHelpData;
   GetVehicleDetailsModel? getVehicledetails;
-  String? loginType;
-  LoginModel? logInData;
+  LoginModel? loginModel;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    loginModel = LocalStoragePref().getLoginModel();
     getfamilymembers();
     getDailyHelpmembers();
     getVehicleData();
@@ -40,9 +40,9 @@ class _AccountScreenState extends State<AccountScreen>
 
   getfamilymembers() async {
     ApiRepository apiRepository = ApiRepository();
-    logInData = LocalStoragePref.instance!.getLoginModel();
+    // logInData = LocalStoragePref.instance!.getLoginModel();
     final getFamilyMember = await apiRepository
-        .getFamilyMembers(logInData!.user!.flatId.toString());
+        .getFamilyMembers(loginModel!.user!.flatId.toString());
     setState(() {
       getFamilyMemberData = getFamilyMember;
     });
@@ -50,9 +50,9 @@ class _AccountScreenState extends State<AccountScreen>
 
   getVehicleData() async {
     ApiRepository apiRepository = ApiRepository();
-    final data = LocalStoragePref.instance!.getLoginModel();
-    var getVehicleData =
-        await apiRepository.getVehicleDetails(data!.user!.flatId.toString());
+    // final data = LocalStoragePref.instance!.getLoginModel();
+    var getVehicleData = await apiRepository
+        .getVehicleDetails(loginModel!.user!.flatId.toString());
     setState(() {
       getVehicledetails = getVehicleData;
     });
@@ -60,9 +60,10 @@ class _AccountScreenState extends State<AccountScreen>
 
   getDailyHelpmembers() async {
     ApiRepository apiRepository = ApiRepository();
-    final data = LocalStoragePref.instance!.getLoginModel();
+    // final data = LocalStoragePref.instance!.getLoginModel();
     final getDailyHelpMember = await apiRepository.getDailyHelpMembers(
-        data!.user!.societyId.toString(), data.user!.flatId.toString());
+        loginModel!.user!.societyId.toString(),
+        loginModel!.user!.flatId.toString());
 
     setState(() {
       getDailyHelpData = getDailyHelpMember;
@@ -211,17 +212,18 @@ class _AccountScreenState extends State<AccountScreen>
 
   @override
   Widget build(BuildContext context) {
-    final loginModel = LocalStoragePref().getLoginModel();
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddOptionsDialog,
-        backgroundColor: const Color(0xFF6B4EFF),
-        child: const Icon(
-          Icons.add_rounded,
-          color: Colors.white,
-          size: 28,
-        ),
-      ),
+      floatingActionButton: loginModel!.user!.role != "sub_member"
+          ? FloatingActionButton(
+              onPressed: _showAddOptionsDialog,
+              backgroundColor: const Color(0xFF6B4EFF),
+              child: const Icon(
+                Icons.add_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
+            )
+          : null,
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -258,10 +260,10 @@ class _AccountScreenState extends State<AccountScreen>
                     children: [
                       Row(
                         children: [
-                          logInData?.user?.profileImage != null
+                          loginModel?.user?.profileImage != null
                               ? ClipOval(
                                   child: CachedNetworkImage(
-                                    imageUrl: logInData!.user!.profileImage!,
+                                    imageUrl: loginModel!.user!.profileImage!,
                                     width: 70,
                                     height: 70,
                                     fit: BoxFit.cover,

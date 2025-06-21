@@ -111,9 +111,8 @@ class _MembersPageState extends State<MembersPage> {
                       ),
                     );
                   } else if (state is MembersSuccessState) {
-                    String adminPhoto = state.memberlistModel?.users?.admins
-                            ?.first.profileImage ??
-                        "NA";
+                    String? adminPhoto = state
+                        .memberlistModel?.users?.admins?.first.profileImage;
                     String adminName =
                         state.memberlistModel?.users?.admins?.first.uname ??
                             "NA";
@@ -131,7 +130,8 @@ class _MembersPageState extends State<MembersPage> {
                         leading: CircleAvatar(
                           radius: 30,
                           backgroundImage: CachedNetworkImageProvider(
-                            adminPhoto,
+                            adminPhoto ??
+                                "https://ui-avatars.com/api/?background=edbdff&name=$adminName.",
                           ),
                         ),
                         title: Text(
@@ -142,11 +142,13 @@ class _MembersPageState extends State<MembersPage> {
                             color: Color(0xFF1A1A1A),
                           ),
                         ),
-                        subtitle: Text(
-                          adminEmail,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
+                        subtitle: FittedBox(
+                          child: Text(
+                            adminEmail,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
                           ),
                         ),
                         trailing: const Text(
