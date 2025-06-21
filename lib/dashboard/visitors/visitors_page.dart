@@ -124,7 +124,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       Tab(text: "Upcomming"),
-                      Tab(text: "Regular"),
+                      // Tab(text: "Regular"),
                       Tab(text: "Past"),
                     ],
                   ),
@@ -133,7 +133,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                     child: TabBarView(
                       children: [
                         _buildError(state.msg),
-                        _buildError(state.msg),
+                        // _buildError(state.msg),
                         _buildError(state.msg),
                       ],
                     ),

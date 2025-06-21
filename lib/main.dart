@@ -109,6 +109,9 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+            inputDecorationTheme: const InputDecorationTheme(
+              errorStyle: TextStyle(color: Colors.white),
+            ),
             useMaterial3: true,
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
         home: isLoggedin == true

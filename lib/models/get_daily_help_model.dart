@@ -37,14 +37,15 @@ class GetDailyHelpModel {
 }
 
 class Employee {
-  int employeeId;
-  int societyId;
-  int memberId;
-  int flatId;
-  String name;
-  String phone;
-  String address;
-  String empType;
+  int? employeeId;
+  int? societyId;
+  int? memberId;
+  int? flatId;
+  String? name;
+  String? photo;
+  String? phone;
+  String? address;
+  String? empType;
   DateTime createdAt;
 
   Employee({
@@ -53,6 +54,7 @@ class Employee {
     required this.memberId,
     required this.flatId,
     required this.name,
+    required this.photo,
     required this.phone,
     required this.address,
     required this.empType,
@@ -65,6 +67,7 @@ class Employee {
         memberId: json["member_id"],
         flatId: json["flat_id"],
         name: json["name"],
+        photo: json["profile_image"],
         phone: json["phone"],
         address: json["address"],
         empType: json["emp_type"],
@@ -77,6 +80,7 @@ class Employee {
         "member_id": memberId,
         "flat_id": flatId,
         "name": name,
+        "profile_image": photo,
         "phone": phone,
         "address": address,
         "emp_type": empType,

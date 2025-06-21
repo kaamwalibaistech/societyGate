@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -5,7 +6,6 @@ import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/models/announcements_model.dart';
 
 import '../../constents/local_storage.dart';
-import '../../constents/sizedbox.dart';
 import '../../models/login_model.dart';
 import '../../models/memberlist_model.dart';
 import '../../models/watchman_add_model.dart';
@@ -26,11 +26,18 @@ class _MembersPageState extends State<MembersPage> {
   TextEditingController confirmPasswordController = TextEditingController();
   LoginModel? loginModel;
   WatchManAddModel? watchmanData;
-  Announcementmodel? data;
-  String? adminName;
-  String? adminEmail;
+  // Announcementmodel? data;
+  // String? adminName = "Anil";
+  // String? adminEmail = "Anil";
   // LoginModel? loginModel;
   String? loginType;
+// <<<<<<< ritesh
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+// =======
+//   // String profilePhoto = "https://ui-avatars.com/api/?background=edbdff&name=.";
+
+// >>>>>>> final
   @override
   void initState() {
     super.initState();
@@ -43,6 +50,10 @@ class _MembersPageState extends State<MembersPage> {
 
     if (loginModel != null) {
       final societyId = loginModel?.user!.societyId;
+      // setState(() {
+      //   // profilePhoto = loginModel?.user?.profileImage ??
+      //   //     "https://ui-avatars.com/api/?background=edbdff&name=$adminName.";
+      // });
       context
           .read<MembersBloc>()
           .add(GetMemberListEvent(soceityId: societyId.toString()));
@@ -54,12 +65,12 @@ class _MembersPageState extends State<MembersPage> {
   getData() async {
     final getLoginModel = LocalStoragePref().getLoginModel();
 
-    ApiRepository apiRepositiory = ApiRepository();
-    Announcementmodel? mydata = await apiRepositiory
-        .getHomePageData(getLoginModel!.user!.societyId.toString());
+    // ApiRepository apiRepositiory = ApiRepository();
+    // Announcementmodel? mydata = await apiRepositiory
+    //     .getHomePageData(getLoginModel!.user!.societyId.toString());
     setState(() {
       loginModel = getLoginModel;
-      data = mydata;
+      // data = mydata;
       loginType = loginModel?.user?.role ?? "NA";
       // uiPhoto = loginModel?.user?.uname ?? "User";
     });
@@ -70,144 +81,161 @@ class _MembersPageState extends State<MembersPage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8F9FF),
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.purple.shade50,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF6B4EFF)),
+            icon: const Icon(Icons.arrow_back, color: Colors.purple),
             onPressed: () => Navigator.pop(context),
           ),
           title: const Text(
             "Members",
             style: TextStyle(
-              color: Color(0xFF1A1A1A),
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-            ),
+                color: Color(0xFF1A1A1A),
+                fontWeight: FontWeight.w600,
+                fontSize: 20),
           ),
           centerTitle: true,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(160),
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.only(bottom: 25),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        // padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color(0xFF6B4EFF),
-                            width: 1.5,
-                          ),
-                        ),
-                        child: ClipOval(
-                          child: Image.network(
-                            "https://ui-avatars.com/api/?background=random&name=$adminName.",
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              adminName ?? "No Admin",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF1A1A1A),
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              adminEmail ?? "Not Available",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF0F2FF),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: TabBar(
-                      indicator: BoxDecoration(
-                        color: const Color(0xFF6B4EFF),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      labelColor: Colors.white,
-                      unselectedLabelColor: const Color(0xFF6B4EFF),
-                      indicatorPadding: const EdgeInsets.symmetric(
-                          horizontal: -20, vertical: 5),
-                      tabs: const [
-                        Tab(text: "Members"),
-                        Tab(text: "Watchman"),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ),
-        body: BlocBuilder<MembersBloc, MembersState>(
-          builder: (context, state) {
-            if (state is MembersInitialState) {
-              return _buildShimmer();
-            } else if (state is MembersSuccessState) {
-              return getUi(state.memberlistModel);
-            } else if (state is MembersErrorState) {
-              return _buildError(state.msg);
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
+        body: Column(
+          children: [
+            SizedBox(
+              child: BlocBuilder<MembersBloc, MembersState>(
+                builder: (context, state) {
+                  if (state is MembersInitialState) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.purple.shade50,
+                      ),
+                    );
+                  } else if (state is MembersSuccessState) {
+                    String? adminPhoto = state
+                        .memberlistModel?.users?.admins?.first.profileImage;
+                    String adminName =
+                        state.memberlistModel?.users?.admins?.first.uname ??
+                            "NA";
+                    String adminEmail =
+                        state.memberlistModel?.users?.admins?.first.uemail ??
+                            "NA";
+
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.blue.shade50),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: CachedNetworkImageProvider(
+                            adminPhoto ??
+                                "https://ui-avatars.com/api/?background=edbdff&name=$adminName.",
+                          ),
+                        ),
+                        title: Text(
+                          adminName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF1A1A1A),
+                          ),
+                        ),
+                        subtitle: FittedBox(
+                          child: Text(
+                            adminEmail,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ),
+                        trailing: const Text(
+                          "Society Admin",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    );
+
+                    // getUi(state.memberlistModel);
+                  } else if (state is MembersErrorState) {
+                    return Container(
+                      padding: const EdgeInsets.all(8),
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.red.shade50,
+                      ),
+                      child: Center(
+                        child: Text(state.msg),
+                      ),
+                    );
+                  } else {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.red.shade50,
+                      ),
+                      child: const Center(
+                        child: Text("Something wrong!"),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0F2FF),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TabBar(
+                  indicator: BoxDecoration(
+                    color: const Color(0xFF6B4EFF),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: const Color(0xFF6B4EFF),
+                  indicatorPadding:
+                      const EdgeInsets.symmetric(horizontal: -20, vertical: 5),
+                  tabs: const [
+                    Tab(text: "Members"),
+                    Tab(text: "Watchman"),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: BlocBuilder<MembersBloc, MembersState>(
+                builder: (context, state) {
+                  if (state is MembersInitialState) {
+                    return _buildShimmer();
+                  } else if (state is MembersSuccessState) {
+                    return getUi(state.memberlistModel);
+                  } else if (state is MembersErrorState) {
+                    return _buildError(state.msg);
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget getUi(
-    MemberlistModel? memberlistModel,
-  ) {
-    if (memberlistModel?.users?.admins?.isNotEmpty ?? false) {
-      adminName = memberlistModel!.users!.admins!.first.uname;
-      adminEmail = memberlistModel.users!.admins!.first.uemail;
-    }
-
+  Widget getUi(MemberlistModel? memberlistModel) {
     return Column(
       children: [
-        // Admin Card
-
         // Tab Content
         Expanded(
           child: TabBarView(
@@ -343,17 +371,16 @@ class _MembersPageState extends State<MembersPage> {
                 height: 75,
                 decoration: BoxDecoration(
                     color: Colors.purple.shade50,
-                    borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(12)),
                 child: ListTile(
-                  leading: ClipOval(
-                    child: Image.network(
-                      "https://ui-avatars.com/api/?background=random&name=${memberList.uname}.",
-                      height: 50,
-                      width: 50,
-                    ),
+                  leading: CircleAvatar(
+                    radius: 35,
+                    backgroundImage: CachedNetworkImageProvider(memberList
+                            .profileImage ??
+                        "https://ui-avatars.com/api/?background=random&name=${memberList.uname}."),
                   ),
-                  title: Text(memberList.uname),
-                  subtitle: Text(memberList.uname),
+                  title: Text(memberList.uname ?? ""),
+                  subtitle: Text(memberList.uname ?? ""),
                   trailing: GestureDetector(
                     onTap: () async {
                       if (loginModel!.user!.role == "admin") {
@@ -372,7 +399,7 @@ class _MembersPageState extends State<MembersPage> {
                       }
                     },
                     child: Text(
-                      memberList.approvalStatus,
+                      memberList.approvalStatus ?? "",
                       style: const TextStyle(fontSize: 14),
                     ),
                   ),
@@ -405,7 +432,7 @@ class _MembersPageState extends State<MembersPage> {
                       height: 75,
                       decoration: BoxDecoration(
                           color: Colors.purple.shade50,
-                          borderRadius: BorderRadius.circular(20)),
+                          borderRadius: BorderRadius.circular(12)),
                       child: ListTile(
                         trailing: loginType == "admin"
                             ? GestureDetector(
@@ -531,12 +558,19 @@ class _MembersPageState extends State<MembersPage> {
                                 ),
                               )
                             : const SizedBox.shrink(),
-                        leading: const CircleAvatar(
-                          foregroundImage:
-                              AssetImage("lib/assets/watchman.jpg"),
-                          radius: 30,
-// >>>>>>> final
+                        leading: CircleAvatar(
+                          radius: 35,
+                          backgroundImage: CachedNetworkImageProvider(watchmenList
+                                  .profileImage ??
+                              "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}."),
                         ),
+
+//                         const CircleAvatar(
+//                           foregroundImage:
+//                               AssetImage("lib/assets/watchman.jpg"),
+//                           radius: 30,
+// // >>>>>>> final
+//                         ),
                         title: Text(watchmenList.uname ?? "No Name"),
                         subtitle: Text(watchmenList.uphone ?? "Not Available"),
                       ));
@@ -547,205 +581,121 @@ class _MembersPageState extends State<MembersPage> {
     );
   }
 
-  modelBottomsheet() {
+  void modelBottomsheet() {
     final formKey = GlobalKey<FormState>();
-    String? validateEmail(String? email) {
-      RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
-      final isEmailValid = emailRegEx.hasMatch(email ?? "");
-      if (!isEmailValid) return "please  Enter a valid email";
-      return null;
-    }
 
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: SingleChildScrollView(
-              child: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    sizedBoxH10(context),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                      child: Text(
-                        "Name",
-                        style: TextStyle(),
+    // String? validateEmail(String? email) {
+    //   RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
+    //   final isEmailValid = emailRegEx.hasMatch(email ?? "");
+    //   if (!isEmailValid) return "Please enter a valid email";
+    //   return null;
+    // }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Very important
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          return DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.85,
+            minChildSize: 0.5,
+            maxChildSize: 0.95,
+            builder: (context, scrollController) {
+              return SingleChildScrollView(
+                controller: scrollController,
+                padding: EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                  top: 20,
+                ),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildLabel("Name"),
+                      buildTextField(nameController, "Enter name",
+                          validator: (value) {
+                        if (value!.isEmpty || value.length < 2) {
+                          return "Enter a valid name";
+                        }
+                        return null;
+                      }),
+                      buildLabel("Email"),
+                      buildTextField(
+                        emailController, "Enter email",
+                        keyboardType: TextInputType.emailAddress,
+                        // validator: validateEmail
                       ),
-                    ),
-                    Center(
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              controller: nameController,
-                              validator: (value) {
-                                if (nameController.text.isEmpty &&
-                                    nameController.text.length < 2) {
-                                  return "Enter name";
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  hintText: "Enter name",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                    ),
-                    sizedBoxH10(context),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                      child: Text(
-                        "Email",
-                        style: TextStyle(),
+                      buildLabel("Mobile No."),
+                      buildTextField(
+                        mobileNoController,
+                        "Enter mobile no",
+                        keyboardType: TextInputType.number,
+                        maxLength: 10,
+                        validator: (value) {
+                          if (value!.length != 10) {
+                            return "Mobile no should be 10 digits";
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    Center(
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              controller: emailController,
-                              validator: validateEmail,
-                              decoration: const InputDecoration(
-                                  hintText: "Enter Email",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                    ),
-                    sizedBoxH10(context),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                      child: Text(
-                        "Mobile No.",
-                        style: TextStyle(),
+                      buildLabel("Password"),
+                      buildTextField(
+                        passwordController,
+                        "Enter password",
+                        isObscure: true,
+                        isTextVisible: _isPasswordVisible,
+                        toggleVisibility: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null || value.length < 2) {
+                            return "Enter password";
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    Center(
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              controller: mobileNoController,
-                              maxLength: 10,
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                if (value!.length < 10) {
-                                  return "Mobile no should be 10 in digits";
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  counterText: "",
-                                  hintText: "Enter mobile no",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                    ),
-                    sizedBoxH10(context),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                      child: Text(
-                        "password",
-                        style: TextStyle(),
+                      buildLabel("Confirm Password"),
+                      buildTextField(
+                        confirmPasswordController,
+                        "Enter confirm password",
+                        isObscure: true,
+                        isTextVisible: _isConfirmPasswordVisible,
+                        toggleVisibility: () {
+                          setState(() {
+                            _isConfirmPasswordVisible =
+                                !_isConfirmPasswordVisible;
+                          });
+                        },
+                        validator: (value) {
+                          if (value != passwordController.text) {
+                            return "Passwords do not match";
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    Center(
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              controller: passwordController,
-                              validator: (value) {
-                                if (passwordController.text.isEmpty &&
-                                    passwordController.text.length < 2) {
-                                  return "Enter password";
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  hintText: "Enter password",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                    ),
-                    sizedBoxH10(context),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-                      child: Text(
-                        "confirm password",
-                        style: TextStyle(),
-                      ),
-                    ),
-                    Center(
-                      child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.90,
-                          height: MediaQuery.of(context).size.height * 0.06,
-                          child: Center(
-                            child: TextFormField(
-                              controller: confirmPasswordController,
-                              validator: (value) {
-                                if (confirmPasswordController.text.isEmpty &&
-                                    confirmPasswordController.text.length < 2) {
-                                  return " Enter password";
-                                }
-                                return null;
-                              },
-                              decoration: const InputDecoration(
-                                  hintText: "Enter confirm password",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide.none)),
-                            ),
-                          )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: () async {
-                            if (formKey.currentState!.validate() &&
-                                passwordController.text ==
-                                    confirmPasswordController.text) {
+                      const SizedBox(height: 20),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
                               ApiRepository apiRepository = ApiRepository();
-
                               WatchManAddModel? watchmanData =
                                   await apiRepository.addWatchman(
-                                      loginModel!.user!.societyId.toString(),
-                                      nameController.text,
-                                      emailController.text,
-                                      mobileNoController.text,
-                                      passwordController.text);
+                                loginModel!.user!.societyId.toString(),
+                                nameController.text,
+                                emailController.text,
+                                mobileNoController.text,
+                                passwordController.text,
+                              );
                               final societyId = loginModel?.user!.societyId;
                               context.read<MembersBloc>().add(
                                   GetMemberListEvent(
@@ -755,28 +705,67 @@ class _MembersPageState extends State<MembersPage> {
                               Navigator.pop(context);
                             } else {
                               Fluttertoast.showToast(
-                                  msg: "password should be same");
+                                  msg: "All fields are Manditory");
                             }
                           },
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.05,
-                            width: MediaQuery.of(context).size.width * 0.30,
-                            decoration:
-                                const BoxDecoration(color: Colors.green),
-                            child: const Center(
-                                child: Text(
-                              "Add Watchman",
-                              style: TextStyle(),
-                            )),
-                          ),
+                          child: const Text("Add Watchman"),
                         ),
                       ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           );
-        });
+        },
+      ),
+    );
+  }
+
+  Widget buildLabel(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0, bottom: 6, left: 5),
+      child: Text(
+        text,
+        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+      ),
+    );
+  }
+
+  Widget buildTextField(
+    TextEditingController controller,
+    String hint, {
+    bool isObscure = false,
+    bool? isTextVisible,
+    VoidCallback? toggleVisibility,
+    int? maxLength,
+    TextInputType keyboardType = TextInputType.text,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: isObscure && !(isTextVisible ?? false),
+      maxLength: maxLength,
+      keyboardType: keyboardType,
+      validator: validator,
+      decoration: InputDecoration(
+        hintText: hint,
+        filled: true,
+        fillColor: Colors.white,
+        counterText: "",
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        border: const OutlineInputBorder(borderSide: BorderSide.none),
+        suffixIcon: isObscure
+            ? IconButton(
+                icon: Icon(
+                  isTextVisible ?? false
+                      ? Icons.visibility
+                      : Icons.visibility_off,
+                ),
+                onPressed: toggleVisibility,
+              )
+            : null,
+      ),
+    );
   }
 }

@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/constents/local_storage.dart';
 
@@ -22,13 +24,25 @@ class _CreatePostState extends State<CreatePost> {
   File? _image;
   final ImagePicker _picker = ImagePicker();
 
+  Future<File> saveImagePermanently(String imagePath) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final name = path.basename(imagePath);
+    final image = File(imagePath);
+    final newImage = await image.copy('${directory.path}/$name');
+    return newImage;
+  }
+
   Future<void> _pickImage(ImageSource source) async {
     try {
       final pickedFile = await _picker.pickImage(source: source);
 
       if (pickedFile != null) {
+        File imageFile = File(pickedFile.path);
+        if (source == ImageSource.camera) {
+          imageFile = await saveImagePermanently(pickedFile.path);
+        }
         setState(() {
-          _image = File(pickedFile.path);
+          _image = imageFile;
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -217,24 +231,24 @@ class _CreatePostState extends State<CreatePost> {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () => _pickImage(ImageSource.camera),
-                                icon: const Icon(
-                                  Icons.camera_alt,
-                                ),
-                                label: const Text('Camera',
-                                    style: TextStyle(color: Colors.black)),
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
-                                ),
-                              ),
-                            ),
+                            // const SizedBox(width: 10),
+                            // Expanded(
+                            //   child: ElevatedButton.icon(
+                            //     onPressed: () => _pickImage(ImageSource.camera),
+                            //     icon: const Icon(
+                            //       Icons.camera_alt,
+                            //     ),
+                            //     label: const Text('Camera',
+                            //         style: TextStyle(color: Colors.black)),
+                            //     style: ElevatedButton.styleFrom(
+                            //       shape: RoundedRectangleBorder(
+                            //         borderRadius: BorderRadius.circular(10),
+                            //       ),
+                            //       padding:
+                            //           const EdgeInsets.symmetric(vertical: 14),
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ],

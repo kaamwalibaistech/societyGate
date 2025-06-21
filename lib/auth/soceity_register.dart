@@ -287,6 +287,7 @@ class _SocietyRegister extends State<SocietyRegister> {
                     ),
                     SizedBox(
                       child: TextFormField(
+                        keyboardType: TextInputType.emailAddress,
                         controller: emailController,
                         validator: validateEmail,
                         decoration: InputDecoration(

@@ -26,13 +26,13 @@ class _AccountScreenState extends State<AccountScreen>
   GetFamilyMemberModel? getFamilyMemberData;
   GetDailyHelpModel? getDailyHelpData;
   GetVehicleDetailsModel? getVehicledetails;
-  String? loginType;
-  LoginModel? logInData;
+  LoginModel? loginModel;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    loginModel = LocalStoragePref().getLoginModel();
     getfamilymembers();
     getDailyHelpmembers();
     getVehicleData();
@@ -40,9 +40,9 @@ class _AccountScreenState extends State<AccountScreen>
 
   getfamilymembers() async {
     ApiRepository apiRepository = ApiRepository();
-    logInData = LocalStoragePref.instance!.getLoginModel();
+    // logInData = LocalStoragePref.instance!.getLoginModel();
     final getFamilyMember = await apiRepository
-        .getFamilyMembers(logInData!.user!.flatId.toString());
+        .getFamilyMembers(loginModel!.user!.flatId.toString());
     setState(() {
       getFamilyMemberData = getFamilyMember;
     });
@@ -50,9 +50,9 @@ class _AccountScreenState extends State<AccountScreen>
 
   getVehicleData() async {
     ApiRepository apiRepository = ApiRepository();
-    final data = LocalStoragePref.instance!.getLoginModel();
-    var getVehicleData =
-        await apiRepository.getVehicleDetails(data!.user!.flatId.toString());
+    // final data = LocalStoragePref.instance!.getLoginModel();
+    var getVehicleData = await apiRepository
+        .getVehicleDetails(loginModel!.user!.flatId.toString());
     setState(() {
       getVehicledetails = getVehicleData;
     });
@@ -60,9 +60,10 @@ class _AccountScreenState extends State<AccountScreen>
 
   getDailyHelpmembers() async {
     ApiRepository apiRepository = ApiRepository();
-    final data = LocalStoragePref.instance!.getLoginModel();
+    // final data = LocalStoragePref.instance!.getLoginModel();
     final getDailyHelpMember = await apiRepository.getDailyHelpMembers(
-        data!.user!.societyId.toString(), data.user!.flatId.toString());
+        loginModel!.user!.societyId.toString(),
+        loginModel!.user!.flatId.toString());
 
     setState(() {
       getDailyHelpData = getDailyHelpMember;
@@ -88,14 +89,12 @@ class _AccountScreenState extends State<AccountScreen>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                const Text(
                   'Add to Household',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: loginType == "watchman"
-                        ? const Color(0xFFFF9933)
-                        : const Color(0xFF6B4EFF),
+                    color: Color(0xFF6B4EFF),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -152,9 +151,7 @@ class _AccountScreenState extends State<AccountScreen>
         case Icons.settings_rounded:
           return const Color(0xFF009688); // Light teal
         default:
-          return loginType == "watchman"
-              ? const Color(0xFFFF9933)
-              : const Color(0xFF6B4EFF);
+          return const Color(0xFF6B4EFF);
       }
     }
 
@@ -173,9 +170,7 @@ class _AccountScreenState extends State<AccountScreen>
         case Icons.settings_rounded:
           return const Color(0xFFE0F2F1); // Very light teal
         default:
-          return loginType == "watchman"
-              ? const Color(0xFFFF9933).withOpacity(0.1)
-              : const Color(0xFF6B4EFF).withOpacity(0.1);
+          return const Color(0xFF6B4EFF).withOpacity(0.1);
       }
     }
 
@@ -217,31 +212,26 @@ class _AccountScreenState extends State<AccountScreen>
 
   @override
   Widget build(BuildContext context) {
-    final loginModel = LocalStoragePref().getLoginModel();
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddOptionsDialog,
-        backgroundColor: loginType == "watchman"
-            ? const Color(0xFFFF9933)
-            : const Color(0xFF6B4EFF),
-        child: const Icon(
-          Icons.add_rounded,
-          color: Colors.white,
-          size: 28,
-        ),
-      ),
+      floatingActionButton: loginModel!.user!.role != "sub_member"
+          ? FloatingActionButton(
+              onPressed: _showAddOptionsDialog,
+              backgroundColor: const Color(0xFF6B4EFF),
+              child: const Icon(
+                Icons.add_rounded,
+                color: Colors.white,
+                size: 28,
+              ),
+            )
+          : null,
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              loginType == "watchman"
-                  ? const Color(0xFFFFF5E6)
-                  : const Color(0xFFF8F9FF),
-              loginType == "watchman"
-                  ? const Color(0xFFFFE5CC)
-                  : const Color(0xFFEEF1FF),
+              Color(0xFFF8F9FF),
+              Color(0xFFEEF1FF),
             ],
           ),
         ),
@@ -270,10 +260,10 @@ class _AccountScreenState extends State<AccountScreen>
                     children: [
                       Row(
                         children: [
-                          logInData?.user?.profileImage != null
+                          loginModel?.user?.profileImage != null
                               ? ClipOval(
                                   child: CachedNetworkImage(
-                                    imageUrl: logInData!.user!.profileImage!,
+                                    imageUrl: loginModel!.user!.profileImage!,
                                     width: 70,
                                     height: 70,
                                     fit: BoxFit.cover,
@@ -433,16 +423,14 @@ class _AccountScreenState extends State<AccountScreen>
                 const SizedBox(height: 20),
 
                 // Household Section Title
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
                     "Household",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: loginType == "watchman"
-                          ? const Color(0xFFFF9933)
-                          : const Color(0xFFE91E63),
+                      color: Color(0xFFE91E63),
                     ),
                   ),
                 ),
@@ -525,6 +513,8 @@ class _AccountScreenState extends State<AccountScreen>
                             itemCount:
                                 getFamilyMemberData?.familyMembers?.length ?? 2,
                             itemBuilder: (context, index) {
+                              FamilyMember? memberData =
+                                  getFamilyMemberData?.familyMembers?[index];
                               return Container(
                                 margin: const EdgeInsets.only(right: 15),
                                 width: 100,
@@ -533,34 +523,17 @@ class _AccountScreenState extends State<AccountScreen>
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.shade50,
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: loginType == "watchman"
-                                              ? const Color(0xFFFF9933)
-                                                  .withOpacity(0.2)
-                                              : const Color(0xFF6B4EFF)
-                                                  .withOpacity(0.2),
-                                        ),
-                                      ),
-                                      child: Icon(
-                                        Icons.person_rounded,
-                                        color: loginType == "watchman"
-                                            ? const Color(0xFFFF9933)
-                                            : const Color(0xFF6B4EFF),
-                                        size: 24,
-                                      ),
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(memberData
+                                                  ?.photo ??
+                                              "https://ui-avatars.com/api/?background=random&name=${memberData?.uname ?? "NA"}."),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      getFamilyMemberData
-                                              ?.familyMembers?[index].uname ??
-                                          "",
+                                      memberData?.uname ?? "",
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
@@ -571,9 +544,7 @@ class _AccountScreenState extends State<AccountScreen>
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
-                                      getFamilyMemberData?.familyMembers?[index]
-                                              .relation ??
-                                          "",
+                                      memberData?.relation ?? "",
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey[600],
@@ -690,19 +661,16 @@ class _AccountScreenState extends State<AccountScreen>
                                       color: Colors.white,
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                        color: loginType == "watchman"
-                                            ? const Color(0xFFFF9933)
-                                                .withOpacity(0.2)
-                                            : const Color(0xFF6B4EFF)
-                                                .withOpacity(0.2),
+                                        color: const Color(0xFF6B4EFF)
+                                            .withOpacity(0.2),
                                       ),
                                     ),
-                                    child: Icon(
-                                      Icons.person_rounded,
-                                      color: loginType == "watchman"
-                                          ? const Color(0xFFFF9933)
-                                          : const Color(0xFF6B4EFF),
-                                      size: 20,
+                                    child: CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(help
+                                                  ?.photo ??
+                                              "https://ui-avatars.com/api/?background=random&name=${help?.name ?? "NA"}."),
                                     ),
                                   ),
                                   const SizedBox(width: 12),
@@ -841,18 +809,13 @@ class _AccountScreenState extends State<AccountScreen>
                                         color: Colors.white,
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                          color: loginType == "watchman"
-                                              ? const Color(0xFFFF9933)
-                                                  .withOpacity(0.2)
-                                              : const Color(0xFF6B4EFF)
-                                                  .withOpacity(0.2),
+                                          color: const Color(0xFF6B4EFF)
+                                              .withOpacity(0.2),
                                         ),
                                       ),
-                                      child: Icon(
+                                      child: const Icon(
                                         Icons.directions_car_rounded,
-                                        color: loginType == "watchman"
-                                            ? const Color(0xFFFF9933)
-                                            : const Color(0xFF6B4EFF),
+                                        color: Color(0xFF6B4EFF),
                                         size: 24,
                                       ),
                                     ),
@@ -970,7 +933,7 @@ class _AccountScreenState extends State<AccountScreen>
                               ),
                             ),
                             const SizedBox(width: 15),
-                            Column(
+                            const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
@@ -978,13 +941,11 @@ class _AccountScreenState extends State<AccountScreen>
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
-                                    color: loginType == "watchman"
-                                        ? const Color(0xFFFF9933)
-                                        : const Color(0xFF6B4EFF),
+                                    color: Color(0xFF6B4EFF),
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                const Text(
+                                SizedBox(height: 4),
+                                Text(
                                   "Add family members for quick entry",
                                   style: TextStyle(
                                     fontSize: 13,
@@ -1095,9 +1056,7 @@ class _AccountScreenState extends State<AccountScreen>
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: loginType == "watchman"
-                                  ? const Color(0xFFFF9933)
-                                  : const Color(0xFF6B4EFF),
+                              backgroundColor: const Color(0xFF6B4EFF),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -1181,7 +1140,7 @@ class _AccountScreenState extends State<AccountScreen>
                               ),
                             ),
                             const SizedBox(width: 15),
-                            Column(
+                            const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
@@ -1189,13 +1148,11 @@ class _AccountScreenState extends State<AccountScreen>
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
-                                    color: loginType == "watchman"
-                                        ? const Color(0xFFFF9933)
-                                        : const Color(0xFF6B4EFF),
+                                    color: Color(0xFF6B4EFF),
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                const Text(
+                                SizedBox(height: 4),
+                                Text(
                                   "Add daily help for quick entry",
                                   style: TextStyle(
                                     fontSize: 13,
@@ -1283,9 +1240,7 @@ class _AccountScreenState extends State<AccountScreen>
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: loginType == "watchman"
-                                  ? const Color(0xFFFF9933)
-                                  : const Color(0xFF6B4EFF),
+                              backgroundColor: const Color(0xFF6B4EFF),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -1370,7 +1325,7 @@ class _AccountScreenState extends State<AccountScreen>
                               ),
                             ),
                             const SizedBox(width: 15),
-                            Column(
+                            const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
@@ -1378,13 +1333,11 @@ class _AccountScreenState extends State<AccountScreen>
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
-                                    color: loginType == "watchman"
-                                        ? const Color(0xFFFF9933)
-                                        : const Color(0xFF6B4EFF),
+                                    color: Color(0xFF6B4EFF),
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                const Text(
+                                SizedBox(height: 4),
+                                Text(
                                   "Add your vehicle for quick entry",
                                   style: TextStyle(
                                     fontSize: 13,
@@ -1464,9 +1417,7 @@ class _AccountScreenState extends State<AccountScreen>
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: loginType == "watchman"
-                                  ? const Color(0xFFFF9933)
-                                  : const Color(0xFF6B4EFF),
+                              backgroundColor: const Color(0xFF6B4EFF),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -1554,10 +1505,8 @@ class _AccountScreenState extends State<AccountScreen>
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: loginType == "watchman"
-                    ? const Color(0xFFFF9933)
-                    : const Color(0xFF6B4EFF),
+              borderSide: const BorderSide(
+                color: Color(0xFF6B4EFF),
                 width: 1,
               ),
             ),

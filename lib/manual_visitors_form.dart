@@ -116,27 +116,30 @@ class _ManualVisitorsFormState extends State<ManualVisitorsForm> {
                           flatNoController.text,
                           blockController.text,
                           floorNoController.text);
+                      if (flatIdData?.status == 200) {
+                        AddVisitoModel? dataa = await addVisitorApi(
+                            flatIdData!.data[0].flatId.toString(),
+                            societyId,
+                            requestBy,
+                            name,
+                            phone,
+                            relation,
+                            gender,
+                            purpose,
+                            visitingDate);
+                        await apiRepository.manualAproveApi(
+                            dataa!.uniqueCode.toString(),
+                            _loginModel!.user!.userId.toString(),
+                            "entry");
 
-                      AddVisitoModel? dataa = await addVisitorApi(
-                          flatIdData!.data[0].flatId.toString(),
-                          societyId,
-                          requestBy,
-                          name,
-                          phone,
-                          relation,
-                          gender,
-                          purpose,
-                          visitingDate);
-                      await apiRepository.manualAproveApi(
-                          dataa!.uniqueCode.toString(),
-                          _loginModel!.user!.userId.toString(),
-                          "entry");
+                        BlocProvider.of<VisitorsBloc>(context)
+                            .add(GetEnteredVisitorsEvent());
 
-                      BlocProvider.of<VisitorsBloc>(context)
-                          .add(GetEnteredVisitorsEvent());
-
-                      Fluttertoast.showToast(msg: "Added Successfully");
-                      Navigator.pop(context);
+                        Fluttertoast.showToast(msg: "Added Successfully");
+                        Navigator.pop(context);
+                      } else {
+                        Fluttertoast.showToast(msg: flatIdData?.message ?? "");
+                      }
                     }
                   },
                   child: const Text("Entry"),
