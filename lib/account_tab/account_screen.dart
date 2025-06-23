@@ -41,8 +41,9 @@ class _AccountScreenState extends State<AccountScreen>
   getfamilymembers() async {
     ApiRepository apiRepository = ApiRepository();
     // logInData = LocalStoragePref.instance!.getLoginModel();
-    final getFamilyMember = await apiRepository
-        .getFamilyMembers(loginModel!.user!.flatId.toString());
+    final getFamilyMember = await apiRepository.getFamilyMembers(
+        loginModel?.user?.flatId.toString(),
+        loginModel?.user?.societyId.toString() ?? "");
     setState(() {
       getFamilyMemberData = getFamilyMember;
     });
@@ -505,7 +506,7 @@ class _AccountScreenState extends State<AccountScreen>
                       if (getFamilyMemberData?.familyMembers?.isNotEmpty ??
                           false)
                         SizedBox(
-                          height: 140, // fixed and sufficient height
+                          height: 180, // fixed and sufficient height
                           child: ListView.builder(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 10),
@@ -517,12 +518,15 @@ class _AccountScreenState extends State<AccountScreen>
                                   getFamilyMemberData?.familyMembers?[index];
                               return Container(
                                 margin: const EdgeInsets.only(right: 15),
-                                width: 100,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                width: 120,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[50],
+                                  color: Colors.grey[100],
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     CircleAvatar(
                                       radius: 20,
@@ -547,7 +551,7 @@ class _AccountScreenState extends State<AccountScreen>
                                       memberData?.relation ?? "",
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color: Colors.grey[600],
+                                        color: Colors.red,
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
@@ -577,6 +581,7 @@ class _AccountScreenState extends State<AccountScreen>
                 const SizedBox(height: 20),
 
                 // Daily Help Section
+
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
@@ -637,70 +642,77 @@ class _AccountScreenState extends State<AccountScreen>
                         ),
                       ),
                       const Divider(height: 1),
-                      if (getDailyHelpData?.employees.isNotEmpty ?? false)
-                        ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.all(15),
-                          itemCount: getDailyHelpData?.employees.length ?? 0,
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 10),
-                          itemBuilder: (context, index) {
-                            final help = getDailyHelpData?.employees[index];
-                            return Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[50],
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: const Color(0xFF6B4EFF)
-                                            .withOpacity(0.2),
-                                      ),
-                                    ),
-                                    child: CircleAvatar(
+                      if (getDailyHelpData?.employees?.isNotEmpty ?? false)
+                        SizedBox(
+                          height: 200, // fixed and sufficient height
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: getDailyHelpData?.employees?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              final help = getDailyHelpData?.employees?[index];
+
+                              return Container(
+                                margin: const EdgeInsets.only(right: 15),
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[100],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
                                       radius: 20,
                                       backgroundImage:
                                           CachedNetworkImageProvider(help
-                                                  ?.photo ??
+                                                  ?.profileImage ??
                                               "https://ui-avatars.com/api/?background=random&name=${help?.name ?? "NA"}."),
                                     ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          help?.name ?? "",
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          help?.empType ?? "",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                      ],
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      help?.name ?? "",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      help?.phone ?? "",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      help?.address ?? "",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.blue,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      help?.empType ?? "",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.red,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         )
                       else
                         Padding(
@@ -784,7 +796,7 @@ class _AccountScreenState extends State<AccountScreen>
                       const Divider(height: 1),
                       if (getVehicledetails?.data?.isNotEmpty ?? false)
                         SizedBox(
-                          height: 120,
+                          height: 140,
                           child: ListView.builder(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 15,
@@ -797,7 +809,7 @@ class _AccountScreenState extends State<AccountScreen>
                                 margin: const EdgeInsets.only(right: 15),
                                 width: 140,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[50],
+                                  color: Colors.grey[100],
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Column(

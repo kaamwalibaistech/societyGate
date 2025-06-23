@@ -133,7 +133,6 @@ class _VisitorsPageState extends State<VisitorsPage> {
                     child: TabBarView(
                       children: [
                         _buildError(state.msg),
-                        // _buildError(state.msg),
                         _buildError(state.msg),
                       ],
                     ),
@@ -253,44 +252,6 @@ class _VisitorsPageState extends State<VisitorsPage> {
                           ]),
                       sizedBoxH5(context)
                     ],
-                  )),
-            );
-          }),
-    );
-  }
-
-  Widget getRegularVisitorsWidget(
-    BuildContext context,
-    List<Visitor>? regularvisitorsList,
-  ) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      child: ListView.builder(
-          itemCount: regularvisitorsList?.length ?? 0,
-          itemBuilder: (context, index) {
-            final regularvisitors = regularvisitorsList![index];
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => VisitorsDetailsPage(
-                            visitorID: regularvisitors.visitorId.toString())));
-              },
-              child: Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                  height: 75,
-                  decoration: BoxDecoration(
-                      color: Colors.purple.shade50,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: ListTile(
-                    leading: const CircleAvatar(
-                      foregroundImage: AssetImage("lib/assets/qr.jpg"),
-                      radius: 30,
-                    ),
-                    title: Text(regularvisitors.name ?? "Not Available"),
-                    subtitle: Text(regularvisitors.phone ?? "Not Available"),
                   )),
             );
           }),
