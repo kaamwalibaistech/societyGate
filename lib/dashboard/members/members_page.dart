@@ -398,10 +398,15 @@ class _MembersPageState extends State<MembersPage> {
                         Fluttertoast.showToast(msg: "Only admin can Approve");
                       }
                     },
-                    child: Text(
-                      memberList.approvalStatus ?? "",
-                      style: const TextStyle(fontSize: 14),
-                    ),
+                    child: memberList.approvalStatus == "pending"
+                        ? Text(
+                            memberList.approvalStatus ?? "",
+                            style: const TextStyle(fontSize: 14),
+                          )
+                        : Image.asset(
+                            'lib/assets/icons/tickmark.png',
+                            scale: 1.3,
+                          ),
                   ),
                 ));
           }),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
 import 'package:society_gate/bloc/homepage_event.dart';
 import 'package:society_gate/bloc/homepage_state.dart';
+import 'package:society_gate/dashboard/notice_board/notice_api.dart';
+import 'package:society_gate/models/login_model.dart';
 import '../../constents/local_storage.dart';
 import 'add_notice_screen.dart';
 
@@ -14,15 +17,20 @@ class NoticeBoardScreen extends StatefulWidget {
 }
 
 class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
+  LoginModel? logInData;
   @override
   void initState() {
     super.initState();
     BlocProvider.of<HomepageBloc>(context).add(GetHomePageDataEvent());
+    getData();
+  }
+
+  void getData() {
+    logInData = LocalStoragePref().getLoginModel();
   }
 
   @override
   Widget build(BuildContext context) {
-    final logInData = LocalStoragePref().getLoginModel();
     return Scaffold(
       backgroundColor: Colors.white,
       floatingActionButton: logInData!.user!.role == "admin"
@@ -81,29 +89,37 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                 } else if (notice.announcementType!
                     .toLowerCase()
                     .contains('maintenance')) {
-                  typeColor = Colors.green;
+                  typeColor = Colors.greenAccent.shade700;
                 }
 
-                return Padding(
+                return Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                   padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: typeColor.withAlpha(30),
+                      borderRadius: BorderRadius.circular(10)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         notice.title ?? "",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: Colors.black87,
+                          color: typeColor,
                         ),
                       ),
                       const SizedBox(height: 3),
-                      Text(
-                        notice.description ?? "",
-                        style: const TextStyle(
-                            fontSize: 14, color: Colors.black54),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: Text(
+                          notice.description ?? "",
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.black87),
+                        ),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -111,32 +127,99 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                             "Created: ${notice.createdAt}",
                             style: const TextStyle(
                               fontSize: 12,
-                              color: Colors.grey,
+                              color: Colors.black54,
                             ),
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: typeColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(20),
-                              border:
-                                  Border.all(color: typeColor.withOpacity(0.5)),
-                            ),
-                            child: Text(
-                              notice.announcementType ?? "",
-                              style: TextStyle(
-                                color: typeColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11,
-                              ),
-                            ),
+                          PopupMenuButton(
+                            iconColor: Colors.red,
+                            icon: const Icon(Icons.more_vert_outlined),
+                            itemBuilder: (context) => [
+                              logInData?.user?.userId == notice.userId
+                                  ? const PopupMenuItem<int>(
+                                      height: 30,
+                                      value: 1,
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.delete_outline,
+                                            weight: 5,
+                                            size: 20,
+                                            color: Colors.red,
+                                          ),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Delete",
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : const PopupMenuItem<int>(
+                                      height: 0,
+                                      value: 0,
+                                      child: SizedBox.shrink()),
+                              const PopupMenuItem<int>(
+                                height: 30,
+                                value: 2,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.share,
+                                      weight: 5,
+                                      size: 20,
+                                      color: Colors.blue,
+                                    ),
+                                    SizedBox(width: 5),
+                                    Text(
+                                      "Share",
+                                      style: TextStyle(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                            onSelected: (value) async {
+                              if (value == 1) {
+                                EasyLoading.show();
+
+                                String msg = await deleteAnnouncement(
+                                    notice.announcementId?.toString() ?? "");
+
+                                EasyLoading.showToast(msg);
+                                BlocProvider.of<HomepageBloc>(context)
+                                    .add(GetHomePageDataEvent());
+                              } else if (value == 2) {
+                                EasyLoading.showToast("Working on it");
+                              }
+                            },
                           ),
+                          // Container(
+                          //   padding: const EdgeInsets.symmetric(
+                          //       horizontal: 5, vertical: 2),
+                          //   decoration: BoxDecoration(
+                          //     color: typeColor.withOpacity(0.1),
+                          //     borderRadius: BorderRadius.circular(20),
+                          //     border:
+                          //         Border.all(color: typeColor.withOpacity(0.5)),
+                          //   ),
+                          //   child: Text(
+                          //     notice.announcementType ?? "",
+                          //     style: TextStyle(
+                          //       color: typeColor,
+                          //       fontWeight: FontWeight.bold,
+                          //       fontSize: 11,
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
-                      Divider(
-                        color: Colors.blue.shade50,
-                      )
+                      // Divider(
+                      //   color: Colors.blue.shade50,
+                      // )
                     ],
                   ),
                 );

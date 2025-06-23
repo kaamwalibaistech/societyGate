@@ -16,6 +16,10 @@ class ApiConstant {
   static const String updateShop = "shopsupdate";
   static const String deleteShop = "shopsdelete";
 
+  // Announcement API Constants
+  static const String getAnnouncements = "getannouncement";
+  static const String deleteAnnouncement = "announcementsdelete";
+
   /// Community API Constants
   static const String getCommunityPosts = "communitypostget";
   static const String deleteCommunityPost = "communitypostdelete";

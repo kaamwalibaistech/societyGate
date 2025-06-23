@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/community/community_post_add.dart';
+import 'package:society_gate/dashboard/notice_board/notice_api.dart';
 import 'package:society_gate/payments_screen/payment_screen.dart';
 
 import 'amenities/book_amenities.dart';
@@ -18,7 +19,7 @@ import 'dashboard/notice_board/notice_board_screen.dart';
 import 'dashboard/visitors/visitors_page.dart';
 import 'models/announcements_model.dart';
 import 'models/login_model.dart';
-import 'scanner_page.dart';
+import 'watchman_tools/scanner_page.dart';
 import 'shops/dailyneeds_tab.dart';
 
 class HomepageScreen extends StatefulWidget {
@@ -32,6 +33,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
   Announcementmodel? announcementmodel;
   LoginModel? loginModel;
   String? loginType;
+  List<int> visibleIndices = [];
 
   String profilePhoto = "https://ui-avatars.com/api/?background=edbdff&name=.";
 
@@ -45,15 +47,22 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
   getData() async {
     loginModel = LocalStoragePref().getLoginModel();
-    String name = loginModel?.user?.uname ?? "NA";
+    final data =
+        await getAnnouncement(loginModel?.user!.societyId.toString() ?? "");
     setState(() {
+      String name = loginModel?.user?.uname ?? "NA";
       profilePhoto = loginModel?.user?.profileImage ??
           "https://ui-avatars.com/api/?background=edbdff&name=$name.";
       loginType = loginModel?.user?.role ?? "NA";
+      announcementmodel = data;
     });
-    ApiRepository apiRepositiory = ApiRepository();
-    announcementmodel = await apiRepositiory
-        .getHomePageData(loginModel?.user?.societyId.toString());
+
+    visibleIndices = List.generate(6, (index) => index);
+    if (loginType == "watchman") {
+      visibleIndices.removeWhere((index) => index == 3 || index == 4);
+    } else if (loginType == "sub_member") {
+      visibleIndices.removeWhere((index) => index == 3 || index == 5);
+    }
 
     log("Profile url: $profilePhoto");
     log("Role: $loginType");
@@ -91,11 +100,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<int> visibleIndices = List.generate(6, (index) => index);
-    if (loginType == "watchman") {
-      visibleIndices.removeWhere((index) => index == 3 || index == 4);
-    }
-
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -316,21 +320,12 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         bool hasAnnouncements =
                             announcementmodel?.announcements?.isNotEmpty ??
                                 false;
-                        return Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 4, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withAlpha(30),
-                                blurRadius: 10,
-                                offset: const Offset(0, 5),
-                                spreadRadius: 0,
-                              ),
-                            ],
-                          ),
+                        String annType = announcementmodel
+                                ?.announcements?[index].announcementType ??
+                            "";
+                        return Card(
+                          color: _getAnnouncementColor(annType).withAlpha(20),
+                          elevation: 0,
                           child: Column(
                             children: [
                               Container(
@@ -349,29 +344,16 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                     Icon(
                                       Icons.campaign_rounded,
                                       color: hasAnnouncements
-                                          ? _getAnnouncementColor(
-                                              announcementmodel
-                                                      ?.announcements?[index]
-                                                      .announcementType ??
-                                                  "")
+                                          ? _getAnnouncementColor(annType)
                                           : const Color(0xFF6B4EFF),
                                       size: 18,
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      hasAnnouncements
-                                          ? announcementmodel
-                                                  ?.announcements![index]
-                                                  .announcementType ??
-                                              ""
-                                          : "Notice",
+                                      hasAnnouncements ? annType : "Notice",
                                       style: TextStyle(
                                         color: hasAnnouncements
-                                            ? _getAnnouncementColor(
-                                                announcementmodel!
-                                                        .announcements![index]
-                                                        .announcementType ??
-                                                    "")
+                                            ? _getAnnouncementColor(annType)
                                             : const Color(0xFF6B4EFF),
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
@@ -389,16 +371,18 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                       ),
                                       child: Row(
                                         children: [
-                                          const Icon(
+                                          Icon(
                                             Icons.access_time,
-                                            color: Color(0xFF6B4EFF),
+                                            color:
+                                                _getAnnouncementColor(annType),
                                             size: 12,
                                           ),
                                           const SizedBox(width: 4),
                                           Text(
                                             "New",
                                             style: TextStyle(
-                                              color: Colors.grey[700],
+                                              color: _getAnnouncementColor(
+                                                  annType),
                                               fontSize: 11,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -492,7 +476,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                           ),
 
                                           /*
-      ------------------------------     This is Save and Share Button -------------------------
+                              ------------------------------     This is Save and Share Button -------------------------
                                           const Spacer(),
                                           Icon(
                                             Icons.bookmark_border_rounded,
@@ -721,7 +705,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       case 'emergency':
         return const Color(0xFFFF3B30); // Red color for emergency
       case 'maintenance':
-        return const Color(0xFF34C759); // Green color for maintenance
+        return Colors.greenAccent.shade700; // Green color for maintenance
       case 'general':
         return const Color(0xFF6B4EFF); // Purple color for general
       default:

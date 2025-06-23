@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:society_gate/models/login_model.dart';
 
-import 'account_screen.dart';
+import 'account_tab/account_screen.dart';
 import 'community/community_page.dart';
 import 'constents/local_storage.dart';
-import 'dashboard/watchman_profile_page.dart';
+import 'account_tab/watchman_profile_page.dart';
 import 'homepage_screen.dart';
 import 'shops/dailyneeds_tab.dart';
 

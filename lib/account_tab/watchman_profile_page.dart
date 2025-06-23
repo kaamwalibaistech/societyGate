@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:society_gate/auth/register_screen.dart';
-import 'package:society_gate/help_support.dart';
-import 'package:society_gate/terms_condition.dart';
+import 'package:society_gate/account_tab/settings_pages/help_support.dart';
+import 'package:society_gate/account_tab/settings_pages/terms_condition.dart';
 
 import '../constents/local_storage.dart';
 import '../constents/sizedbox.dart';
-import '../manual_visitors_screen.dart';
-import '../privacy_policy_screen.dart';
+import '../watchman_tools/manual_visitors_screen.dart';
+import 'settings_pages/privacy_policy_screen.dart';
 
 class WatchmanProfilePage extends StatefulWidget {
   const WatchmanProfilePage({super.key});

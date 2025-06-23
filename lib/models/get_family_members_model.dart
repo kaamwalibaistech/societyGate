@@ -47,10 +47,11 @@ class FamilyMember {
   int? memberId;
   int? submemberId;
   String? uname;
-  String? photo;
   String? uemail;
   String? uphone;
   String? relation;
+  String? photo;
+
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -76,7 +77,7 @@ class FamilyMember {
         memberId: json["member_id"],
         submemberId: json["submember_id"],
         uname: json["uname"],
-        photo: json["profile_photo"],
+        photo: json["profile_image"],
         uemail: json["uemail"],
         uphone: json["uphone"],
         relation: json["relation"],
@@ -95,7 +96,7 @@ class FamilyMember {
         "member_id": memberId,
         "submember_id": submemberId,
         "uname": uname,
-        "profile_photo": photo,
+        "profile_image": photo,
         "uemail": uemail,
         "uphone": uphone,
         "relation": relation,
