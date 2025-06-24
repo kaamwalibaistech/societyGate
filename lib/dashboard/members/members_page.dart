@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/dashboard/members/member_detail_page.dart';
 import 'package:society_gate/models/announcements_model.dart';
 
 import '../../constents/local_storage.dart';
@@ -366,49 +367,58 @@ class _MembersPageState extends State<MembersPage> {
           itemCount: members?.length ?? 0,
           itemBuilder: (context, index) {
             Members memberList = members![index];
-            return Container(
-                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-                height: 75,
-                decoration: BoxDecoration(
-                    color: Colors.purple.shade50,
-                    borderRadius: BorderRadius.circular(12)),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 35,
-                    backgroundImage: CachedNetworkImageProvider(memberList
-                            .profileImage ??
-                        "https://ui-avatars.com/api/?background=random&name=${memberList.uname}."),
-                  ),
-                  title: Text(memberList.uname ?? ""),
-                  subtitle: Text(memberList.uname ?? ""),
-                  trailing: GestureDetector(
-                    onTap: () async {
-                      if (loginModel!.user!.role == "admin") {
-                        if (memberList.approvalStatus == "pending") {
-                          final loginModel = LocalStoragePref().getLoginModel();
-                          final societyId = loginModel!.user!.societyId;
-                          ApiRepository apiRepository = ApiRepository();
-                          await apiRepository
-                              .getUserApproval(memberList.userId.toString());
-                          context.read<MembersBloc>().add(GetMemberListEvent(
-                              soceityId: societyId.toString()));
-                          Fluttertoast.showToast(msg: "Member Approved");
+            return GestureDetector(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MemberDetailPage(member: memberList))),
+              child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                  height: 75,
+                  decoration: BoxDecoration(
+                      color: Colors.purple.shade50,
+                      borderRadius: BorderRadius.circular(12)),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 35,
+                      backgroundImage: CachedNetworkImageProvider(memberList
+                              .profileImage ??
+                          "https://ui-avatars.com/api/?background=random&name=${memberList.uname}."),
+                    ),
+                    title: Text(memberList.uname ?? ""),
+                    subtitle: Text(memberList.uname ?? ""),
+                    trailing: GestureDetector(
+                      onTap: () async {
+                        if (loginModel!.user!.role == "admin") {
+                          if (memberList.approvalStatus == "pending") {
+                            final loginModel =
+                                LocalStoragePref().getLoginModel();
+                            final societyId = loginModel!.user!.societyId;
+                            ApiRepository apiRepository = ApiRepository();
+                            await apiRepository
+                                .getUserApproval(memberList.userId.toString());
+                            context.read<MembersBloc>().add(GetMemberListEvent(
+                                soceityId: societyId.toString()));
+                            Fluttertoast.showToast(msg: "Member Approved");
+                          }
+                        } else {
+                          Fluttertoast.showToast(msg: "Only admin can Approve");
                         }
-                      } else {
-                        Fluttertoast.showToast(msg: "Only admin can Approve");
-                      }
-                    },
-                    child: memberList.approvalStatus == "pending"
-                        ? Text(
-                            memberList.approvalStatus ?? "",
-                            style: const TextStyle(fontSize: 14),
-                          )
-                        : Image.asset(
-                            'lib/assets/icons/tickmark.png',
-                            scale: 1.3,
-                          ),
-                  ),
-                ));
+                      },
+                      child: memberList.approvalStatus == "pending"
+                          ? Text(
+                              memberList.approvalStatus ?? "",
+                              style: const TextStyle(fontSize: 14),
+                            )
+                          : Image.asset(
+                              'lib/assets/icons/tickmark.png',
+                              scale: 1.3,
+                            ),
+                    ),
+                  )),
+            );
           }),
     );
   }

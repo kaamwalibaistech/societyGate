@@ -528,12 +528,23 @@ class _AccountScreenState extends State<AccountScreen>
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    CircleAvatar(
-                                      radius: 20,
-                                      backgroundImage:
-                                          CachedNetworkImageProvider(memberData
-                                                  ?.photo ??
-                                              "https://ui-avatars.com/api/?background=random&name=${memberData?.uname ?? "NA"}."),
+                                    GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                                  content: Image.network(memberData
+                                                          ?.photo ??
+                                                      "https://ui-avatars.com/api/?background=random&name=${memberData?.uname ?? "NA"}."),
+                                                ));
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 20,
+                                        backgroundImage:
+                                            CachedNetworkImageProvider(memberData
+                                                    ?.photo ??
+                                                "https://ui-avatars.com/api/?background=random&name=${memberData?.uname ?? "NA"}."),
+                                      ),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
