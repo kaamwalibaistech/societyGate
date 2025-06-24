@@ -8,10 +8,10 @@ import 'package:lottie/lottie.dart';
 
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
-import 'api/api_constant.dart';
-import 'constents/local_storage.dart';
-import 'constents/sizedbox.dart';
-import 'models/login_model.dart';
+import '../api/api_constant.dart';
+import '../constents/local_storage.dart';
+import '../constents/sizedbox.dart';
+import '../models/login_model.dart';
 
 class ScannerPage extends StatefulWidget {
   const ScannerPage({super.key});

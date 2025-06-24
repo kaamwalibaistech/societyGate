@@ -39,6 +39,7 @@ class VisitorsBloc extends Bloc<VisitorsEvent, VisitorsState> {
         emit(VisitorsErrorState(visitorsListModel.message.toString()));
       }
     } catch (e) {
+      emit(VisitorsErrorState(e.toString()));
       throw Exception(e);
     }
   }

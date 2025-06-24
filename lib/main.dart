@@ -8,7 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:society_gate/amenities/amenities_add.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
-import 'package:society_gate/firebase_options.dart';
+import 'package:society_gate/constents/firebase_options.dart';
 
 // import 'package:society_gate/firebase_options.dart';
 

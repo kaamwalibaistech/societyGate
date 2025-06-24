@@ -1,89 +1,77 @@
-// To parse this JSON data, do
-//
-//     final getDailyHelpModel = getDailyHelpModelFromJson(jsonString);
-
-import 'dart:convert';
-
-GetDailyHelpModel getDailyHelpModelFromJson(String str) =>
-    GetDailyHelpModel.fromJson(json.decode(str));
-
-String getDailyHelpModelToJson(GetDailyHelpModel data) =>
-    json.encode(data.toJson());
-
 class GetDailyHelpModel {
-  int status;
-  String message;
-  List<Employee> employees;
+  int? status;
+  String? message;
+  List<Employees>? employees;
 
-  GetDailyHelpModel({
-    required this.status,
-    required this.message,
-    required this.employees,
-  });
+  GetDailyHelpModel({this.status, this.message, this.employees});
 
-  factory GetDailyHelpModel.fromJson(Map<String, dynamic> json) =>
-      GetDailyHelpModel(
-        status: json["status"],
-        message: json["message"],
-        employees: List<Employee>.from(
-            json["employees"].map((x) => Employee.fromJson(x))),
-      );
+  GetDailyHelpModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    if (json['employees'] != null) {
+      employees = <Employees>[];
+      json['employees'].forEach((v) {
+        employees!.add(new Employees.fromJson(v));
+      });
+    }
+  }
 
-  Map<String, dynamic> toJson() => {
-        "status": status,
-        "message": message,
-        "employees": List<dynamic>.from(employees.map((x) => x.toJson())),
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    if (this.employees != null) {
+      data['employees'] = this.employees!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
 }
 
-class Employee {
+class Employees {
   int? employeeId;
   int? societyId;
-  int? memberId;
   int? flatId;
+  int? memberId;
   String? name;
-  String? photo;
   String? phone;
   String? address;
   String? empType;
-  DateTime createdAt;
+  String? profileImage;
 
-  Employee({
-    required this.employeeId,
-    required this.societyId,
-    required this.memberId,
-    required this.flatId,
-    required this.name,
-    required this.photo,
-    required this.phone,
-    required this.address,
-    required this.empType,
-    required this.createdAt,
-  });
+  Employees(
+      {this.employeeId,
+      this.societyId,
+      this.flatId,
+      this.memberId,
+      this.name,
+      this.phone,
+      this.address,
+      this.empType,
+      this.profileImage});
 
-  factory Employee.fromJson(Map<String, dynamic> json) => Employee(
-        employeeId: json["employee_id"],
-        societyId: json["society_id"],
-        memberId: json["member_id"],
-        flatId: json["flat_id"],
-        name: json["name"],
-        photo: json["profile_image"],
-        phone: json["phone"],
-        address: json["address"],
-        empType: json["emp_type"],
-        createdAt: DateTime.parse(json["created_at"]),
-      );
+  Employees.fromJson(Map<String, dynamic> json) {
+    employeeId = json['employee_id'];
+    societyId = json['society_id'];
+    flatId = json['flat_id'];
+    memberId = json['member_id'];
+    name = json['name'];
+    phone = json['phone'];
+    address = json['address'];
+    empType = json['emp_type'];
+    profileImage = json['profile_image'];
+  }
 
-  Map<String, dynamic> toJson() => {
-        "employee_id": employeeId,
-        "society_id": societyId,
-        "member_id": memberId,
-        "flat_id": flatId,
-        "name": name,
-        "profile_image": photo,
-        "phone": phone,
-        "address": address,
-        "emp_type": empType,
-        "created_at": createdAt.toIso8601String(),
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['employee_id'] = this.employeeId;
+    data['society_id'] = this.societyId;
+    data['flat_id'] = this.flatId;
+    data['member_id'] = this.memberId;
+    data['name'] = this.name;
+    data['phone'] = this.phone;
+    data['address'] = this.address;
+    data['emp_type'] = this.empType;
+    data['profile_image'] = this.profileImage;
+    return data;
+  }
 }
