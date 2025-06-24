@@ -1,2 +1,0 @@
-D:/New project/societyGate/android/app/.cxx/Debug/5a4k4i4d/armeabi-v7a/CMakeFiles/edit_cache.dir
-D:/New project/societyGate/android/app/.cxx/Debug/5a4k4i4d/armeabi-v7a/CMakeFiles/rebuild_cache.dir
