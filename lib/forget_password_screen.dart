@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/constents/sizedbox.dart';
+import 'package:society_gate/new_password_screen.dart';
 
 class EmployerForgetPassword extends StatefulWidget {
   const EmployerForgetPassword({super.key});
@@ -11,7 +13,7 @@ class EmployerForgetPassword extends StatefulWidget {
 
 class _ForgetPasswordState extends State<EmployerForgetPassword> {
   String? otp;
-  // AuthRepository repositiory = AuthRepository();
+  ApiRepository repositiory = ApiRepository();
   TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
 
@@ -23,7 +25,7 @@ class _ForgetPasswordState extends State<EmployerForgetPassword> {
   void initState() {
     super.initState();
   }
-/*
+
   Future _sendOtp() async {
     final otpData = await repositiory
         .getEmployerRegisterForgetPasswordOtp(phoneNumberController.text);
@@ -31,7 +33,7 @@ class _ForgetPasswordState extends State<EmployerForgetPassword> {
     otp = otpData!.otp;
 
     // _otpController.value = TextEditingValue(text: otpData?.otp ?? '');
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +52,9 @@ class _ForgetPasswordState extends State<EmployerForgetPassword> {
               ),
               Center(
                 child: Image.asset(
-                  "lib/assets/images/kaamwalijobs.png",
-                  height: 80,
+                  "lib/assets/icons/app icon.png",
+                  height: 0,
+                  width: 200,
                 ),
               ),
               SizedBox(
@@ -114,13 +117,13 @@ class _ForgetPasswordState extends State<EmployerForgetPassword> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          if (
-                              // _formKey.currentState!.validate() &&
-                              phoneNumberController.text.isNotEmpty) {
-                            // _sendOtp();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("OTP Sent Successfully")));
+                          if (phoneNumberController.text.isEmpty) {
+                            Fluttertoast.showToast(
+                                msg: "Phone Number Should be valid");
+                          } else {
+                            _sendOtp();
+                            Fluttertoast.showToast(
+                                msg: "OTP Sent Successfully");
                             setState(() {
                               isVisible = false;
                               isVisible2 = true;
@@ -199,17 +202,17 @@ class _ForgetPasswordState extends State<EmployerForgetPassword> {
                         height: MediaQuery.of(context).size.height * 0.010,
                       ),
                       GestureDetector(
-                        // onTap: () {
-                        //   if (_otpController.text == otp) {
-                        //     Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //             builder: (context) => EmployerNewPassword(
-                        //                 number: phoneNumberController.text)));
-                        //   } else {
-                        //     Fluttertoast.showToast(msg: "Invalid OTP");
-                        //   }
-                        // },
+                        onTap: () {
+                          if (_otpController.text == otp) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EmployerNewPassword(
+                                        number: phoneNumberController.text)));
+                          } else {
+                            Fluttertoast.showToast(msg: "Invalid OTP");
+                          }
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                               color: Colors.blue,

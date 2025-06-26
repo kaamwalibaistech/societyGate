@@ -5,7 +5,9 @@ import 'dart:io';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+// import 'package:http_parser/http_parser.dart';
 import 'package:society_gate/models/forget_password_model.dart';
+import 'package:society_gate/models/forget_password_response_model.dart';
 import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'package:society_gate/models/help_support_model.dart';
 import 'package:society_gate/models/update_user_model.dart';
@@ -16,7 +18,6 @@ import '../models/add_notices_model.dart';
 import '../models/add_vehicle_model.dart';
 import '../models/admin_register_model.dart';
 import '../models/amenities_model.dart';
-import '../models/announcements_model.dart';
 import '../models/flat_id_model.dart';
 import '../models/get_daily_help_model.dart';
 import '../models/get_family_members_model.dart';
@@ -226,9 +227,7 @@ class ApiRepository {
 
       // Add the image file
 
-      if (photoPath != null &&
-          photoPath.isNotEmpty &&
-          File(photoPath).existsSync()) {
+      if (photoPath.isNotEmpty && File(photoPath).existsSync()) {
         request.files.add(
           await http.MultipartFile.fromPath(
             'photo',
@@ -270,15 +269,8 @@ class ApiRepository {
 //       uname, uemail, uphone, relation, password) async {
 //     final url = Uri.parse("${baseUrl}familymembersadd");
 // // =======
-  Future<AddFamilyMemberModel?> addFamilyMembers(
-    societyid,
-    flatid,
-    memberid,
-    uname,
-    uemail,
-    uphone,
-    relation,
-  ) async {
+  Future<AddFamilyMemberModel?> addFamilyMembers(societyid, flatid, memberid,
+      uname, uemail, uphone, relation, password) async {
     final url = Uri.parse("https://thesocietygate.com/api/familymembersadd");
 // >>>>>>> final
     final body = {
@@ -289,7 +281,7 @@ class ApiRepository {
       'uemail': uemail,
       'uphone': uphone,
       'relation': relation,
-      // 'password': password,
+      'password': password,
     };
     try {
       final response = await http.post(url, body: body);
@@ -417,23 +409,74 @@ class ApiRepository {
     return null;
   }
 
-  Future<ForgetPasswordModel?> getForgotPassword(email) async {
-    final url = Uri.parse("${baseUrl}forget-password");
-    final body = {
-      "uemail": email,
-    };
+  // Future<ForgetPasswordModel?> getForgotPassword(email) async {
+  //   final url = Uri.parse("${baseUrl}forget-password");
+  //   final body = {
+  //     "uemail": email,
+  //   };
+  //   try {
+  //     final response = await http.post(url, body: body);
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data = jsonDecode(response.body);
+  //       if (data['status'] == 200) {
+  //         return ForgetPasswordModel.fromJson(data);
+  //       }
+  //       return ForgetPasswordModel.fromJson(data);
+  //     }
+  //   } catch (e) {
+  //     throw Exception(e.toString());
+  //   }
+  //   return null;
+  // }
+
+  Future<EmployerforgetpasswordModel?> getEmployerRegisterForgetPasswordOtp(
+      String number) async {
+    Map<String, String> queryParameters = {};
+    queryParameters.addAll({"API-KEY": "ea3652c8-d890-44c6-9789-48dfc5831998"});
+
+    Uri url = Uri.parse(
+            "https://test.kaamwalijobs.com/API/Mobile_api/testsendforgototp")
+        .replace(queryParameters: queryParameters);
+
+    final body = {'mobile_no': number};
+
+    try {
+      final response =
+          await http.post(url, headers: queryParameters, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == '200') {
+          return EmployerforgetpasswordModel.fromJson(data);
+        }
+      }
+    } catch (e) {
+      throw Exception();
+    }
+
+    return null;
+  }
+
+  Future<ForgotPasswordResponse?> getEmployerRegisterNewPassword(
+      String number, String newPassword) async {
+    // Map<String, String> queryParameters = {};
+    // queryParameters.addAll({"API-KEY": "ea3652c8-d890-44c6-9789-48dfc5831998"});
+
+    Uri url = Uri.parse("https://thesocietygate.com/api/forgot-password");
+
+    final body = {'uphone': number, 'upassword': newPassword};
+
     try {
       final response = await http.post(url, body: body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         if (data['status'] == 200) {
-          return ForgetPasswordModel.fromJson(data);
+          return ForgotPasswordResponse.fromJson(data);
         }
-        return ForgetPasswordModel.fromJson(data);
       }
     } catch (e) {
-      throw Exception(e.toString());
+      throw Exception();
     }
+
     return null;
   }
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 
 class EmployerNewPassword extends StatefulWidget {
-  final int number;
+  final String number;
 
   const EmployerNewPassword({super.key, required this.number});
 
@@ -15,7 +17,7 @@ class _ForgetPasswordState extends State<EmployerNewPassword> {
   bool _obsecureText2 = true;
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  // AuthRepository repositiory = AuthRepository();
+  ApiRepository repositiory = ApiRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +35,8 @@ class _ForgetPasswordState extends State<EmployerNewPassword> {
               ),
               Center(
                 child: Image.asset(
-                  "lib/assets/images/kaamwalijobs.png",
-                  height: 80,
+                  "lib/assets/icons/app icon.png",
+                  height: 0,
                 ),
               ),
               SizedBox(
@@ -132,21 +134,27 @@ class _ForgetPasswordState extends State<EmployerNewPassword> {
                     ),
                     sizedBoxH15(context),
                     GestureDetector(
-                      onTap: () {
-                        // repositiory.getEmployerRegisterNewPassword(
-                        //     widget.number.toString(),
-                        //     newPasswordController.text);
-                        // if (newPasswordController.text ==
-                        //         confirmPasswordController.text &&
-                        //     newPasswordController.text.isNotEmpty &&
-                        //     confirmPasswordController.text.isNotEmpty) {
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //       const SnackBar(
-                        //           content:
-                        //               Text("Password Change Successfully")));
-                        //   Navigator.pop(context);
-                        //   Navigator.pop(context);
-                        // }
+                      onTap: () async {
+                        if (newPasswordController.text ==
+                            confirmPasswordController.text) {
+                          final dataResponse =
+                              await repositiory.getEmployerRegisterNewPassword(
+                                  widget.number.toString(),
+                                  newPasswordController.text);
+                          if (dataResponse?.status == 200) {
+                            Fluttertoast.showToast(
+                                msg: dataResponse?.message ?? "");
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: dataResponse?.message ??
+                                    "Something went Wrong");
+                          }
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Password Should be same");
+                        }
                       },
                       child: Container(
                         decoration: BoxDecoration(

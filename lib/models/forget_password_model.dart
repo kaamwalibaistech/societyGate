@@ -1,32 +1,36 @@
 // To parse this JSON data, do
 //
-//     final forgetPasswordModel = forgetPasswordModelFromJson(jsonString);
+//     final employerforgetpasswordModel = employerforgetpasswordModelFromJson(jsonString);
 
 import 'dart:convert';
 
-ForgetPasswordModel forgetPasswordModelFromJson(String str) =>
-    ForgetPasswordModel.fromJson(json.decode(str));
+EmployerforgetpasswordModel employerforgetpasswordModelFromJson(String str) =>
+    EmployerforgetpasswordModel.fromJson(json.decode(str));
 
-String forgetPasswordModelToJson(ForgetPasswordModel data) =>
+String employerforgetpasswordModelToJson(EmployerforgetpasswordModel data) =>
     json.encode(data.toJson());
 
-class ForgetPasswordModel {
-  int? status;
-  String? message;
+class EmployerforgetpasswordModel {
+  String status;
+  String otp;
+  String msg;
 
-  ForgetPasswordModel({
-    this.status,
-    this.message,
+  EmployerforgetpasswordModel({
+    required this.status,
+    required this.otp,
+    required this.msg,
   });
 
-  factory ForgetPasswordModel.fromJson(Map<String, dynamic> json) =>
-      ForgetPasswordModel(
+  factory EmployerforgetpasswordModel.fromJson(Map<String, dynamic> json) =>
+      EmployerforgetpasswordModel(
         status: json["status"],
-        message: json["message"],
+        otp: json["otp"],
+        msg: json["msg"],
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
-        "message": message,
+        "otp": otp,
+        "msg": msg,
       };
 }

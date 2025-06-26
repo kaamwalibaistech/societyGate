@@ -194,10 +194,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     )
                                   : CircleAvatar(
                                       radius: 50,
-                                      backgroundImage: FileImage(imagee!))
+                                      backgroundImage: imagee != null
+                                          ? FileImage(imagee!)
+                                          : null,
+                                      backgroundColor: Colors.grey[300],
+                                      child: imagee == null
+                                          ? const Icon(Icons.person,
+                                              size: 50, color: Colors.white)
+                                          : null,
+                                    )
                               : CircleAvatar(
                                   radius: 50,
-                                  backgroundImage: FileImage(imagee!))),
+                                  backgroundImage: imagee != null
+                                      ? FileImage(imagee!)
+                                      : null,
+                                  backgroundColor: Colors.grey[300],
+                                  child: imagee == null
+                                      ? const Icon(Icons.person,
+                                          size: 50, color: Colors.white)
+                                      : null,
+                                )),
                     ),
                     Center(
                       child: Padding(
