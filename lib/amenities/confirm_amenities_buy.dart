@@ -119,7 +119,8 @@ class _ConfirmAmenitiesBuyState extends State<ConfirmAmenitiesBuy> {
                             'currency': 'INR',
                             'name': 'Acme Corp.',
                             'description': 'Amenity Booking',
-                            'order_id': 'order_Qlhxs6KFORi5kU',
+                            // 'order_id': 'order_Qlhxs6KFORi5kU',
+                            'order_id': 'order_QlmN1ijZm8xto8',
                             'retry': {'enabled': true, 'max_count': 2},
                             'send_sms_hash': true,
                             'prefill': {

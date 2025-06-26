@@ -100,6 +100,22 @@ class _SettingScreenState extends State<SettingScreen> {
                           loginType: loginType,
                         )
                       : const SizedBox.shrink(),
+                  loginType == "admin"
+                      ? _buildSettingTile(
+                          icon: Icons.account_balance_rounded,
+                          title: "Edit Bank Details",
+                          subtitle: "Update amenities lists, prices and more!",
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AmenitiesAdd(),
+                              ),
+                            );
+                          },
+                          loginType: loginType,
+                        )
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),
@@ -291,6 +307,8 @@ class _SettingScreenState extends State<SettingScreen> {
       switch (icon) {
         case Icons.person_outline_rounded:
           return const Color(0xFF4CAF50); // Light green
+        case Icons.account_balance_rounded:
+          return Colors.pinkAccent.shade200;
         case Icons.shield_outlined:
           return const Color(0xFF2196F3); // Light blue
         case Icons.description_outlined:
@@ -309,6 +327,8 @@ class _SettingScreenState extends State<SettingScreen> {
       switch (icon) {
         case Icons.person_outline_rounded:
           return const Color(0xFFE8F5E9); // Very light green
+        case Icons.account_balance_rounded:
+          return Colors.pink.shade50;
         case Icons.shield_outlined:
           return const Color(0xFFE3F2FD); // Very light blue
         case Icons.description_outlined:
