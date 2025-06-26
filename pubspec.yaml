@@ -49,13 +49,10 @@ dependencies:
   qr_flutter: ^4.1.0
   url_launcher: ^6.3.1
   cached_network_image: ^3.4.1
-<<<<<<< HEAD
   # device_preview: ^1.2.0
   http_parser: ^4.1.2
 
   firebase_core: ^3.13.0
-=======
->>>>>>> 1411c53cfdbcb3ed788fbdb69d37497be35574bb
   image_picker: ^1.1.2
   permission_handler: ^11.0.1
   flutter_easyloading: ^3.0.5
@@ -64,9 +61,8 @@ dependencies:
   # device_preview: ^1.2.0
 
   in_app_update: ^4.2.3
-  firebase_core: ^3.13.0
+  # firebase_core: ^3.13.0
   firebase_messaging: ^15.2.5
-
 
 # dependency_overrides:
 #   shared_preferences_android: 2.4.8
