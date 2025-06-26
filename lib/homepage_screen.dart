@@ -168,6 +168,22 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           ],
                         ),
                       ),
+                      Visibility(
+                        visible: loginType == "admin",
+                        child: Container(
+                          margin: EdgeInsets.only(right: 20),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                              color: Colors.red.shade100,
+                              border: Border.all(color: Colors.red),
+                              borderRadius: BorderRadius.circular(100)),
+                          child: Text(
+                            "secretary",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
                       GestureDetector(
                         onTap: () {
                           Fluttertoast.showToast(msg: "No Notifications");
