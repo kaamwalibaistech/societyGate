@@ -1,2 +1,0 @@
-C:/Ritesh/flutter/my_society/android/app/.cxx/RelWithDebInfo/594i131p/x86/CMakeFiles/edit_cache.dir
-C:/Ritesh/flutter/my_society/android/app/.cxx/RelWithDebInfo/594i131p/x86/CMakeFiles/rebuild_cache.dir
