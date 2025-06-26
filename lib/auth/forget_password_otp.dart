@@ -11,7 +11,7 @@ class EmployerForgetPassword extends StatefulWidget {
 
 class _ForgetPasswordState extends State<EmployerForgetPassword> {
   String? otp;
-  AuthRepository repositiory = AuthRepository();
+  // AuthRepository repositiory = AuthRepository();
   TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
 
@@ -23,7 +23,7 @@ class _ForgetPasswordState extends State<EmployerForgetPassword> {
   void initState() {
     super.initState();
   }
-
+/*
   Future _sendOtp() async {
     final otpData = await repositiory
         .getEmployerRegisterForgetPasswordOtp(phoneNumberController.text);
@@ -31,7 +31,7 @@ class _ForgetPasswordState extends State<EmployerForgetPassword> {
     otp = otpData!.otp;
 
     // _otpController.value = TextEditingValue(text: otpData?.otp ?? '');
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +117,7 @@ class _ForgetPasswordState extends State<EmployerForgetPassword> {
                           if (
                               // _formKey.currentState!.validate() &&
                               phoneNumberController.text.isNotEmpty) {
-                            _sendOtp();
+                            // _sendOtp();
                             ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content: Text("OTP Sent Successfully")));
@@ -199,17 +199,17 @@ class _ForgetPasswordState extends State<EmployerForgetPassword> {
                         height: MediaQuery.of(context).size.height * 0.010,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          if (_otpController.text == otp) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EmployerNewPassword(
-                                        number: phoneNumberController.text)));
-                          } else {
-                            Fluttertoast.showToast(msg: "Invalid OTP");
-                          }
-                        },
+                        // onTap: () {
+                        //   if (_otpController.text == otp) {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //             builder: (context) => EmployerNewPassword(
+                        //                 number: phoneNumberController.text)));
+                        //   } else {
+                        //     Fluttertoast.showToast(msg: "Invalid OTP");
+                        //   }
+                        // },
                         child: Container(
                           decoration: BoxDecoration(
                               color: Colors.blue,

@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class ConfirmAmenitiesBuy extends StatefulWidget {
   final List<Map<String, String>> selectedAmenitiesList;
@@ -15,7 +19,7 @@ class ConfirmAmenitiesBuy extends StatefulWidget {
 }
 
 class _ConfirmAmenitiesBuyState extends State<ConfirmAmenitiesBuy> {
-  bool isTermsAccepted = true;
+  // bool isTermsAccepted = true;
 
   @override
   Widget build(BuildContext context) {
@@ -90,56 +94,117 @@ class _ConfirmAmenitiesBuyState extends State<ConfirmAmenitiesBuy> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      icon: const Icon(
-                        Icons.payment,
-                        color: Colors.white,
-                      ),
-                      label: const Text(
-                        "Proceed to Pay",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pinkAccent,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      onPressed: isTermsAccepted
-                          ? () {
-                              // Add your payment logic here
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  backgroundColor: Colors.greenAccent,
-                                  content: Text(
-                                    "Proceeding to payment...",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                              );
+                        icon: const Icon(
+                          Icons.payment,
+                          color: Colors.white,
+                        ),
+                        label: const Text(
+                          "Proceed to Pay",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.pinkAccent,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        onPressed: () {
+                          Razorpay razorpay = Razorpay();
+                          var options = {
+                            'key': 'rzp_test_Kc0D3gsG5D09RJ',
+                            'amount': 20000,
+                            'currency': 'INR',
+                            'name': 'Acme Corp.',
+                            'description': 'Amenity Booking',
+                            'order_id': 'order_Qlhxs6KFORi5kU',
+                            'retry': {'enabled': true, 'max_count': 2},
+                            'send_sms_hash': true,
+                            'prefill': {
+                              'contact': '9892986314',
+                              'email': 'test@razorpay.com',
+                            },
+                            'external': {
+                              'wallets': ['paytm']
                             }
-                          : null,
-                    ),
+                          };
+                          razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
+                              handlePaymentErrorResponse);
+                          razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
+                              handlePaymentSuccessResponse);
+                          razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
+                              handleExternalWalletSelected);
+                          try {
+                            razorpay.open(options);
+                          } catch (e) {
+                            EasyLoading.showToast(e.toString());
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.greenAccent,
+                              content: Text(
+                                "Proceeding to payment...",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          );
+                        }),
                   ),
-                  // sizedBoxH20(context),
-                  // const Center(
-                  //   child: Text(
-                  //     "By continue, you accepted the Terms and Conditions",
-                  //     style: TextStyle(
-                  //         fontSize: 14,
-                  //         color: Colors.blueAccent,
-                  //         decoration: TextDecoration.underline,
-                  //         fontStyle: FontStyle.italic),
-                  //   ),
-                  // ),
                 ],
               ),
             )
           ],
         ),
       ),
+    );
+  }
+
+  // Razor Pay Payment handles
+
+  void handlePaymentErrorResponse(PaymentFailureResponse response) {
+    /*
+    * Payment Failure Response contains three values:
+    * 1. Error Code
+    * 2. Error Description
+    * 3. Metadata
+    * */
+    showAlertDialog(context, "Payment Failed",
+        "Code: ${response.code}\nDescription: ${response.message}\nMetadata:${response.error.toString()}");
+  }
+
+  void handlePaymentSuccessResponse(PaymentSuccessResponse response) {
+    /*
+    * Payment Success Response contains three values:
+    * 1. Order ID
+    * 2. Payment ID
+    * 3. Signature
+    * */
+    log("Payment successful");
+    log("Order ID: ${response.orderId}");
+    log("Payment ID: ${response.paymentId}");
+    log("Signature: ${response.signature}");
+    showAlertDialog(
+        context, "Payment Successful", "Payment ID: ${response.paymentId}");
+  }
+
+  void handleExternalWalletSelected(ExternalWalletResponse response) {
+    showAlertDialog(
+        context, "External Wallet Selected", "${response.walletName}");
+  }
+
+  void showAlertDialog(BuildContext context, String title, String message) {
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: Text(message),
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

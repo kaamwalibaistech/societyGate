@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 
 class EmployerNewPassword extends StatefulWidget {
-  final number;
+  final int number;
 
   const EmployerNewPassword({super.key, required this.number});
 
@@ -15,7 +15,7 @@ class _ForgetPasswordState extends State<EmployerNewPassword> {
   bool _obsecureText2 = true;
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  AuthRepository repositiory = AuthRepository();
+  // AuthRepository repositiory = AuthRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -133,20 +133,20 @@ class _ForgetPasswordState extends State<EmployerNewPassword> {
                     sizedBoxH15(context),
                     GestureDetector(
                       onTap: () {
-                        repositiory.getEmployerRegisterNewPassword(
-                            widget.number.toString(),
-                            newPasswordController.text);
-                        if (newPasswordController.text ==
-                                confirmPasswordController.text &&
-                            newPasswordController.text.isNotEmpty &&
-                            confirmPasswordController.text.isNotEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content:
-                                      Text("Password Change Successfully")));
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        }
+                        // repositiory.getEmployerRegisterNewPassword(
+                        //     widget.number.toString(),
+                        //     newPasswordController.text);
+                        // if (newPasswordController.text ==
+                        //         confirmPasswordController.text &&
+                        //     newPasswordController.text.isNotEmpty &&
+                        //     confirmPasswordController.text.isNotEmpty) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //       const SnackBar(
+                        //           content:
+                        //               Text("Password Change Successfully")));
+                        //   Navigator.pop(context);
+                        //   Navigator.pop(context);
+                        // }
                       },
                       child: Container(
                         decoration: BoxDecoration(
