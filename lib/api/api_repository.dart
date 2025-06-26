@@ -187,25 +187,25 @@ class ApiRepository {
     return null;
   }
 
-  Future<Announcementmodel?> getHomePageData(societyId) async {
-    final url = Uri.parse("${baseUrl}getannouncement");
-    final body = {
-      'society_id': societyId,
-    };
-    try {
-      final response = await http.post(url, body: body);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        if (data['status'] == 200) {
-          return Announcementmodel.fromJson(data);
-        }
-        return Announcementmodel.fromJson(data);
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-    return null;
-  }
+  // Future<Announcementmodel?> getHomePageData(societyId) async {
+  //   final url = Uri.parse("${baseUrl}getannouncement");
+  //   final body = {
+  //     'society_id': societyId,
+  //   };
+  //   try {
+  //     final response = await http.post(url, body: body);
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> data = jsonDecode(response.body);
+  //       if (data['status'] == 200) {
+  //         return Announcementmodel.fromJson(data);
+  //       }
+  //       return Announcementmodel.fromJson(data);
+  //     }
+  //   } catch (e) {
+  //     throw Exception(e.toString());
+  //   }
+  //   return null;
+  // }
 
   Future<int?> communityPost(
     String societyId,
@@ -306,26 +306,6 @@ class ApiRepository {
     return null;
   }
 
-  Future<GetFamilyMemberModel?> getFamilyMembers(flatid) async {
-    final url = Uri.parse("${baseUrl}familymembersget");
-    final body = {
-      'flat_id': flatid,
-    };
-    try {
-      final response = await http.post(url, body: body);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        if (data['status'] == 200) {
-          return GetFamilyMemberModel.fromJson(data);
-        }
-        return GetFamilyMemberModel.fromJson(data);
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-    return null;
-  }
-
   Future<GetUserPurchaseAmenitiesModel?> getFamilyMemGetUserPurchaseAmenities(
       societyId, userId) async {
     final url = Uri.parse("${baseUrl}get-amenities-by-userid");
@@ -351,7 +331,7 @@ class ApiRepository {
   Future<GetVehicleDetailsModel?> getVehicleDetails(flatid) async {
     final url = Uri.parse("${baseUrl}getvehicleparking");
     final body = {
-      'flat_id': flatid,
+      'flat_id': "1",
     };
     try {
       final response = await http.post(url, body: body);
@@ -509,6 +489,28 @@ class ApiRepository {
     return null;
   }
 
+  Future<GetFamilyMemberModel?> getFamilyMembers(
+      flatid, String societyId) async {
+    final url = Uri.parse("${baseUrl}familymembersget");
+    final body = {
+      'flat_id': flatid,
+      'society_id': societyId,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['status'] == 200) {
+          return GetFamilyMemberModel.fromJson(data);
+        }
+        return GetFamilyMemberModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
   Future<GetDailyHelpModel?> getDailyHelpMembers(societyid, flatid) async {
     final url = Uri.parse("${baseUrl}employmentget");
     final body = {
@@ -520,6 +522,7 @@ class ApiRepository {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         if (data['status'] == 200) {
+          log(data.toString());
           return GetDailyHelpModel.fromJson(data);
         }
         return null;

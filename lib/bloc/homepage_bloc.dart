@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:society_gate/bloc/homepage_event.dart';
 import 'package:society_gate/bloc/homepage_state.dart';
+import 'package:society_gate/dashboard/notice_board/notice_api.dart';
 
-import '../api/api_repository.dart';
 import '../constents/local_storage.dart';
 import '../models/announcements_model.dart';
 
@@ -15,10 +15,8 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
       GetHomePageDataEvent event, Emitter<HomepageState> emit) async {
     try {
       final getLoginModel = LocalStoragePref().getLoginModel();
-
-      ApiRepository apiRepositiory = ApiRepository();
-      Announcementmodel? mydata = await apiRepositiory
-          .getHomePageData(getLoginModel!.user!.societyId.toString());
+      Announcementmodel? mydata =
+          await getAnnouncement(getLoginModel!.user!.societyId.toString());
 
       if (mydata!.status == 200) {
         emit(HomePageLoadedState(mydata: mydata));

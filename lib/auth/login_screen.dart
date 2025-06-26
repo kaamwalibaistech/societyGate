@@ -78,14 +78,16 @@ class _CreateNewAccountState extends State<LoginScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("Enter your email address to reset your password."),
+              const Text("Enter your Phone Number to reset your password."),
               const SizedBox(height: 12),
               TextField(
+                maxLength: 10,
                 controller: emailController,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  hintText: "example@gmail.com",
-                  prefixIcon: const Icon(Icons.email),
+                  hintText: "Phone No",
+                  counterText: "",
+                  prefixIcon: const Icon(Icons.call),
                   filled: true,
                   fillColor: Colors.blue.shade50,
                   border: OutlineInputBorder(
@@ -108,7 +110,7 @@ class _CreateNewAccountState extends State<LoginScreen> {
                 String email = emailController.text.trim();
 
                 if (email.isEmpty || !email.contains('@')) {
-                  Fluttertoast.showToast(msg: "Enter A valid Email");
+                  Fluttertoast.showToast(msg: "Enter A valid Phone Number");
                 } else {
                   ApiRepository apiRepository = ApiRepository();
                   final forgotPasswordData = await apiRepository
