@@ -38,9 +38,10 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.member.uname ?? ""),
-        actions: !isAdmin
+        actions: isAdmin
             ? [
-                ElevatedButton(onPressed: () {}, child: Text("Add a Fine")),
+                ElevatedButton(
+                    onPressed: () {}, child: const Text("Add a Fine")),
                 sizedBoxW10(context)
               ]
             : null,

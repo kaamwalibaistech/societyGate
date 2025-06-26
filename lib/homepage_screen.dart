@@ -171,14 +171,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       Visibility(
                         visible: loginType == "admin",
                         child: Container(
-                          margin: EdgeInsets.only(right: 20),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          margin: const EdgeInsets.only(right: 20),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                               color: Colors.red.shade100,
                               border: Border.all(color: Colors.red),
                               borderRadius: BorderRadius.circular(100)),
-                          child: Text(
+                          child: const Text(
                             "secretary",
                             style: TextStyle(fontSize: 12),
                           ),
@@ -627,7 +627,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const PaymentScreen()));
+                                          const SocietyPaymentsScreen()));
                               break;
                             case 4:
                               Navigator.push(
