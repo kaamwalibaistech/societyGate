@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/amenities/amenities_add.dart';
-import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/auth/forget_password_otp.dart';
 import 'package:society_gate/auth/register_waiting_page.dart';
 import 'package:society_gate/navigation_screen.dart';
 
@@ -67,67 +67,67 @@ class _CreateNewAccountState extends State<LoginScreen> {
     );
   }
 
-  void showForgotPasswordDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: const Text("Forgot Password"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text("Enter your Phone Number to reset your password."),
-              const SizedBox(height: 12),
-              TextField(
-                maxLength: 10,
-                controller: emailController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: "Phone No",
-                  counterText: "",
-                  prefixIcon: const Icon(Icons.call),
-                  filled: true,
-                  fillColor: Colors.blue.shade50,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close dialog
-              },
-              child: const Text("Cancel"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                String email = emailController.text.trim();
+  // void showForgotPasswordDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //         title: const Text("Forgot Password"),
+  //         content: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             const Text("Enter your Phone Number to reset your password."),
+  //             const SizedBox(height: 12),
+  //             TextField(
+  //               maxLength: 10,
+  //               controller: emailController,
+  //               keyboardType: TextInputType.number,
+  //               decoration: InputDecoration(
+  //                 hintText: "Phone No",
+  //                 counterText: "",
+  //                 prefixIcon: const Icon(Icons.call),
+  //                 filled: true,
+  //                 fillColor: Colors.blue.shade50,
+  //                 border: OutlineInputBorder(
+  //                   borderRadius: BorderRadius.circular(10),
+  //                   borderSide: BorderSide.none,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context); // Close dialog
+  //             },
+  //             child: const Text("Cancel"),
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: () async {
+  //               String email = emailController.text.trim();
 
-                if (email.isEmpty || !email.contains('@')) {
-                  Fluttertoast.showToast(msg: "Enter A valid Phone Number");
-                } else {
-                  ApiRepository apiRepository = ApiRepository();
-                  final forgotPasswordData = await apiRepository
-                      .getForgotPassword(emailController.text);
+  //               if (email.isEmpty || !email.contains('@')) {
+  //                 Fluttertoast.showToast(msg: "Enter A valid Phone Number");
+  //               } else {
+  //                 ApiRepository apiRepository = ApiRepository();
+  //                 final forgotPasswordData = await apiRepository
+  //                     .getForgotPassword(emailController.text);
 
-                  Fluttertoast.showToast(
-                      msg: forgotPasswordData!.message.toString());
-                  Navigator.pop(context);
-                }
-              },
-              child: const Text("Submit"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  //                 Fluttertoast.showToast(
+  //                     msg: forgotPasswordData!.message.toString());
+  //                 Navigator.pop(context);
+  //               }
+  //             },
+  //             child: const Text("Submit"),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -298,7 +298,12 @@ class _CreateNewAccountState extends State<LoginScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  showForgotPasswordDialog(context);
+                  // showForgotPasswordDialog(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const EmployerForgetPassword()));
                 },
                 child: const Center(
                   child: Text(
