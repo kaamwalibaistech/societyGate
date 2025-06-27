@@ -6,14 +6,15 @@ import 'package:flutter/services.dart';
 import 'package:society_gate/models/login_model.dart';
 
 import 'account_tab/account_screen.dart';
+import 'account_tab/watchman_profile_page.dart';
 import 'community/community_page.dart';
 import 'constents/local_storage.dart';
-import 'account_tab/watchman_profile_page.dart';
 import 'homepage_screen.dart';
 import 'shops/dailyneeds_tab.dart';
 
 class Navigationscreen extends StatefulWidget {
-  const Navigationscreen({super.key});
+  final int newIndexData;
+  const Navigationscreen({super.key, this.newIndexData = 0});
 
   @override
   State<Navigationscreen> createState() => _Navigationscreen();
@@ -38,6 +39,7 @@ class _Navigationscreen extends State<Navigationscreen> {
     setState(() {
       loginType = loginModel!.user!.role;
       uiPhoto = loginModel!.user!.uname ?? "NA";
+      selectedIndex = widget.newIndexData;
     });
   }
 
@@ -96,7 +98,7 @@ class _Navigationscreen extends State<Navigationscreen> {
             ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.message_outlined),
-              label: "Message",
+              label: "Community",
               activeIcon: Icon(Icons.message),
             ),
             BottomNavigationBarItem(
