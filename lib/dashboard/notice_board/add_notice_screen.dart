@@ -6,7 +6,6 @@ import 'package:society_gate/bloc/homepage_event.dart';
 
 import '../../api/api_repository.dart';
 import '../../constents/local_storage.dart';
-import '../../constents/sizedbox.dart';
 import '../../models/add_notices_model.dart';
 
 class AddNoticeScreen extends StatefulWidget {
@@ -27,6 +26,9 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
   bool? maintenanceChecked = false;
   int selectedIndex = 0;
   String? announcementType;
+  bool? emergencySelected;
+  bool? maintenanceSelected;
+  bool? generalSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -42,178 +44,83 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
             child: const Icon(Icons.arrow_back)),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 10, top: 10),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Form(
             key: formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0),
-                  child: Text(
-                    "Title",
-                    style: TextStyle(fontSize: 20),
+                const Text("Title",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: titleController,
+                  validator: (value) =>
+                      value == null || value.isEmpty ? "Enter Title" : null,
+                  decoration: InputDecoration(
+                    hintText: "Enter title",
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 14),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintStyle: const TextStyle(color: Colors.grey),
                   ),
                 ),
-                SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.90,
-                    height: MediaQuery.of(context).size.height * 0.07,
-                    child: Center(
-                      child: TextFormField(
-                        controller: titleController,
-                        validator: (value) {
-                          if (titleController.text.isEmpty) {
-                            return "Enter Title";
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                            hintText: "Enter title",
-                            hintStyle: TextStyle(color: Colors.grey),
-                            fillColor: Colors.white,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide.none)),
-                      ),
-                    )),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0),
-                  child: Text(
-                    "Description",
-                    style: TextStyle(fontSize: 20),
+                const SizedBox(height: 20),
+                const Text("Description",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: descriptionController,
+                  maxLines: 5,
+                  validator: (value) => value == null || value.isEmpty
+                      ? "Enter Description"
+                      : null,
+                  decoration: InputDecoration(
+                    hintText: "Enter Description",
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 14),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintStyle: const TextStyle(color: Colors.grey),
                   ),
                 ),
-                SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.90,
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    child: Center(
-                      child: TextFormField(
-                        controller: descriptionController,
-                        maxLines: 4,
-                        validator: (value) {
-                          if (descriptionController.text.isEmpty) {
-                            return "Enter Description";
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                            hintText: "Enter Description",
-                            hintStyle: TextStyle(color: Colors.grey),
-                            fillColor: Colors.white,
-                            filled: true,
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide.none)),
-                      ),
-                    )),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0),
-                  child: Text(
-                    "Announcement type",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                const SizedBox(height: 20),
+                const Text("Announcement type",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
                   children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedIndex = 1;
-                              announcementType = "general";
-                            });
-                          },
-                          child: Container(
-                            height: 20,
-                            width: 20,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: selectedIndex == 1
-                                        ? Colors.green
-                                        : Colors.black),
-                                color: selectedIndex == 1
-                                    ? Colors.green
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(10)),
-                          ),
-                        ),
-                        sizedBoxW5(context),
-                        const Text(
-                          "General",
-                          style: TextStyle(color: Colors.black),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedIndex = 2;
-                              announcementType = "emergency";
-                            });
-                          },
-                          child: Container(
-                            height: 20,
-                            width: 20,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: selectedIndex == 2
-                                        ? Colors.green
-                                        : Colors.black),
-                                color: selectedIndex == 2
-                                    ? Colors.green
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(10)),
-                          ),
-                        ),
-                        sizedBoxW5(context),
-                        const Text(
-                          "Emergency",
-                          style: TextStyle(color: Colors.black),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedIndex = 3;
-                              announcementType = "maintenance";
-                            });
-                          },
-                          child: Container(
-                            height: 20,
-                            width: 20,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: selectedIndex == 3
-                                        ? Colors.green
-                                        : Colors.black),
-                                color: selectedIndex == 3
-                                    ? Colors.green
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(10)),
-                          ),
-                        ),
-                        sizedBoxW5(context),
-                        const Text(
-                          "Maintenance",
-                          style: TextStyle(color: Colors.black),
-                        )
-                      ],
-                    ),
+                    _buildOption("General", 1, selectedIndex == 1),
+                    _buildOption("Emergency", 2, selectedIndex == 2),
+                    _buildOption("Maintenance", 3, selectedIndex == 3),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Center(
-                    child: GestureDetector(
-                      onTap: () async {
-                        if (formKey.currentState!.validate()) {
+                const SizedBox(height: 30),
+                Center(
+                  child: GestureDetector(
+                    onTap: () async {
+                      if (formKey.currentState!.validate()) {
+                        if (generalSelected != true &&
+                            maintenanceSelected != true &&
+                            emergencySelected != true) {
+                          Fluttertoast.showToast(
+                              msg: "Announcement type is Required");
+                        } else {
                           final logInData = LocalStoragePref().getLoginModel();
                           ApiRepository apiRepository = ApiRepository();
                           AddNoticeModel? addNoticeData =
@@ -230,26 +137,81 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                               msg: addNoticeData?.message.toString() ?? "");
                           Navigator.pop(context);
                         }
-                      },
-                      child: Container(
-                          height: 50,
-                          width: MediaQuery.of(context).size.width * 0.99,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: const Color.fromARGB(255, 19, 52, 84),
+                      } else {
+                        Fluttertoast.showToast(msg: "All Fields Are Required");
+                      }
+                    },
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF133454),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 6,
+                            offset: Offset(0, 3),
                           ),
-                          child: const Center(
-                            child: Text(
-                              "Add Notice",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "Add Notice",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w600),
+                        ),
+                      ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOption(String label, int index, bool isSelected) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedIndex = index;
+          announcementType = label.toLowerCase();
+          generalSelected = index == 1;
+          emergencySelected = index == 2;
+          maintenanceSelected = index == 3;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color(0xFF133454).withOpacity(0.1)
+              : Colors.transparent,
+          border: Border.all(
+              color:
+                  isSelected ? const Color(0xFF133454) : Colors.grey.shade400),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+              size: 18,
+              color: isSelected ? const Color(0xFF133454) : Colors.grey,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                color: isSelected ? const Color(0xFF133454) : Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
       ),
     );
