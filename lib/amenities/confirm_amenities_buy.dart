@@ -151,16 +151,6 @@ class _ConfirmAmenitiesBuyState extends State<ConfirmAmenitiesBuy> {
 
   // Razorpay payment
   _createAmenitiesOrder() async {
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   const SnackBar(
-    //     backgroundColor: Colors.greenAccent,
-    //     content: Text(
-    //       "Proceeding to payment...",
-    //       style: TextStyle(color: Colors.black),
-    //     ),
-    //   ),
-    // );
-
     try {
       EasyLoading.show();
       createOrderForAmenitiesModel = await createOrderForAmenitiesAmenities(

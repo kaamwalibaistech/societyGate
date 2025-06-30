@@ -99,6 +99,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<DailyneedsBloc>(create: (context) => DailyneedsBloc()),
         BlocProvider<PaymentsBloc>(create: (context) => PaymentsBloc()),
         BlocProvider<CommunityBloc>(create: (context) => CommunityBloc()),
+        BlocProvider<CommentsBloc>(create: (context) => CommentsBloc()),
         BlocProvider<AllAmenitiesBloc>(create: (context) => AllAmenitiesBloc()),
         BlocProvider<AmenitiesOFMemberBloc>(
             create: (context) => AmenitiesOFMemberBloc()),

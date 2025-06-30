@@ -16,7 +16,9 @@ final class GetAllAmenitiesFailure extends GetAllAmenitiesState {}
 
 final class GetAllAmenitiesSuccess extends GetAllAmenitiesState {
   final AmenitiesModel amenitiesModel;
-  const GetAllAmenitiesSuccess({required this.amenitiesModel});
+  final GetUserPurchaseAmenitiesModel? getUserPurchaseAmenitiesData;
+  const GetAllAmenitiesSuccess(
+      {required this.amenitiesModel, this.getUserPurchaseAmenitiesData});
   @override
   List<Object> get props => [amenitiesModel];
 }
