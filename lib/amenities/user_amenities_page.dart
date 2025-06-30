@@ -7,9 +7,12 @@ import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'amenities_images.dart';
 
 class UserAmenitiesPage extends StatefulWidget {
-  final List<String> amenities;
+  // final List<String> amenities;
 
-  const UserAmenitiesPage({super.key, required this.amenities});
+  const UserAmenitiesPage({
+    super.key,
+    // required this.amenities
+  });
 
   @override
   State<UserAmenitiesPage> createState() => _UserAmenitiesPageState();
@@ -27,9 +30,8 @@ class _UserAmenitiesPageState extends State<UserAmenitiesPage> {
   _getData() async {
     final data = LocalStoragePref.instance!.getLoginModel();
     ApiRepository apiRepository = ApiRepository();
-    final amenitiesData =
-        await apiRepository.getFamilyMemGetUserPurchaseAmenities(
-            data!.user!.societyId.toString(), data.user?.userId.toString());
+    final amenitiesData = await apiRepository.getUserPurchaseAmenities(
+        data!.user!.societyId.toString(), data.user?.userId.toString());
     setState(() {
       getUserPurchaseAmenitiesData = amenitiesData;
     });

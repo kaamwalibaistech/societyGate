@@ -409,13 +409,13 @@ class _AccountScreenState extends State<AccountScreen>
                             context,
                             MaterialPageRoute(
                               builder: (_) => const UserAmenitiesPage(
-                                amenities: [
-                                  'Wi-Fi',
-                                  'Parking',
-                                  'Swimming Pool',
-                                  'Gym'
-                                ],
-                              ),
+                                  // amenities: [
+                                  //   'Wi-Fi',
+                                  //   'Parking',
+                                  //   'Swimming Pool',
+                                  //   'Gym'
+                                  // ],
+                                  ),
                             ),
                           );
 

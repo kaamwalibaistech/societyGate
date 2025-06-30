@@ -28,5 +28,6 @@ class ApiConstant {
   static const String deleteComment = "community_commentdelete";
 
   //Amenities API Constants
-  static const String createorderAmenities = "create-order";
+  static const String createOrderForAmenitiesAmenities = "create-order";
+  static const String amenitiesBookbyUser = "amenities-book-by-user";
 }

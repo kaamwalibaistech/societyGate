@@ -3,15 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:society_gate/constents/local_storage.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 import 'package:society_gate/models/amenities_model.dart';
-import 'package:society_gate/models/login_model.dart';
 
 import 'amenities_images.dart';
 import 'bloc/amenities_bloc.dart';
 import 'confirm_amenities_buy.dart';
-import 'network/amenities_apis.dart';
 
 class BookAmenities extends StatefulWidget {
   const BookAmenities({super.key});
@@ -22,7 +19,19 @@ class BookAmenities extends StatefulWidget {
 
 class _BookAmenitiesState extends State<BookAmenities> {
   AmenitiesModel? amenitiesModel;
-  LoginModel? loginModel;
+  double total = 0;
+
+  List<Map<String, String>> selectedAmenitiesList = [];
+
+  Map<String, String> toMap(
+      String id, String name, String price, String duration) {
+    return {
+      'amenity_id': id,
+      'amenity_name': name,
+      'amount': price,
+      'duration': duration
+    };
+  }
 
   @override
   void initState() {
@@ -32,16 +41,6 @@ class _BookAmenitiesState extends State<BookAmenities> {
 
   fetchVisitors() {
     context.read<AllAmenitiesBloc>().add(GetAllAmenities());
-    loginModel = LocalStoragePref().getLoginModel();
-  }
-
-  double total = 0;
-
-  // final Set<String> selectedAmenities = {};
-  List<Map<String, String>> selectedAmenitiesList = [];
-
-  Map<String, String> toMap(String name, String price, String duration) {
-    return {'amenity_name': name, 'amount': price, 'duration': duration};
   }
 
   @override
@@ -107,13 +106,8 @@ class _BookAmenitiesState extends State<BookAmenities> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (total != 0.0) {
-                      final createOrderModel = createOrderAmenities(
-                        total.toString(),
-                        loginModel?.user?.societyId.toString() ?? "",
-                        loginModel?.user?.userId.toString() ?? "",
-                      );
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -122,7 +116,6 @@ class _BookAmenitiesState extends State<BookAmenities> {
                                         selectedAmenitiesList,
                                     total: total,
                                   )));
-                      // selectedAmenitiesList = list;
                     } else {
                       Fluttertoast.showToast(
                           backgroundColor: Colors.red,
@@ -189,6 +182,7 @@ class _BookAmenitiesState extends State<BookAmenities> {
                         return GestureDetector(
                           onTap: () {
                             final ameList = toMap(
+                              amenitiesList?.amenityId.toString() ?? "",
                               amenitiesList?.amenityName ?? "",
                               amenitiesList?.amount ?? "",
                               amenitiesList?.duration ?? "",
@@ -302,7 +296,6 @@ class _BookAmenitiesState extends State<BookAmenities> {
                 }
               }),
             ),
-            /*  ,*/
           ],
         ),
       ),
