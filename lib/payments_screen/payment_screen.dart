@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:society_gate/constents/local_storage.dart';
-import 'package:society_gate/payments_screen/paid_bills_detail_screen.dart';
 
 class SocietyPaymentsScreen extends StatefulWidget {
   const SocietyPaymentsScreen({super.key});
@@ -212,53 +211,43 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
       itemBuilder: (context, index) {
         final price = list[index];
 
-        return GestureDetector(
-          onTap: () {
-            unpaid
-                ? null
-                : Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PaidBillsDetailScreen()));
-          },
-          child: Card(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            elevation: 1,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(12),
-              leading: unpaid
-                  ? Checkbox(
-                      value: price['selected'] ?? false,
-                      onChanged: (value) {
-                        setState(() {
-                          price['selected'] = value;
-                        });
-                      },
-                    )
-                  : const Icon(Icons.check_circle, color: Colors.green),
-              title: Text(
-                price['id'],
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              subtitle: Text(price['date']),
-              trailing: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '₹${price['amount']}',
-                    style: TextStyle(
-                      color: unpaid ? Colors.red : Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          elevation: 1,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(12),
+            leading: unpaid
+                ? Checkbox(
+                    value: price['selected'] ?? false,
+                    onChanged: (value) {
+                      setState(() {
+                        price['selected'] = value;
+                      });
+                    },
+                  )
+                : const Icon(Icons.check_circle, color: Colors.green),
+            title: Text(
+              price['id'],
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text(price['date']),
+            trailing: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '₹${price['amount']}',
+                  style: TextStyle(
+                    color: unpaid ? Colors.red : Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
-                  const SizedBox(height: 8),
-                  const Icon(Icons.arrow_forward_ios,
-                      size: 14, color: Colors.grey),
-                ],
-              ),
+                ),
+                const SizedBox(height: 8),
+                const Icon(Icons.arrow_forward_ios,
+                    size: 14, color: Colors.grey),
+              ],
             ),
           ),
         );
