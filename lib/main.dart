@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:in_app_update/in_app_update.dart';
 import 'package:society_gate/amenities/amenities_add.dart';
+import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
 import 'package:society_gate/constents/firebase_options.dart';
 
@@ -31,9 +28,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseApi().initNotification();
 
   await LocalStoragePref.instance!.initPrefBox();
-  await dotenv.load(fileName: ".env");
+  // await dotenv.load(fileName: ".env");
   // checkForUpdates();
 
   runApp(const MyApp());

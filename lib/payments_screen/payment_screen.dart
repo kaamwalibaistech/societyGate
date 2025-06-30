@@ -1,4 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:society_gate/constents/local_storage.dart';
 
 class SocietyPaymentsScreen extends StatefulWidget {
   const SocietyPaymentsScreen({super.key});
@@ -9,6 +14,56 @@ class SocietyPaymentsScreen extends StatefulWidget {
 
 class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     with TickerProviderStateMixin {
+  late Razorpay _razorpay;
+
+  void handleExternalWalletSelected(ExternalWalletResponse response) {}
+
+  Future<void> handlePaymentSuccessResponse(
+      PaymentSuccessResponse response) async {
+    String paymentId = response.paymentId ?? "N/A";
+
+    Fluttertoast.showToast(
+      msg: "Payment Successful!\nPayment ID: $paymentId",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+    );
+  }
+
+  void openCheckOut(String price) async {
+    final data = LocalStoragePref().getLoginModel();
+    var options = {
+      'key': 'rzp_test_Kc0D3gsG5D09RJ',
+      'amount': double.parse(price) * 100,
+      'name': 'Society Gate',
+      'send_sms_hash': true,
+      // 'description': ,
+      'prefill': {'contact': data?.user?.uphone, 'email': data?.user?.uemail}
+    };
+    try {
+      _razorpay.open(options);
+      log("Opened");
+    } catch (e) {
+      print('erroe $e');
+    }
+  }
+
+  void handlePaymentErrorResponse(PaymentFailureResponse response) {
+    String errorMessage = "Payment Failed";
+
+    try {
+      // Extract details from the response
+      int? code = response.code;
+      String? message = response.message;
+
+      errorMessage = "Error Code: $code\nMessage: $message";
+      Fluttertoast.showToast(msg: errorMessage);
+    } catch (e) {
+      throw (e.toString());
+    }
+  }
+
   late TabController _tabController;
   double getSelectedTotal() {
     return unpaidList
@@ -43,6 +98,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
+    _razorpay = Razorpay();
   }
 
   @override
@@ -117,6 +173,16 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                           return;
                         }
 
+                        final price = getSelectedTotal();
+
+                        openCheckOut(price.toString());
+                        _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
+                            handlePaymentSuccessResponse);
+                        _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
+                            handlePaymentErrorResponse);
+                        _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
+                            handleExternalWalletSelected);
+
                         // Add payment logic for selected
                         print("Proceed to pay ${getSelectedTotal()}");
                       },
@@ -143,7 +209,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
       padding: const EdgeInsets.all(12),
       itemCount: list.length,
       itemBuilder: (context, index) {
-        final challan = list[index];
+        final price = list[index];
 
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 8),
@@ -154,24 +220,24 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
             contentPadding: const EdgeInsets.all(12),
             leading: unpaid
                 ? Checkbox(
-                    value: challan['selected'] ?? false,
+                    value: price['selected'] ?? false,
                     onChanged: (value) {
                       setState(() {
-                        challan['selected'] = value;
+                        price['selected'] = value;
                       });
                     },
                   )
                 : const Icon(Icons.check_circle, color: Colors.green),
             title: Text(
-              challan['id'],
+              price['id'],
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
-            subtitle: Text(challan['date']),
+            subtitle: Text(price['date']),
             trailing: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '₹${challan['amount']}',
+                  '₹${price['amount']}',
                   style: TextStyle(
                     color: unpaid ? Colors.red : Colors.grey,
                     fontWeight: FontWeight.bold,

@@ -5,7 +5,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
-import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/community/community_post_add.dart';
 import 'package:society_gate/dashboard/notice_board/notice_api.dart';
 import 'package:society_gate/payments_screen/payment_screen.dart';
@@ -40,8 +39,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
   void initState() {
     super.initState();
     getData();
-
-    FirebaseApi().initNotification();
   }
 
   getData() async {
@@ -834,8 +831,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const DailyneedsTab()));
+                                      builder: (context) => const DailyneedsTab(
+                                            valuee: true,
+                                          )));
                               break;
                           }
                         },
