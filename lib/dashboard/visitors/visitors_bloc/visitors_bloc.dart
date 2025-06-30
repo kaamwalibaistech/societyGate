@@ -25,11 +25,11 @@ class VisitorsBloc extends Bloc<VisitorsEvent, VisitorsState> {
       if (loginModel!.user!.role == "watchman") {
         log(loginModel.user!.role.toString());
         final memberData =
-            await visitorsListForWatchmanApi(event.soceityId, "1", "10");
+            await visitorsListForWatchmanApi(event.soceityId, "1", "100");
         visitorsListModel = memberData;
       } else {
         final memberData =
-            await visitorsListApi(event.soceityId, event.flatId, "1", "10");
+            await visitorsListApi(event.soceityId, event.flatId, "1", "100");
         visitorsListModel = memberData;
       }
 
