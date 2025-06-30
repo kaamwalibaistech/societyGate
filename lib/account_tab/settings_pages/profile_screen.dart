@@ -518,10 +518,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             email,
                             phone,
                             imagee?.path);
-                        await LocalStoragePref().storeLoginModel(loginData);
 
                         Fluttertoast.showToast(
                             msg: userData?.message.toString() ?? "");
+                        final loginDataa = await login(
+                            logInData!.user!.uphone.toString(),
+                            passwordController.text);
+                        await LocalStoragePref().storeLoginModel(loginDataa!);
 
                         Navigator.pop(context); // close dialog
                         Navigator.pop(context); // go back

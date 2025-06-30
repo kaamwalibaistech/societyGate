@@ -324,7 +324,7 @@ class ApiRepository {
   Future<GetVehicleDetailsModel?> getVehicleDetails(flatid) async {
     final url = Uri.parse("${baseUrl}getvehicleparking");
     final body = {
-      'flat_id': "1",
+      'flat_id': flatid,
     };
     try {
       final response = await http.post(url, body: body);

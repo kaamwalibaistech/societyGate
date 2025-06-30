@@ -37,7 +37,9 @@ class _AccountScreenState extends State<AccountScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    loginModel = LocalStoragePref().getLoginModel();
+    setState(() {
+      loginModel = LocalStoragePref().getLoginModel();
+    });
     getfamilymembers();
     getDailyHelpmembers();
     getVehicleData();
@@ -320,12 +322,16 @@ class _AccountScreenState extends State<AccountScreen>
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
+                              // final dataa = await
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const SettingScreen(),
                                 ),
                               );
+                              // if (dataa == true) {
+                              //   // setState(() {});
+                              // }
                             },
                             child: Container(
                               padding: const EdgeInsets.all(8),
@@ -371,12 +377,44 @@ class _AccountScreenState extends State<AccountScreen>
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    loginModel?.user?.societyName ?? "---",
+                                    loginModel?.user?.societyName ?? "--",
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                       color: Color(0xFF2D3142),
                                     ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        loginModel?.user?.block ?? "--",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFF2D3142),
+                                        ),
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 3.0),
+                                        child: Text(
+                                          "-",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xFF2D3142),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        loginModel?.user?.flatNumber ?? "--",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFF2D3142),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -1007,6 +1045,7 @@ class _AccountScreenState extends State<AccountScreen>
                         ),
                         const SizedBox(height: 15),
                         _buildTextField(
+                          keyboardType: TextInputType.emailAddress,
                           controller: familyEmailController,
                           label: "Email",
                           hint: "Enter email",
@@ -1404,7 +1443,7 @@ class _AccountScreenState extends State<AccountScreen>
                         const SizedBox(height: 15),
                         _buildTextField(
                           controller: vehicleModelController,
-                          label: "Vehicle Model",
+                          label: "Vehicle Company",
                           hint: "Enter vehicle company",
                           validator: (value) {
                             if (value!.isEmpty) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:society_gate/auth/register_screen.dart';
 import 'package:society_gate/account_tab/settings_pages/help_support.dart';
 import 'package:society_gate/account_tab/settings_pages/terms_condition.dart';
+import 'package:society_gate/auth/register_screen.dart';
 
 import '../constents/local_storage.dart';
 import '../constents/sizedbox.dart';
@@ -137,13 +137,62 @@ class _WatchmanProfilePageState extends State<WatchmanProfilePage> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        await LocalStoragePref.instance!.clearAllPref();
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RegisterScreen()),
-                          (Route<dynamic> route) => false,
+                        final shouldLogout = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            title: const Text(
+                              "Logout",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF2D3142),
+                              ),
+                            ),
+                            content: const Text(
+                              "Are you sure you want to logout?",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xFF6C7A9C),
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                    color: Color(0xFF6C7A9C),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: Text(
+                                  "Logout",
+                                  style: TextStyle(
+                                    color: Colors.red[400],
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         );
+
+                        if (shouldLogout == true) {
+                          await LocalStoragePref.instance!.clearAllPref();
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
+                            (Route<dynamic> route) => false,
+                          );
+                        }
                       },
                       child: const ListTile(
                         leading: Icon(

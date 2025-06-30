@@ -1,12 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constents/sizedbox.dart';
 import 'bloc/dailyneeds_bloc.dart';
@@ -332,7 +332,7 @@ class _AddShopState extends State<AddShop> {
                     ),
                   ),
                 ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           Row(
             children: [
               Expanded(
