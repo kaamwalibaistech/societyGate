@@ -22,6 +22,11 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen>
     with SingleTickerProviderStateMixin {
+  TextEditingController familyNameController = TextEditingController();
+  TextEditingController familyMobileNoController = TextEditingController();
+  TextEditingController familyEmailController = TextEditingController();
+  TextEditingController familyRelationController = TextEditingController();
+  TextEditingController familyPasswordController = TextEditingController();
   late TabController _tabController;
   GetFamilyMemberModel? getFamilyMemberData;
   GetDailyHelpModel? getDailyHelpData;
@@ -32,7 +37,9 @@ class _AccountScreenState extends State<AccountScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    loginModel = LocalStoragePref().getLoginModel();
+    setState(() {
+      loginModel = LocalStoragePref().getLoginModel();
+    });
     getfamilymembers();
     getDailyHelpmembers();
     getVehicleData();
@@ -315,12 +322,16 @@ class _AccountScreenState extends State<AccountScreen>
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
+                              // final dataa = await
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const SettingScreen(),
                                 ),
                               );
+                              // if (dataa == true) {
+                              //   // setState(() {});
+                              // }
                             },
                             child: Container(
                               padding: const EdgeInsets.all(8),
@@ -366,12 +377,44 @@ class _AccountScreenState extends State<AccountScreen>
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    loginModel?.user?.societyName ?? "---",
+                                    loginModel?.user?.societyName ?? "--",
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                       color: Color(0xFF2D3142),
                                     ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        loginModel?.user?.block ?? "--",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFF2D3142),
+                                        ),
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 3.0),
+                                        child: Text(
+                                          "-",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xFF2D3142),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        loginModel?.user?.flatNumber ?? "--",
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFF2D3142),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -404,13 +447,13 @@ class _AccountScreenState extends State<AccountScreen>
                             context,
                             MaterialPageRoute(
                               builder: (_) => const UserAmenitiesPage(
-                                amenities: [
-                                  'Wi-Fi',
-                                  'Parking',
-                                  'Swimming Pool',
-                                  'Gym'
-                                ],
-                              ),
+                                  // amenities: [
+                                  //   'Wi-Fi',
+                                  //   'Parking',
+                                  //   'Swimming Pool',
+                                  //   'Gym'
+                                  // ],
+                                  ),
                             ),
                           );
 
@@ -560,7 +603,7 @@ class _AccountScreenState extends State<AccountScreen>
                                     const SizedBox(height: 2),
                                     Text(
                                       memberData?.relation ?? "",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 12,
                                         color: Colors.red,
                                       ),
@@ -704,7 +747,7 @@ class _AccountScreenState extends State<AccountScreen>
                                     const SizedBox(height: 2),
                                     Text(
                                       help?.address ?? "",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 12,
                                         color: Colors.blue,
                                       ),
@@ -713,7 +756,7 @@ class _AccountScreenState extends State<AccountScreen>
                                     const SizedBox(height: 2),
                                     Text(
                                       help?.empType ?? "",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 12,
                                         color: Colors.red,
                                       ),
@@ -897,11 +940,6 @@ class _AccountScreenState extends State<AccountScreen>
   }
 
   familyMemberModelBottomSheet() {
-    TextEditingController familyNameController = TextEditingController();
-    TextEditingController familyMobileNoController = TextEditingController();
-    TextEditingController familyEmailController = TextEditingController();
-    TextEditingController familyRelationController = TextEditingController();
-    TextEditingController familyPasswordController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
     return showModalBottomSheet(
@@ -1007,6 +1045,7 @@ class _AccountScreenState extends State<AccountScreen>
                         ),
                         const SizedBox(height: 15),
                         _buildTextField(
+                          keyboardType: TextInputType.emailAddress,
                           controller: familyEmailController,
                           label: "Email",
                           hint: "Enter email",
@@ -1033,19 +1072,19 @@ class _AccountScreenState extends State<AccountScreen>
                             return null;
                           },
                         ),
-                        // const SizedBox(height: 15),
-                        // _buildTextField(
-                        //   controller: familyPasswordController,
-                        //   label: "Password",
-                        //   hint: "Enter password",
-                        //   isPassword: true,
-                        //   validator: (value) {
-                        //     if (value!.length < 6) {
-                        //       return "Password should be at least 6 characters";
-                        //     }
-                        //     return null;
-                        //   },
-                        // ),
+                        const SizedBox(height: 15),
+                        _buildTextField(
+                          controller: familyPasswordController,
+                          label: "Password",
+                          hint: "Enter password",
+                          isPassword: true,
+                          validator: (value) {
+                            if (value!.length < 6) {
+                              return "Password should be at least 6 characters";
+                            }
+                            return null;
+                          },
+                        ),
                         const SizedBox(height: 25),
                         SizedBox(
                           width: double.infinity,
@@ -1057,25 +1096,31 @@ class _AccountScreenState extends State<AccountScreen>
                                   final data = LocalStoragePref.instance!
                                       .getLoginModel();
                                   ApiRepository apiRepository = ApiRepository();
+
                                   final dataa =
                                       await apiRepository.addFamilyMembers(
-                                    data!.user!.societyId.toString(),
-                                    data.user!.flatId.toString(),
-                                    data.user!.userId.toString(),
-                                    familyNameController.text,
-                                    familyEmailController.text,
-                                    familyMobileNoController.text,
-                                    familyRelationController.text,
-                                  );
-                                  getfamilymembers();
-                                  Navigator.pop(context);
-                                  Fluttertoast.showToast(
-                                      msg: dataa!.message.toString());
+                                          data!.user!.societyId.toString(),
+                                          data.user!.flatId.toString(),
+                                          data.user!.userId.toString(),
+                                          familyNameController.text,
+                                          familyEmailController.text,
+                                          familyMobileNoController.text,
+                                          familyRelationController.text,
+                                          familyPasswordController.text);
+
+                                  if (dataa?.status == 200) {
+                                    getfamilymembers();
+                                    Navigator.pop(context);
+                                    Fluttertoast.showToast(
+                                        msg: dataa!.message.toString());
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg: dataa!.message.toString());
+                                  }
                                 }
                               } catch (e) {
                                 Fluttertoast.showToast(
-                                    msg:
-                                        "Phone Number or Email is Already Taken");
+                                    msg: "Something went wrong");
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -1398,7 +1443,7 @@ class _AccountScreenState extends State<AccountScreen>
                         const SizedBox(height: 15),
                         _buildTextField(
                           controller: vehicleModelController,
-                          label: "Vehicle Model",
+                          label: "Vehicle Company",
                           hint: "Enter vehicle company",
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -1473,7 +1518,7 @@ class _AccountScreenState extends State<AccountScreen>
     int? maxLength,
     bool isPassword = false,
     String? Function(String?)? validator,
-    // bool obscureText = true,
+    // bool obscureText = false,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1495,16 +1540,16 @@ class _AccountScreenState extends State<AccountScreen>
           validator: validator,
           decoration: InputDecoration(
             // suffixIcon: isPassword
-            // ? GestureDetector(
-            //     onTap: () {
-            //       setState(() {
-            //         obscureText = !obscureText;
-            //       });
-            //     },
-            //     child: obscureText
-            //         ? const Icon(Icons.visibility)
-            //         : const Icon(Icons.visibility_off_outlined))
-            // : const SizedBox.shrink(),
+            //     ? GestureDetector(
+            //         onTap: () {
+            //           setState(() {
+            //             obscureText = !obscureText;
+            //           });
+            //         },
+            //         child: obscureText
+            //             ? const Icon(Icons.visibility)
+            //             : const Icon(Icons.visibility_off_outlined))
+            //     : const SizedBox.shrink(),
             hintText: hint,
             hintStyle: TextStyle(
               color: Colors.grey[400],

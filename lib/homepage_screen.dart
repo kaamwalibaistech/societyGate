@@ -11,7 +11,6 @@ import 'package:society_gate/dashboard/notice_board/notice_api.dart';
 import 'package:society_gate/payments_screen/payment_screen.dart';
 
 import 'amenities/book_amenities.dart';
-import 'api/api_repository.dart';
 import 'community/community_page.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/members/members_page.dart';
@@ -19,8 +18,8 @@ import 'dashboard/notice_board/notice_board_screen.dart';
 import 'dashboard/visitors/visitors_page.dart';
 import 'models/announcements_model.dart';
 import 'models/login_model.dart';
-import 'watchman_tools/scanner_page.dart';
 import 'shops/dailyneeds_tab.dart';
+import 'watchman_tools/scanner_page.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -60,8 +59,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
     visibleIndices = List.generate(6, (index) => index);
     if (loginType == "watchman") {
       visibleIndices.removeWhere((index) => index == 3 || index == 4);
-    } else if (loginType == "sub_member") {
-      visibleIndices.removeWhere((index) => index == 3 || index == 5);
+      // } else if (loginType == "sub_member") {
+      //   visibleIndices.removeWhere((index) => index == 3 || index == 5);
     }
 
     log("Profile url: $profilePhoto");
@@ -96,6 +95,26 @@ class _HomepageScreenState extends State<HomepageScreen> {
     'lib/assets/payment.png',
     'lib/assets/ameneties.png',
     'lib/assets/store.png',
+  ];
+  final List<Map<String, String>> promoList = [
+    {
+      "title": "Secure Your Society",
+      "description":
+          "Monitor visitors, approve entries, and maintain safety using our app.",
+      "tag": "New"
+    },
+    {
+      "title": "Instant Notifications",
+      "description":
+          "Get real-time alerts for deliveries, guests, and announcements.",
+      "tag": "Update"
+    },
+    {
+      "title": "One-Tap Approvals",
+      "description":
+          "Approve or reject gate entries with a single tap on your phone.",
+      "tag": "Tip"
+    },
   ];
 
   @override
@@ -171,14 +190,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       Visibility(
                         visible: loginType == "admin",
                         child: Container(
-                          margin: EdgeInsets.only(right: 20),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          margin: const EdgeInsets.only(right: 20),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                               color: Colors.red.shade100,
                               border: Border.all(color: Colors.red),
                               borderRadius: BorderRadius.circular(100)),
-                          child: Text(
+                          child: const Text(
                             "secretary",
                             style: TextStyle(fontSize: 12),
                           ),
@@ -324,174 +343,349 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
                 // Announcements Section (if not watchman)
                 if (loginType != "watchman") ...[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: CarouselSlider.builder(
-                      itemCount:
-                          (announcementmodel?.announcements?.isNotEmpty ??
-                                  false)
-                              ? announcementmodel?.announcements?.length
-                              : 1,
-                      itemBuilder: (context, index, realIndex) {
-                        bool hasAnnouncements =
-                            announcementmodel?.announcements?.isNotEmpty ??
-                                false;
-                        String annType = announcementmodel
-                                ?.announcements?[index].announcementType ??
-                            "";
-                        return Card(
-                          color: _getAnnouncementColor(annType).withAlpha(20),
-                          elevation: 0,
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color(0xFF6B4EFF).withOpacity(0.04),
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(12),
-                                    topRight: Radius.circular(12),
-                                  ),
-                                ),
-                                child: Row(
+                  (announcementmodel?.announcements?.isEmpty ?? false)
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: CarouselSlider.builder(
+                            itemCount: promoList.length,
+                            itemBuilder: (context, index, realIndex) {
+                              final promo = promoList[index];
+
+                              return Card(
+                                color: const Color(0xFF6B4EFF).withAlpha(20),
+                                elevation: 0,
+                                child: Column(
                                   children: [
-                                    Icon(
-                                      Icons.campaign_rounded,
-                                      color: hasAnnouncements
-                                          ? _getAnnouncementColor(annType)
-                                          : const Color(0xFF6B4EFF),
-                                      size: 18,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      hasAnnouncements ? annType : "Notice",
-                                      style: TextStyle(
-                                        color: hasAnnouncements
-                                            ? _getAnnouncementColor(annType)
-                                            : const Color(0xFF6B4EFF),
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const Spacer(),
                                     Container(
                                       padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
+                                          horizontal: 12, vertical: 8),
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(12),
+                                        color: const Color(0xFF6B4EFF)
+                                            .withOpacity(0.04),
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(12),
+                                          topRight: Radius.circular(12),
+                                        ),
                                       ),
                                       child: Row(
                                         children: [
-                                          Icon(
-                                            Icons.access_time,
-                                            color:
-                                                _getAnnouncementColor(annType),
-                                            size: 12,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            "New",
+                                          const Icon(Icons.campaign_rounded,
+                                              color: Color(0xFF6B4EFF),
+                                              size: 18),
+                                          const SizedBox(width: 8),
+                                          const Text(
+                                            "Promotions",
                                             style: TextStyle(
-                                              color: _getAnnouncementColor(
-                                                  annType),
-                                              fontSize: 11,
+                                              color: Color(0xFF6B4EFF),
+                                              fontSize: 13,
                                               fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                const Icon(
+                                                    Icons
+                                                        .local_fire_department_rounded,
+                                                    color: Color(0xFF6B4EFF),
+                                                    size: 12),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  promo["tag"] ?? "Promo",
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF6B4EFF),
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        hasAnnouncements
-                                            ? announcementmodel
-                                                    ?.announcements![index]
-                                                    .title ??
-                                                ""
-                                            : "No Notices",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.grey[800],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      if (hasAnnouncements)
-                                        Expanded(
-                                          child: Text(
-                                            announcementmodel!
-                                                    .announcements![index]
-                                                    .description ??
-                                                "",
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.grey[600],
-                                              height: 1.3,
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              promo["title"] ?? "",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey[800],
+                                              ),
                                             ),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      const SizedBox(height: 8),
-                                      Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const NoticeBoardScreen()));
-                                            },
-                                            child: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 10,
-                                                vertical: 5,
+                                            const SizedBox(height: 6),
+                                            Expanded(
+                                              child: Text(
+                                                promo["description"] ?? "",
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.grey[600],
+                                                  height: 1.3,
+                                                ),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                              decoration: BoxDecoration(
-                                                color: const Color(0xFF6B4EFF)
-                                                    .withOpacity(0.08),
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                              child: const Row(
-                                                children: [
-                                                  Text(
-                                                    "Read More",
-                                                    style: TextStyle(
-                                                      color: Color(0xFF6B4EFF),
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    // You can change this to open a promo details page
+                                                  },
+                                                  child: Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 5),
+                                                    decoration: BoxDecoration(
+                                                      color: const Color(
+                                                              0xFF6B4EFF)
+                                                          .withOpacity(0.08),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                    ),
+                                                    child: const Row(
+                                                      children: [
+                                                        Text(
+                                                          "Learn More",
+                                                          style: TextStyle(
+                                                            color: Color(
+                                                                0xFF6B4EFF),
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 4),
+                                                        Icon(
+                                                            Icons.arrow_forward,
+                                                            color: Color(
+                                                                0xFF6B4EFF),
+                                                            size: 12),
+                                                      ],
                                                     ),
                                                   ),
-                                                  SizedBox(width: 4),
-                                                  Icon(
-                                                    Icons.arrow_forward,
-                                                    color: Color(0xFF6B4EFF),
-                                                    size: 12,
-                                                  ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            options: CarouselOptions(
+                              height: 180,
+                              autoPlay: true,
+                              enlargeCenterPage: true,
+                              viewportFraction: 0.92,
+                              autoPlayCurve: Curves.easeInOut,
+                              autoPlayAnimationDuration:
+                                  const Duration(milliseconds: 800),
+                              enableInfiniteScroll: true,
+                              padEnds: true,
+                            ),
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: CarouselSlider.builder(
+                            itemCount:
+                                (announcementmodel?.announcements?.isNotEmpty ??
+                                        false)
+                                    ? announcementmodel?.announcements?.length
+                                    : 1,
+                            itemBuilder: (context, index, realIndex) {
+                              bool hasAnnouncements = announcementmodel
+                                      ?.announcements?.isNotEmpty ??
+                                  false;
+                              String annType = announcementmodel
+                                      ?.announcements?[index]
+                                      .announcementType ??
+                                  "";
+                              return Card(
+                                color: _getAnnouncementColor(annType)
+                                    .withAlpha(20),
+                                elevation: 0,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF6B4EFF)
+                                            .withOpacity(0.04),
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(12),
+                                          topRight: Radius.circular(12),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.campaign_rounded,
+                                            color: hasAnnouncements
+                                                ? _getAnnouncementColor(annType)
+                                                : const Color(0xFF6B4EFF),
+                                            size: 18,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            hasAnnouncements
+                                                ? annType
+                                                : "Notice",
+                                            style: TextStyle(
+                                              color: hasAnnouncements
+                                                  ? _getAnnouncementColor(
+                                                      annType)
+                                                  : const Color(0xFF6B4EFF),
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
+                                          const Spacer(),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.access_time,
+                                                  color: _getAnnouncementColor(
+                                                      annType),
+                                                  size: 12,
+                                                ),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  "New",
+                                                  style: TextStyle(
+                                                    color:
+                                                        _getAnnouncementColor(
+                                                            annType),
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              hasAnnouncements
+                                                  ? announcementmodel
+                                                          ?.announcements![
+                                                              index]
+                                                          .title ??
+                                                      ""
+                                                  : "No Notices",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.grey[800],
+                                              ),
+                                            ),
+                                            const SizedBox(height: 6),
+                                            if (hasAnnouncements)
+                                              Expanded(
+                                                child: Text(
+                                                  announcementmodel!
+                                                          .announcements![index]
+                                                          .description ??
+                                                      "",
+                                                  style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: Colors.grey[600],
+                                                    height: 1.3,
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            const SizedBox(height: 8),
+                                            Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const NoticeBoardScreen()));
+                                                  },
+                                                  child: Container(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 5,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: const Color(
+                                                              0xFF6B4EFF)
+                                                          .withOpacity(0.08),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                    ),
+                                                    child: const Row(
+                                                      children: [
+                                                        Text(
+                                                          "Read More",
+                                                          style: TextStyle(
+                                                            color: Color(
+                                                                0xFF6B4EFF),
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 4),
+                                                        Icon(
+                                                          Icons.arrow_forward,
+                                                          color:
+                                                              Color(0xFF6B4EFF),
+                                                          size: 12,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
 
-                                          /*
+                                                /*
                               ------------------------------     This is Save and Share Button -------------------------
                                           const Spacer(),
                                           Icon(
@@ -505,29 +699,29 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                             color: Colors.grey[400],
                                             size: 18,
                                           ),*/
-                                        ],
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                              );
+                            },
+                            options: CarouselOptions(
+                              height: 180,
+                              autoPlay: true,
+                              enlargeCenterPage: true,
+                              viewportFraction: 0.92,
+                              autoPlayCurve: Curves.easeInOut,
+                              autoPlayAnimationDuration:
+                                  const Duration(milliseconds: 800),
+                              enableInfiniteScroll: true,
+                              padEnds: true,
+                            ),
                           ),
-                        );
-                      },
-                      options: CarouselOptions(
-                        height: 180,
-                        autoPlay: true,
-                        enlargeCenterPage: true,
-                        viewportFraction: 0.92,
-                        autoPlayCurve: Curves.easeInOut,
-                        autoPlayAnimationDuration:
-                            const Duration(milliseconds: 800),
-                        enableInfiniteScroll: true,
-                        padEnds: true,
-                      ),
-                    ),
-                  ),
+                        ),
                   const SizedBox(height: 8),
                 ],
 
@@ -627,7 +821,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const PaymentScreen()));
+                                          const SocietyPaymentsScreen()));
                               break;
                             case 4:
                               Navigator.push(

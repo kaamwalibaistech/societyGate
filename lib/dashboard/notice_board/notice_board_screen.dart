@@ -6,6 +6,7 @@ import 'package:society_gate/bloc/homepage_event.dart';
 import 'package:society_gate/bloc/homepage_state.dart';
 import 'package:society_gate/dashboard/notice_board/notice_api.dart';
 import 'package:society_gate/models/login_model.dart';
+
 import '../../constents/local_storage.dart';
 import 'add_notice_screen.dart';
 
@@ -65,12 +66,9 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
             final notices = state.mydata?.announcements ?? [];
             if (notices.isEmpty) {
               return const Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 300),
-                  child: Text(
-                    "No Notices Available",
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
+                child: Text(
+                  "No Notices Available",
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               );
             }
@@ -134,7 +132,7 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                             iconColor: Colors.red,
                             icon: const Icon(Icons.more_vert_outlined),
                             itemBuilder: (context) => [
-                              logInData?.user?.userId == notice.userId
+                              logInData?.user?.role == "admin"
                                   ? const PopupMenuItem<int>(
                                       height: 30,
                                       value: 1,

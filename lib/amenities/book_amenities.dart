@@ -19,6 +19,19 @@ class BookAmenities extends StatefulWidget {
 
 class _BookAmenitiesState extends State<BookAmenities> {
   AmenitiesModel? amenitiesModel;
+  double total = 0;
+
+  List<Map<String, String>> selectedAmenitiesList = [];
+
+  Map<String, String> toMap(
+      String id, String name, String price, String duration) {
+    return {
+      'amenity_id': id,
+      'amenity_name': name,
+      'amount': price,
+      'duration': duration
+    };
+  }
 
   @override
   void initState() {
@@ -28,15 +41,6 @@ class _BookAmenitiesState extends State<BookAmenities> {
 
   fetchVisitors() {
     context.read<AllAmenitiesBloc>().add(GetAllAmenities());
-  }
-
-  double total = 0;
-
-  // final Set<String> selectedAmenities = {};
-  List<Map<String, String>> selectedAmenitiesList = [];
-
-  Map<String, String> toMap(String name, String price, String duration) {
-    return {'amenity_name': name, 'amount': price, 'duration': duration};
   }
 
   @override
@@ -102,7 +106,7 @@ class _BookAmenitiesState extends State<BookAmenities> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (total != 0.0) {
                       Navigator.push(
                           context,
@@ -112,7 +116,6 @@ class _BookAmenitiesState extends State<BookAmenities> {
                                         selectedAmenitiesList,
                                     total: total,
                                   )));
-                      // selectedAmenitiesList = list;
                     } else {
                       Fluttertoast.showToast(
                           backgroundColor: Colors.red,
@@ -179,6 +182,7 @@ class _BookAmenitiesState extends State<BookAmenities> {
                         return GestureDetector(
                           onTap: () {
                             final ameList = toMap(
+                              amenitiesList?.amenityId.toString() ?? "",
                               amenitiesList?.amenityName ?? "",
                               amenitiesList?.amount ?? "",
                               amenitiesList?.duration ?? "",
@@ -292,7 +296,6 @@ class _BookAmenitiesState extends State<BookAmenities> {
                 }
               }),
             ),
-            /*  ,*/
           ],
         ),
       ),
