@@ -11,7 +11,8 @@ import '../models/shoplist_model.dart';
 import 'shopsettings.dart';
 
 class DailyneedsTab extends StatefulWidget {
-  const DailyneedsTab({super.key});
+  final bool? valuee;
+  const DailyneedsTab({super.key, this.valuee});
 
   @override
   State<DailyneedsTab> createState() => DailyneedsTabState();
@@ -33,7 +34,7 @@ class DailyneedsTabState extends State<DailyneedsTab> {
         appBar: AppBar(
           backgroundColor: Colors.green.shade400,
           foregroundColor: Colors.white,
-          // automaticallyImplyLeading: false,
+          automaticallyImplyLeading: widget.valuee == true ? true : false,
           title: const Text(
             "DAILY NEEDS",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
