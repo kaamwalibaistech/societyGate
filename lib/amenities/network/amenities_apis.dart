@@ -58,7 +58,7 @@ Future<BuyAmenitiesDone?> buyAmenities(
       return BuyAmenitiesDone.fromJson(data);
     } else {
       log("error");
-      log("buyAmenitiesDone response: ${response.toString()}");
+      log("buyAmenitiesDone response: ${response.body.toString()}");
     }
   } catch (e) {
     throw Exception(e.toString());

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:society_gate/amenities/user_amenities_page.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 import 'package:society_gate/models/amenities_model.dart';
 
@@ -39,7 +40,7 @@ class _BookAmenitiesState extends State<BookAmenities> {
     fetchVisitors();
   }
 
-  fetchVisitors() {
+  fetchVisitors() async {
     context.read<AllAmenitiesBloc>().add(GetAllAmenities());
   }
 
@@ -133,23 +134,10 @@ class _BookAmenitiesState extends State<BookAmenities> {
                 if (state is GetAllAmenitiesInitial ||
                     state is GetAllAmenitiesLoading) {
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      color: Colors.pinkAccent,
+                    ),
                   );
-                  // return GridView.count(
-                  //   crossAxisCount: 2,
-                  //   crossAxisSpacing: 16,
-                  //   mainAxisSpacing: 16,
-                  //   childAspectRatio: 1,
-                  //   children: List.generate(
-                  //       4,
-                  //       (context) => Container(
-                  //             // duration: const Duration(milliseconds: 250),
-                  //             decoration: BoxDecoration(
-                  //               color: Colors.grey.shade100,
-                  //               borderRadius: BorderRadius.circular(16),
-                  //             ),
-                  //           )),
-                  // );
                 } else if (state is GetAllAmenitiesSuccess) {
                   return GridView.builder(
                       itemCount: state.amenitiesModel.data?.length ?? 0,
@@ -169,119 +157,154 @@ class _BookAmenitiesState extends State<BookAmenities> {
                               amenitiesList?.amenityName,
                         );
 
-                        // String getAmenityImage(String amenityName) {
-                        //   final amenity = amenitiesImage.firstWhere(
-                        //     (item) =>
-                        //         item['name']?.toLowerCase() ==
-                        //         amenityName.toLowerCase(),
-                        //     orElse: () => {'image': defaultImg},
-                        //   );
-                        //   return amenity['image'];
-                        // }
+                        bool isBooked =
+                            state.getUserPurchaseAmenitiesData!.data!.any(
+                                (e) => e.amenityId == amenitiesList?.amenityId);
 
-                        return GestureDetector(
-                          onTap: () {
-                            final ameList = toMap(
-                              amenitiesList?.amenityId.toString() ?? "",
-                              amenitiesList?.amenityName ?? "",
-                              amenitiesList?.amount ?? "",
-                              amenitiesList?.duration ?? "",
-                            );
-
-                            setState(() {
-                              final alreadySelected = selectedAmenitiesList.any(
-                                (item) =>
-                                    item['amenity_name'] ==
-                                    amenitiesList?.amenityName,
-                              );
-
-                              if (alreadySelected) {
-                                selectedAmenitiesList.removeWhere(
-                                  (item) =>
-                                      item['amenity_name'] ==
-                                      amenitiesList?.amenityName,
-                                );
-                                total -=
-                                    double.parse(amenitiesList?.amount ?? '0');
-                              } else {
-                                selectedAmenitiesList.add(ameList);
-                                total +=
-                                    double.parse(amenitiesList?.amount ?? '0');
-                              }
-                            });
-
-                            log(selectedAmenitiesList.toString());
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? Colors.white
-                                  : Colors.white.withAlpha(100),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color:
-                                    isSelected ? Colors.white : Colors.white60,
-                                width: isSelected ? 2 : 1,
-                              ),
-                              boxShadow: isSelected
-                                  ? [
-                                      const BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 6,
-                                        offset: Offset(2, 2),
-                                      )
-                                    ]
-                                  : [],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircleAvatar(
-                                  radius: 40,
-                                  child: Image.asset(
-                                    getAmenityImage(
-                                        amenitiesList?.amenityName ?? ""),
-                                    height: 60,
-                                    // width: 60,
-                                    // fit: BoxFit.cover,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
+                        return Stack(
+                          alignment: Alignment.topCenter,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                final ameList = toMap(
+                                  amenitiesList?.amenityId.toString() ?? "",
                                   amenitiesList?.amenityName ?? "",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
+                                  amenitiesList?.amount ?? "",
+                                  amenitiesList?.duration ?? "",
+                                );
+
+                                setState(() {
+                                  final alreadySelected =
+                                      selectedAmenitiesList.any(
+                                    (item) =>
+                                        item['amenity_name'] ==
+                                        amenitiesList?.amenityName,
+                                  );
+
+                                  if (alreadySelected) {
+                                    selectedAmenitiesList.removeWhere(
+                                      (item) =>
+                                          item['amenity_name'] ==
+                                          amenitiesList?.amenityName,
+                                    );
+                                    total -= double.parse(
+                                        amenitiesList?.amount ?? '0');
+                                  } else {
+                                    selectedAmenitiesList.add(ameList);
+                                    total += double.parse(
+                                        amenitiesList?.amount ?? '0');
+                                  }
+                                });
+
+                                log(selectedAmenitiesList.toString());
+                              },
+                              child: AnimatedContainer(
+                                width: MediaQuery.of(context).size.width,
+                                duration: const Duration(milliseconds: 250),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? Colors.white
+                                      : Colors.white.withAlpha(100),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
                                     color: isSelected
-                                        ? Colors.deepOrange
-                                        : Colors.black54,
+                                        ? Colors.white
+                                        : Colors.white60,
+                                    width: isSelected ? 2 : 1,
                                   ),
+                                  boxShadow: isSelected
+                                      ? [
+                                          const BoxShadow(
+                                            color: Colors.black26,
+                                            blurRadius: 6,
+                                            offset: Offset(2, 2),
+                                          )
+                                        ]
+                                      : [],
                                 ),
-                                const SizedBox(height: 4),
-                                RichText(
-                                    text: TextSpan(
-                                        text: "₹${amenitiesList?.amount ?? 0}",
-                                        style: TextStyle(
-                                            color: isSelected
-                                                ? Colors.deepOrange
-                                                : Colors.pinkAccent,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                        children: [
-                                      TextSpan(
-                                        text:
-                                            " / ${amenitiesList?.duration ?? ""}",
-                                        style: TextStyle(
-                                            color: isSelected
-                                                ? Colors.deepOrange
-                                                : Colors.pinkAccent,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 40,
+                                      child: Image.asset(
+                                        getAmenityImage(
+                                            amenitiesList?.amenityName ?? ""),
+                                        height: 60,
+                                        // width: 60,
+                                        // fit: BoxFit.cover,
                                       ),
-                                    ])),
-                              ],
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      amenitiesList?.amenityName ?? "",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: isSelected
+                                            ? Colors.deepOrange
+                                            : Colors.black54,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    RichText(
+                                        text: TextSpan(
+                                            text:
+                                                "₹${amenitiesList?.amount ?? 0}",
+                                            style: TextStyle(
+                                                color: isSelected
+                                                    ? Colors.deepOrange
+                                                    : Colors.pinkAccent,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                            children: [
+                                          TextSpan(
+                                            text:
+                                                " / ${amenitiesList?.duration ?? ""}",
+                                            style: TextStyle(
+                                                color: isSelected
+                                                    ? Colors.deepOrange
+                                                    : Colors.pinkAccent,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ])),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
+                            Visibility(
+                                visible: isBooked,
+                                child: GestureDetector(
+                                  onTap: () => showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                            title: const Text(
+                                                "Amenity Already Purchased"),
+                                            content: const Text(
+                                                "You have already acquired this amenity."),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  child: const Text("Close")),
+                                              TextButton(
+                                                  onPressed: () => Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const UserAmenitiesPage())),
+                                                  child: const Text(
+                                                      "View Amenity"))
+                                            ],
+                                          )),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.black12,
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                ))
+                          ],
                         );
                       });
                 } else if (state is GetAllAmenitiesFailure) {

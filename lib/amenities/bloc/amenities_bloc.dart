@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 
 import '../../constents/local_storage.dart';
 import '../../models/amenities_model.dart';
@@ -18,15 +19,22 @@ class AllAmenitiesBloc extends Bloc<AmenitiesEvent, GetAllAmenitiesState> {
   void _getAllAmenities(
       GetAllAmenities event, Emitter<GetAllAmenitiesState> emit) async {
     emit(GetAllAmenitiesLoading());
+    ApiRepository apiRepository = ApiRepository();
     try {
-      String societyId =
-          (LocalStoragePref().getLoginModel()?.user?.societyId ?? "0")
-              .toString();
-      final amenities = await ApiRepository().fetchAmenities(societyId);
+      final loginModel = LocalStoragePref().getLoginModel();
+
+      final amenities = await apiRepository
+          .fetchAmenities(loginModel?.user?.societyId.toString() ?? "");
+
+      GetUserPurchaseAmenitiesModel? getUserPurchaseAmenitiesData =
+          await apiRepository.getUserPurchaseAmenities(
+              loginModel?.user?.societyId.toString(),
+              loginModel?.user?.userId.toString());
 
       if (amenities?.status == 200) {
         emit(GetAllAmenitiesSuccess(
-            amenitiesModel: amenities as AmenitiesModel));
+            amenitiesModel: amenities as AmenitiesModel,
+            getUserPurchaseAmenitiesData: getUserPurchaseAmenitiesData));
       } else if (amenities?.status == 404) {
         emit(GetAllAmenitiesFailure());
       } else {
