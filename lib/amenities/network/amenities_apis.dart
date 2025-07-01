@@ -46,9 +46,9 @@ Future<BuyAmenitiesDone?> buyAmenities(
   String baseUrl = ApiConstant.baseUrl;
   Uri url = Uri.parse(baseUrl + api);
   final body = {
-    'user_id': userId,
     'society_id': societyId,
-    'amenity_ids[]': amenities,
+    'user_id': userId,
+    'amenities[]': amenities,
   };
   try {
     final response = await http.post(url, body: body);

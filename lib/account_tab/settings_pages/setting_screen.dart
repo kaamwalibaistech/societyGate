@@ -4,6 +4,7 @@ import 'package:society_gate/account_tab/settings_pages/profile_screen.dart';
 import 'package:society_gate/account_tab/settings_pages/terms_condition.dart';
 import 'package:society_gate/amenities/amenities_add.dart';
 import 'package:society_gate/auth/register_screen.dart';
+import 'package:society_gate/bank_details.dart';
 import 'package:society_gate/navigation_screen.dart';
 
 import '../../constents/local_storage.dart';
@@ -138,7 +139,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const AmenitiesAdd(),
+                                  builder: (context) => const BankDetailsPage(),
                                 ),
                               );
                             },
