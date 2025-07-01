@@ -149,7 +149,7 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
                           Navigator.pop(context);
                         },
                         icon: const Icon(Icons.done),
-                        label: const Text("Done"),
+                        label: const Text("Close"),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.grey.shade300,
                           foregroundColor: Colors.black,

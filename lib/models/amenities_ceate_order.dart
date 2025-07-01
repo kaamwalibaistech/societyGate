@@ -24,7 +24,7 @@ class CreateOrderForAmenities {
           amount: json["amount"],
           currency: json["currency"],
           key: json["key"],
-          fullResponse: json);
+          fullResponse: json["full_response"]);
 
   Map<String, dynamic> toJson() => {
         "status": status,
@@ -33,6 +33,6 @@ class CreateOrderForAmenities {
         "amount": amount,
         "currency": currency,
         "key": key,
-        "fullResponse": toJson()
+        "fullResponse": fullResponse
       };
 }

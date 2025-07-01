@@ -28,7 +28,7 @@ class BuyAmenitiesDone {
 }
 
 class Data {
-  String? amenityId;
+  int? amenityId;
   String? amount;
   String? duration;
   String? startTime;

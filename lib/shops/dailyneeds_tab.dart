@@ -64,7 +64,9 @@ class DailyneedsTabState extends State<DailyneedsTab> {
             builder: (context, state) {
           if (state is DailyneedsInitial) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.green,
+              ),
             );
           } else if (state is DailyneedsSuccessState) {
             return buildSuccessWidget(state.shopListModel);
