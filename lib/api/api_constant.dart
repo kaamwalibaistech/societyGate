@@ -30,4 +30,7 @@ class ApiConstant {
   //Amenities API Constants
   static const String createOrderForAmenitiesAmenities = "create-order";
   static const String amenitiesBookbyUser = "amenities-book-by-user";
+
+  // Store AccId in database
+  static const String storeAccId = "add-razorpay-id";
 }

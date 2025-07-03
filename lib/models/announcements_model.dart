@@ -1,11 +1,13 @@
 class Announcementmodel {
   int? status;
+  String? accId;
   List<Announcements>? announcements;
 
-  Announcementmodel({this.status, this.announcements});
+  Announcementmodel({this.status, this.announcements, this.accId});
 
   Announcementmodel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
+    accId = json['razorpay_account_id'];
     if (json['announcements'] != null) {
       announcements = <Announcements>[];
       json['announcements'].forEach((v) {
@@ -17,6 +19,7 @@ class Announcementmodel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
+    data['razorpay_account_id'] = accId;
     if (announcements != null) {
       data['announcements'] = announcements!.map((v) => v.toJson()).toList();
     }

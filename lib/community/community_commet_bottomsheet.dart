@@ -4,6 +4,7 @@ import 'package:society_gate/community/bloc/community_bloc.dart';
 import 'package:society_gate/community/comment_item.dart';
 import 'package:society_gate/constents/local_storage.dart';
 import 'package:society_gate/models/comments_model.dart';
+import 'package:society_gate/models/login_model.dart';
 
 import 'network/community_apis.dart';
 
@@ -21,12 +22,13 @@ class CommunityCommetBottomsheet extends StatefulWidget {
 class _CommunityCommetBottomsheetState
     extends State<CommunityCommetBottomsheet> {
   TextEditingController commentController = TextEditingController();
-
+  LoginModel? loginModel;
   @override
   void initState() {
     super.initState();
     BlocProvider.of<CommentsBloc>(context)
         .add(CommunityCommentEvent(page: '1', postId: widget.postId));
+    loginModel = LocalStoragePref().getLoginModel();
   }
 
   @override
@@ -64,7 +66,7 @@ class _CommunityCommetBottomsheetState
                               shrinkWrap: true,
                               itemBuilder: (context, index) => CommentItem(
                                 comments: commentList[index],
-                                memberId: 1,
+                                memberId: loginModel?.user?.userId ?? 0,
                                 postId: widget.postId,
                                 isoutSide: false,
                               ),
