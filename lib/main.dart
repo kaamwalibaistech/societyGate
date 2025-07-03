@@ -6,6 +6,7 @@ import 'package:society_gate/amenities/amenities_add.dart';
 import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
 import 'package:society_gate/constents/firebase_options.dart';
+import 'package:society_gate/homepage_screen.dart';
 
 // import 'package:society_gate/firebase_options.dart';
 
@@ -119,6 +120,9 @@ class _MyAppState extends State<MyApp> {
                 : const AmenitiesAdd()
             : const RegisterScreen(),
         builder: EasyLoading.init(),
+        // routes: {
+        //   '/homepage': (context) => const HomepageScreen(),
+        // },
       ),
     );
   }

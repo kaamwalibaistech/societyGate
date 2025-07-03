@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
+import 'package:society_gate/bank/add_bank_form.dart';
 import 'package:society_gate/community/community_post_add.dart';
 import 'package:society_gate/dashboard/notice_board/notice_api.dart';
 import 'package:society_gate/payments_screen/payment_screen.dart';
@@ -32,41 +34,52 @@ class _HomepageScreenState extends State<HomepageScreen> {
   LoginModel? loginModel;
   String? loginType;
   List<int> visibleIndices = [];
+  bool isAccountCreated = true;
 
   String profilePhoto = "https://ui-avatars.com/api/?background=edbdff&name=.";
-
   @override
   void initState() {
     super.initState();
     getData();
   }
 
-  getData() async {
+  Future<void> getData() async {
     loginModel = LocalStoragePref().getLoginModel();
-    final data =
-        await getAnnouncement(loginModel?.user!.societyId.toString() ?? "");
-    setState(() {
-      String name = loginModel?.user?.uname ?? "NA";
-      profilePhoto = loginModel?.user?.profileImage ??
-          "https://ui-avatars.com/api/?background=edbdff&name=$name.";
-      loginType = loginModel?.user?.role ?? "NA";
-      announcementmodel = data;
-    });
+
+    final String name = loginModel?.user?.uname ?? "NA";
+    profilePhoto = loginModel?.user?.profileImage ??
+        "https://ui-avatars.com/api/?background=edbdff&name=$name";
+    loginType = loginModel?.user?.role ?? "NA";
+    if (loginType != "watchnam") {
+      announcementmodel =
+          await getAnnouncement(loginModel?.user!.societyId.toString() ?? "");
+    }
+    if (loginType == "admin") {
+      if (announcementmodel?.accId != null &&
+          announcementmodel!.accId!.isNotEmpty) {
+        LocalStoragePref().setBankAddedBool(true);
+      } else {
+        LocalStoragePref().setBankAddedBool(false);
+      }
+    }
 
     visibleIndices = List.generate(6, (index) => index);
     if (loginType == "watchman") {
       visibleIndices.removeWhere((index) => index == 3 || index == 4);
-      // } else if (loginType == "sub_member") {
-      //   visibleIndices.removeWhere((index) => index == 3 || index == 5);
     }
 
-    log("Profile url: $profilePhoto");
-    log("Role: $loginType");
-    log("Society Id: ${loginModel?.user?.societyId}");
-    log("Flat id: ${loginModel?.user?.flatId}");
-    log("Email: ${loginModel?.user?.uemail}");
-    log("Phone: ${loginModel?.user?.uphone}");
-    log("UserId: ${loginModel?.user?.userId}");
+    setState(() {});
+  }
+
+  bool _showAddBank() {
+    final isBankAdded = LocalStoragePref().getBankAddedBool();
+
+    if (loginType != "admin") return false;
+    if (isBankAdded == null || isBankAdded == false) {
+      log("Bank not added. Showing field.");
+      return true;
+    } else {}
+    return false;
   }
 
   List<String> title = [
@@ -135,7 +148,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
         child: SafeArea(
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 12),
                 // Profile Section
@@ -252,6 +267,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       ],
                     ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         loginType == "admin"
                             ? Center(
@@ -337,6 +354,154 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 ),
 
                 const SizedBox(height: 16),
+                /*
+After added acc details:
+account status (not activated, activated),
+contact support,
+Edit details.
+Once acc is activated it should be hidden.
+ */
+                Visibility(
+                  visible: _showAddBank(),
+                  child: Card(
+                    margin: EdgeInsets.all(20),
+                    elevation: 10,
+                    color: Colors.white,
+                    shadowColor: Colors.blue.shade100,
+                    child: DottedBorder(
+                        // borderPadding: const EdgeInsets.all(12),
+                        color: Colors.red,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 20),
+                        strokeWidth: 2,
+                        dashPattern: const [5, 3],
+                        borderType: BorderType.RRect,
+                        radius: const Radius.circular(12),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.account_balance_wallet_outlined,
+                                size: 36, color: Colors.red),
+                            const SizedBox(height: 12),
+                            const Text(
+                              "Create Your Society Payment Account",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            const Text(
+                              "Add bank details to receive maintenance and other payments.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 13, color: Colors.black54),
+                            ),
+                            const SizedBox(height: 16),
+                            Wrap(
+                              spacing: 10,
+                              runSpacing: 10,
+                              alignment: WrapAlignment.center,
+                              children: [
+                                ElevatedButton.icon(
+                                  icon: const Icon(Icons.add),
+                                  label: const Text("Add Bank Details"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 16),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddBankDetailsPage(
+                                                    loginModel: loginModel)));
+                                  },
+                                ),
+                                OutlinedButton.icon(
+                                  icon: const Icon(Icons.support_agent),
+                                  label: const Text("Support"),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.red,
+                                    side: const BorderSide(color: Colors.red),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 16),
+                                  ),
+                                  onPressed: () {},
+                                ),
+                              ],
+                            )
+                          ],
+                        )
+                        /* Column(
+                              children: [
+                                const Icon(
+                                    Icons.account_balance_wallet_outlined,
+                                    size: 36,
+                                    color: Colors.blue),
+                                const SizedBox(height: 12),
+                                const Text(
+                                  "Account pending",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                const Text(
+                                  "Please wait untill we are approve you account!.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 13, color: Colors.black54),
+                                ),
+                                const SizedBox(height: 16),
+                                Wrap(
+                                  spacing: 10,
+                                  runSpacing: 10,
+                                  alignment: WrapAlignment.center,
+                                  children: [
+                                    ElevatedButton.icon(
+                                      icon: const Icon(Icons.edit),
+                                      label: const Text("Edit details"),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blue,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12, horizontal: 16),
+                                      ),
+                                      onPressed: () {
+                                        // TODO: Add bank details logic
+                                      },
+                                    ),
+                                    OutlinedButton.icon(
+                                      icon: const Icon(Icons.support_agent),
+                                      label: const Text("Support"),
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: Colors.blue,
+                                        side: const BorderSide(
+                                            color: Colors.blue),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12, horizontal: 16),
+                                      ),
+                                      onPressed: () {
+                                        // TODO: Support contact logic
+                                      },
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            */
+                        ),
+                  ),
+                ),
 
                 // Announcements Section (if not watchman)
                 if (loginType != "watchman") ...[
