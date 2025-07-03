@@ -1,8 +1,10 @@
 part of 'payments_bloc.dart';
 
-sealed class PaymentsEvent extends Equatable {
-  const PaymentsEvent();
+class PaymentsEvent extends Equatable {
+  final String societyId;
+  final String userId;
+  const PaymentsEvent({required this.societyId, required this.userId});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [societyId, userId];
 }

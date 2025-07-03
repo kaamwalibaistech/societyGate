@@ -1,9 +1,14 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/constents/local_storage.dart';
+import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
+import 'package:society_gate/payments_screen/bloc/payments_bloc.dart';
 
 class SocietyPaymentsScreen extends StatefulWidget {
   const SocietyPaymentsScreen({super.key});
@@ -14,6 +19,7 @@ class SocietyPaymentsScreen extends StatefulWidget {
 
 class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     with TickerProviderStateMixin {
+  //payment logic
   late Razorpay _razorpay;
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {}
@@ -64,27 +70,43 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     }
   }
 
-  late TabController _tabController;
-  double getSelectedTotal() {
-    return unpaidList
-        .where((item) => item['selected'] == true)
-        .fold(0.0, (sum, item) => sum + (item['amount'] as num));
-  }
+  //payment logic
 
-  final List<Map<String, dynamic>> unpaidList = [
-    {
-      'id': 'Society Fine',
-      'amount': 1000,
-      'date': 'May 30, 2025 12:03',
-      'selected': false,
-    },
-    {
-      'id': 'maintenance',
-      'amount': 7000,
-      'date': 'April 30, 2025 17:32',
-      'selected': false,
-    },
-  ];
+  String? dataLength;
+  double totalPayment = 0.0;
+  bool isChecked = false;
+
+  late TabController _tabController;
+  // double getSelectedTotal() {
+  //   return unpaidList
+  //       .where((item) => item['selected'] == true)
+  //       .fold(0.0, (sum, item) => sum + (item['amount'] as num));
+  // }
+
+  // final List<Map<String, dynamic>> unpaidList = [
+  //   {
+  //     'id': 'Society Fine',
+  //     'amount': 1000,
+  //     'date': 'May 30, 2025 12:03',
+  //     'selected': false,
+  //   },
+  //   {
+  //     'id': 'maintenance',
+  //     'amount': 7000,
+  //     'date': 'April 30, 2025 17:32',
+  //     'selected': false,
+  //   },
+  // ];
+
+  //Api calling for unpaid
+  UnPaidMaintainenceModel? unpaidData;
+
+  getUnpaidData() async {
+    final locaData = LocalStoragePref().getLoginModel();
+    unpaidData = await ApiRepository().getUnpaidMaintainence(
+        locaData?.user?.societyId.toString(),
+        locaData?.user?.userId.toString());
+  }
 
   final List<Map<String, dynamic>> paidList = [
     {
@@ -97,6 +119,10 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
+    final locaData = LocalStoragePref().getLoginModel();
+    BlocProvider.of<PaymentsBloc>(context).add(PaymentsEvent(
+        societyId: locaData?.user?.societyId.toString() ?? "",
+        userId: locaData?.user?.userId.toString() ?? ""));
     super.initState();
     _razorpay = Razorpay();
   }
@@ -118,25 +144,27 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
           tabs: [
-            Tab(text: "Unpaid (${unpaidList.length})"),
+            Tab(text: "Unpaid (${dataLength ?? 0})"),
             Tab(text: "Paid (${paidList.length})"),
           ],
         ),
       ),
+      // Inside TabBarView:
       body: TabBarView(
         controller: _tabController,
         children: [
-          _buildPaymentList(unpaidList, unpaid: true),
-          _buildPaymentList(paidList, unpaid: false),
+          _buildUnpaidPaymentList(),
+          _buildPaidPaymentList(),
         ],
       ),
-      bottomNavigationBar: unpaidList.isNotEmpty
+
+      bottomNavigationBar: unpaidData?.data == null
           ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (getSelectedTotal() > 0)
+                  if (totalPayment > 0.0)
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -146,11 +174,11 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Center(
-                        child: Text(
-                          '${unpaidList.where((e) => e['selected'] == true).length} Payments selected for Rs. ${getSelectedTotal().toStringAsFixed(2)}',
-                          style: const TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.w600),
-                        ),
+                        child: Text("Payment Selected for Rs. $totalPayment"
+                            // '${unpaidList.where((e) => e['selected'] == true).length} Payments selected for Rs. ${getSelectedTotal().toStringAsFixed(2)}',
+                            // style: const TextStyle(
+                            //     color: Colors.green, fontWeight: FontWeight.w600),
+                            ),
                       ),
                     ),
                   const SizedBox(height: 10),
@@ -159,10 +187,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                     height: 45,
                     child: ElevatedButton(
                       onPressed: () {
-                        final selected = unpaidList
-                            .where((item) => item['selected'] == true)
-                            .toList();
-                        if (selected.isEmpty) {
+                        if (totalPayment < 1.0) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content:
@@ -173,7 +198,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                           return;
                         }
 
-                        final price = getSelectedTotal();
+                        final price = totalPayment;
 
                         openCheckOut(price.toString());
                         _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
@@ -184,7 +209,6 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                             handleExternalWalletSelected);
 
                         // Add payment logic for selected
-                        print("Proceed to pay ${getSelectedTotal()}");
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
@@ -203,14 +227,94 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     );
   }
 
-  Widget _buildPaymentList(List<Map<String, dynamic>> list,
-      {required bool unpaid}) {
+  Widget _buildUnpaidPaymentList() {
+    return BlocConsumer<PaymentsBloc, PaymentsState>(
+      listener: (context, state) {
+        if (state is PaymentsLoadedState) {
+          setState(() {
+            dataLength = state.unpaidData?.data?.length.toString();
+          });
+        }
+      },
+      // bloc: PaymentsBloc(),
+      buildWhen: (previous, current) =>
+          current is PaymentsLoadedState || current is PaymentsLoading,
+      builder: (context, state) {
+        if (state is PaymentsLoadedState) {
+          return ListView.builder(
+            padding: const EdgeInsets.all(12),
+            itemCount: state.unpaidData?.data?.length,
+            itemBuilder: (context, index) {
+              final item = unpaidData?.data?[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                elevation: 1,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(12),
+                  leading: Checkbox(
+                    value: state.unpaidData?.data![index].isChecked ?? false,
+                    onChanged: (value) {
+                      setState(() {
+                        state.unpaidData?.data![index].isChecked =
+                            value ?? false;
+
+                        final a =
+                            state.unpaidData?.data![index].totalAmount ?? 0.0;
+                        final double amount = (a is num)
+                            ? a.toDouble()
+                            : double.tryParse(a.toString()) ?? 0.0;
+                        if (value == true) {
+                          totalPayment += amount;
+                        } else {
+                          totalPayment -= amount;
+                        }
+
+                        log("Total Payment: $totalPayment");
+                      });
+                    },
+                  ),
+                  title: Text(
+                    state.unpaidData?.data![index].type.toString() ?? "",
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  subtitle: Text(
+                    state.unpaidData?.data![index].date.toString() ?? "",
+                  ),
+                  trailing: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '₹${state.unpaidData?.data![index].totalAmount.toString() ?? ""}',
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Icon(Icons.arrow_forward_ios,
+                          size: 14, color: Colors.grey),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
+    );
+  }
+
+  Widget _buildPaidPaymentList() {
     return ListView.builder(
       padding: const EdgeInsets.all(12),
-      itemCount: list.length,
+      itemCount: paidList.length,
       itemBuilder: (context, index) {
-        final price = list[index];
-
+        final item = paidList[index];
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 8),
           elevation: 1,
@@ -218,28 +322,19 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: ListTile(
             contentPadding: const EdgeInsets.all(12),
-            leading: unpaid
-                ? Checkbox(
-                    value: price['selected'] ?? false,
-                    onChanged: (value) {
-                      setState(() {
-                        price['selected'] = value;
-                      });
-                    },
-                  )
-                : const Icon(Icons.check_circle, color: Colors.green),
+            leading: const Icon(Icons.check_circle, color: Colors.green),
             title: Text(
-              price['id'],
+              item['id'],
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
-            subtitle: Text(price['date']),
+            subtitle: Text(item['date']),
             trailing: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '₹${price['amount']}',
-                  style: TextStyle(
-                    color: unpaid ? Colors.red : Colors.grey,
+                  '₹${item['amount']}',
+                  style: const TextStyle(
+                    color: Colors.grey,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),

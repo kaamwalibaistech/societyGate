@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,9 +7,7 @@ import 'package:society_gate/community/community_commet_bottomsheet.dart';
 import 'package:society_gate/community/network/community_apis.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 import 'package:society_gate/models/comments_model.dart';
-import 'package:society_gate/models/community_model.dart';
 
-import '../constents/local_storage.dart';
 import 'comment_item.dart';
 import 'community_loading.dart';
 
@@ -23,11 +19,30 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
+  // final ScrollController _scrollController = ScrollController();
+  int page = 1;
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<CommunityBloc>(context).add(CommunityPostEvent(page: '1'));
+    BlocProvider.of<CommunityBloc>(context)
+        .add(CommunityPostEvent(page: page.toString()));
+    // _scrollController.addListener(pageCount);
   }
+
+  // pageCount() async {
+  //   if (isLoading) return;
+
+  //   if (_scrollController.position.pixels ==
+  //       _scrollController.position.) {
+  //     isLoading = true;
+  //     page++;
+
+  //     BlocProvider.of<CommunityBloc>(context)
+  //         .add(CommunityPostEvent(page: page.toString()));
+  //     isLoading = false;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +52,7 @@ class _CommunityPageState extends State<CommunityPage> {
         return const CommunityLoading();
       } else if (state is CommunityPostSuccess) {
         return ListView.builder(
+            // controller: _scrollController,
             itemCount: state.communityModel?.data?.length ?? 0,
             itemBuilder: (context, index) {
               final post = state.communityModel?.data?[index];
