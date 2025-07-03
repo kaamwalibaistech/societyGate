@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:society_gate/account_tab/settings_pages/help_support.dart';
 import 'package:society_gate/account_tab/settings_pages/profile_screen.dart';
 import 'package:society_gate/account_tab/settings_pages/terms_condition.dart';
 import 'package:society_gate/amenities/amenities_add.dart';
 import 'package:society_gate/auth/register_screen.dart';
-import 'package:society_gate/bank_details.dart';
+import 'package:society_gate/bank/add_bank_form.dart';
+import 'package:society_gate/bank/bank_api.dart';
+import 'package:society_gate/bank/bank_details.dart';
+import 'package:society_gate/bank/bank_model.dart';
+import 'package:society_gate/dashboard/notice_board/notice_api.dart';
 import 'package:society_gate/navigation_screen.dart';
 
 import '../../constents/local_storage.dart';
@@ -132,16 +137,47 @@ class _SettingScreenState extends State<SettingScreen> {
                     loginType == "admin"
                         ? _buildSettingTile(
                             icon: Icons.account_balance_rounded,
-                            title: "Edit Bank Details",
+                            title: "Bank Details",
                             subtitle:
                                 "Update amenities lists, prices and more!",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const BankDetailsPage(),
-                                ),
-                              );
+                            onTap: () async {
+                              EasyLoading.show(status: "Loading bank details!");
+                              final data = await getAnnouncement(
+                                  loginModel?.user!.societyId.toString() ?? "");
+
+                              if (data!.accId == "" ||
+                                  data.accId == null ||
+                                  data.accId!.isEmpty) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddBankDetailsPage(
+                                      loginModel: loginModel,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                bool isPending;
+                                RazorpayAccountModel? razorpayAccountModel =
+                                    await getRouteAccount(data!.accId!);
+
+                                if (razorpayAccountModel?.status !=
+                                    "activated") {
+                                  isPending = false;
+                                } else {
+                                  isPending = true;
+                                }
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => BankDetailsPage(
+                                        isPending: isPending,
+                                        razorpayAccountModel:
+                                            razorpayAccountModel),
+                                  ),
+                                );
+                              }
+                              EasyLoading.dismiss();
                             },
                             loginType: loginType,
                           )
