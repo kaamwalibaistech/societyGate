@@ -1,11 +1,3 @@
-import 'dart:convert';
-
-GetVehicleDetailsModel? getVehicleDetailsModelFromJson(String str) =>
-    str.isEmpty ? null : GetVehicleDetailsModel.fromJson(json.decode(str));
-
-String getVehicleDetailsModelToJson(GetVehicleDetailsModel? data) =>
-    json.encode(data?.toJson() ?? {});
-
 class GetVehicleDetailsModel {
   int? status;
   String? message;
