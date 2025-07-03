@@ -182,44 +182,46 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                       ),
                     ),
                   const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 45,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (totalPayment < 1.0) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content:
-                                  Text("Please select at least one Payment."),
-                              backgroundColor: Colors.red,
+                  dataLength == null
+                      ? const SizedBox.shrink()
+                      : SizedBox(
+                          width: double.infinity,
+                          height: 45,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (totalPayment < 1.0) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        "Please select at least one Payment."),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              final price = totalPayment;
+
+                              openCheckOut(price.toString());
+                              _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
+                                  handlePaymentSuccessResponse);
+                              _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
+                                  handlePaymentErrorResponse);
+                              _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
+                                  handleExternalWalletSelected);
+
+                              // Add payment logic for selected
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
-                          );
-                          return;
-                        }
-
-                        final price = totalPayment;
-
-                        openCheckOut(price.toString());
-                        _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-                            handlePaymentSuccessResponse);
-                        _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
-                            handlePaymentErrorResponse);
-                        _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
-                            handleExternalWalletSelected);
-
-                        // Add payment logic for selected
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                            child: const Text("Pay All",
+                                style: TextStyle(fontSize: 16)),
+                          ),
                         ),
-                      ),
-                      child:
-                          const Text("Pay All", style: TextStyle(fontSize: 16)),
-                    ),
-                  ),
                 ],
               ),
             )
@@ -302,6 +304,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
               );
             },
           );
+        } else if (state is PaymentsFailed) {
+          return const Center(child: Text("No Unpaid Payments"));
         } else {
           return const Center(child: CircularProgressIndicator());
         }
