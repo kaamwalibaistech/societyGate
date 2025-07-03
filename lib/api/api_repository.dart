@@ -10,7 +10,7 @@ import 'package:society_gate/models/forget_password_model.dart';
 import 'package:society_gate/models/forget_password_response_model.dart';
 import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'package:society_gate/models/help_support_model.dart';
-import 'package:society_gate/models/amenities_ceate_order.dart';
+import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
 import 'package:society_gate/models/update_user_model.dart';
 
 import '../models/add_daily_help_model.dart';
@@ -337,6 +337,25 @@ class ApiRepository {
       }
     } catch (e) {
       throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<UnPaidMaintainenceModel?> getUnpaidMaintainence(
+      String? societyId, String? userId) async {
+    final url = Uri.parse("${baseUrl}unpaid-maintenance");
+    final body = {
+      'society_id': societyId,
+      'user_id': userId,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return UnPaidMaintainenceModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception("API Error: ${e.toString()}");
     }
     return null;
   }
