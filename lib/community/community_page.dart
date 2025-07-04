@@ -22,6 +22,8 @@ class _CommunityPageState extends State<CommunityPage> {
   // final ScrollController _scrollController = ScrollController();
   int page = 1;
   bool isLoading = false;
+  String defaultImg =
+      "https://ui-avatars.com/api/?background=random&name=User+Names.";
   @override
   void initState() {
     super.initState();
@@ -65,9 +67,11 @@ class _CommunityPageState extends State<CommunityPage> {
                 children: [
                   ListTile(
                     leading: CircleAvatar(
-                        foregroundImage: CachedNetworkImageProvider(post
-                                ?.profileImage ??
-                            "https://ui-avatars.com/api/?background=random&name=User+Names")),
+                        foregroundImage: post?.profileImage == null ||
+                                post?.profileImage == ""
+                            ? CachedNetworkImageProvider(defaultImg)
+                            : CachedNetworkImageProvider(
+                                post?.profileImage ?? defaultImg)),
                     title: Text(post?.societyName ?? ""),
                     subtitle: Text(
                         "${post?.adminName ?? "NA"}   • ${getTimeAgo(post?.createdAt)}"),
