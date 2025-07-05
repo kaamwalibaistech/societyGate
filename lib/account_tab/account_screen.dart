@@ -1301,10 +1301,15 @@ class _AccountScreenState extends State<AccountScreen>
                                   dailyHelpAddressController.text,
                                   dailyHelpTypeController.text,
                                 );
-                                getDailyHelpmembers();
-                                Navigator.pop(context);
-                                Fluttertoast.showToast(
-                                    msg: dailyHelpData!.message.toString());
+                                if (dailyHelpData?.status == 200) {
+                                  getDailyHelpmembers();
+                                  Navigator.pop(context);
+                                  Fluttertoast.showToast(
+                                      msg: dailyHelpData!.message.toString());
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: "Mobile Number is already taken");
+                                }
                               }
                             },
                             style: ElevatedButton.styleFrom(
