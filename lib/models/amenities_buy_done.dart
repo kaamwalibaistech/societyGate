@@ -34,6 +34,7 @@ class Data {
   String? startTime;
   String? endTime;
   int? bookingId;
+  String? amenityName;
 
   Data(
       {this.amenityId,
@@ -41,7 +42,8 @@ class Data {
       this.duration,
       this.startTime,
       this.endTime,
-      this.bookingId});
+      this.bookingId,
+      this.amenityName});
 
   Data.fromJson(Map<String, dynamic> json) {
     amenityId = json['amenity_id'];
@@ -50,6 +52,7 @@ class Data {
     startTime = json['start_time'];
     endTime = json['end_time'];
     bookingId = json['booking_id'];
+    amenityName = json['amenity_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -60,6 +63,7 @@ class Data {
     data['start_time'] = this.startTime;
     data['end_time'] = this.endTime;
     data['booking_id'] = this.bookingId;
+    data['amenity_name'] = this.amenityName;
     return data;
   }
 }

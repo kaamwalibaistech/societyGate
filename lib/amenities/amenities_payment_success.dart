@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:society_gate/account_tab/settings_pages/help_support.dart';
+import 'package:society_gate/constents/local_storage.dart';
 import 'package:society_gate/constents/sizedbox.dart';
-import 'package:society_gate/homepage_screen.dart';
 import 'package:society_gate/models/amenities_buy_done.dart';
 import 'package:society_gate/models/amenities_ceate_order.dart';
 import 'package:society_gate/amenities/user_amenities_page.dart';
 
 import 'amenities_images.dart';
+import 'amenities_invoice_helper.dart';
 
 class AmenitiesPaymentSuccess extends StatelessWidget {
   final BuyAmenitiesDone? buyAmenitiesDone;
@@ -29,6 +30,8 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
     EasyLoading.dismiss();
     final order = orderDetails;
     final bookings = buyAmenitiesDone?.data ?? [];
+    final loginModel = LocalStoragePref().getLoginModel();
+    String total = ((orderDetails?.amount ?? 0) / 100).toStringAsFixed(2);
 
     return Scaffold(
       appBar: AppBar(
@@ -68,8 +71,7 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                 const Divider(height: 24),
                 _buildPaymentInfoTile("Payment ID", paymentId),
                 _buildPaymentInfoTile("Order ID", order?.orderId),
-                _buildPaymentInfoTile("Amount Paid",
-                    "₹ ${(order?.amount ?? 0) / 100} ${order?.currency ?? ''}"),
+                _buildPaymentInfoTile("Amount Paid", "₹ $total "),
                 _buildPaymentInfoTile(
                     "Receipt ID", order?.fullResponse?['receipt']),
 
@@ -89,18 +91,11 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                     child: ListTile(
                       contentPadding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 12),
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          getAmenityImage("Club House"),
-                          width: 48,
-                          height: 48,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      title: const Text(
-                        "Amenity",
-                        style: TextStyle(
+                      leading: Image.asset(
+                          getAmenityImage(amenity.amenityName ?? "")),
+                      title: Text(
+                        amenity.amenityName ?? "",
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       subtitle: Padding(
@@ -112,11 +107,11 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                                 "Duration: ${amenity.duration}"),
                             const SizedBox(height: 2),
                             _infoRow(Icons.play_arrow_rounded,
-                                "Start: ${_formatDate(amenity.startTime ?? '')}",
+                                "Start: ${amenity.startTime ?? ''}",
                                 iconColor: Colors.green),
                             const SizedBox(height: 2),
                             _infoRow(Icons.stop_rounded,
-                                "End: ${_formatDate(amenity.endTime ?? '')}",
+                                "End: ${amenity.endTime ?? ''}",
                                 iconColor: Colors.red),
                           ],
                         ),
@@ -124,6 +119,8 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                     ),
                   ),
                 ),
+                sizedBoxH30(context),
+                sizedBoxH30(context),
               ],
             ),
           ),
@@ -160,8 +157,16 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12)),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
-                      onPressed: () {
-                        // TODO: Download invoice
+                      onPressed: () async {
+                        EasyLoading.show(status: "Loading Invoice...");
+                        await generateAndDownloadInvoice(
+                          context,
+                          loginModel,
+                          buyAmenitiesDone,
+                          orderDetails,
+                          paymentId,
+                        );
+                        // EasyLoading.dismiss();
                       },
                     ),
                   ),
@@ -180,7 +185,7 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                       ),
                       onPressed: () {
                         Navigator.pop(context);
-                        Navigator.pushReplacement(
+                        Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (_) => const HelpSupport()));
@@ -189,7 +194,7 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 20),
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size.fromHeight(48),
@@ -199,7 +204,7 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (_) => const UserAmenitiesPage()),
@@ -222,6 +227,7 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                   ],
                 ),
               ),
+              sizedBoxH30(context),
               sizedBoxH20(context)
             ],
           ),
@@ -230,14 +236,14 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
     );
   }
 
-  String _formatDate(String isoDate) {
-    try {
-      final date = DateTime.parse(isoDate);
-      return DateFormat('dd MMM yyyy, hh:mm a').format(date);
-    } catch (e) {
-      return isoDate;
-    }
-  }
+  // String _formatDate(String isoDate) {
+  //   try {
+  //     final date = DateTime.parse(isoDate);
+  //     return DateFormat('dd MMM yyyy').format(date);
+  //   } catch (e) {
+  //     return isoDate;
+  //   }
+  // }
 
   /// Helper widget for info rows inside ListTile subtitle
   Widget _infoRow(IconData icon, String text, {Color iconColor = Colors.blue}) {
