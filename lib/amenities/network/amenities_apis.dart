@@ -41,6 +41,7 @@ Future<BuyAmenitiesDone?> buyAmenities(
   String userId,
   String societyId,
   String amenities,
+  String paymentId,
 ) async {
   String api = ApiConstant.amenitiesBookbyUser;
   String baseUrl = ApiConstant.baseUrl;
@@ -49,6 +50,7 @@ Future<BuyAmenitiesDone?> buyAmenities(
     'society_id': societyId,
     'user_id': userId,
     'amenities[]': amenities,
+    'payment_id': paymentId,
   };
   try {
     final response = await http.post(url, body: body);
