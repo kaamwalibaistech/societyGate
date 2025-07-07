@@ -1,14 +1,6 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:society_gate/bank/bank_api.dart';
 import 'package:society_gate/bank/bank_model.dart';
-import 'package:society_gate/constents/local_storage.dart';
-import 'package:society_gate/constents/sizedbox.dart';
-import 'package:society_gate/dashboard/notice_board/notice_api.dart';
 
 class BankDetailsPage extends StatelessWidget {
   final bool isPending;
@@ -105,12 +97,12 @@ class BankDetailsPage extends StatelessWidget {
                       ),
                     ),
                     const Divider(),
-                    _infoTile("Type", account?.type),
-                    _infoTile("Business Type", account?.businessType),
+                    _infoTile("Account Type", account.type),
+                    _infoTile("Business Type", account.businessType),
                     _infoTile("Category",
-                        account?.profile?.category ?? 'Not Provided'),
+                        account.profile?.category ?? 'Not Provided'),
                     _infoTile("Subcategory",
-                        account?.profile?.subcategory ?? 'Not Provided'),
+                        account.profile?.subcategory ?? 'Not Provided'),
                     const SizedBox(height: 25),
 
                     /// Address Section
@@ -124,7 +116,7 @@ class BankDetailsPage extends StatelessWidget {
                     ),
                     const Divider(),
                     Text(
-                      _formatAddress(account?.profile?.addresses),
+                      _formatAddress(account.profile?.addresses),
                       style:
                           const TextStyle(fontSize: 14, color: Colors.black87),
                     ),
