@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/api/api_repository.dart';
-
 import 'package:society_gate/dashboard/members/member_watchman_detail_page.dart';
 import 'package:society_gate/models/announcements_model.dart';
-
 
 import '../../constents/local_storage.dart';
 import '../../models/login_model.dart';
