@@ -790,13 +790,18 @@ class _MembersPageState extends State<MembersPage> {
                                 mobileNoController.text,
                                 passwordController.text,
                               );
-                              final societyId = loginModel?.user!.societyId;
-                              context.read<MembersBloc>().add(
-                                  GetMemberListEvent(
-                                      soceityId: societyId.toString()));
-                              Fluttertoast.showToast(
-                                  msg: watchmanData!.message.toString());
-                              Navigator.pop(context);
+                              if (watchmanData?.status == 200) {
+                                final societyId = loginModel?.user!.societyId;
+                                context.read<MembersBloc>().add(
+                                    GetMemberListEvent(
+                                        soceityId: societyId.toString()));
+                                Fluttertoast.showToast(
+                                    msg: watchmanData!.message.toString());
+                                Navigator.pop(context);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Mobile number is already taken");
+                              }
                             } else {
                               Fluttertoast.showToast(
                                   msg: "All fields are Manditory");
