@@ -299,7 +299,8 @@ class _BookAmenitiesState extends State<BookAmenities> {
                                           )),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.black12,
+                                      color: const Color.fromARGB(
+                                          31, 174, 162, 162),
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                   ),

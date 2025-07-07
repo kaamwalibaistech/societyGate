@@ -50,6 +50,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
     profilePhoto = loginModel?.user?.profileImage ??
         "https://ui-avatars.com/api/?background=edbdff&name=$name";
     loginType = loginModel?.user?.role ?? "NA";
+    log(loginModel?.user?.userId.toString() ?? "NA");
     if (loginType != "watchnam") {
       announcementmodel =
           await getAnnouncement(loginModel?.user!.societyId.toString() ?? "");

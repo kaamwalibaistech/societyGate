@@ -279,7 +279,7 @@ class _ConfirmAmenitiesBuyState extends State<ConfirmAmenitiesBuy> {
 class PaymentWaitingPage extends StatefulWidget {
   final LoginModel? loginModel;
   final CreateOrderForAmenities? createOrderForAmenitiesModel;
-  final dynamic response; // Razorpay payment response
+  final PaymentSuccessResponse response; // Razorpay payment response
   final String finalAmenityIds;
 
   const PaymentWaitingPage({
@@ -305,10 +305,10 @@ class _PaymentWaitingPageState extends State<PaymentWaitingPage> {
   void bookAmenities() async {
     try {
       BuyAmenitiesDone? buyAmenitiesDone = await buyAmenities(
-        widget.loginModel?.user?.userId.toString() ?? "",
-        widget.loginModel?.user?.societyId.toString() ?? "",
-        widget.finalAmenityIds,
-      );
+          widget.loginModel?.user?.userId.toString() ?? "",
+          widget.loginModel?.user?.societyId.toString() ?? "",
+          widget.finalAmenityIds,
+          widget.response.paymentId ?? "");
 
       if (buyAmenitiesDone?.status == 200) {
         Future.delayed(const Duration(seconds: 5), () {

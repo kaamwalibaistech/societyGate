@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/api/api_repository.dart';
-import 'package:society_gate/dashboard/members/member_detail_page.dart';
+
+import 'package:society_gate/dashboard/members/member_watchman_detail_page.dart';
 import 'package:society_gate/models/announcements_model.dart';
+
 
 import '../../constents/local_storage.dart';
 import '../../models/login_model.dart';
@@ -121,42 +123,53 @@ class _MembersPageState extends State<MembersPage> {
                         state.memberlistModel?.users?.admins?.first.uemail ??
                             "NA";
 
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.blue.shade50),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          radius: 30,
-                          backgroundImage: CachedNetworkImageProvider(
-                            adminPhoto ??
-                                "https://ui-avatars.com/api/?background=edbdff&name=$adminName.",
-                          ),
-                        ),
-                        title: Text(
-                          adminName,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1A1A1A),
-                          ),
-                        ),
-                        subtitle: FittedBox(
-                          child: Text(
-                            adminEmail,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
+                    return GestureDetector(
+                      onTap: () => loginType == "admin"
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MemberWatchmanDetailPage(
+                                          details: state.memberlistModel?.users
+                                              ?.admins?[0])))
+                          : null,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.blue.shade50),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: CachedNetworkImageProvider(
+                              adminPhoto ??
+                                  "https://ui-avatars.com/api/?background=edbdff&name=$adminName.",
                             ),
                           ),
-                        ),
-                        trailing: const Text(
-                          "Society Admin",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.blue,
+                          title: Text(
+                            adminName,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF1A1A1A),
+                            ),
+                          ),
+                          subtitle: FittedBox(
+                            child: Text(
+                              adminEmail,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ),
+                          trailing: const Text(
+                            "Society Admin",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue,
+                            ),
                           ),
                         ),
                       ),
@@ -295,7 +308,7 @@ class _MembersPageState extends State<MembersPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: ElevatedButton.icon(
                               onPressed: () => modelBottomsheet(),
-                              icon: const Icon(Icons.add),
+                              icon: const Icon(Icons.person_add_alt_1),
                               label: const Text("Add Watchman"),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF6B4EFF),
@@ -368,11 +381,13 @@ class _MembersPageState extends State<MembersPage> {
           itemBuilder: (context, index) {
             Members memberList = members![index];
             return GestureDetector(
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MemberDetailPage(member: memberList))),
+              onTap: () => loginType == "admin"
+                  ? Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              MemberWatchmanDetailPage(details: memberList)))
+                  : null,
               child: Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
@@ -393,15 +408,68 @@ class _MembersPageState extends State<MembersPage> {
                       onTap: () async {
                         if (loginModel!.user!.role == "admin") {
                           if (memberList.approvalStatus == "pending") {
-                            final loginModel =
-                                LocalStoragePref().getLoginModel();
-                            final societyId = loginModel!.user!.societyId;
-                            ApiRepository apiRepository = ApiRepository();
-                            await apiRepository
-                                .getUserApproval(memberList.userId.toString());
-                            context.read<MembersBloc>().add(GetMemberListEvent(
-                                soceityId: societyId.toString()));
-                            Fluttertoast.showToast(msg: "Member Approved");
+                            showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      title: const Text(
+                                        "Confirm Approval",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xFF2D3142),
+                                        ),
+                                      ),
+                                      content: const Text(
+                                        "please varify member details before you are approve!",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Color(0xFF6C7A9C),
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, false),
+                                          child: const Text(
+                                            "Cancel",
+                                            style: TextStyle(
+                                              color: Color(0xFF6C7A9C),
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            final loginModel =
+                                                LocalStoragePref()
+                                                    .getLoginModel();
+                                            final societyId =
+                                                loginModel!.user!.societyId;
+                                            ApiRepository apiRepository =
+                                                ApiRepository();
+                                            await apiRepository.getUserApproval(
+                                                memberList.userId.toString());
+                                            context.read<MembersBloc>().add(
+                                                GetMemberListEvent(
+                                                    soceityId:
+                                                        societyId.toString()));
+                                            Fluttertoast.showToast(
+                                                msg: "Member Approved");
+                                            Navigator.pop(context, false);
+                                          },
+                                          child: Text(
+                                            "Approve",
+                                            style: TextStyle(
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ));
                           }
                         } else {
                           Fluttertoast.showToast(msg: "Only admin can Approve");
@@ -428,8 +496,12 @@ class _MembersPageState extends State<MembersPage> {
       height: MediaQuery.of(context).size.height,
       child: Scaffold(
         floatingActionButton: loginType == "admin"
-            ? FloatingActionButton(
-                child: const Icon(Icons.add),
+            ? FloatingActionButton.extended(
+                backgroundColor: const Color(0xFF6B4EFF),
+                foregroundColor: Colors.white,
+                isExtended: true,
+                label: Text("Add Watchman"),
+                icon: Icon(Icons.person_add_alt_1, size: 25),
                 onPressed: () {
                   modelBottomsheet();
                 })
@@ -441,154 +513,163 @@ class _MembersPageState extends State<MembersPage> {
                 itemCount: watchmen?.length ?? 0,
                 itemBuilder: (context, index) {
                   Watchmen watchmenList = watchmen![index];
-                  return Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 8),
-                      height: 75,
-                      decoration: BoxDecoration(
-                          color: Colors.purple.shade50,
-                          borderRadius: BorderRadius.circular(12)),
-                      child: ListTile(
-                        trailing: loginType == "admin"
-                            ? GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                            content: Container(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10),
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.2,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  const Text(
-                                                    "Are you sure you want to delete",
-                                                    style:
-                                                        TextStyle(fontSize: 20),
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: const Text(
-                                                              "cancel")),
-                                                      const SizedBox(
-                                                        width: 15,
-                                                      ),
-                                                      GestureDetector(
-                                                          onTap: () async {
-                                                            final societyId =
-                                                                loginModel
-                                                                    ?.user!
-                                                                    .societyId;
-                                                            ApiRepository
-                                                                apiRepository =
-                                                                ApiRepository();
+                  return GestureDetector(
+                    onTap: () => loginType == "admin"
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MemberWatchmanDetailPage(
+                                    details: watchmenList)))
+                        : null,
+                    child: Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 8),
+                        height: 75,
+                        decoration: BoxDecoration(
+                            color: Colors.purple.shade50,
+                            borderRadius: BorderRadius.circular(12)),
+                        child: ListTile(
+                          trailing: loginType == "admin"
+                              ? GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              content: Container(
+                                                padding: const EdgeInsets.only(
+                                                    top: 10),
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.2,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    const Text(
+                                                      "Are you sure you want to delete",
+                                                      style: TextStyle(
+                                                          fontSize: 20),
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: const Text(
+                                                                "cancel")),
+                                                        const SizedBox(
+                                                          width: 15,
+                                                        ),
+                                                        GestureDetector(
+                                                            onTap: () async {
+                                                              final societyId =
+                                                                  loginModel
+                                                                      ?.user!
+                                                                      .societyId;
+                                                              ApiRepository
+                                                                  apiRepository =
+                                                                  ApiRepository();
 
-// <<<<<<< anil
-//                                                     await apiRepository
-//                                                         .deleteWatchman(
-//                                                             watchmen[index]
-//                                                                 .userId
-//                                                                 .toString());
-//                                                     context
-//                                                         .read<MembersBloc>()
-//                                                         .add(GetMemberListEvent(
-//                                                             soceityId: societyId
-//                                                                 .toString()));
-//                                                     Navigator.pop(context);
-//                                                   },
-//                                                   child: const Text("Delete"))
-//                                             ],
-//                                           )
-//                                         ],
-//                                       ),
-//                                     ),
-//                                   ));
-//                         },
-//                         child: ListTile(
-//                           trailing: const Icon(
-//                             Icons.delete,
-//                             color: Colors.red,
-//                           ),
-//                           leading:
-//                               // ClipOval(
-//                               //   child: Image.network(
-//                               //     "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}.",
-//                               //     height: 50,
-//                               //     width: 50,
-//                               //   ),
-//                               // ),
-//                               const CircleAvatar(
-//                             foregroundImage:
-//                                 AssetImage("lib/assets/watchman.jpg"),
-//                             radius: 30,
-//                           ),
-//                           title: Text(watchmenList.uname ?? "No Name"),
-//                           subtitle:
-//                               Text(watchmenList.uphone ?? "Not Available"),
-// =======
-                                                            await apiRepository
-                                                                .deleteWatchman(
-                                                                    watchmen[
-                                                                            index]
-                                                                        .userId
-                                                                        .toString());
-                                                            context
-                                                                .read<
-                                                                    MembersBloc>()
-                                                                .add(GetMemberListEvent(
-                                                                    soceityId:
-                                                                        societyId
-                                                                            .toString()));
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: const Text(
-                                                              "Delete"))
-                                                    ],
-                                                  )
-                                                ],
+                                                              // <<<<<<< anil
+                                                              //                                                     await apiRepository
+                                                              //                                                         .deleteWatchman(
+                                                              //                                                             watchmen[index]
+                                                              //                                                                 .userId
+                                                              //                                                                 .toString());
+                                                              //                                                     context
+                                                              //                                                         .read<MembersBloc>()
+                                                              //                                                         .add(GetMemberListEvent(
+                                                              //                                                             soceityId: societyId
+                                                              //                                                                 .toString()));
+                                                              //                                                     Navigator.pop(context);
+                                                              //                                                   },
+                                                              //                                                   child: const Text("Delete"))
+                                                              //                                             ],
+                                                              //                                           )
+                                                              //                                         ],
+                                                              //                                       ),
+                                                              //                                     ),
+                                                              //                                   ));
+                                                              //                         },
+                                                              //                         child: ListTile(
+                                                              //                           trailing: const Icon(
+                                                              //                             Icons.delete,
+                                                              //                             color: Colors.red,
+                                                              //                           ),
+                                                              //                           leading:
+                                                              //                               // ClipOval(
+                                                              //                               //   child: Image.network(
+                                                              //                               //     "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}.",
+                                                              //                               //     height: 50,
+                                                              //                               //     width: 50,
+                                                              //                               //   ),
+                                                              //                               // ),
+                                                              //                               const CircleAvatar(
+                                                              //                             foregroundImage:
+                                                              //                                 AssetImage("lib/assets/watchman.jpg"),
+                                                              //                             radius: 30,
+                                                              //                           ),
+                                                              //                           title: Text(watchmenList.uname ?? "No Name"),
+                                                              //                           subtitle:
+                                                              //                               Text(watchmenList.uphone ?? "Not Available"),
+                                                              // =======
+                                                              await apiRepository
+                                                                  .deleteWatchman(watchmen[
+                                                                          index]
+                                                                      .userId
+                                                                      .toString());
+                                                              context
+                                                                  .read<
+                                                                      MembersBloc>()
+                                                                  .add(GetMemberListEvent(
+                                                                      soceityId:
+                                                                          societyId
+                                                                              .toString()));
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: const Text(
+                                                                "Delete"))
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ));
-                                },
-                                child: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
-                              )
-                            : const SizedBox.shrink(),
-                        leading: CircleAvatar(
-                          radius: 35,
-                          backgroundImage: CachedNetworkImageProvider(watchmenList
-                                  .profileImage ??
-                              "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}."),
-                        ),
+                                            ));
+                                  },
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                          leading: CircleAvatar(
+                            radius: 35,
+                            backgroundImage: CachedNetworkImageProvider(
+                                watchmenList.profileImage ??
+                                    "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}."),
+                          ),
 
-//                         const CircleAvatar(
-//                           foregroundImage:
-//                               AssetImage("lib/assets/watchman.jpg"),
-//                           radius: 30,
-// // >>>>>>> final
-//                         ),
-                        title: Text(watchmenList.uname ?? "No Name"),
-                        subtitle: Text(watchmenList.uphone ?? "Not Available"),
-                      ));
+                          //                         const CircleAvatar(
+                          //                           foregroundImage:
+                          //                               AssetImage("lib/assets/watchman.jpg"),
+                          //                           radius: 30,
+                          // // >>>>>>> final
+                          //                         ),
+                          title: Text(watchmenList.uname ?? "No Name"),
+                          subtitle:
+                              Text(watchmenList.uphone ?? "Not Available"),
+                        )),
+                  );
                 }),
           ],
         ),
@@ -711,13 +792,18 @@ class _MembersPageState extends State<MembersPage> {
                                 mobileNoController.text,
                                 passwordController.text,
                               );
-                              final societyId = loginModel?.user!.societyId;
-                              context.read<MembersBloc>().add(
-                                  GetMemberListEvent(
-                                      soceityId: societyId.toString()));
-                              Fluttertoast.showToast(
-                                  msg: watchmanData!.message.toString());
-                              Navigator.pop(context);
+                              if (watchmanData?.status == 200) {
+                                final societyId = loginModel?.user!.societyId;
+                                context.read<MembersBloc>().add(
+                                    GetMemberListEvent(
+                                        soceityId: societyId.toString()));
+                                Fluttertoast.showToast(
+                                    msg: watchmanData!.message.toString());
+                                Navigator.pop(context);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Mobile number is already taken");
+                              }
                             } else {
                               Fluttertoast.showToast(
                                   msg: "All fields are Manditory");

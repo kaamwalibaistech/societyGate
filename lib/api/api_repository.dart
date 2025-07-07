@@ -11,6 +11,7 @@ import 'package:society_gate/models/forget_password_response_model.dart';
 import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'package:society_gate/models/help_support_model.dart';
 import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
+import 'package:society_gate/models/unpaid_maintainence_order_model.dart';
 import 'package:society_gate/models/update_user_model.dart';
 
 import '../models/add_daily_help_model.dart';
@@ -544,7 +545,7 @@ class ApiRepository {
         if (data['status'] == 200) {
           return WatchManAddModel.fromJson(data);
         }
-        return WatchManAddModel.fromJson(data);
+        return null;
       }
     } catch (e) {
       throw Exception(e.toString());
@@ -722,6 +723,33 @@ class ApiRepository {
         final Map<String, dynamic> data = jsonDecode(response.body);
         log("Api DATA: ${data.toString()}");
         return AmenitiesModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<UnPaidMaintainenceOrderModel?> unpaidMaintainenceOrder(
+      String societyid,
+      String userId,
+      String mainatenanceIds,
+      String totalAmount,
+      String flatId) async {
+    final url = Uri.parse("${baseUrl}order-for-maintenance");
+    final body = {
+      'society_id': societyid,
+      'user_id': userId,
+      'maintenance_ids[]': mainatenanceIds,
+      'amount': totalAmount,
+      'flat_id': flatId,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+
+        return UnPaidMaintainenceOrderModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

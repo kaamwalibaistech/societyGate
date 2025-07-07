@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:society_gate/amenities/user_amenities_page.dart';
 import 'package:society_gate/models/login_model.dart';
 
@@ -27,11 +30,30 @@ class _AccountScreenState extends State<AccountScreen>
   TextEditingController familyEmailController = TextEditingController();
   TextEditingController familyRelationController = TextEditingController();
   TextEditingController familyPasswordController = TextEditingController();
+  TextEditingController vehicleNumberController = TextEditingController();
+  TextEditingController vehicleTypeController = TextEditingController();
+  TextEditingController vehicleModelController = TextEditingController();
+  TextEditingController vehicleParkingSlotController = TextEditingController();
+  TextEditingController dailyHelpNameController = TextEditingController();
+  TextEditingController dailyHelpMobileNoController = TextEditingController();
+  TextEditingController dailyHelpAddressController = TextEditingController();
+  TextEditingController dailyHelpTypeController = TextEditingController();
+
   late TabController _tabController;
   GetFamilyMemberModel? getFamilyMemberData;
   GetDailyHelpModel? getDailyHelpData;
   GetVehicleDetailsModel? getVehicledetails;
   LoginModel? loginModel;
+  File? selectedImageFile; // To hold picked image file
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      selectedImageFile = File(pickedFile.path);
+    }
+  }
 
   @override
   void initState() {
@@ -80,7 +102,22 @@ class _AccountScreenState extends State<AccountScreen>
 
   @override
   void dispose() {
+    // 👇 Dispose all controllers here
+    familyNameController.dispose();
+    familyMobileNoController.dispose();
+    familyEmailController.dispose();
+    familyRelationController.dispose();
+    familyPasswordController.dispose();
+    vehicleNumberController.dispose();
+    vehicleTypeController.dispose();
+    vehicleModelController.dispose();
+    vehicleParkingSlotController.dispose();
+    dailyHelpNameController.dispose();
+    dailyHelpMobileNoController.dispose();
+    dailyHelpAddressController.dispose();
+    dailyHelpTypeController.dispose();
     _tabController.dispose();
+
     super.dispose();
   }
 
@@ -1150,195 +1187,231 @@ class _AccountScreenState extends State<AccountScreen>
   }
 
   dailyHelpModelBottomSheet() {
-    TextEditingController dailyHelpNameController = TextEditingController();
-    TextEditingController dailyHelpMobileNoController = TextEditingController();
-    TextEditingController dailyHelpAddressController = TextEditingController();
-    TextEditingController dailyHelpTypeController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
     return showModalBottomSheet(
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  topRight: Radius.circular(25),
-                ),
-              ),
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
+          ),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Center(
+                      child: Container(
+                        height: 5,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
                       children: [
-                        Center(
-                          child: Container(
-                            height: 5,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(5),
-                            ),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE3F2FD),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.cleaning_services_rounded,
+                            color: Color(0xFF2196F3),
+                            size: 24,
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        Row(
+                        const SizedBox(width: 15),
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: const Color(
-                                    0xFFE3F2FD), // Very light blue background
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(
-                                Icons.cleaning_services_rounded,
-                                color: Color(0xFF2196F3), // Light blue icon
-                                size: 24,
+                            Text(
+                              "Add Daily Help",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF6B4EFF),
                               ),
                             ),
-                            const SizedBox(width: 15),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Add Daily Help",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFF6B4EFF),
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  "Add daily help for quick entry",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
+                            SizedBox(height: 4),
+                            Text(
+                              "Add daily help for quick entry",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey,
+                              ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 25),
-                        _buildTextField(
-                          controller: dailyHelpNameController,
-                          label: "Name",
-                          hint: "Enter name",
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Enter name";
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 15),
-                        _buildTextField(
-                          controller: dailyHelpMobileNoController,
-                          label: "Mobile Number",
-                          hint: "Enter mobile number",
-                          keyboardType: TextInputType.number,
-                          maxLength: 10,
-                          validator: (value) {
-                            if (value!.length != 10) {
-                              return "Mobile number should be 10 digits";
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 15),
-                        _buildTextField(
-                          controller: dailyHelpAddressController,
-                          label: "Address",
-                          hint: "Enter address",
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Enter address";
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 15),
-                        _buildTextField(
-                          controller: dailyHelpTypeController,
-                          label: "Help Type",
-                          hint: "Select service type",
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Enter service type";
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 25),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              if (formKey.currentState!.validate()) {
-                                final data =
-                                    LocalStoragePref.instance!.getLoginModel();
-                                ApiRepository apiRepository = ApiRepository();
-                                AddDailyHelpModel? dailyHelpData =
-                                    await apiRepository.addDailyHelpMembers(
-                                  data!.user!.societyId.toString(),
-                                  data.user!.userId.toString(),
-                                  data.user!.flatId.toString(),
-                                  dailyHelpNameController.text,
-                                  dailyHelpMobileNoController.text,
-                                  dailyHelpAddressController.text,
-                                  dailyHelpTypeController.text,
-                                );
-                                getDailyHelpmembers();
-                                Navigator.pop(context);
-                                Fluttertoast.showToast(
-                                    msg: dailyHelpData!.message.toString());
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF6B4EFF),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 0,
-                            ),
-                            child: const Text(
-                              "Add Help",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 25),
+
+                    // 👇 Image Picker Field
+                    Center(
+                      child: GestureDetector(
+                        onTap: () async {
+                          await _pickImage();
+                          (context as Element).markNeedsBuild(); //
+                        },
+                        child: CircleAvatar(
+                          radius: 45,
+                          backgroundColor: Colors.grey.shade200,
+                          backgroundImage: selectedImageFile != null
+                              ? FileImage(selectedImageFile!)
+                              : null,
+                          child: selectedImageFile == null
+                              ? const Icon(Icons.camera_alt,
+                                  size: 30, color: Colors.grey)
+                              : null,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Center(
+                      child: TextButton(
+                        onPressed: () async {
+                          await _pickImage();
+                          (context as Element).markNeedsBuild();
+                        },
+                        child: const Text(
+                          "Upload Image",
+                          style: TextStyle(color: Color(0xFF6B4EFF)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // 👇 Existing Fields
+                    _buildTextField(
+                      controller: dailyHelpNameController,
+                      label: "Name",
+                      hint: "Enter name",
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Enter name";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    _buildTextField(
+                      controller: dailyHelpMobileNoController,
+                      label: "Mobile Number",
+                      hint: "Enter mobile number",
+                      keyboardType: TextInputType.number,
+                      maxLength: 10,
+                      validator: (value) {
+                        if (value!.length != 10) {
+                          return "Mobile number should be 10 digits";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    _buildTextField(
+                      controller: dailyHelpAddressController,
+                      label: "Address",
+                      hint: "Enter address",
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Enter address";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 15),
+                    _buildTextField(
+                      controller: dailyHelpTypeController,
+                      label: "Help Type",
+                      hint: "Select service type",
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Enter service type";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 25),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            final data =
+                                LocalStoragePref.instance!.getLoginModel();
+                            ApiRepository apiRepository = ApiRepository();
+                            AddDailyHelpModel? dailyHelpData =
+                                await apiRepository.addDailyHelpMembers(
+                              data!.user!.societyId.toString(),
+                              data.user!.userId.toString(),
+                              data.user!.flatId.toString(),
+                              dailyHelpNameController.text,
+                              dailyHelpMobileNoController.text,
+                              dailyHelpAddressController.text,
+                              dailyHelpTypeController.text,
+                              // 👇 send image path if needed later
+                              // selectedImageFile?.path ?? "",
+                            );
+                            if (dailyHelpData?.status == 200) {
+                              getDailyHelpmembers();
+                              Navigator.pop(context);
+                              Fluttertoast.showToast(
+                                  msg: dailyHelpData!.message.toString());
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Mobile Number is already taken");
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF6B4EFF),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Text(
+                          "Add Help",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                 ),
-              ));
-        });
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   vehicleModelBottomSheet() {
-    TextEditingController vehicleNumberController = TextEditingController();
-    TextEditingController vehicleTypeController = TextEditingController();
-    TextEditingController vehicleModelController = TextEditingController();
-    TextEditingController vehicleParkingSlotController =
-        TextEditingController();
     final formKey = GlobalKey<FormState>();
 
     return showModalBottomSheet(

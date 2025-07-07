@@ -490,6 +490,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ),
+                  const Text("Forgot Password?")
                 ],
               ),
               actions: [
