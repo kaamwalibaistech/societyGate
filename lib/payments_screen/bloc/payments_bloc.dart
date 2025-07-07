@@ -15,17 +15,28 @@ class PaymentsBloc extends Bloc<PaymentsEvent, PaymentsState> {
     // emit(CommentsLoading());
     try {
       UnPaidMaintainenceModel? unpaidData;
-
+      List<Datum>? newUnpaid = [];
+      List<Datum>? newPaid = [];
       unpaidData = await ApiRepository().getUnpaidMaintainence(
           event.societyId.toString(), event.userId.toString());
 
       if (unpaidData?.status == 200) {
-        emit(PaymentsLoadedState(unpaidData: unpaidData));
+        // unpaidData?.data!.removeWhere((e) => e.status == "paid");
+        // emit(PaymentsUNPaidLoadedState(unpaidData: unpaidData));
+        for (var i in unpaidData!.data!) {
+          if (i.status == "unpaid") {
+            newUnpaid.add(i);
+          } else {
+            newPaid.add(i);
+          }
+        }
+        emit(PaymentsPaidLoadedState(paidData: newPaid));
+        emit(PaymentsUNPaidLoadedState(unpaidData: newUnpaid));
       } else {
-        emit(PaymentsFailed());
+        emit(const PaymentsFailed(msg: ""));
       }
     } catch (e) {
-      emit(PaymentsFailed());
+      emit(const PaymentsFailed(msg: ""));
       throw Exception(e);
     }
   }
