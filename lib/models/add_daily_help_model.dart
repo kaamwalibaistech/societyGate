@@ -11,49 +11,56 @@ String addDailyHelpModelToJson(AddDailyHelpModel data) =>
     json.encode(data.toJson());
 
 class AddDailyHelpModel {
-  int status;
-  String message;
-  Employee employee;
+  int? status;
+  String? message;
+  List<Employee>? employee;
 
   AddDailyHelpModel({
-    required this.status,
-    required this.message,
-    required this.employee,
+    this.status,
+    this.message,
+    this.employee,
   });
 
   factory AddDailyHelpModel.fromJson(Map<String, dynamic> json) =>
       AddDailyHelpModel(
         status: json["status"],
         message: json["message"],
-        employee: Employee.fromJson(json["employee"]),
+        employee: json["employee"] == null
+            ? []
+            : List<Employee>.from(
+                json["employee"]!.map((x) => Employee.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "employee": employee.toJson(),
+        "employee": employee == null
+            ? []
+            : List<dynamic>.from(employee!.map((x) => x.toJson())),
       };
 }
 
 class Employee {
-  String societyId;
-  String memberId;
-  String flatId;
-  String name;
-  String phone;
-  String address;
-  String empType;
-  int employeeId;
+  String? societyId;
+  String? memberId;
+  String? flatId;
+  String? name;
+  String? phone;
+  String? address;
+  String? empType;
+  dynamic profileImage;
+  int? employeeId;
 
   Employee({
-    required this.societyId,
-    required this.memberId,
-    required this.flatId,
-    required this.name,
-    required this.phone,
-    required this.address,
-    required this.empType,
-    required this.employeeId,
+    this.societyId,
+    this.memberId,
+    this.flatId,
+    this.name,
+    this.phone,
+    this.address,
+    this.empType,
+    this.profileImage,
+    this.employeeId,
   });
 
   factory Employee.fromJson(Map<String, dynamic> json) => Employee(
@@ -64,6 +71,7 @@ class Employee {
         phone: json["phone"],
         address: json["address"],
         empType: json["emp_type"],
+        profileImage: json["profile_image"],
         employeeId: json["employee_id"],
       );
 
@@ -75,6 +83,7 @@ class Employee {
         "phone": phone,
         "address": address,
         "emp_type": empType,
+        "profile_image": profileImage,
         "employee_id": employeeId,
       };
 }

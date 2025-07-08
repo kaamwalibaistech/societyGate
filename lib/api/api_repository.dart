@@ -12,6 +12,7 @@ import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'package:society_gate/models/help_support_model.dart';
 import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
 import 'package:society_gate/models/unpaid_maintainence_order_model.dart';
+import 'package:society_gate/models/update_maintainence_status_model.dart';
 import 'package:society_gate/models/update_user_model.dart';
 
 import '../models/add_daily_help_model.dart';
@@ -502,52 +503,102 @@ class ApiRepository {
   }
 
   Future<AddDailyHelpModel?> addDailyHelpMembers(
-      societyid, memberid, flatid, name, phone, address, emptype) async {
+      societyid, memberid, flatid, name, phone, address, emptype, image) async {
     final url = Uri.parse("${baseUrl}employmentadd");
-    final body = {
-      'society_id': societyid,
-      'member_id': memberid,
-      'flat_id': flatid,
-      'name': name,
-      'phone': phone,
-      'address': address,
-      'emp_type': emptype,
-    };
+    // final body = {
+    //   'society_id': societyid,
+    //   'member_id': memberid,
+    //   'flat_id': flatid,
+    //   'name': name,
+    //   'phone': phone,
+    //   'address': address,
+    //   'emp_type': emptype,
+    //   'profile_image': image,
+    // };
+
     try {
-      final response = await http.post(url, body: body);
+      final request = http.MultipartRequest("POST", url);
+
+      request.fields['society_id'] = societyid;
+      request.fields['member_id'] = memberid;
+      request.fields['flat_id'] = flatid;
+      request.fields['name'] = name;
+      request.fields['phone'] = phone;
+      request.fields['address'] = address;
+      request.fields['emp_type'] = emptype;
+
+      // Add the image file
+      if (image != null && image.isNotEmpty) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'profile_image',
+            image,
+            // contentType: MediaType('image', 'jpeg'), // optional
+          ),
+        );
+      }
+
+      final response = await request.send();
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
+        final responseBody = await response.stream.bytesToString();
+        final Map<String, dynamic> data = jsonDecode(responseBody);
         if (data['status'] == 200) {
           return AddDailyHelpModel.fromJson(data);
+        } else {
+          log('Upload failed: $data');
+          return AddDailyHelpModel.fromJson(data);
         }
-        return null;
+      } else {
+        log('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
+      log('Error: $e');
       throw Exception(e.toString());
     }
     return null;
   }
 
   Future<WatchManAddModel?> addWatchman(
-      societyid, name, email, phoneNo, password) async {
+      societyid, name, email, phoneNo, password, profileImage) async {
     final url = Uri.parse("${baseUrl}watchmenadd");
-    final body = {
-      'society_id': societyid,
-      'uname': name,
-      'uemail': email ?? "",
-      'uphone': phoneNo,
-      'upassword': password,
-    };
+
     try {
-      final response = await http.post(url, body: body);
+      final request = http.MultipartRequest("POST", url);
+
+      request.fields['society_id'] = societyid;
+      request.fields['uname'] = name;
+      request.fields['uemail'] = email;
+      request.fields['uphone'] = phoneNo;
+      request.fields['upassword'] = password;
+
+      // Add the image file
+      if (profileImage != null && profileImage.isNotEmpty) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'profile_image',
+            profileImage,
+            // contentType: MediaType('image', 'jpeg'), // optional
+          ),
+        );
+      }
+
+      final response = await request.send();
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
+        final responseBody = await response.stream.bytesToString();
+        final Map<String, dynamic> data = jsonDecode(responseBody);
         if (data['status'] == 200) {
           return WatchManAddModel.fromJson(data);
+        } else {
+          log('Upload failed: $data');
+          return WatchManAddModel.fromJson(data);
         }
-        return null;
+      } else {
+        log('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
+      log('Error: $e');
       throw Exception(e.toString());
     }
     return null;
@@ -750,6 +801,34 @@ class ApiRepository {
         final Map<String, dynamic> data = jsonDecode(response.body);
 
         return UnPaidMaintainenceOrderModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<UpdateMaintainenceStatusModel?> updateMaintainenceStatus(
+    String societyid,
+    String userId,
+    String flatId,
+    String razorPayId,
+    String mainatenanceIds,
+  ) async {
+    final url = Uri.parse("${baseUrl}payment-success");
+    final body = {
+      'society_id': societyid,
+      'user_id': userId,
+      'flat_id': flatId,
+      'razorpay_payment_id': razorPayId,
+      'maintenance_ids': mainatenanceIds,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+
+        return UpdateMaintainenceStatusModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

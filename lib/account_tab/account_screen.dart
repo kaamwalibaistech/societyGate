@@ -1370,7 +1370,7 @@ class _AccountScreenState extends State<AccountScreen>
                               dailyHelpAddressController.text,
                               dailyHelpTypeController.text,
                               // 👇 send image path if needed later
-                              // selectedImageFile?.path ?? "",
+                              selectedImageFile?.path ?? "",
                             );
                             if (dailyHelpData?.status == 200) {
                               getDailyHelpmembers();

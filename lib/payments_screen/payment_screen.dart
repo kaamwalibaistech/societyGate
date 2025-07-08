@@ -2,11 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/constents/local_storage.dart';
+import 'package:society_gate/maintainence_invoice.dart';
 import 'package:society_gate/models/login_model.dart';
 import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
 import 'package:society_gate/models/unpaid_maintainence_order_model.dart';
@@ -23,12 +25,27 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     with TickerProviderStateMixin {
   //payment logic
   late Razorpay _razorpay;
+  String? paymentId;
+  dynamic maintainenceIds;
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {}
 
   Future<void> handlePaymentSuccessResponse(
       PaymentSuccessResponse response) async {
-    String paymentId = response.paymentId ?? "N/A";
+    paymentId = response.paymentId ?? "N/A";
+    final status = await ApiRepository().updateMaintainenceStatus(
+      locaData?.user?.societyId.toString() ?? "",
+      locaData?.user?.userId.toString() ?? "",
+      locaData?.user?.flatId.toString() ?? "",
+      paymentId ?? "",
+      maintainenceIds,
+    );
+    setState(() {
+      totalPayment = 0.0;
+    });
+    BlocProvider.of<PaymentsBloc>(context).add(PaymentsEvent(
+        societyId: locaData?.user?.societyId.toString() ?? "",
+        userId: locaData?.user?.userId.toString() ?? ""));
 
     Fluttertoast.showToast(
       msg: "Payment Successful!\nPayment ID: $paymentId",
@@ -164,8 +181,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
       ),
 
       bottomNavigationBar: unpaidData?.data == null
-          ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
+          ? SafeArea(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -191,7 +207,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                               height: 45,
                               child: ElevatedButton(
                                 onPressed: () async {
-                                  final maintainenceIds = getMaintainenceIds();
+                                  maintainenceIds = getMaintainenceIds();
 
                                   if (totalPayment < 1.0) {
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -265,73 +281,75 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
 
       builder: (context, state) {
         if (state is PaymentsUNPaidLoadedState) {
-          return ListView.builder(
-            padding: const EdgeInsets.all(12),
-            itemCount: state.unpaidData?.length ?? 0,
-            itemBuilder: (context, index) {
-              final unpaidList = state.unpaidData ?? [];
+          return state.unpaidData?.length != 0
+              ? ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: state.unpaidData?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final unpaidList = state.unpaidData ?? [];
 
-              return Card(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.all(12),
-                  leading: Checkbox(
-                    value: unpaidList[index].isChecked ?? false,
-                    onChanged: (value) {
-                      setState(() {
-                        unpaidList[index].isChecked = value ?? false;
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      elevation: 1,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(12),
+                        leading: Checkbox(
+                          value: unpaidList[index].isChecked ?? false,
+                          onChanged: (value) {
+                            setState(() {
+                              unpaidList[index].isChecked = value ?? false;
 
-                        final a = unpaidList[index].totalAmount ?? 0.0;
-                        final double amount = (a is num)
-                            ? a.toDouble()
-                            : double.tryParse(a.toString()) ?? 0.0;
-                        if (value == true) {
-                          totalPayment += amount;
-                        } else {
-                          totalPayment -= amount;
-                        }
+                              final a = unpaidList[index].totalAmount ?? 0.0;
+                              final double amount = (a is num)
+                                  ? a.toDouble()
+                                  : double.tryParse(a.toString()) ?? 0.0;
+                              if (value == true) {
+                                totalPayment += amount;
+                              } else {
+                                totalPayment -= amount;
+                              }
 
-                        log("Total Payment: $totalPayment");
-                        if (value == true) {
-                          selectedMaintainenceIds
-                              .add(unpaidList[index].id.toString() ?? "");
-                        } else {
-                          selectedMaintainenceIds
-                              .remove(unpaidList[index].id.toString());
-                        }
-                      });
-                    },
-                  ),
-                  title: Text(
-                    unpaidList[index].type.toString() ?? "",
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  subtitle: Text(
-                    unpaidList[index].date.toString() ?? "",
-                  ),
-                  trailing: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '₹${unpaidList[index].totalAmount.toString() ?? ""}',
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                              log("Total Payment: $totalPayment");
+                              if (value == true) {
+                                selectedMaintainenceIds
+                                    .add(unpaidList[index].id.toString());
+                              } else {
+                                selectedMaintainenceIds
+                                    .remove(unpaidList[index].id.toString());
+                              }
+                            });
+                          },
+                        ),
+                        title: Text(
+                          unpaidList[index].type.toString(),
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        subtitle: Text(
+                          unpaidList[index].date.toString(),
+                        ),
+                        trailing: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              '₹${unpaidList[index].totalAmount.toString()}',
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            // const SizedBox(height: 8),
+                            // const Icon(Icons.arrow_forward_ios,
+                            //     size: 14, color: Colors.grey),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      const Icon(Icons.arrow_forward_ios,
-                          size: 14, color: Colors.grey),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
+                    );
+                  },
+                )
+              : const Center(child: Text("No Unpaid Payments"));
         } else if (state is PaymentsFailed) {
           return const Center(child: Text("No Unpaid Payments"));
         } else {
@@ -357,45 +375,106 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
           current is PaymentsPaidLoadedState,
       builder: (context, state) {
         if (state is PaymentsPaidLoadedState) {
-          return ListView.builder(
-            padding: const EdgeInsets.all(12),
-            itemCount: state.paidData?.length,
-            itemBuilder: (context, index) {
-              final paidList = state.paidData ?? [];
-              return Card(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.all(12),
-                  leading: const Icon(Icons.check_circle, color: Colors.green),
-                  title: Text(paidList[index].type ?? ""),
-                  subtitle: Text(
-                    paidList[index].date ?? "",
-                  ),
-                  trailing: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        paidList[index].totalAmount ?? "",
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+          return state.paidData?.isNotEmpty == true
+              ? ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: state.paidData?.length,
+                  itemBuilder: (context, index) {
+                    final paidList = state.paidData ?? [];
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      shadowColor: Colors.grey.withOpacity(0.3),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 24,
+                              backgroundColor: Colors.green.withOpacity(0.1),
+                              child: const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                                size: 28,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    paidList[index].type ?? "",
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    paidList[index].date ?? "",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  paidList[index].totalAmount ?? "",
+                                  style: const TextStyle(
+                                    color: Colors.blueAccent,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                GestureDetector(
+                                  onTap: () async {
+                                    EasyLoading.show(
+                                        status: "Loading Invoice...");
+                                    getMaintainenceInvoice();
+                                    // EasyLoading.dismiss();
+                                  },
+                                  child: const Text(
+                                    "Invoice",
+                                    style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      // const SizedBox(height: 8),
-                      // const Icon(Icons.arrow_forward_ios,
-                      //     size: 14, color: Colors.grey),
-                    ],
+                    );
+                  },
+                )
+              : const Center(
+                  child: Text(
+                    "No Paid Payments",
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
-                ),
-              );
-            },
-          );
+                );
         } else if (state is PaymentsFailed) {
-          return const Center(child: Text("No paid Payments"));
+          return const Center(
+            child: Text(
+              "Failed to load paid payments",
+              style: TextStyle(fontSize: 16, color: Colors.redAccent),
+            ),
+          );
         } else {
           return const Center(child: CircularProgressIndicator());
         }

@@ -191,7 +191,11 @@ class _VisitorsPageState extends State<VisitorsPage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => VisitorsDetailsPage(
-                            visitorID: visitors.visitorId.toString())));
+                              visitorID: visitors.visitorId.toString(),
+                              societyId:
+                                  loginModel?.user?.societyId.toString() ?? "",
+                              flatId: loginModel?.user?.flatId.toString() ?? "",
+                            )));
               },
               child: Container(
                   margin:
@@ -213,43 +217,50 @@ class _VisitorsPageState extends State<VisitorsPage> {
                           subtitle: Text(visitors.phone ?? "Not available"),
                         ),
                       ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              visitors.relation ?? "Not available",
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.blueGrey),
-                            ),
-                            sizedBoxW5(context),
-                            const Icon(
-                              Icons.circle,
-                              size: 6,
-                              color: Colors.blueGrey,
-                            ),
-                            sizedBoxW5(context),
-                            Text(
-                              visitors.visitingPurpose ?? "Not available",
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.blueGrey),
-                            ),
-                            //   sizedBoxW5(context),
-                            const SizedBox(
-                              height: 10,
-                              child: VerticalDivider(
-                                color: Colors.blueGrey,
-                                thickness: 1,
-                                width: 20,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                visitors.relation ?? "Not available",
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.blueGrey),
                               ),
-                            ),
-                            sizedBoxW5(context),
-                            Text(
-                              visitors.visitingDate ?? "Not available",
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.blueGrey),
-                            ),
-                          ]),
+                              sizedBoxW5(context),
+                              const Icon(
+                                Icons.circle,
+                                size: 6,
+                                color: Colors.blueGrey,
+                              ),
+                              sizedBoxW5(context),
+                              Expanded(
+                                child: Text(
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  visitors.visitingPurpose ?? "Not available",
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.blueGrey),
+                                ),
+                              ),
+                              //   sizedBoxW5(context),
+                              const SizedBox(
+                                height: 10,
+                                child: VerticalDivider(
+                                  color: Colors.blueGrey,
+                                  thickness: 1,
+                                  width: 20,
+                                ),
+                              ),
+                              sizedBoxW5(context),
+                              Text(
+                                visitors.visitingDate ?? "Not available",
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.blueGrey),
+                              ),
+                            ]),
+                      ),
                       sizedBoxH5(context)
                     ],
                   )),
@@ -267,14 +278,18 @@ class _VisitorsPageState extends State<VisitorsPage> {
       child: ListView.builder(
           itemCount: pastVisitorsList?.length ?? 0,
           itemBuilder: (context, index) {
-            final regularvisitors = pastVisitorsList![index];
+            final pastvisitors = pastVisitorsList![index];
             return GestureDetector(
               onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => VisitorsDetailsPage(
-                            visitorID: regularvisitors.visitorId.toString())));
+                              visitorID: pastvisitors.visitorId.toString(),
+                              societyId:
+                                  loginModel?.user?.societyId.toString() ?? "",
+                              flatId: loginModel?.user?.flatId.toString() ?? "",
+                            )));
               },
               child: Container(
                   margin:
@@ -288,8 +303,8 @@ class _VisitorsPageState extends State<VisitorsPage> {
                       foregroundImage: AssetImage("lib/assets/qr.jpg"),
                       radius: 30,
                     ),
-                    title: Text(regularvisitors.name ?? "Not Available"),
-                    subtitle: Text(regularvisitors.phone ?? "Not Available"),
+                    title: Text(pastvisitors.name ?? "Not Available"),
+                    subtitle: Text(pastvisitors.phone ?? "Not Available"),
                   )),
             );
           }),
