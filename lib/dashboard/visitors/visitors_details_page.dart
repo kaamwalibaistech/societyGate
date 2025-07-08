@@ -58,9 +58,10 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
         title: const Text(
           "Visitors",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         elevation: 10,
@@ -188,6 +189,7 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
                     title: Center(
@@ -206,21 +208,25 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
                   ),
                   const Divider(),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      _infoTile(
-                          "Relation", visitorsDetailModel?.data?.relation),
-                      _infoTile("Gender", visitorsDetailModel?.data?.gender),
+                      Expanded(
+                        child: _infoTile(
+                            "Relation", visitorsDetailModel?.data?.relation),
+                      ),
+                      Expanded(
+                          child: _infoTile(
+                              "Gender", visitorsDetailModel?.data?.gender)),
+                      Expanded(
+                        child: _infoTile("Invited At",
+                            visitorsDetailModel?.data?.visitingDate),
+                      ),
                     ],
                   ),
                   sizedBoxH15(context),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: _infoTile(
-                            "Date", visitorsDetailModel?.data?.visitingDate),
-                      ),
                       Expanded(
                         child: _infoTile("Purpose",
                             visitorsDetailModel?.data?.visitingPurpose),
@@ -305,14 +311,11 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
                               ],
                             ));
                   },
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.black,
-                  ),
+                  icon: const Icon(Icons.delete),
                   label: const Text("Delete"),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade200,
-                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
                   ),
                 ),
               ],
@@ -325,23 +328,19 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
 
   Widget _infoTile(String label, String? value) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          overflow: TextOverflow.ellipsis,
-          softWrap: true,
           label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-            color: Colors.grey,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 4),
         Text(
-          overflow: TextOverflow.ellipsis,
-          softWrap: true,
-          value ?? "N/A",
-          style: const TextStyle(fontSize: 16),
+          value ?? "—",
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.blueGrey,
+          ),
         ),
       ],
     );

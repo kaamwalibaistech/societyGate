@@ -6,8 +6,9 @@ class ApiConstant {
 
   // Visitors API Constants
   static const String visitorsbysocietyAndFlatId =
-      "getVisitorsbysocietyandflatid";
-  static const String visitorsbysocietyId = "getvisitorsbysocietyid";
+      "getVisitorsbysocietyandflatid"; // used to fetch visitors for membr, admin
+  static const String visitorsbysocietyId =
+      "getvisitorsbysocietyid"; //used to fetch visitors for watchmen
   static const String insertVisitor = "insertvisitor";
   static const String getVisitors = "getvisitor";
   static const String deleteVisitor = "deletevisitor";
