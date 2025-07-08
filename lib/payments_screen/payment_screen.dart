@@ -27,6 +27,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   late Razorpay _razorpay;
   String? paymentId;
   dynamic maintainenceIds;
+  dynamic date;
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {}
 
@@ -100,12 +101,12 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   UnPaidMaintainenceModel? unpaidData;
   List<String> selectedMaintainenceIds = [];
 
-  getUnpaidData() async {
-    final locaData = LocalStoragePref().getLoginModel();
-    unpaidData = await ApiRepository().getUnpaidMaintainence(
-        locaData?.user?.societyId.toString(),
-        locaData?.user?.userId.toString());
-  }
+  // getUnpaidData() async {
+
+  //   unpaidData = await ApiRepository().getUnpaidMaintainence(
+  //       locaData?.user?.societyId.toString(),
+  //       locaData?.user?.userId.toString());
+  // }
 
   LoginModel? locaData;
 
@@ -256,7 +257,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: const Text("Pay All",
+                                child: const Text("Pay ",
                                     style: TextStyle(fontSize: 16)),
                               ),
                             )
@@ -287,6 +288,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                   itemCount: state.unpaidData?.length ?? 0,
                   itemBuilder: (context, index) {
                     final unpaidList = state.unpaidData ?? [];
+                    date = state.unpaidData?[index].date;
 
                     return Card(
                       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -441,8 +443,23 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                   onTap: () async {
                                     EasyLoading.show(
                                         status: "Loading Invoice...");
-                                    getMaintainenceInvoice();
-                                    // EasyLoading.dismiss();
+                                    generateInvoicePdf(
+                                      // invoiceNumber: "INV-2025-0001",
+                                      customerName: locaData?.user?.uname ?? "",
+                                      contact: locaData?.user?.uphone ?? "",
+                                      email: locaData?.user?.uemail ?? "",
+                                      societyName:
+                                          locaData?.user?.societyName ?? "",
+                                      block: locaData?.user?.block ?? "",
+                                      flatNo: locaData?.user?.flatNumber ?? "",
+                                      paymentDate:
+                                          paidList[index].date.toString(),
+                                      paymentMode: "UPI",
+                                      paidAmount: paidList[index]
+                                          .totalAmount
+                                          .toString(),
+                                      fineType: paidList[index].type.toString(),
+                                    );
                                   },
                                   child: const Text(
                                     "Invoice",
