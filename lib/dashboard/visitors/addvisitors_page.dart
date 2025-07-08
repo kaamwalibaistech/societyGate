@@ -1,9 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
 import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:intl/intl.dart';
 
 import 'package:path_provider/path_provider.dart';
@@ -17,7 +20,8 @@ import 'network/add_visiters_api.dart';
 import 'visitors_bloc/visitors_bloc.dart';
 
 class AddVisitorsPage extends StatefulWidget {
-  const AddVisitorsPage({super.key});
+  final bool isEnteredThroughNavBar;
+  const AddVisitorsPage({super.key, required this.isEnteredThroughNavBar});
 
   @override
   State<AddVisitorsPage> createState() => _AddVisitorsPageState();
@@ -26,9 +30,13 @@ class AddVisitorsPage extends StatefulWidget {
 class _AddVisitorsPageState extends State<AddVisitorsPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController relationController = TextEditingController();
+  final TextEditingController purposeController = TextEditingController();
 
   late String flatId, societyId, requestBy;
-  late String name, phone, relation, gender, purpose, visitingDate;
+  late String gender, visitingDate;
   AddVisitoModel? _addVisitoModel;
   LoginModel? _loginModel;
   late String qrData;
@@ -52,8 +60,16 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
 
   addVisitors() async {
     try {
-      _addVisitoModel = await addVisitorApi(flatId, societyId, requestBy, name,
-          phone, relation, gender, purpose, visitingDate);
+      _addVisitoModel = await addVisitorApi(
+          flatId,
+          societyId,
+          requestBy,
+          nameController.text,
+          phoneController.text,
+          relationController.text,
+          gender,
+          purposeController.text,
+          visitingDate);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(_addVisitoModel?.message ?? "Failled"),
         backgroundColor: Colors.green,
@@ -69,6 +85,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
   }
 
   void qrCode(BuildContext context) {
+    EasyLoading.show();
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -110,12 +127,21 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () {
-                      context.read<VisitorsBloc>().add(GetVisitorsEvent(
-                          soceityId: societyId.toString(),
-                          flatId: flatId.toString()));
-
-                      Navigator.pop(context);
-                      Navigator.pop(context);
+                      if (widget.isEnteredThroughNavBar == true) {
+                        Navigator.pop(context);
+                        nameController.clear();
+                        phoneController.clear();
+                        relationController.clear();
+                        purposeController.clear();
+                        _dateController.clear();
+                      } else {
+                        context.read<VisitorsBloc>().add(GetVisitorsEvent(
+                            soceityId: societyId.toString(),
+                            flatId: flatId.toString()));
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      }
+                      EasyLoading.dismiss();
                     },
                     icon: const Icon(
                       Icons.done,
@@ -130,6 +156,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       shareQrImage(context, qrData);
+                      EasyLoading.dismiss();
                     },
                     icon: const Icon(
                       Icons.share,
@@ -148,6 +175,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
         ),
       ),
     );
+    EasyLoading.dismiss();
   }
 
   Future<void> shareQrImage(BuildContext context, String data) async {
@@ -211,71 +239,74 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.deepPurple.shade50,
       appBar: AppBar(
         title: const Text("Visitor Entry Form"),
-        backgroundColor: Colors.purple.shade100,
+        backgroundColor: Colors.deepPurpleAccent,
+        foregroundColor: Colors.white,
+        // elevation: 4,
+        centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                _buildTextField("Name", (val) => name = val!),
-                _buildTextField("Phone", (val) => phone = val!, isPhone: true),
-                _buildTextField("Relation", (val) => relation = val!),
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(labelText: "Gender"),
-                  items: ["male", "female", "other"].map((value) {
-                    return DropdownMenuItem(value: value, child: Text(value));
-                  }).toList(),
-                  onChanged: (val) => gender = val!,
-                ),
-                _buildTextField("Visiting Purpose", (val) => purpose = val!),
-                TextFormField(
-                  controller: _dateController,
-                  decoration: const InputDecoration(labelText: "Visiting Date"),
-                  readOnly: true,
-                  onTap: () async {
-                    DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2025),
-                      lastDate: DateTime(2026),
-                    );
-                    if (picked != null) {
-                      final now = DateTime.now();
-                      final today = DateTime(now.year, now.month, now.day);
-                      final selectedDate =
-                          DateTime(picked.year, picked.month, picked.day);
-
-                      if (selectedDate.isBefore(today)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                                "Please select today's date or a future date"),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                        return;
-                      }
-                      setState(() {
-                        visitingDate = DateFormat('yyyy-MM-dd').format(picked);
-                        _dateController.text = visitingDate;
-                      });
-                    }
-                  },
-                ),
+                sizedBoxH30(context),
+                _buildTextField(
+                    "Name", Icons.person, (val) => nameController.text = val!,
+                    isName: true, controller: nameController),
                 const SizedBox(height: 20),
-                ElevatedButton(
+                _buildTextField("Phone", Icons.phone_android,
+                    (val) => phoneController.text = val!,
+                    isPhone: true, controller: phoneController),
+                const SizedBox(height: 20),
+                _buildTextField("Relation", Icons.group,
+                    (val) => relationController.text = val!,
+                    controller: relationController),
+                const SizedBox(height: 20),
+                _buildDropdownField(),
+                const SizedBox(height: 20),
+                _buildTextField("Visiting Purpose", Icons.assignment,
+                    (val) => purposeController.text = val!,
+                    controller: purposeController),
+                const SizedBox(height: 20),
+                _buildDatePicker(),
+                const SizedBox(height: 30),
+                // Align(
+                //   alignment: Alignment.bottomRight,
+                //   child: Container(
+                //     height: 80,
+                //     width: 200,
+                //     decoration: BoxDecoration(
+                //         color: Colors.deepPurpleAccent,
+                //         borderRadius: BorderRadius.circular(10)),
+                //   ),
+                // ),
+                ElevatedButton.icon(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      addVisitors();
+                      addVisitors(); // your submission method
                     }
                   },
-                  child: const Text("Submit"),
+                  icon: const Icon(Icons.mail),
+                  label: const Text(
+                    "Invite",
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurpleAccent,
+                    foregroundColor: Colors.white,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                    // maximumSize: Size(300, 60),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    elevation: 6,
+                  ),
                 ),
               ],
             ),
@@ -285,12 +316,47 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
     );
   }
 
-  Widget _buildTextField(String label, Function(String?) onSaved,
-      {bool isPhone = false}) {
+  Widget _buildTextField(
+    String label,
+    IconData icon,
+    Function(String?) onSaved, {
+    bool isPhone = false,
+    bool isName = false,
+    required TextEditingController controller,
+  }) {
+    final FlutterNativeContactPicker _contactPicker =
+        FlutterNativeContactPicker();
+    // List<Contact>? _contacts;
+    // String? _selectedPhoneNumber;
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        counterText: "", // optional: hides character counter
+        prefixIcon: Icon(icon, color: Colors.deepPurpleAccent),
+        suffixIcon: isName
+            ? IconButton(
+                onPressed: () async {
+                  final contact = await _contactPicker.selectContact();
+                  String rawNumber = contact?.phoneNumbers?.first ?? "";
+                  String cleanedNumber =
+                      rawNumber.replaceAll(RegExp(r'\D'), '');
+                  if (cleanedNumber.startsWith('91') &&
+                      cleanedNumber.length > 10) {
+                    cleanedNumber = cleanedNumber.substring(2);
+                  }
+                  setState(() {
+                    nameController.text = contact?.fullName ?? "";
+                    phoneController.text = cleanedNumber;
+                  });
+
+                  log(contact?.selectedPhoneNumber ?? "00");
+                },
+                icon: const Icon(Icons.contacts_rounded,
+                    color: Colors.deepPurpleAccent))
+            : null,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        filled: true,
+        fillColor: Colors.white,
       ),
       validator: (value) {
         if (value == null || value.isEmpty) return 'Required';
@@ -300,6 +366,138 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
       onSaved: onSaved,
       keyboardType: isPhone ? TextInputType.number : TextInputType.text,
       maxLength: isPhone ? 10 : null,
+    );
+  }
+
+/*
+  void _selectContact() async {
+    log("Working");
+
+    // Navigator.push(
+    //     context, MaterialPageRoute(builder: (_) => SelectContactScreen()));
+    /* var status = await Permission.contacts.status;
+
+    if (status.isGranted) {
+      final FlutterNativeContactPicker _contactPicker =
+          FlutterNativeContactPicker();
+      List<Contact>? _contacts;
+      String? _selectedPhoneNumber;
+      Contact? contact = (await _contactPicker.selectPhoneNumber()) as Contact?;
+      setState(() {
+        _contacts = contact == null ? null : [contact];
+        _selectedPhoneNumber = null;
+      });
+      log(_contacts.toString());
+
+      /*  final contacts = await FlutterContacts.getContacts(withProperties: true);
+      if (contacts.isEmpty) {
+        log("No contacts found");
+        return;
+      } else {
+        final selected = contacts.first;
+        String rawNumber =
+            selected.phones.isNotEmpty ? selected.phones.first.number : "";
+        String cleanedNumber = rawNumber.replaceAll(RegExp(r'\D'), '');
+        if (cleanedNumber.startsWith('91') && cleanedNumber.length > 10) {
+          cleanedNumber = cleanedNumber.substring(2);
+        }
+        nameController.text = selected.displayName;
+        phoneController.text = cleanedNumber;
+
+        log("Name: ${nameController.text}, Phone: ${phoneController.text}");
+      }
+      */
+    } else if (status.isDenied) {
+      final granted = await Permission.contacts.request();
+      if (granted.isGranted) {
+        _selectContact(); // Retry after permission
+      } else {
+        log("Permission Denied by user");
+      }
+    } else if (status.isPermanentlyDenied) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Permission Required"),
+          content: const Text(
+              "Contact permission is permanently denied. Please enable it from settings."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                openAppSettings();
+                Navigator.pop(context);
+              },
+              child: const Text("Open Settings"),
+            ),
+          ],
+        ),
+      );
+    }*/
+  }
+*/
+  Widget _buildDropdownField() {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        labelText: "Gender",
+        prefixIcon: const Icon(Icons.wc, color: Colors.deepPurple),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        filled: true,
+        fillColor: Colors.white,
+      ),
+      items: ["Male", "Female", "Other"].map((value) {
+        return DropdownMenuItem(value: value, child: Text(value));
+      }).toList(),
+      onChanged: (val) => gender = val!,
+      validator: (value) =>
+          value == null || value.isEmpty ? 'Please select gender' : null,
+    );
+  }
+
+  Widget _buildDatePicker() {
+    return TextFormField(
+      controller: _dateController,
+      decoration: InputDecoration(
+        labelText: "Visiting Date",
+        prefixIcon:
+            const Icon(Icons.calendar_today, color: Colors.deepPurpleAccent),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        filled: true,
+        fillColor: Colors.white,
+      ),
+      readOnly: true,
+      onTap: () async {
+        DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2025),
+          lastDate: DateTime(2026),
+        );
+        if (picked != null) {
+          final now = DateTime.now();
+          final today = DateTime(now.year, now.month, now.day);
+          final selectedDate = DateTime(picked.year, picked.month, picked.day);
+
+          if (selectedDate.isBefore(today)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Please select today's date or a future date"),
+                backgroundColor: Colors.red,
+              ),
+            );
+            return;
+          }
+          setState(() {
+            visitingDate = DateFormat('yyyy-MM-dd').format(picked);
+            _dateController.text = visitingDate;
+          });
+        }
+      },
+      validator: (value) =>
+          value == null || value.isEmpty ? 'Please select a date' : null,
     );
   }
 }

@@ -299,10 +299,18 @@ class _BookAmenitiesState extends State<BookAmenities> {
                                           )),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          31, 174, 162, 162),
+                                      color: Colors.white54,
                                       borderRadius: BorderRadius.circular(16),
                                     ),
+                                    child: const Center(
+                                        child: Text(
+                                      " Already Booked! ",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color: Colors.green,
+                                          backgroundColor: Colors.white),
+                                    )),
                                   ),
                                 ))
                           ],

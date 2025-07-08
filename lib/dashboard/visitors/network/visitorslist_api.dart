@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../api/api_constant.dart';
@@ -31,6 +32,8 @@ Future<VisitorsListModel?> visitorsListApi(
   } catch (e, stacktrace) {
     log("visitorsListApi error: $e");
     log("Stacktrace: $stacktrace");
+    Fluttertoast.showToast(msg: e.toString());
+
     throw Exception("Failed to fetch visitors list");
   }
   return null;
@@ -57,6 +60,8 @@ Future<VisitorsListModel?> visitorsListForWatchmanApi(
   } catch (e, stacktrace) {
     log("visitorsListApi error: $e");
     log("Stacktrace: $stacktrace");
+    Fluttertoast.showToast(msg: e.toString());
+
     throw Exception("Failed to fetch visitors list");
   }
   return null;
@@ -99,6 +104,7 @@ Future<List<Map<String, dynamic>>?> enteredVisitorsListForWatchmanApi(
   } catch (e, stacktrace) {
     log("visitorsListApi error: $e");
     log("Stacktrace: $stacktrace");
+    Fluttertoast.showToast(msg: e.toString());
     throw Exception("Failed to fetch visitors list");
   }
   return mapData;

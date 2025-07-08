@@ -3,6 +3,8 @@ class ApiConstant {
   static const String adminRegister = "mygetapi.php";
   static const String loginApi = "login";
   static const String societyMembersList = "usersbysociety";
+
+  // Visitors API Constants
   static const String visitorsbysocietyAndFlatId =
       "getVisitorsbysocietyandflatid";
   static const String visitorsbysocietyId = "getvisitorsbysocietyid";
@@ -11,6 +13,8 @@ class ApiConstant {
   static const String deleteVisitor = "deletevisitor";
   static const String aproveVisitor = "approvevisitor";
   static const String editVisitor = "updatevisitor";
+
+  // Shop API Constants
   static const String shopList = "shopslist";
   static const String addShop = "shopsadd";
   static const String updateShop = "shopsupdate";
@@ -30,7 +34,5 @@ class ApiConstant {
   //Amenities API Constants
   static const String createOrderForAmenitiesAmenities = "create-order";
   static const String amenitiesBookbyUser = "amenities-book-by-user";
-
-  // Store AccId in database
-  static const String storeAccId = "add-razorpay-id";
+  static const String storeAccId = "add-razorpay-id"; // Store AccId in database
 }
