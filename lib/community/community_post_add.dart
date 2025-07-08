@@ -231,24 +231,24 @@ class _CreatePostState extends State<CreatePost> {
                                 ),
                               ),
                             ),
-                            // const SizedBox(width: 10),
-                            // Expanded(
-                            //   child: ElevatedButton.icon(
-                            //     onPressed: () => _pickImage(ImageSource.camera),
-                            //     icon: const Icon(
-                            //       Icons.camera_alt,
-                            //     ),
-                            //     label: const Text('Camera',
-                            //         style: TextStyle(color: Colors.black)),
-                            //     style: ElevatedButton.styleFrom(
-                            //       shape: RoundedRectangleBorder(
-                            //         borderRadius: BorderRadius.circular(10),
-                            //       ),
-                            //       padding:
-                            //           const EdgeInsets.symmetric(vertical: 14),
-                            //     ),
-                            //   ),
-                            // ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () => _pickImage(ImageSource.camera),
+                                icon: const Icon(
+                                  Icons.camera_alt,
+                                ),
+                                label: const Text('Camera',
+                                    style: TextStyle(color: Colors.black)),
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ],

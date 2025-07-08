@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/dashboard/members/member_watchman_detail_page.dart';
-import 'package:society_gate/models/announcements_model.dart';
 
 import '../../constents/local_storage.dart';
 import '../../models/login_model.dart';
@@ -100,106 +102,102 @@ class _MembersPageState extends State<MembersPage> {
         ),
         body: Column(
           children: [
-            SizedBox(
-              child: BlocBuilder<MembersBloc, MembersState>(
-                builder: (context, state) {
-                  if (state is MembersInitialState) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.purple.shade50,
-                      ),
-                    );
-                  } else if (state is MembersSuccessState) {
-                    String? adminPhoto = state
-                        .memberlistModel?.users?.admins?.first.profileImage;
-                    String adminName =
-                        state.memberlistModel?.users?.admins?.first.uname ??
-                            "NA";
-                    String adminEmail =
-                        state.memberlistModel?.users?.admins?.first.uemail ??
-                            "NA";
+            BlocBuilder<MembersBloc, MembersState>(
+              builder: (context, state) {
+                if (state is MembersInitialState) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.purple.shade50,
+                    ),
+                  );
+                } else if (state is MembersSuccessState) {
+                  String? adminPhoto =
+                      state.memberlistModel?.users?.admins?.first.profileImage;
+                  String adminName =
+                      state.memberlistModel?.users?.admins?.first.uname ?? "NA";
+                  String adminEmail =
+                      state.memberlistModel?.users?.admins?.first.uemail ??
+                          "NA";
 
-                    return GestureDetector(
-                      onTap: () => loginType == "admin"
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      MemberWatchmanDetailPage(
-                                          details: state.memberlistModel?.users
-                                              ?.admins?[0])))
-                          : null,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.blue.shade50),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: CachedNetworkImageProvider(
-                              adminPhoto ??
-                                  "https://ui-avatars.com/api/?background=edbdff&name=$adminName.",
-                            ),
+                  return GestureDetector(
+                    onTap: () => loginType == "admin"
+                        ? Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MemberWatchmanDetailPage(
+                                    details: state
+                                        .memberlistModel?.users?.admins?[0])))
+                        : null,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.blue.shade50),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: CachedNetworkImageProvider(
+                            adminPhoto ??
+                                "https://ui-avatars.com/api/?background=edbdff&name=$adminName.",
                           ),
-                          title: Text(
-                            adminName,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF1A1A1A),
-                            ),
+                        ),
+                        title: Text(
+                          adminName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF1A1A1A),
                           ),
-                          subtitle: FittedBox(
-                            child: Text(
-                              adminEmail,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ),
-                          trailing: const Text(
-                            "Society Admin",
+                        ),
+                        subtitle: FittedBox(
+                          child: Text(
+                            adminEmail,
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.blue,
+                              color: Colors.grey[600],
                             ),
                           ),
                         ),
+                        trailing: const Text(
+                          "Society Admin",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blue,
+                          ),
+                        ),
                       ),
-                    );
+                    ),
+                  );
 
-                    // getUi(state.memberlistModel);
-                  } else if (state is MembersErrorState) {
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.red.shade50,
-                      ),
-                      child: Center(
-                        child: Text(state.msg),
-                      ),
-                    );
-                  } else {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.red.shade50,
-                      ),
-                      child: const Center(
-                        child: Text("Something wrong!"),
-                      ),
-                    );
-                  }
-                },
-              ),
+                  // getUi(state.memberlistModel);
+                } else if (state is MembersErrorState) {
+                  return Container(
+                    padding: const EdgeInsets.all(8),
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.red.shade50,
+                    ),
+                    child: Center(
+                      child: Text(state.msg),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.red.shade50,
+                    ),
+                    child: const Center(
+                      child: Text("Something wrong!"),
+                    ),
+                  );
+                }
+              },
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
@@ -458,7 +456,7 @@ class _MembersPageState extends State<MembersPage> {
                                                 msg: "Member Approved");
                                             Navigator.pop(context, false);
                                           },
-                                          child: Text(
+                                          child: const Text(
                                             "Approve",
                                             style: TextStyle(
                                               color: Colors.green,
@@ -490,201 +488,198 @@ class _MembersPageState extends State<MembersPage> {
   }
 
   Widget getWatchmanWidget(BuildContext context, List<Watchmen>? watchmen) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      child: Scaffold(
-        floatingActionButton: loginType == "admin"
-            ? FloatingActionButton.extended(
-                backgroundColor: const Color(0xFF6B4EFF),
-                foregroundColor: Colors.white,
-                isExtended: true,
-                label: Text("Add Watchman"),
-                icon: Icon(Icons.person_add_alt_1, size: 25),
-                onPressed: () {
-                  modelBottomsheet();
-                })
-            : const SizedBox.shrink(),
-        body: Column(
+    return Scaffold(
+      floatingActionButton: loginType == "admin"
+          ? FloatingActionButton.extended(
+              backgroundColor: const Color(0xFF6B4EFF),
+              foregroundColor: Colors.white,
+              isExtended: true,
+              label: const Text("Add Watchman"),
+              icon: const Icon(Icons.person_add_alt_1, size: 25),
+              onPressed: () {
+                modelBottomsheet();
+              })
+          : const SizedBox.shrink(),
+      body: SafeArea(
+        child: Column(
           children: [
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: watchmen?.length ?? 0,
-                itemBuilder: (context, index) {
-                  Watchmen watchmenList = watchmen![index];
-                  return GestureDetector(
-                    onTap: () => loginType == "admin"
-                        ? Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MemberWatchmanDetailPage(
-                                    details: watchmenList)))
-                        : null,
-                    child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 8),
-                        height: 75,
-                        decoration: BoxDecoration(
-                            color: Colors.purple.shade50,
-                            borderRadius: BorderRadius.circular(12)),
-                        child: ListTile(
-                          trailing: loginType == "admin"
-                              ? GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                              content: Container(
-                                                padding: const EdgeInsets.only(
-                                                    top: 10),
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.2,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    const Text(
-                                                      "Are you sure you want to delete",
-                                                      style: TextStyle(
-                                                          fontSize: 20),
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        GestureDetector(
-                                                            onTap: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: const Text(
-                                                                "cancel")),
-                                                        const SizedBox(
-                                                          width: 15,
-                                                        ),
-                                                        GestureDetector(
-                                                            onTap: () async {
-                                                              final societyId =
-                                                                  loginModel
-                                                                      ?.user!
-                                                                      .societyId;
-                                                              ApiRepository
-                                                                  apiRepository =
-                                                                  ApiRepository();
+            Flexible(
+              child: ListView.builder(
+                  // scrollDirection: Axis.vertical,
+                  // physics: const AlwaysScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: watchmen?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    Watchmen watchmenList = watchmen![index];
+                    return GestureDetector(
+                      onTap: () => loginType == "admin"
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MemberWatchmanDetailPage(
+                                          details: watchmenList)))
+                          : null,
+                      child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 8),
+                          height: 75,
+                          decoration: BoxDecoration(
+                              color: Colors.purple.shade50,
+                              borderRadius: BorderRadius.circular(12)),
+                          child: ListTile(
+                            trailing: loginType == "admin"
+                                ? GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                                content: Container(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.2,
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      const Text(
+                                                        "Are you sure you want to delete",
+                                                        style: TextStyle(
+                                                            fontSize: 20),
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: const Text(
+                                                                  "cancel")),
+                                                          const SizedBox(
+                                                            width: 15,
+                                                          ),
+                                                          GestureDetector(
+                                                              onTap: () async {
+                                                                final societyId =
+                                                                    loginModel
+                                                                        ?.user!
+                                                                        .societyId;
+                                                                ApiRepository
+                                                                    apiRepository =
+                                                                    ApiRepository();
 
-                                                              // <<<<<<< anil
-                                                              //                                                     await apiRepository
-                                                              //                                                         .deleteWatchman(
-                                                              //                                                             watchmen[index]
-                                                              //                                                                 .userId
-                                                              //                                                                 .toString());
-                                                              //                                                     context
-                                                              //                                                         .read<MembersBloc>()
-                                                              //                                                         .add(GetMemberListEvent(
-                                                              //                                                             soceityId: societyId
-                                                              //                                                                 .toString()));
-                                                              //                                                     Navigator.pop(context);
-                                                              //                                                   },
-                                                              //                                                   child: const Text("Delete"))
-                                                              //                                             ],
-                                                              //                                           )
-                                                              //                                         ],
-                                                              //                                       ),
-                                                              //                                     ),
-                                                              //                                   ));
-                                                              //                         },
-                                                              //                         child: ListTile(
-                                                              //                           trailing: const Icon(
-                                                              //                             Icons.delete,
-                                                              //                             color: Colors.red,
-                                                              //                           ),
-                                                              //                           leading:
-                                                              //                               // ClipOval(
-                                                              //                               //   child: Image.network(
-                                                              //                               //     "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}.",
-                                                              //                               //     height: 50,
-                                                              //                               //     width: 50,
-                                                              //                               //   ),
-                                                              //                               // ),
-                                                              //                               const CircleAvatar(
-                                                              //                             foregroundImage:
-                                                              //                                 AssetImage("lib/assets/watchman.jpg"),
-                                                              //                             radius: 30,
-                                                              //                           ),
-                                                              //                           title: Text(watchmenList.uname ?? "No Name"),
-                                                              //                           subtitle:
-                                                              //                               Text(watchmenList.uphone ?? "Not Available"),
-                                                              // =======
-                                                              await apiRepository
-                                                                  .deleteWatchman(watchmen[
-                                                                          index]
-                                                                      .userId
-                                                                      .toString());
-                                                              context
-                                                                  .read<
-                                                                      MembersBloc>()
-                                                                  .add(GetMemberListEvent(
-                                                                      soceityId:
-                                                                          societyId
-                                                                              .toString()));
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: const Text(
-                                                                "Delete"))
-                                                      ],
-                                                    )
-                                                  ],
+                                                                // <<<<<<< anil
+                                                                //                                                     await apiRepository
+                                                                //                                                         .deleteWatchman(
+                                                                //                                                             watchmen[index]
+                                                                //                                                                 .userId
+                                                                //                                                                 .toString());
+                                                                //                                                     context
+                                                                //                                                         .read<MembersBloc>()
+                                                                //                                                         .add(GetMemberListEvent(
+                                                                //                                                             soceityId: societyId
+                                                                //                                                                 .toString()));
+                                                                //                                                     Navigator.pop(context);
+                                                                //                                                   },
+                                                                //                                                   child: const Text("Delete"))
+                                                                //                                             ],
+                                                                //                                           )
+                                                                //                                         ],
+                                                                //                                       ),
+                                                                //                                     ),
+                                                                //                                   ));
+                                                                //                         },
+                                                                //                         child: ListTile(
+                                                                //                           trailing: const Icon(
+                                                                //                             Icons.delete,
+                                                                //                             color: Colors.red,
+                                                                //                           ),
+                                                                //                           leading:
+                                                                //                               // ClipOval(
+                                                                //                               //   child: Image.network(
+                                                                //                               //     "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}.",
+                                                                //                               //     height: 50,
+                                                                //                               //     width: 50,
+                                                                //                               //   ),
+                                                                //                               // ),
+                                                                //                               const CircleAvatar(
+                                                                //                             foregroundImage:
+                                                                //                                 AssetImage("lib/assets/watchman.jpg"),
+                                                                //                             radius: 30,
+                                                                //                           ),
+                                                                //                           title: Text(watchmenList.uname ?? "No Name"),
+                                                                //                           subtitle:
+                                                                //                               Text(watchmenList.uphone ?? "Not Available"),
+                                                                // =======
+                                                                await apiRepository
+                                                                    .deleteWatchman(watchmen[
+                                                                            index]
+                                                                        .userId
+                                                                        .toString());
+                                                                context
+                                                                    .read<
+                                                                        MembersBloc>()
+                                                                    .add(GetMemberListEvent(
+                                                                        soceityId:
+                                                                            societyId.toString()));
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: const Text(
+                                                                  "Delete"))
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ));
-                                  },
-                                  child: const Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
-                          leading: CircleAvatar(
-                            radius: 35,
-                            backgroundImage: CachedNetworkImageProvider(
-                                watchmenList.profileImage ??
-                                    "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}."),
-                          ),
+                                              ));
+                                    },
+                                    child: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
+                            leading: CircleAvatar(
+                              radius: 35,
+                              backgroundImage: CachedNetworkImageProvider(
+                                  watchmenList.profileImage ??
+                                      "https://ui-avatars.com/api/?background=random&name=${watchmenList.uname}."),
+                            ),
 
-                          //                         const CircleAvatar(
-                          //                           foregroundImage:
-                          //                               AssetImage("lib/assets/watchman.jpg"),
-                          //                           radius: 30,
-                          // // >>>>>>> final
-                          //                         ),
-                          title: Text(watchmenList.uname ?? "No Name"),
-                          subtitle:
-                              Text(watchmenList.uphone ?? "Not Available"),
-                        )),
-                  );
-                }),
+                            //                         const CircleAvatar(
+                            //                           foregroundImage:
+                            //                               AssetImage("lib/assets/watchman.jpg"),
+                            //                           radius: 30,
+                            // // >>>>>>> final
+                            //                         ),
+                            title: Text(watchmenList.uname ?? "No Name"),
+                            subtitle:
+                                Text(watchmenList.uphone ?? "Not Available"),
+                          )),
+                    );
+                  }),
+            ),
           ],
         ),
       ),
     );
   }
 
-  void modelBottomsheet() {
-    final formKey = GlobalKey<FormState>();
-
-    // String? validateEmail(String? email) {
-    //   RegExp emailRegEx = RegExp(r'^[\w\.-]+@[\w-]+\.\w{2,3}(\.\w{2,3})?$');
-    //   final isEmailValid = emailRegEx.hasMatch(email ?? "");
-    //   if (!isEmailValid) return "Please enter a valid email";
-    //   return null;
-    // }
-
+  modelBottomsheet() {
+    XFile? pickedImage;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Very important
@@ -693,6 +688,60 @@ class _MembersPageState extends State<MembersPage> {
       ),
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
+          final formKey = GlobalKey<FormState>();
+
+          final ImagePicker picker = ImagePicker();
+
+          Future pickImage(BuildContext context) async {
+            showModalBottomSheet(
+              context: context,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              builder: (BuildContext context) {
+                return SafeArea(
+                  child: Wrap(
+                    children: [
+                      ListTile(
+                          leading:
+                              const Icon(Icons.camera_alt, color: Colors.blue),
+                          title: const Text('Take Photo'),
+                          onTap: () async {
+                            final photo = await picker.pickImage(
+                                source: ImageSource.camera, imageQuality: 70);
+                            if (photo != null) {
+                              setState(() {
+                                pickedImage = photo;
+                              });
+                            }
+                          }),
+                      ListTile(
+                        leading: const Icon(Icons.photo_library,
+                            color: Colors.green),
+                        title: const Text('Choose from Gallery'),
+                        onTap: () async {
+                          final galleryImage = await picker.pickImage(
+                              source: ImageSource.gallery, imageQuality: 70);
+                          if (galleryImage != null) {
+                            Navigator.of(context).pop();
+                            setState(() {
+                              pickedImage = galleryImage;
+                            });
+                          }
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.close, color: Colors.red),
+                        title: const Text('Cancel'),
+                        onTap: () => Navigator.of(context).pop(),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          }
+
           return DraggableScrollableSheet(
             expand: false,
             initialChildSize: 0.85,
@@ -712,6 +761,42 @@ class _MembersPageState extends State<MembersPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      buildLabel("Profile Photo"),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () => pickImage(context),
+                          child: pickedImage == null
+                              ? Container(
+                                  width: 120,
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.grey[200],
+                                  ),
+                                  child: const Icon(
+                                    Icons.add_a_photo,
+                                    size: 40,
+                                    color: Colors.grey,
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  radius: 60,
+                                  backgroundImage:
+                                      FileImage(File(pickedImage!.path)),
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () => pickImage(context),
+                        child: const Center(
+                          child: Text(
+                            "Upload Image",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
                       buildLabel("Name"),
                       buildTextField(nameController, "Enter name",
                           validator: (value) {
@@ -721,11 +806,8 @@ class _MembersPageState extends State<MembersPage> {
                         return null;
                       }),
                       buildLabel("Email"),
-                      buildTextField(
-                        emailController, "Enter email",
-                        keyboardType: TextInputType.emailAddress,
-                        // validator: validateEmail
-                      ),
+                      buildTextField(emailController, "Enter email",
+                          keyboardType: TextInputType.emailAddress),
                       buildLabel("Mobile No."),
                       buildTextField(
                         mobileNoController,
@@ -751,8 +833,10 @@ class _MembersPageState extends State<MembersPage> {
                           });
                         },
                         validator: (value) {
-                          if (value == null || value.length < 2) {
+                          if (value == null) {
                             return "Enter password";
+                          } else if (value.length < 6) {
+                            return "Password Should be 6 digits";
                           }
                           return null;
                         },
@@ -784,13 +868,21 @@ class _MembersPageState extends State<MembersPage> {
                               ApiRepository apiRepository = ApiRepository();
                               WatchManAddModel? watchmanData =
                                   await apiRepository.addWatchman(
-                                loginModel!.user!.societyId.toString(),
+                                loginModel?.user?.societyId.toString() ?? "",
                                 nameController.text,
                                 emailController.text,
                                 mobileNoController.text,
                                 passwordController.text,
+                                pickedImage?.path.toString() ?? "",
+
+                                // 👆 Send pickedImage.path to API if needed
                               );
                               if (watchmanData?.status == 200) {
+                                nameController.clear();
+                                emailController.clear();
+                                mobileNoController.clear();
+                                passwordController.clear();
+                                confirmPasswordController.clear();
                                 final societyId = loginModel?.user!.societyId;
                                 context.read<MembersBloc>().add(
                                     GetMemberListEvent(
@@ -798,13 +890,51 @@ class _MembersPageState extends State<MembersPage> {
                                 Fluttertoast.showToast(
                                     msg: watchmanData!.message.toString());
                                 Navigator.pop(context);
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: "Mobile number is already taken");
+                              } else if (watchmanData?.status == 400) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text("Something went wrong!"),
+                                    content: SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5.0),
+                                            child: Text((watchmanData!
+                                                        .message["uemail"] ??
+                                                    [""])
+                                                .join(", ")),
+                                          ),
+                                          Text(
+                                              (watchmanData.message["uphone"] ??
+                                                      [""])
+                                                  .join(", ")),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 5.0),
+                                            child: Text((watchmanData.message[
+                                                        "profile_image"] ??
+                                                    [""])
+                                                .join(", ")),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text("Close"),
+                                      ),
+                                    ],
+                                  ),
+                                );
                               }
                             } else {
                               Fluttertoast.showToast(
-                                  msg: "All fields are Manditory");
+                                  msg: "All fields are mandatory");
                             }
                           },
                           child: const Text("Add Watchman"),
@@ -818,7 +948,14 @@ class _MembersPageState extends State<MembersPage> {
           );
         },
       ),
-    );
+    ).whenComplete(() {
+      nameController.clear();
+      emailController.clear();
+      mobileNoController.clear();
+      passwordController.clear();
+      confirmPasswordController.clear();
+      pickedImage = null;
+    });
   }
 
   Widget buildLabel(String text) {
@@ -848,6 +985,7 @@ class _MembersPageState extends State<MembersPage> {
       keyboardType: keyboardType,
       validator: validator,
       decoration: InputDecoration(
+        errorStyle: const TextStyle(color: Colors.red),
         hintText: hint,
         filled: true,
         fillColor: Colors.white,
