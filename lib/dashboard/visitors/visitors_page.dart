@@ -210,63 +210,46 @@ class _VisitorsPageState extends State<VisitorsPage> {
                       color: Colors.purple.shade50,
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: 65,
-                        child: ListTile(
-                          leading: const CircleAvatar(
-                            foregroundImage: AssetImage("lib/assets/qr.jpg"),
-                            radius: 30,
-                          ),
-                          title: Text(visitors.name ?? "Not available"),
-                          subtitle: Text(visitors.phone ?? "Not available"),
+                      ListTile(
+                        leading: const CircleAvatar(
+                          foregroundImage: AssetImage("lib/assets/qr.jpg"),
+                          radius: 30,
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
+                        title: Text(visitors.name ?? "Not available"),
+                        trailing: Text(
+                          visitors.visitingDate ?? "Not available",
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.blueGrey),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(visitors.phone ?? "Not available"),
+                            Wrap(children: [
                               Text(
-                                visitors.relation ?? "Not available",
+                                "• ${visitors.relation ?? "Not available"}    ",
                                 style: const TextStyle(
                                     fontSize: 12, color: Colors.blueGrey),
                               ),
-                              sizedBoxW5(context),
-                              const Icon(
-                                Icons.circle,
-                                size: 6,
-                                color: Colors.blueGrey,
-                              ),
-                              sizedBoxW5(context),
-                              Expanded(
-                                child: Text(
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                  visitors.visitingPurpose ?? "Not available",
-                                  style: const TextStyle(
-                                      fontSize: 12, color: Colors.blueGrey),
-                                ),
+                              Text(
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                "• ${visitors.visitingPurpose ?? "Not available"}",
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.blueGrey),
                               ),
                               //   sizedBoxW5(context),
-                              const SizedBox(
-                                height: 10,
-                                child: VerticalDivider(
-                                  color: Colors.blueGrey,
-                                  thickness: 1,
-                                  width: 20,
-                                ),
-                              ),
-                              sizedBoxW5(context),
-                              Text(
-                                visitors.visitingDate ?? "Not available",
-                                style: const TextStyle(
-                                    fontSize: 12, color: Colors.blueGrey),
-                              ),
+
+                              // sizedBoxW5(context),
                             ]),
+                          ],
+                        ),
                       ),
-                      sizedBoxH5(context)
+
+                      // sizedBoxH5(context)
                     ],
                   )),
             );
