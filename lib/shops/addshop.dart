@@ -248,6 +248,7 @@ class _AddShopState extends State<AddShop> {
                 autofocus: true,
                 keyboardType:
                     isPhone ? TextInputType.phone : TextInputType.text,
+                maxLength: isPhone ? 10 : null,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return "This field cannot be empty!";

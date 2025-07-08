@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import '../../../api/api_constant.dart';
 import 'package:http/http.dart' as http;
 
@@ -34,6 +36,7 @@ Future<AddVisitoModel?> addVisitorApi(
       return AddVisitoModel.fromJson(data);
     }
   } catch (e) {
+    Fluttertoast.showToast(msg: e.toString());
     throw Exception(e);
   }
   return null;

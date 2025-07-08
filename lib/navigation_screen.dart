@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:society_gate/dashboard/visitors/addvisitors_page.dart';
 import 'package:society_gate/models/login_model.dart';
 
 import 'account_tab/account_screen.dart';
@@ -53,15 +54,20 @@ class _Navigationscreen extends State<Navigationscreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) async {
-        final shouldExit = await _onWillPop();
-
-        if (shouldExit) {
-          if (Platform.isAndroid) {
-            SystemNavigator.pop();
-          } else {
-            exit(0);
+      onPopInvokedWithResult: (didPop, result) async {
+        if (selectedIndex == 0) {
+          final shouldExit = await _onWillPop();
+          if (shouldExit) {
+            if (Platform.isAndroid) {
+              SystemNavigator.pop();
+            } else {
+              exit(0);
+            }
           }
+        } else {
+          setState(() {
+            selectedIndex = 0;
+          });
         }
       },
       child: Scaffold(
@@ -81,8 +87,10 @@ class _Navigationscreen extends State<Navigationscreen> {
               : selectedIndex == 1
                   ? Colors.green
                   : selectedIndex == 2
-                      ? Colors.blueAccent
-                      : Colors.black87,
+                      ? Colors.deepPurpleAccent
+                      : selectedIndex == 3
+                          ? Colors.blueAccent
+                          : Colors.black87,
           items: [
             const BottomNavigationBarItem(
               icon: Icon(
@@ -95,6 +103,15 @@ class _Navigationscreen extends State<Navigationscreen> {
               icon: Icon(Icons.shopping_bag_outlined),
               label: "Needs",
               activeIcon: Icon(Icons.shopping_bag_rounded),
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(
+                Icons.add_circle_rounded,
+                size: 50,
+                color: Colors.deepPurpleAccent,
+              ),
+              label: "Add Visitor",
+              activeIcon: Icon(Icons.add_circle, size: 50),
             ),
             const BottomNavigationBarItem(
               icon: Icon(Icons.message_outlined),
@@ -162,8 +179,10 @@ class _Navigationscreen extends State<Navigationscreen> {
       case 1:
         return const DailyneedsTab();
       case 2:
-        return const CommunityPage();
+        return const AddVisitorsPage(isEnteredThroughNavBar: true);
       case 3:
+        return const CommunityPage();
+      case 4:
         return loginType != "watchman"
             ? const AccountScreen()
             : const WatchmanProfilePage();

@@ -49,20 +49,25 @@ class _VisitorsPageState extends State<VisitorsPage> {
       length: 2, // Number of tabs
       child: Scaffold(
         floatingActionButton: loginModel?.user?.role != "watchman"
-            ? FloatingActionButton(
-                child: const Icon(Icons.add),
+            ? FloatingActionButton.extended(
+                icon: const Icon(Icons.person_add_alt_1),
+                backgroundColor: Colors.deepPurpleAccent,
+                foregroundColor: Colors.white,
+                label: const Text("Add Visitor"),
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const AddVisitorsPage()));
+                          builder: (context) => const AddVisitorsPage(
+                              isEnteredThroughNavBar: false)));
                 })
             : null,
         appBar: AppBar(
           backgroundColor: Colors.deepPurpleAccent,
+          foregroundColor: Colors.white,
           title: const Text(
             "Visitors",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           elevation: 10,
