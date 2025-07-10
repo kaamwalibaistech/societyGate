@@ -186,9 +186,10 @@ class _ScannerPageState extends State<ScannerPage> {
           failedDialog(data['message']);
         }
       }
+      // Navigator.pop(context);
     } catch (e) {
       Fluttertoast.showToast(msg: "Error occurred: $e");
-      Navigator.pop(context);
+      // Navigator.pop(context);
       controller?.resumeCamera();
       _dialogShown = false;
     }

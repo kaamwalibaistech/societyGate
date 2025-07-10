@@ -10,7 +10,7 @@ class ApiConstant {
   static const String visitorsbysocietyId =
       "getvisitorsbysocietyid"; //used to fetch visitors for watchmen
   static const String insertVisitor = "insertvisitor";
-  static const String getVisitors = "getvisitor";
+  static const String getVisitors = "getvisitordetails";
   static const String deleteVisitor = "deletevisitor";
   static const String aproveVisitor = "approvevisitor";
   static const String editVisitor = "updatevisitor";

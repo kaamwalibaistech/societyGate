@@ -7,7 +7,9 @@ import 'package:society_gate/dashboard/visitors/addvisitors_page.dart';
 import 'package:society_gate/models/login_model.dart';
 
 import 'account_tab/account_screen.dart';
-import 'account_tab/watchman_profile_page.dart';
+import 'watchman_tools/manual_visitors_form.dart';
+import 'watchman_tools/manual_visitors_screen.dart';
+import 'watchman_tools/watchman_profile_page.dart';
 import 'community/community_page.dart';
 import 'constents/local_storage.dart';
 import 'homepage_screen.dart';
@@ -87,7 +89,9 @@ class _Navigationscreen extends State<Navigationscreen> {
               : selectedIndex == 1
                   ? Colors.green
                   : selectedIndex == 2
-                      ? Colors.deepPurpleAccent
+                      ? loginType == "watchman"
+                          ? Color(0xFFFF9933)
+                          : Colors.deepPurpleAccent
                       : selectedIndex == 3
                           ? Colors.blueAccent
                           : Colors.black87,
@@ -104,11 +108,13 @@ class _Navigationscreen extends State<Navigationscreen> {
               label: "Needs",
               activeIcon: Icon(Icons.shopping_bag_rounded),
             ),
-            const BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: Icon(
                 Icons.add_circle_rounded,
                 size: 50,
-                color: Colors.deepPurpleAccent,
+                color: loginType == "watchman"
+                    ? Color(0xFFFF9933)
+                    : Colors.deepPurpleAccent,
               ),
               label: "Add Visitor",
               activeIcon: Icon(Icons.add_circle, size: 50),
@@ -179,7 +185,9 @@ class _Navigationscreen extends State<Navigationscreen> {
       case 1:
         return const DailyneedsTab();
       case 2:
-        return const AddVisitorsPage(isEnteredThroughNavBar: true);
+        return loginType != "watchman"
+            ? const AddVisitorsPage(isEnteredThroughNavBar: true)
+            : const ManualVisitorsScreen();
       case 3:
         return const CommunityPage();
       case 4:

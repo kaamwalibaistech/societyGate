@@ -48,134 +48,166 @@ class _ManualVisitorsScreenState extends State<ManualVisitorsScreen> {
         backgroundColor: Colors.amber,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ManualVisitorsForm()));
-              },
-              child: Container(
-                  margin: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 1, color: Colors.greenAccent),
-                      color: Colors.amber.shade50,
-                      boxShadow: [
-                        BoxShadow(
-                            offset: const Offset(0, 1),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            color: Colors.amber.shade100)
-                      ]),
-                  height: MediaQuery.of(context).size.height * 0.10,
-                  width: MediaQuery.of(context).size.width,
-                  child: const Center(child: Text("Add Manual Visitor"))),
-            ),
-            BlocBuilder<VisitorsBloc, VisitorsState>(
-              // buildWhen: (previous, current) {
-              //   return current is VisitorsSuccessState;
-              // },
-              builder: (context, state) {
-                if (state is VisitorsSuccessState) {
-                  return ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemCount: state.getManualvisitorsList?.length,
-                      shrinkWrap: true,
-                      itemBuilder: ((context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            color: Colors.amber,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    trailing: GestureDetector(
-                                        onTap: () async {
-                                          final loginModel = LocalStoragePref()
-                                              .getLoginModel();
+        child: Center(
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ManualVisitorsForm()));
+                },
+                child: Container(
+                    margin: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(width: 1, color: Colors.amber),
+                        color: Colors.amber.shade50,
+                        boxShadow: [
+                          BoxShadow(
+                              offset: const Offset(0, 2),
+                              spreadRadius: 3,
+                              blurRadius: 5,
+                              color: Colors.amber.shade100)
+                        ]),
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.add_box_rounded,
+                          color: Color(0xFFFF9933),
+                        ),
+                        sizedBoxW10(context),
+                        const Text(
+                          "Add Manual Visitor",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    )),
+              ),
+              BlocBuilder<VisitorsBloc, VisitorsState>(
+                // buildWhen: (previous, current) {
+                //   return current is VisitorsSuccessState;
+                // },
+                builder: (context, state) {
+                  if (state is VisitorsSuccessState) {
+                    return ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: state.getManualvisitorsList?.length,
+                        shrinkWrap: true,
+                        itemBuilder: ((context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              color: Colors.amber,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ListTile(
+                                      trailing: GestureDetector(
+                                          onTap: () async {
+                                            final loginModel =
+                                                LocalStoragePref()
+                                                    .getLoginModel();
 
-                                          ApiRepository apiRepository =
-                                              ApiRepository();
-                                          final data = await apiRepository
-                                              .manualAproveApi(
-                                                  state.getManualvisitorsList?[
-                                                              index]
-                                                              ["unique_code"]
-                                                          .toString() ??
-                                                      "",
-                                                  loginModel!.user!.userId
-                                                      .toString(),
-                                                  "exit");
-                                          BlocProvider.of<VisitorsBloc>(context)
-                                              .add(GetEnteredVisitorsEvent());
-                                        },
-                                        child: const Icon(Icons.exit_to_app)),
-                                    leading: const CircleAvatar(
-                                      foregroundImage:
-                                          AssetImage("lib/assets/qr.jpg"),
-                                      radius: 30,
+                                            ApiRepository apiRepository =
+                                                ApiRepository();
+                                            final data = await apiRepository
+                                                .manualAproveApi(
+                                                    state.getManualvisitorsList?[
+                                                                index]
+                                                                ["unique_code"]
+                                                            .toString() ??
+                                                        "",
+                                                    loginModel!.user!.userId
+                                                        .toString(),
+                                                    "exit");
+                                            BlocProvider.of<VisitorsBloc>(
+                                                    context)
+                                                .add(GetEnteredVisitorsEvent());
+                                          },
+                                          child: const Icon(Icons.exit_to_app)),
+                                      leading: const CircleAvatar(
+                                        foregroundImage:
+                                            AssetImage("lib/assets/qr.jpg"),
+                                        radius: 30,
+                                      ),
+                                      title: Text(
+                                          '${state.getManualvisitorsList?[index]["name"]}'),
+                                      subtitle: Text(
+                                          '${state.getManualvisitorsList?[index]["phone"]}'),
                                     ),
-                                    title: Text(
-                                        '${state.getManualvisitorsList?[index]["name"]}'),
-                                    subtitle: Text(
-                                        '${state.getManualvisitorsList?[index]["phone"]}'),
                                   ),
-                                ),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        '${state.getManualvisitorsList?[index]["relation"]}' ??
-                                            "Not available",
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.blueGrey),
-                                      ),
-                                      sizedBoxW5(context),
-                                      const SizedBox(
-                                        height: 10,
-                                        child: VerticalDivider(
-                                          color: Colors.blueGrey,
-                                          thickness: 1,
-                                          width: 20,
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '${state.getManualvisitorsList?[index]["relation"]}' ??
+                                              "Not available",
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.blueGrey),
                                         ),
-                                      ),
-                                      sizedBoxW5(context),
-                                      Text(
-                                        '${state.getManualvisitorsList?[index]["visiting_purpose"]}' ??
-                                            "Not available",
-                                        style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.blueGrey),
-                                      ),
-                                      //   sizedBoxW5(context),
+                                        sizedBoxW5(context),
+                                        const SizedBox(
+                                          height: 10,
+                                          child: VerticalDivider(
+                                            color: Colors.blueGrey,
+                                            thickness: 1,
+                                            width: 20,
+                                          ),
+                                        ),
+                                        sizedBoxW5(context),
+                                        Text(
+                                          '${state.getManualvisitorsList?[index]["visiting_purpose"]}' ??
+                                              "Not available",
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.blueGrey),
+                                        ),
+                                        //   sizedBoxW5(context),
 
-                                      sizedBoxW5(context),
-                                    ]),
-                                sizedBoxH5(context)
-                              ],
+                                        sizedBoxW5(context),
+                                      ]),
+                                  sizedBoxH5(context)
+                                ],
+                              ),
                             ),
+                          );
+                        }));
+                  }
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 100, bottom: 10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.asset(
+                            "lib/assets/empty.jpg",
+                            scale: 10,
                           ),
-                        );
-                      }));
-                }
-                return const Text("No visitors");
-              },
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 250.0),
-            //   child: Text(loginModel?.user?.uname.length.toString() ?? ""),
-            // )
-          ],
+                        ),
+                      ),
+                      const Text("No Visitor available!")
+                    ],
+                  );
+                },
+              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 250.0),
+              //   child: Text(loginModel?.user?.uname.length.toString() ?? ""),
+              // )
+            ],
+          ),
         ),
       ),
     );

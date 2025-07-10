@@ -294,7 +294,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
                   },
                   icon: const Icon(Icons.mail),
                   label: const Text(
-                    "Invite",
+                    "Invite Now",
                     style: TextStyle(fontSize: 25),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -491,7 +491,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
             return;
           }
           setState(() {
-            visitingDate = DateFormat('yyyy-MM-dd').format(picked);
+            visitingDate = DateFormat('dd-mm-yyyy').format(picked);
             _dateController.text = visitingDate;
           });
         }
