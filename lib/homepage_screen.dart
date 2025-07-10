@@ -29,7 +29,10 @@ class HomepageScreen extends StatefulWidget {
   State<HomepageScreen> createState() => _HomepageScreenState();
 }
 
-class _HomepageScreenState extends State<HomepageScreen> {
+class _HomepageScreenState extends State<HomepageScreen>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
+  late final AnimationController _controller;
+
   Announcementmodel? announcementmodel;
   LoginModel? loginModel;
   String? loginType;
@@ -40,7 +43,27 @@ class _HomepageScreenState extends State<HomepageScreen> {
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(vsync: this);
+    WidgetsBinding.instance.addObserver(this);
     getData();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  // Handle app lifecycle changes
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _controller.stop(); // Pause animation
+    } else if (state == AppLifecycleState.resumed) {
+      _controller.repeat(); // Resume animation
+    }
   }
 
   Future<void> getData() async {
@@ -930,6 +953,12 @@ Once acc is activated it should be hidden.
                           ),
                           child: Lottie.asset(
                             "lib/assets/lottie_json/scan.json",
+                            controller: _controller,
+                            onLoaded: (composition) {
+                              _controller
+                                ..duration = composition.duration
+                                ..repeat();
+                            },
                             fit: BoxFit.contain,
                           ),
                         ),

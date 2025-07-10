@@ -99,7 +99,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                                 context,
                                 state.visitorsListModel!.data?.upcomingVisitors
                                     ?.list)
-                            : const Center(child: Text("No visitors today!")),
+                            : _buildError(""),
                         // (state.visitorsListModel?.data?.regularVisitors?.list
                         //             ?.isNotEmpty ??
                         //         false)
@@ -115,7 +115,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                                 context,
                                 state.visitorsListModel?.data?.pastVisitors
                                     ?.list)
-                            : const Center(child: Text("No visitors!")),
+                            : _buildError(""),
                       ],
                     ),
                   )
@@ -145,8 +145,21 @@ class _VisitorsPageState extends State<VisitorsPage> {
                 ],
               );
             } else {
-              return const Text("data");
-              //CircularProgressIndicator();
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 100, bottom: 10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        "lib/assets/empty.jpg",
+                        scale: 10,
+                      ),
+                    ),
+                  ),
+                  const Text("No Visitor today!")
+                ],
+              );
             }
           },
         ),
@@ -171,11 +184,20 @@ class _VisitorsPageState extends State<VisitorsPage> {
   }
 
   Widget _buildError(String msg) {
-    return Center(
-      child: Text(
-        msg,
-        style: const TextStyle(color: Colors.red),
-      ),
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 100, bottom: 10),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              "lib/assets/empty.jpg",
+              scale: 10,
+            ),
+          ),
+        ),
+        Text("No Visitor today! \n $msg")
+      ],
     );
   }
 

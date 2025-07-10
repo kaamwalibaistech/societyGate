@@ -288,11 +288,12 @@ class _BookAmenitiesState extends State<BookAmenities> {
                                                       Navigator.pop(context),
                                                   child: const Text("Close")),
                                               TextButton(
-                                                  onPressed: () => Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              const UserAmenitiesPage())),
+                                                  onPressed: () =>
+                                                      Navigator.pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const UserAmenitiesPage())),
                                                   child: const Text(
                                                       "View Amenity"))
                                             ],
