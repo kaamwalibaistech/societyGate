@@ -70,15 +70,24 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
           gender,
           purposeController.text,
           visitingDate);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(_addVisitoModel?.message ?? "Failled"),
-        backgroundColor: Colors.green,
-      ));
-      setState(() {
-        qrData = _addVisitoModel?.uniqueCode ?? "Something Wrong!";
-      });
+      if (_addVisitoModel != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(_addVisitoModel?.message ?? "Failled"),
+          backgroundColor: Colors.green,
+        ));
+        setState(() {
+          qrData = _addVisitoModel?.uniqueCode ?? "Something Wrong!";
+        });
 
-      qrCode(context);
+        qrCode(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(_addVisitoModel?.message ?? "Something went wrong!"),
+          backgroundColor: Colors.red,
+          showCloseIcon: true,
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
     } catch (e) {
       throw Exception(e);
     }
@@ -369,76 +378,6 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
     );
   }
 
-/*
-  void _selectContact() async {
-    log("Working");
-
-    // Navigator.push(
-    //     context, MaterialPageRoute(builder: (_) => SelectContactScreen()));
-    /* var status = await Permission.contacts.status;
-
-    if (status.isGranted) {
-      final FlutterNativeContactPicker _contactPicker =
-          FlutterNativeContactPicker();
-      List<Contact>? _contacts;
-      String? _selectedPhoneNumber;
-      Contact? contact = (await _contactPicker.selectPhoneNumber()) as Contact?;
-      setState(() {
-        _contacts = contact == null ? null : [contact];
-        _selectedPhoneNumber = null;
-      });
-      log(_contacts.toString());
-
-      /*  final contacts = await FlutterContacts.getContacts(withProperties: true);
-      if (contacts.isEmpty) {
-        log("No contacts found");
-        return;
-      } else {
-        final selected = contacts.first;
-        String rawNumber =
-            selected.phones.isNotEmpty ? selected.phones.first.number : "";
-        String cleanedNumber = rawNumber.replaceAll(RegExp(r'\D'), '');
-        if (cleanedNumber.startsWith('91') && cleanedNumber.length > 10) {
-          cleanedNumber = cleanedNumber.substring(2);
-        }
-        nameController.text = selected.displayName;
-        phoneController.text = cleanedNumber;
-
-        log("Name: ${nameController.text}, Phone: ${phoneController.text}");
-      }
-      */
-    } else if (status.isDenied) {
-      final granted = await Permission.contacts.request();
-      if (granted.isGranted) {
-        _selectContact(); // Retry after permission
-      } else {
-        log("Permission Denied by user");
-      }
-    } else if (status.isPermanentlyDenied) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Permission Required"),
-          content: const Text(
-              "Contact permission is permanently denied. Please enable it from settings."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                openAppSettings();
-                Navigator.pop(context);
-              },
-              child: const Text("Open Settings"),
-            ),
-          ],
-        ),
-      );
-    }*/
-  }
-*/
   Widget _buildDropdownField() {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
@@ -491,7 +430,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
             return;
           }
           setState(() {
-            visitingDate = DateFormat('dd-mm-yyyy').format(picked);
+            visitingDate = DateFormat('dd-MM-yyyy').format(picked);
             _dateController.text = visitingDate;
           });
         }
