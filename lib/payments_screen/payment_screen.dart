@@ -42,7 +42,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
       maintainenceIds,
     );
     setState(() {
-      totalPayment = 0.0;
+      totalPayment = 0.00;
     });
     BlocProvider.of<PaymentsBloc>(context).add(PaymentsEvent(
         societyId: locaData?.user?.societyId.toString() ?? "",
@@ -58,7 +58,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   }
 
   void openCheckOut(String price) async {
-    final data = LocalStoragePref().getLoginModel();
+    EasyLoading.show(status: "Loading");
+
     var options = {
       'key': 'rzp_test_Kc0D3gsG5D09RJ',
       'order_id': createOrder?.orderId.toString() ?? "",
@@ -66,13 +67,18 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
       'name': 'Society Gate',
       'send_sms_hash': true,
       // 'description': ,
-      'prefill': {'contact': data?.user?.uphone, 'email': data?.user?.uemail}
+      'prefill': {
+        'contact': locaData?.user?.uphone,
+        'email': locaData?.user?.uemail
+      }
     };
     try {
       _razorpay.open(options);
       log("Opened");
+      EasyLoading.dismiss();
     } catch (e) {
       print('erroe $e');
+      EasyLoading.dismiss();
     }
   }
 
@@ -92,7 +98,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
 
   String? unpaidDataLength;
   String? paidDataLength;
-  double totalPayment = 0.0;
+  double totalPayment = 0.00;
   bool isChecked = false;
 
   late TabController _tabController;
@@ -111,14 +117,14 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   LoginModel? locaData;
 
   String getMaintainenceIds() {
-    String anil = "";
+    String dataa = "";
     for (String a in selectedMaintainenceIds) {
-      anil += "$a,";
+      dataa += "$a,";
     }
-    log("Before trimed:  $anil");
-    if (anil.isNotEmpty) {
-      log(anil.replaceRange(anil.length - 1, anil.length, ""));
-      return anil.replaceRange(anil.length - 1, anil.length, "");
+    log("Before trimed:  $dataa");
+    if (dataa.isNotEmpty) {
+      log(dataa.replaceRange(dataa.length - 1, dataa.length, ""));
+      return dataa.replaceRange(dataa.length - 1, dataa.length, "");
     } else {
       return "";
     }
@@ -141,7 +147,9 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   }
 
   void _onChange() {
-    if (_tabController.indexIsChanging) return;
+    if (_tabController.indexIsChanging) {
+      totalPayment = 0.00;
+    }
     if (_tabController.index == 0) {
       BlocProvider.of<PaymentsBloc>(context).add(PaymentsEvent(
           societyId: locaData?.user?.societyId.toString() ?? "",
@@ -186,7 +194,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (totalPayment > 0.0)
+                  if (totalPayment > 0.00)
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -196,7 +204,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Center(
-                        child: Text("Payment Selected for Rs. $totalPayment"),
+                        child: Text(
+                            "Payment Selected for Rs. ${totalPayment.toStringAsFixed(2)}"),
                       ),
                     ),
                   const SizedBox(height: 10),
@@ -237,6 +246,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                   final price = totalPayment;
                                   if (createOrder?.orderId != null) {
                                     openCheckOut(price.toString());
+
                                     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
                                         handlePaymentSuccessResponse);
                                     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -339,6 +341,7 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   String getTimeAgo(String? pubDate) {
+    log(pubDate.toString());
     // Parse the published date as UTC
     DateTime published = DateTime.parse(pubDate!).toUtc();
     // Get current date in UTC

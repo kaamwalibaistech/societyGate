@@ -73,9 +73,11 @@ class _AccountScreenState extends State<AccountScreen>
     final getFamilyMember = await apiRepository.getFamilyMembers(
         loginModel?.user?.flatId.toString(),
         loginModel?.user?.societyId.toString() ?? "");
-    setState(() {
-      getFamilyMemberData = getFamilyMember;
-    });
+    if (mounted) {
+      setState(() {
+        getFamilyMemberData = getFamilyMember;
+      });
+    }
   }
 
   getVehicleData() async {
@@ -83,9 +85,11 @@ class _AccountScreenState extends State<AccountScreen>
     // final data = LocalStoragePref.instance!.getLoginModel();
     var getVehicleData = await apiRepository
         .getVehicleDetails(loginModel!.user!.flatId.toString());
-    setState(() {
-      getVehicledetails = getVehicleData;
-    });
+    if (mounted) {
+      setState(() {
+        getVehicledetails = getVehicleData;
+      });
+    }
   }
 
   getDailyHelpmembers() async {
@@ -94,15 +98,15 @@ class _AccountScreenState extends State<AccountScreen>
     final getDailyHelpMember = await apiRepository.getDailyHelpMembers(
         loginModel!.user!.societyId.toString(),
         loginModel!.user!.flatId.toString());
-
-    setState(() {
-      getDailyHelpData = getDailyHelpMember;
-    });
+    if (mounted) {
+      setState(() {
+        getDailyHelpData = getDailyHelpMember;
+      });
+    }
   }
 
   @override
   void dispose() {
-    // 👇 Dispose all controllers here
     familyNameController.dispose();
     familyMobileNoController.dispose();
     familyEmailController.dispose();
@@ -1612,6 +1616,7 @@ class _AccountScreenState extends State<AccountScreen>
           // obscureText: obscureText,
           validator: validator,
           decoration: InputDecoration(
+            errorStyle: const TextStyle(color: Colors.red),
             // suffixIcon: isPassword
             //     ? GestureDetector(
             //         onTap: () {
