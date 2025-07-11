@@ -940,6 +940,9 @@ class _MembersPageState extends State<MembersPage> {
                           child: const Text("Add Watchman"),
                         ),
                       ),
+                      const SizedBox(
+                        height: 25,
+                      )
                     ],
                   ),
                 ),

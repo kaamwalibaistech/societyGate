@@ -223,12 +223,11 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                 );
               },
             );
+          } else {
+            const Center(child: CircularProgressIndicator());
           }
 
-          if (state is HomePageLoadingState) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return const Center(child: Text("Failed to load notices."));
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
