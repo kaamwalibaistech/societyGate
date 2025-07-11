@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../api/api_constant.dart';
@@ -34,6 +35,8 @@ Future<AddVisitoModel?> addVisitorApi(
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
       return AddVisitoModel.fromJson(data);
+    } else {
+      log(response.body);
     }
   } catch (e) {
     Fluttertoast.showToast(msg: e.toString());
@@ -45,16 +48,16 @@ Future<AddVisitoModel?> addVisitorApi(
 //model
 
 class AddVisitoModel {
-  int status;
-  String message;
-  String uniqueCode;
+  int? status;
+  String? message;
+  String? uniqueCode;
 
   AddVisitoModel(
       {required this.status, required this.message, required this.uniqueCode});
 
   factory AddVisitoModel.fromJson(Map<String, dynamic> json) {
     return AddVisitoModel(
-      status: json['status'] ?? "",
+      status: json['status'] ?? 0,
       message: json['message'] ?? "Error",
       uniqueCode: json['unique_code'] ?? "No code found",
     );

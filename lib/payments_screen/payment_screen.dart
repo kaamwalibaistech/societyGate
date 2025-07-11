@@ -34,7 +34,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   Future<void> handlePaymentSuccessResponse(
       PaymentSuccessResponse response) async {
     paymentId = response.paymentId ?? "N/A";
-    final status = await ApiRepository().updateMaintainenceStatus(
+    await ApiRepository().updateMaintainenceStatus(
       locaData?.user?.societyId.toString() ?? "",
       locaData?.user?.userId.toString() ?? "",
       locaData?.user?.flatId.toString() ?? "",
@@ -134,6 +134,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
 
   @override
   void initState() {
+    super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_onChange);
 
@@ -141,20 +142,18 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     BlocProvider.of<PaymentsBloc>(context).add(PaymentsEvent(
         societyId: locaData?.user?.societyId.toString() ?? "",
         userId: locaData?.user?.userId.toString() ?? ""));
-    super.initState();
+
     _razorpay = Razorpay();
     _paymentBloc = BlocProvider.of<PaymentsBloc>(context);
   }
 
   void _onChange() {
-    if (_tabController.indexIsChanging) {
-      totalPayment = 0.00;
-    }
     if (_tabController.index == 0) {
       BlocProvider.of<PaymentsBloc>(context).add(PaymentsEvent(
           societyId: locaData?.user?.societyId.toString() ?? "",
           userId: locaData?.user?.userId.toString() ?? ""));
     } else {
+      totalPayment = 0.00;
       BlocProvider.of<PaymentsBloc>(context).add(PaymentsEvent(
           societyId: locaData?.user?.societyId.toString() ?? "",
           userId: locaData?.user?.userId.toString() ?? ""));
@@ -166,14 +165,16 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text("Society Payments"),
-        backgroundColor: const Color(0xFF002366),
-        iconTheme: const IconThemeData(color: Colors.white),
-        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 18),
+        centerTitle: true,
+        // backgroundColor: const Color(0xFF002366),
+        // iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: const TextStyle(
+            fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: Colors.white,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white70,
+          indicatorColor: Colors.green,
+          labelColor: Colors.green,
+          unselectedLabelColor: Colors.grey,
           tabs: [
             Tab(text: "Unpaid (${unpaidDataLength ?? 0})"),
             Tab(text: "Paid(${paidDataLength ?? 0}) "),
@@ -194,9 +195,11 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (totalPayment > 0.00)
-                    Container(
+                  Visibility(
+                    visible: totalPayment > 0.00,
+                    child: Container(
                       width: double.infinity,
+                      margin: EdgeInsets.symmetric(horizontal: 10),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         color: Colors.green.shade50,
@@ -208,14 +211,15 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                             "Payment Selected for Rs. ${totalPayment.toStringAsFixed(2)}"),
                       ),
                     ),
+                  ),
                   const SizedBox(height: 10),
                   unpaidDataLength == null
                       ? const SizedBox.shrink()
                       : _tabController.index == 0
                           ? SizedBox(
-                              width: double.infinity,
-                              height: 45,
-                              child: ElevatedButton(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              height: 50,
+                              child: ElevatedButton.icon(
                                 onPressed: () async {
                                   maintainenceIds = getMaintainenceIds();
 
@@ -225,6 +229,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                         content: Text(
                                             "Please select at least one Payment."),
                                         backgroundColor: Colors.red,
+                                        behavior: SnackBarBehavior.floating,
+                                        showCloseIcon: true,
                                       ),
                                     );
                                     return;
@@ -267,7 +273,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
-                                child: const Text("Pay ",
+                                icon: Icon(Icons.payment_outlined),
+                                label: const Text("Pay ",
                                     style: TextStyle(fontSize: 16)),
                               ),
                             )
@@ -301,42 +308,56 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                     date = state.unpaidData?[index].date;
 
                     return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      elevation: 1,
+                      margin: EdgeInsets.symmetric(vertical: 8),
+                      elevation: 0,
+                      surfaceTintColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(5)),
                       child: ListTile(
-                        contentPadding: const EdgeInsets.all(12),
-                        leading: Checkbox(
-                          value: unpaidList[index].isChecked ?? false,
-                          onChanged: (value) {
-                            setState(() {
-                              unpaidList[index].isChecked = value ?? false;
+                        contentPadding: EdgeInsets.all(12),
+                        leading: CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.green.shade50,
+                          child: Checkbox(
+                            activeColor: Colors.green,
+                            splashRadius: 50,
+                            shape: CircleBorder(),
+                            side: BorderSide(
+                              color: Colors.green.shade300,
+                              width: 2,
+                            ),
+                            value: unpaidList[index].isChecked ?? false,
+                            onChanged: (value) {
+                              setState(() {
+                                unpaidList[index].isChecked = value ?? false;
 
-                              final a = unpaidList[index].totalAmount ?? 0.0;
-                              final double amount = (a is num)
-                                  ? a.toDouble()
-                                  : double.tryParse(a.toString()) ?? 0.0;
-                              if (value == true) {
-                                totalPayment += amount;
-                              } else {
-                                totalPayment -= amount;
-                              }
+                                final a = unpaidList[index].totalAmount ?? 0.0;
+                                final double amount = (a is num)
+                                    ? a.toDouble()
+                                    : double.tryParse(a.toString()) ?? 0.0;
+                                if (value == true) {
+                                  totalPayment += amount;
+                                } else {
+                                  totalPayment -= amount;
+                                }
 
-                              log("Total Payment: $totalPayment");
-                              if (value == true) {
-                                selectedMaintainenceIds
-                                    .add(unpaidList[index].id.toString());
-                              } else {
-                                selectedMaintainenceIds
-                                    .remove(unpaidList[index].id.toString());
-                              }
-                            });
-                          },
+                                log("Total Payment: $totalPayment");
+                                if (value == true) {
+                                  selectedMaintainenceIds
+                                      .add(unpaidList[index].id.toString());
+                                } else {
+                                  selectedMaintainenceIds
+                                      .remove(unpaidList[index].id.toString());
+                                }
+                              });
+                            },
+                          ),
                         ),
                         title: Text(
                           unpaidList[index].type.toString(),
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         subtitle: Text(
                           unpaidList[index].date.toString(),
@@ -361,13 +382,34 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                     );
                   },
                 )
-              : const Center(child: Text("No Unpaid Payments"));
+              : _buildError("No Unpaid Payments");
         } else if (state is PaymentsFailed) {
-          return const Center(child: Text("No Unpaid Payments"));
+          return _buildError(state.msg ?? "No Unpaid Payments");
         } else {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              child: CircularProgressIndicator(
+            color: Colors.green,
+          ));
         }
       },
+    );
+  }
+
+  Widget _buildError(String msg) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 100, bottom: 10),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              "lib/assets/empty.jpg",
+              scale: 10,
+            ),
+          ),
+        ),
+        Text("No Visitor today! \n $msg")
+      ],
     );
   }
 
@@ -395,9 +437,9 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                     final paidList = state.paidData ?? [];
                     return Card(
                       margin: const EdgeInsets.symmetric(vertical: 10),
-                      elevation: 4,
+                      elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       shadowColor: Colors.grey.withOpacity(0.3),
                       child: Padding(
@@ -489,21 +531,14 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                     );
                   },
                 )
-              : const Center(
-                  child: Text(
-                    "No Paid Payments",
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                );
+              : _buildError("No Paid Payments");
         } else if (state is PaymentsFailed) {
-          return const Center(
-            child: Text(
-              "Failed to load paid payments",
-              style: TextStyle(fontSize: 16, color: Colors.redAccent),
-            ),
-          );
+          return _buildError(state.msg ?? "Failed to load paid payments");
         } else {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              child: CircularProgressIndicator(
+            color: Colors.green,
+          ));
         }
       },
     );
