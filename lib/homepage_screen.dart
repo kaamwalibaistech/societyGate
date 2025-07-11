@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/bank/add_bank_form.dart';
 import 'package:society_gate/community/community_post_add.dart';
@@ -46,6 +47,7 @@ class _HomepageScreenState extends State<HomepageScreen>
     _controller = AnimationController(vsync: this);
     WidgetsBinding.instance.addObserver(this);
     getData();
+    checkForUpdates();
   }
 
   @override
@@ -53,6 +55,23 @@ class _HomepageScreenState extends State<HomepageScreen>
     WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();
+  }
+
+  void checkForUpdates() async {
+    try {
+      AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+
+      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        if (updateInfo.immediateUpdateAllowed) {
+          await InAppUpdate.performImmediateUpdate();
+        } else if (updateInfo.flexibleUpdateAllowed) {
+          await InAppUpdate.startFlexibleUpdate();
+          await InAppUpdate.completeFlexibleUpdate();
+        }
+      }
+    } catch (e) {
+      log("Error checking for updates: $e");
+    }
   }
 
   // Handle app lifecycle changes
@@ -388,7 +407,7 @@ Once acc is activated it should be hidden.
                 Visibility(
                   visible: _showAddBank(),
                   child: Card(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     elevation: 10,
                     color: Colors.white,
                     shadowColor: Colors.blue.shade100,
