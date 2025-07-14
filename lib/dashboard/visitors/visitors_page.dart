@@ -145,21 +145,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                 ],
               );
             } else {
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 100, bottom: 10),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        "lib/assets/empty.jpg",
-                        scale: 10,
-                      ),
-                    ),
-                  ),
-                  const Text("No Visitor today!")
-                ],
-              );
+              return _buildError("No Visitor today!");
             }
           },
         ),
@@ -187,7 +173,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 100, bottom: 10),
+          padding: const EdgeInsets.only(top: 100, bottom: 10),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.asset(
@@ -262,16 +248,11 @@ class _VisitorsPageState extends State<VisitorsPage> {
                                 "• ${visitors.visitingPurpose ?? "Not available"}",
                                 style: const TextStyle(
                                     fontSize: 12, color: Colors.blueGrey),
-                              ),
-                              //   sizedBoxW5(context),
-
-                              // sizedBoxW5(context),
-                            ]),
+                              )
+                            ])
                           ],
                         ),
-                      ),
-
-                      // sizedBoxH5(context)
+                      )
                     ],
                   )),
             );
@@ -307,7 +288,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                   height: 75,
                   decoration: BoxDecoration(
                       color: Colors.purple.shade50,
-                      borderRadius: BorderRadius.circular(20)),
+                      borderRadius: BorderRadius.circular(10)),
                   child: ListTile(
                     leading: const CircleAvatar(
                       foregroundImage: AssetImage("lib/assets/qr.jpg"),

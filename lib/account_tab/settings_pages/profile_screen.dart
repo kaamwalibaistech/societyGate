@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/auth/network/login_api.dart';
 import 'package:society_gate/constents/local_storage.dart';
-import 'package:society_gate/forget_password_screen.dart';
+import 'package:society_gate/auth/forget_password_screen.dart';
 import 'package:society_gate/models/login_model.dart';
 import 'package:society_gate/models/update_user_model.dart';
 
