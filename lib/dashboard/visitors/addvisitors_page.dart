@@ -430,7 +430,7 @@ class _AddVisitorsPageState extends State<AddVisitorsPage> {
             return;
           }
           setState(() {
-            visitingDate = DateFormat('dd-MM-yyyy').format(picked);
+            visitingDate = DateFormat('yyyy-MM-dd').format(picked);
             _dateController.text = visitingDate;
           });
         }

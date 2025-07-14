@@ -246,8 +246,7 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
           ),
           sizedBoxH15(context),
           Visibility(
-            visible: visitorsDetailModel?.data?.entryTime == null ||
-                visitorsDetailModel?.data?.exitTime == null,
+            visible: visitorsDetailModel?.data?.entryTime == null,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
