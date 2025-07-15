@@ -44,10 +44,10 @@ class _HomepageScreenState extends State<HomepageScreen>
   @override
   void initState() {
     super.initState();
+    checkForUpdate();
     _controller = AnimationController(vsync: this);
     WidgetsBinding.instance.addObserver(this);
     getData();
-    checkForUpdates();
   }
 
   @override
@@ -57,7 +57,7 @@ class _HomepageScreenState extends State<HomepageScreen>
     super.dispose();
   }
 
-  void checkForUpdates() async {
+  Future<void> checkForUpdate() async {
     try {
       AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
 
@@ -67,10 +67,12 @@ class _HomepageScreenState extends State<HomepageScreen>
         } else if (updateInfo.flexibleUpdateAllowed) {
           await InAppUpdate.startFlexibleUpdate();
           await InAppUpdate.completeFlexibleUpdate();
+        } else {
+          print("Update available, but no method allowed.");
         }
       }
     } catch (e) {
-      log("Error checking for updates: $e");
+      print("Error checking for update: $e");
     }
   }
 

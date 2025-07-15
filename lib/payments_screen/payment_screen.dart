@@ -8,11 +8,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/constents/local_storage.dart';
-import 'package:society_gate/payments_screen/maintainence_invoice.dart';
 import 'package:society_gate/models/login_model.dart';
 import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
 import 'package:society_gate/models/unpaid_maintainence_order_model.dart';
 import 'package:society_gate/payments_screen/bloc/payments_bloc.dart';
+import 'package:society_gate/payments_screen/maintainence_invoice.dart';
 
 class SocietyPaymentsScreen extends StatefulWidget {
   const SocietyPaymentsScreen({super.key});
@@ -199,7 +199,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                     visible: totalPayment > 0.00,
                     child: Container(
                       width: double.infinity,
-                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         color: Colors.green.shade50,
@@ -216,66 +216,72 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                   unpaidDataLength == null
                       ? const SizedBox.shrink()
                       : _tabController.index == 0
-                          ? SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.7,
-                              height: 50,
-                              child: ElevatedButton.icon(
-                                onPressed: () async {
-                                  maintainenceIds = getMaintainenceIds();
+                          ? Padding(
+                              padding: const EdgeInsets.only(bottom: 15.0),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                height: 50,
+                                child: ElevatedButton.icon(
+                                  onPressed: () async {
+                                    maintainenceIds = getMaintainenceIds();
 
-                                  if (totalPayment < 1.0) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                            "Please select at least one Payment."),
-                                        backgroundColor: Colors.red,
-                                        behavior: SnackBarBehavior.floating,
-                                        showCloseIcon: true,
-                                      ),
-                                    );
-                                    return;
-                                  }
+                                    if (totalPayment < 1.0) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              "Please select at least one Payment."),
+                                          backgroundColor: Colors.red,
+                                          behavior: SnackBarBehavior.floating,
+                                          showCloseIcon: true,
+                                        ),
+                                      );
+                                      return;
+                                    }
 
-                                  createOrder = await ApiRepository()
-                                      .unpaidMaintainenceOrder(
-                                          locaData?.user?.societyId
-                                                  .toString() ??
-                                              "",
-                                          locaData?.user?.userId.toString() ??
-                                              "",
-                                          // selectedMaintainenceIds,
-                                          maintainenceIds,
-                                          totalPayment.toString(),
-                                          locaData?.user?.flatId.toString() ??
-                                              "");
+                                    createOrder = await ApiRepository()
+                                        .unpaidMaintainenceOrder(
+                                            locaData?.user?.societyId
+                                                    .toString() ??
+                                                "",
+                                            locaData?.user?.userId.toString() ??
+                                                "",
+                                            // selectedMaintainenceIds,
+                                            maintainenceIds,
+                                            totalPayment.toString(),
+                                            locaData?.user?.flatId.toString() ??
+                                                "");
 
-                                  final price = totalPayment;
-                                  if (createOrder?.orderId != null) {
-                                    openCheckOut(price.toString());
+                                    final price = totalPayment;
+                                    if (createOrder?.orderId != null) {
+                                      openCheckOut(price.toString());
 
-                                    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-                                        handlePaymentSuccessResponse);
-                                    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
-                                        handlePaymentErrorResponse);
-                                    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET,
-                                        handleExternalWalletSelected);
-                                  } else {
-                                    Fluttertoast.showToast(
-                                        msg: "Something went Wrong");
-                                  }
+                                      _razorpay.on(
+                                          Razorpay.EVENT_PAYMENT_SUCCESS,
+                                          handlePaymentSuccessResponse);
+                                      _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR,
+                                          handlePaymentErrorResponse);
+                                      _razorpay.on(
+                                          Razorpay.EVENT_EXTERNAL_WALLET,
+                                          handleExternalWalletSelected);
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: "Something went Wrong");
+                                    }
 
-                                  // Add payment logic for selected
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                                    // Add payment logic for selected
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
                                   ),
+                                  icon: const Icon(Icons.payment_outlined),
+                                  label: const Text("Pay ",
+                                      style: TextStyle(fontSize: 16)),
                                 ),
-                                icon: Icon(Icons.payment_outlined),
-                                label: const Text("Pay ",
-                                    style: TextStyle(fontSize: 16)),
                               ),
                             )
                           : const SizedBox.shrink()
@@ -308,20 +314,20 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                     date = state.unpaidData?[index].date;
 
                     return Card(
-                      margin: EdgeInsets.symmetric(vertical: 8),
+                      margin: const EdgeInsets.symmetric(vertical: 8),
                       elevation: 0,
                       surfaceTintColor: Colors.white,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5)),
                       child: ListTile(
-                        contentPadding: EdgeInsets.all(12),
+                        contentPadding: const EdgeInsets.all(12),
                         leading: CircleAvatar(
                           radius: 25,
                           backgroundColor: Colors.green.shade50,
                           child: Checkbox(
                             activeColor: Colors.green,
                             splashRadius: 50,
-                            shape: CircleBorder(),
+                            shape: const CircleBorder(),
                             side: BorderSide(
                               color: Colors.green.shade300,
                               width: 2,
@@ -399,7 +405,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 100, bottom: 10),
+          padding: const EdgeInsets.only(top: 100, bottom: 10),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.asset(

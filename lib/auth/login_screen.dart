@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/amenities/amenities_add.dart';
@@ -183,26 +184,31 @@ class _CreateNewAccountState extends State<LoginScreen> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) async {
         if (state is LoginSuccessState) {
+          EasyLoading.dismiss();
           // context.read<LoginBloc>().add(
           //         AmenitiesChecker(),
           //       );
           if (state.isAmenitiesAvailable == true) {
+            EasyLoading.dismiss();
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const Navigationscreen()),
             );
           } else {
+            EasyLoading.dismiss();
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const AmenitiesAdd()),
             );
           }
         } else if (state is LoginNotApproveState) {
+          EasyLoading.dismiss();
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const ApprovalPendingPage()),
           );
         } else if (state is LoginErrorState) {
+          EasyLoading.dismiss();
           Fluttertoast.showToast(
             msg: state.errMsg,
             backgroundColor: Colors.red,
@@ -278,6 +284,7 @@ class _CreateNewAccountState extends State<LoginScreen> {
                   keyboardType: TextInputType.number,
                   controller: _mobileNoController,
                   decoration: InputDecoration(
+                    errorStyle: const TextStyle(color: Colors.red),
                     counterText: "",
                     fillColor: Colors.white,
                     filled: true,
@@ -304,10 +311,17 @@ class _CreateNewAccountState extends State<LoginScreen> {
               ),
               SizedBox(
                 child: TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter Password";
+                    }
+                    return null;
+                  },
                   keyboardType: TextInputType.visiblePassword,
                   controller: _passwordController,
                   obscureText: !isPasswordHidden,
                   decoration: InputDecoration(
+                    errorStyle: const TextStyle(color: Colors.red),
                     filled: true,
                     suffixIcon: GestureDetector(
                       onTap: () {
@@ -369,6 +383,7 @@ class _CreateNewAccountState extends State<LoginScreen> {
               GestureDetector(
                 onTap: () async {
                   if (_formKey.currentState!.validate()) {
+                    EasyLoading.show();
                     context.read<LoginBloc>().add(
                           LoginButtonEvent(_mobileNoController.text,
                               _passwordController.text),
