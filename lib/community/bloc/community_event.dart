@@ -4,9 +4,10 @@ sealed class CommunityEvent extends Equatable {}
 
 final class CommunityPostEvent extends CommunityEvent {
   final String page;
-  CommunityPostEvent({required this.page});
+  final String limit;
+  CommunityPostEvent({required this.page, required this.limit});
   @override
-  List<Object?> get props => [page];
+  List<Object?> get props => [page, limit];
 }
 
 final class CommunityCommentEvent extends CommunityEvent {

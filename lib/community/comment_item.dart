@@ -9,12 +9,14 @@ import 'bloc/community_bloc.dart';
 class CommentItem extends StatelessWidget {
   final Comment comments;
   final int memberId;
+  final String limit;
   final String postId;
   final bool isoutSide;
   const CommentItem(
       {super.key,
       required this.comments,
       required this.memberId,
+      required this.limit,
       required this.postId,
       required this.isoutSide});
 
@@ -23,7 +25,7 @@ class CommentItem extends StatelessWidget {
     return PopScope(
       onPopInvokedWithResult: (didPop, result) =>
           BlocProvider.of<CommunityBloc>(context)
-              .add(CommunityPostEvent(page: '1')),
+              .add(CommunityPostEvent(page: '1', limit: limit)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -96,7 +98,7 @@ class CommentItem extends StatelessWidget {
                     // EasyLoading.showToast(msg);
                     if (isoutSide == true) {
                       BlocProvider.of<CommunityBloc>(context)
-                          .add(CommunityPostEvent(page: '1'));
+                          .add(CommunityPostEvent(page: '1', limit: limit));
                     } else {
                       BlocProvider.of<CommentsBloc>(context).add(
                           CommunityCommentEvent(page: '1', postId: postId));

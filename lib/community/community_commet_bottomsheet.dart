@@ -11,8 +11,13 @@ import 'network/community_apis.dart';
 class CommunityCommetBottomsheet extends StatefulWidget {
   final List<Comment> finalComments; //useless
   final String postId;
-  const CommunityCommetBottomsheet(
-      {super.key, required this.finalComments, required this.postId});
+  final String limit;
+  const CommunityCommetBottomsheet({
+    super.key,
+    required this.finalComments,
+    required this.postId,
+    required this.limit,
+  });
 
   @override
   State<CommunityCommetBottomsheet> createState() =>
@@ -67,6 +72,7 @@ class _CommunityCommetBottomsheetState
                               itemBuilder: (context, index) => CommentItem(
                                 comments: commentList[index],
                                 memberId: loginModel?.user?.userId ?? 0,
+                                limit: widget.limit.toString(),
                                 postId: widget.postId,
                                 isoutSide: false,
                               ),
