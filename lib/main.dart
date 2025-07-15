@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp> {
                 ? const Navigationscreen()
                 : const AmenitiesAdd()
             : const RegisterScreen(),
-        // builder: EasyLoading.init(),
+        builder: EasyLoading.init(),
         // routes: {
         //   '/homepage': (context) => const HomepageScreen(),
         // },
