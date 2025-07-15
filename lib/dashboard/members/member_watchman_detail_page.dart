@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:society_gate/constents/sizedbox.dart';
+import 'package:society_gate/dashboard/members/add_fine_page.dart';
 import 'package:society_gate/models/login_model.dart';
+
 import '../../constents/local_storage.dart';
 
 class MemberWatchmanDetailPage extends StatefulWidget {
@@ -77,7 +79,11 @@ class _MemberWatchmanDetailPageState extends State<MemberWatchmanDetailPage> {
                     if (isAdmin)
                       ElevatedButton.icon(
                         onPressed: () {
-                          // Add Fine Action
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      AddFinePage(details: widget.details)));
                         },
                         icon: const Icon(Icons.warning_amber_rounded),
                         label: const Text("Add Fine"),

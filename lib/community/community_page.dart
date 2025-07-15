@@ -21,8 +21,9 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  // final ScrollController _scrollController = ScrollController();
-  int page = 1;
+  final ScrollController _scrollController = ScrollController();
+  String page = "1";
+  int limit = 1;
   bool isLoading = false;
   String defaultImg =
       "https://ui-avatars.com/api/?background=random&name=User+Names.";
@@ -30,23 +31,28 @@ class _CommunityPageState extends State<CommunityPage> {
   void initState() {
     super.initState();
     BlocProvider.of<CommunityBloc>(context)
-        .add(CommunityPostEvent(page: page.toString()));
-    // _scrollController.addListener(pageCount);
+        .add(CommunityPostEvent(page: page, limit: limit.toString()));
+    _scrollController.addListener(pageCount);
   }
 
-  // pageCount() async {
-  //   if (isLoading) return;
+  pageCount() async {
+    if (isLoading) return;
 
-  //   if (_scrollController.position.pixels ==
-  //       _scrollController.position.) {
-  //     isLoading = true;
-  //     page++;
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      setState(() {
+        isLoading = true;
+        limit = limit + 10;
+      });
+      log(limit.toString());
 
-  //     BlocProvider.of<CommunityBloc>(context)
-  //         .add(CommunityPostEvent(page: page.toString()));
-  //     isLoading = false;
-  //   }
-  // }
+      BlocProvider.of<CommunityBloc>(context)
+          .add(CommunityPostEvent(page: page, limit: limit.toString()));
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +62,7 @@ class _CommunityPageState extends State<CommunityPage> {
         return const CommunityLoading();
       } else if (state is CommunityPostSuccess) {
         return ListView.builder(
-            // controller: _scrollController,
+            controller: _scrollController,
             itemCount: state.communityModel?.data?.length ?? 0,
             itemBuilder: (context, index) {
               final post = state.communityModel?.data?[index];
@@ -137,9 +143,8 @@ class _CommunityPageState extends State<CommunityPage> {
                           String msg =
                               await deletePost(post?.id.toString() ?? "");
                           EasyLoading.showToast(msg);
-                          context
-                              .read<CommunityBloc>()
-                              .add(CommunityPostEvent(page: '1'));
+                          context.read<CommunityBloc>().add(CommunityPostEvent(
+                              page: page, limit: limit.toString()));
                         } else if (value == 2) {
                           EasyLoading.showToast("Working on it");
                         }
@@ -241,8 +246,10 @@ class _CommunityPageState extends State<CommunityPage> {
                                   ),
                                   builder: (context) =>
                                       CommunityCommetBottomsheet(
-                                          finalComments: finalComments,
-                                          postId: post.id.toString()),
+                                    finalComments: finalComments,
+                                    postId: post.id.toString(),
+                                    limit: limit.toString(),
+                                  ),
                                 ),
                                 icon: const Icon(
                                   Icons.chat,
@@ -277,8 +284,10 @@ class _CommunityPageState extends State<CommunityPage> {
                                   ),
                                   builder: (context) =>
                                       CommunityCommetBottomsheet(
-                                          finalComments: finalComments,
-                                          postId: post.id.toString()),
+                                    finalComments: finalComments,
+                                    postId: post.id.toString(),
+                                    limit: limit.toString(),
+                                  ),
                                 ),
                                 child: Container(
                                     decoration: BoxDecoration(
@@ -292,6 +301,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                         CommentItem(
                                           comments: finalComments[0],
                                           memberId: state.memberId,
+                                          limit: limit.toString(),
                                           postId: post.id.toString(),
                                           isoutSide: true,
                                         ),
@@ -327,7 +337,7 @@ class _CommunityPageState extends State<CommunityPage> {
                         sizedBoxH10(context),
                       ],
                     ),
-                  )
+                  ),
                 ],
               );
             });
