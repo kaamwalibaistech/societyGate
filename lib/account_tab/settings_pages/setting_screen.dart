@@ -4,6 +4,7 @@ import 'package:society_gate/account_tab/settings_pages/help_support.dart';
 import 'package:society_gate/account_tab/settings_pages/profile_screen.dart';
 import 'package:society_gate/account_tab/settings_pages/terms_condition.dart';
 import 'package:society_gate/amenities/amenities_add.dart';
+import 'package:society_gate/amenities/edit_amenities.dart';
 import 'package:society_gate/auth/register_screen.dart';
 import 'package:society_gate/bank/add_bank_form.dart';
 import 'package:society_gate/bank/bank_api.dart';
@@ -127,9 +128,28 @@ class _SettingScreenState extends State<SettingScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const AmenitiesAdd(),
+                                  builder: (context) => EditAmenities(),
                                 ),
                               );
+                              /*   bool isAmenityAdded =
+                                  LocalStoragePref().getAmenitiesBool() ??
+                                      false;
+                              if (isAmenityAdded == false) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AmenitiesAdd(),
+                                  ),
+                                );
+                              } else {
+                                 Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditAmenities(),
+                                ),
+                              );
+                              }
+                             */
                             },
                             loginType: loginType,
                           )

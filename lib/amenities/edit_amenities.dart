@@ -1,7 +1,6 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-import '../constents/sizedbox.dart';
+import 'package:society_gate/amenities/amenities_images.dart';
 
 class EditAmenities extends StatefulWidget {
   const EditAmenities({super.key});
@@ -11,86 +10,28 @@ class EditAmenities extends StatefulWidget {
 }
 
 class _EditAmenitiesState extends State<EditAmenities> {
-  int total = 0;
-  final List<Map<String, dynamic>> amenities = [
-    {
-      'name': 'Swimming Pool',
-      'price': 500,
-      'image': "lib/assets/swimming-pool.png",
-    },
-    {
-      'name': 'Garden',
-      'price': 300,
-      'image': "lib/assets/garden.png",
-    },
-    {
-      'name': 'Parking',
-      'price': 200,
-      'image': "lib/assets/parking.png",
-    },
-    {
-      'name': 'Gym',
-      'price': 400,
-      'image': "lib/assets/gym.png",
-    },
-    {
-      'name': 'Playground',
-      'price': 250,
-      'image': "lib/assets/playground.png",
-    },
-    {
-      'name': 'Club House',
-      'price': 600,
-      'image': "lib/assets/club.png",
-    },
-    {
-      'name': 'Spa',
-      'price': 450,
-      'image': "lib/assets/spa.png",
-    },
-    {
-      'name': 'Building Wi-Fi',
-      'price': 150,
-      'image': "lib/assets/wifi.png",
-    },
-    {
-      'name': 'Rooftop Garden',
-      'price': 350,
-      'image': "lib/assets/roof-top.png",
-    },
-  ];
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _durationController = TextEditingController();
+  bool _isExpanded = false;
 
-  final Set<String> selectedAmenities = {};
+  void _toggleCard() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-        ),
-        title: const Text(
-          "Choose Amenities",
-          style: TextStyle(fontSize: 25, color: Colors.white),
-        ),
-        backgroundColor: Colors.pink,
-        elevation: 0,
-        actions: [
-          Text(
-            "₹ ${total.toString()}",
-            style: const TextStyle(fontSize: 25, color: Colors.white),
-          ),
-          sizedBoxW10(context)
-        ],
+        title: const Text("Choose Amenities"),
+        backgroundColor: Colors.pink.shade400,
+        foregroundColor: Colors.white,
+        centerTitle: true,
       ),
       body: Container(
-        margin: const EdgeInsets.only(bottom: 50),
+        padding: const EdgeInsets.all(15),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -101,134 +42,100 @@ class _EditAmenitiesState extends State<EditAmenities> {
             end: Alignment.bottomRight,
           ),
         ),
-        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Book Amenities",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
+            SizedBox(
+              width: double.maxFinite,
+              child: Card(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  elevation: 10,
+                  color: Colors.white,
+                  shadowColor: Colors.black38,
+                  child: DottedBorder(
+                    // borderPadding: const EdgeInsets.all(12),
+                    color: Colors.red.shade300,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  onPressed: () {
-                    // final selected = selectedAmenities.toList();
-                    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    //   content: Text("Selected: ${selected.join(', ')}"),
-                    // ));
-                    Fluttertoast.showToast(msg: "Working on This");
-                  },
-                  child: const Text("Pay for Amenities"),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 1,
-                children: amenities.map((amenity) {
-                  final isSelected =
-                      selectedAmenities.contains(amenity['name']);
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isSelected) {
-                          selectedAmenities.remove(amenity['name']);
-                        } else {
-                          selectedAmenities.add(amenity['name']);
-                        }
-                        total = total +
-                            (isSelected
-                                ? -amenity['price']
-                                : amenity['price']) as int;
-                      });
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? Colors.white
-                            : Colors.white.withAlpha(100),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: isSelected ? Colors.white : Colors.white60,
-                          width: isSelected ? 2 : 1,
+                        horizontal: 12, vertical: 20),
+                    strokeWidth: 2,
+                    dashPattern: const [5, 3],
+                    borderType: BorderType.RRect,
+                    radius: const Radius.circular(12),
+                    child: const Center(
+                      child: Column(children: [
+                        Icon(Icons.add_box_outlined,
+                            size: 36, color: Colors.red),
+                        SizedBox(height: 12),
+                        Text(
+                          "Click here to add more amenities!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
                         ),
-                        boxShadow: isSelected
-                            ? [
-                                const BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 6,
-                                  offset: Offset(2, 2),
-                                )
-                              ]
-                            : [],
+                      ]),
+                    ),
+                  )),
+            ),
+            GestureDetector(
+              onTap: _toggleCard,
+              child: Card(
+                elevation: 1,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    ListTile(
+                      contentPadding: const EdgeInsets.all(10),
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          getAmenityImage("gym"),
+                          width: 60,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                            radius: 40,
-                            child: Image.asset(
-                              amenity['image'],
-                              height: 60,
-                              // width: 60,
-                              // fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            amenity['name'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: isSelected
-                                  ? Colors.deepOrange
-                                  : Colors.black54,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          RichText(
-                              text: TextSpan(
-                                  text: "₹${amenity['price']}",
-                                  style: TextStyle(
-                                      color: isSelected
-                                          ? Colors.deepOrange
-                                          : Colors.pinkAccent,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                  children: [
-                                TextSpan(
-                                  text: " /month",
-                                  style: TextStyle(
-                                      color: isSelected
-                                          ? Colors.deepOrange
-                                          : Colors.pinkAccent,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ])),
-                        ],
+                      title: Text(
+                        " widget.amenityName",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      trailing: Icon(
+                        _isExpanded
+                            ? Icons.keyboard_arrow_up_rounded
+                            : Icons.keyboard_arrow_down_rounded,
                       ),
                     ),
-                  );
-                }).toList(),
+                    if (_isExpanded)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton.icon(
+                              onPressed: () {
+                                // Handle edit
+                              },
+                              icon: const Icon(Icons.edit, color: Colors.blue),
+                              label: const Text("Edit",
+                                  style: TextStyle(color: Colors.blue)),
+                            ),
+                            const SizedBox(width: 10),
+                            TextButton.icon(
+                              onPressed: showDeleteConfirmation,
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              label: const Text("Delete",
+                                  style: TextStyle(color: Colors.red)),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -236,4 +143,88 @@ class _EditAmenitiesState extends State<EditAmenities> {
       ),
     );
   }
+
+  void showDeleteConfirmation() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete Amenity"),
+        content: const Text("Are you sure you want to delete this amenity?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              // Delete logic here
+              Navigator.pop(context);
+            },
+            child: const Text("Delete"),
+          ),
+        ],
+      ),
+    );
+  }
 }
+/*
+
+ // // Maintenance
+    public function unpaidMaintenance(Request $request)
+    {
+        $request->validate([
+            'society_id' => 'required|integer|exists:societies,society_id',
+            'user_id' => 'required|integer|exists:users,user_id'
+        ], [
+            'society_id.exists' => 'The selected society does not exist.',
+            'user_id.exists' => 'The selected user does not exist.',
+            'society_id.required' => 'Society ID is required.',
+            'user_id.required' => 'User ID is required.'
+        ]);
+
+        // $dues = Maintenance::where('society_id', $request->society_id)
+        //     ->where('user_id', $request->user_id)
+        //     ->get();
+
+        // $fine = Fine::where('society_id', $request->society_id)
+        //     ->where('user_id', $request->user_id)
+        //     ->get();
+
+        // if ($dues->isEmpty()) {
+        //     return response()->json([
+        //         'status' => 404,
+        //         'message' => 'No unpaid dues found for this user in the specified society.',
+        //         'data' => []
+        //     ], 404);
+        // }
+        // return response()->json(['status' => 200, 'message' => 'Unpaid dues fetched successfully', 'maintenance' => $dues, 'fine' => $fine], 200);
+
+        $maintenance = Maintenance::where('society_id', $request->society_id)
+            ->where('user_id', $request->user_id)
+            ->get();
+
+        $fine = Fine::where('society_id', $request->society_id)
+            ->where('user_id', $request->user_id)
+            ->get();
+
+        if ($maintenance->isEmpty() && $fine->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No dues or fines found for this user in the specified society.',
+                'data' => []
+            ], 404);
+        }
+
+        $data = [
+            'society_id' => $request->society_id,
+            'user_id' => $request->user_id,
+            'maintenance' => $maintenance,
+            'fines' => $fine,
+        ];
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Unpaid dues fetched successfully',
+            'data' => [$data]
+        ]);
+    }*/
