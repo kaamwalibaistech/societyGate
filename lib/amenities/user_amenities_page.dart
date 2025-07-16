@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:society_gate/amenities/myamenity_details.dart';
 import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/constents/date_format.dart';
 import 'package:society_gate/constents/local_storage.dart';
 import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 
@@ -107,7 +108,7 @@ class _UserAmenitiesPageState extends State<UserAmenitiesPage> {
                                       ),
                                       const SizedBox(height: 6),
                                       Text(
-                                        "• End at:  ${getUserPurchaseAmenitiesData!.data?[index].endTime ?? "".toString()} ",
+                                        "• End at:  ${formatDate(getUserPurchaseAmenitiesData!.data?[index].endTime ?? "".toString())} ",
                                         style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.red.shade300),

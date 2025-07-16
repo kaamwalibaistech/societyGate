@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:society_gate/constents/date_format.dart';
 import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 
 import 'amenities_images.dart';
@@ -13,12 +14,6 @@ class MyAmenityDetails extends StatefulWidget {
 }
 
 class _MyAmenityDetailsState extends State<MyAmenityDetails> {
-  String formatDate(String? dateStr) {
-    if (dateStr == null) return '';
-    final date = DateTime.tryParse(dateStr);
-    return date != null ? DateFormat('dd MMM yyyy – hh:mm a').format(date) : '';
-  }
-
   @override
   Widget build(BuildContext context) {
     final data = widget.data;

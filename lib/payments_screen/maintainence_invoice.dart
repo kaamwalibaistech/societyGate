@@ -2,6 +2,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:society_gate/constents/date_format.dart';
 
 Future<void> generateInvoicePdf({
   // required String invoiceNumber,
@@ -45,7 +46,7 @@ Future<void> generateInvoicePdf({
                           style: pw.TextStyle(
                               fontSize: 22, fontWeight: pw.FontWeight.bold)),
                       // pw.Text('Invoice No: $invoiceNumber'),
-                      pw.Text('Date: $paymentDate'),
+                      pw.Text('Date: ${formatDate(paymentDate)}'),
                     ],
                   ),
                 ],

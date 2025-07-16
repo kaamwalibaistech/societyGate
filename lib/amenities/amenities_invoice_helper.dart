@@ -3,6 +3,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
+import 'package:society_gate/constents/date_format.dart';
 import 'package:society_gate/models/amenities_buy_done.dart';
 import 'package:society_gate/models/amenities_ceate_order.dart';
 import 'package:society_gate/models/login_model.dart';
@@ -113,8 +114,8 @@ Future<void> generateAndDownloadInvoice(
               bookings.indexOf(e) + 1,
               e.amenityName ?? '',
               e.duration ?? '',
-              e.startTime ?? '',
-              e.endTime ?? '',
+              formatDate(e.startTime ?? ''),
+              formatDate(e.endTime ?? ''),
               (e.amount ?? ''),
             ];
           }).toList(),

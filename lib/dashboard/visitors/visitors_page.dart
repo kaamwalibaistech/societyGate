@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:society_gate/constents/date_format.dart';
 
 import '../../constents/local_storage.dart';
 import '../../constents/sizedbox.dart';
@@ -228,7 +229,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                         ),
                         title: Text(visitors.name ?? "Not available"),
                         trailing: Text(
-                          visitors.visitingDate ?? "Not available",
+                          formatDate(visitors.visitingDate ?? "Not available"),
                           style: const TextStyle(
                               fontSize: 12, color: Colors.blueGrey),
                         ),

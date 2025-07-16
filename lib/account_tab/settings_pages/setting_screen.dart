@@ -142,12 +142,11 @@ class _SettingScreenState extends State<SettingScreen> {
                                 "Update amenities lists, prices and more!",
                             onTap: () async {
                               EasyLoading.show(status: "Loading bank details!");
-                              final data = await getAnnouncement(
-                                  loginModel?.user!.societyId.toString() ?? "");
-
-                              if (data!.accId == "" ||
-                                  data.accId == null ||
-                                  data.accId!.isEmpty) {
+                              // final data = await getAnnouncement(
+                              //     loginModel?.user!.societyId.toString() ?? "");
+                              String accId =
+                                  LocalStoragePref().getAccId() ?? "";
+                              if (accId == "" || accId.isEmpty) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -159,7 +158,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               } else {
                                 bool isPending;
                                 RazorpayAccountModel? razorpayAccountModel =
-                                    await getRouteAccount(data!.accId!);
+                                    await getRouteAccount(accId);
 
                                 if (razorpayAccountModel?.status !=
                                     "activated") {

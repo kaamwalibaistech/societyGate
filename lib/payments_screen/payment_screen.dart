@@ -7,7 +7,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/constents/date_format.dart';
 import 'package:society_gate/constents/local_storage.dart';
+import 'package:society_gate/constents/sizedbox.dart';
 import 'package:society_gate/models/login_model.dart';
 import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
 import 'package:society_gate/models/unpaid_maintainence_order_model.dart';
@@ -27,7 +29,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   late Razorpay _razorpay;
   String? paymentId;
   dynamic maintainenceIds;
-  dynamic date;
+  // dynamic date;
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {}
 
@@ -284,7 +286,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                 ),
                               ),
                             )
-                          : const SizedBox.shrink()
+                          : const SizedBox.shrink(),
+                  sizedBoxH10(context)
                 ],
               ),
             )
@@ -311,7 +314,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                   itemCount: state.unpaidData?.length ?? 0,
                   itemBuilder: (context, index) {
                     final unpaidList = state.unpaidData ?? [];
-                    date = state.unpaidData?[index].date;
+                    final date = formatDate(state.unpaidData?[index].date);
 
                     return Card(
                       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -365,9 +368,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        subtitle: Text(
-                          unpaidList[index].date.toString(),
-                        ),
+                        subtitle: Text("Due date: $date"),
                         trailing: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -476,7 +477,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                   ),
                                   const SizedBox(height: 6),
                                   Text(
-                                    paidList[index].date ?? "",
+                                    formatDate(paidList[index].date ?? ""),
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey[600],

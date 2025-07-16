@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:society_gate/constents/date_format.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 import 'package:society_gate/dashboard/members/add_fine_page.dart';
 import 'package:society_gate/models/login_model.dart';
@@ -157,7 +158,7 @@ class _MemberWatchmanDetailPageState extends State<MemberWatchmanDetailPage> {
                   leading: const Icon(Icons.calendar_month_rounded,
                       color: Colors.pink),
                   title: const Text("Joined On"),
-                  subtitle: Text(member.createdAt ?? "N/A"),
+                  subtitle: Text(formatDate(member.createdAt ?? "N/A")),
                 ),
               ),
             ],
