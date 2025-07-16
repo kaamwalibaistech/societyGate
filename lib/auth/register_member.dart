@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../api/api_repository.dart';
 import '../constents/sizedbox.dart';
@@ -326,6 +326,7 @@ class _RegisterMemberState extends State<RegisterMember> {
                       height: MediaQuery.of(context).size.height * 0.06,
                       child: GestureDetector(
                         onTap: () async {
+                          EasyLoading.show();
                           if (_formKey.currentState!.validate()) {
                             ApiRepository apiRepository = ApiRepository();
                             MemberRegisterModel? memberRegisterData =
@@ -339,20 +340,146 @@ class _RegisterMemberState extends State<RegisterMember> {
                                     floorNoNoController.text);
                             // All validations passed
                             if (memberRegisterData?.status == 200) {
-                              Fluttertoast.showToast(
-                                  timeInSecForIosWeb: 2,
-                                  msg: memberRegisterData?.message?.success
-                                          .toString() ??
-                                      "");
-
-                              Navigator.pop(context);
+                              EasyLoading.dismiss();
+                              // SUCCESS DIALOG
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    title: const Column(
+                                      children: [
+                                        Icon(Icons.check_circle_outline,
+                                            color: Colors.green, size: 60),
+                                        SizedBox(height: 10),
+                                        Text(
+                                          "Success!",
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    content: Text(
+                                      memberRegisterData?.message?.success
+                                              ?.toString() ??
+                                          "Registration completed successfully.",
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          fontSize: 16, color: Colors.black87),
+                                    ),
+                                    actionsAlignment: MainAxisAlignment.center,
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(
+                                              context); // Close dialog
+                                          Navigator.pop(
+                                              context); // Pop the registration screen
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 24, vertical: 12),
+                                        ),
+                                        child: const Text("OK",
+                                            style: TextStyle(fontSize: 16)),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             } else {
-                              Fluttertoast.showToast(
-                                  timeInSecForIosWeb: 2,
-                                  msg:
-                                      "${memberRegisterData?.message?.sregistration_no} "
-                                      "${memberRegisterData?.message?.uemail}"
-                                      "${memberRegisterData?.message?.uphone}");
+                              EasyLoading.dismiss();
+                              // FAILURE DIALOG
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    title: const Column(
+                                      children: [
+                                        Icon(Icons.error_outline,
+                                            color: Colors.red, size: 60),
+                                        SizedBox(height: 10),
+                                        Text(
+                                          "Registration Failed",
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (memberRegisterData
+                                                ?.message?.sregistration_no !=
+                                            null)
+                                          _infoRow(
+                                              "Registration No",
+                                              memberRegisterData?.message
+                                                      ?.sregistration_no
+                                                      .toString() ??
+                                                  ""),
+                                        if (memberRegisterData
+                                                ?.message?.uemail !=
+                                            null)
+                                          _infoRow(
+                                              "Email",
+                                              memberRegisterData
+                                                      ?.message?.uemail
+                                                      .toString() ??
+                                                  ""),
+                                        if (memberRegisterData
+                                                ?.message?.uphone !=
+                                            null)
+                                          _infoRow(
+                                              "Phone",
+                                              memberRegisterData
+                                                      ?.message?.uphone
+                                                      .toString() ??
+                                                  ""),
+                                      ],
+                                    ),
+                                    actionsAlignment: MainAxisAlignment.center,
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 24, vertical: 12),
+                                        ),
+                                        child: const Text("Retry",
+                                            style: TextStyle(fontSize: 16)),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             }
                           }
                         },
@@ -377,6 +504,32 @@ class _RegisterMemberState extends State<RegisterMember> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _infoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "$label: ",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                color: Colors.black54,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

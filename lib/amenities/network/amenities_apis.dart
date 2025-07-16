@@ -29,12 +29,12 @@ Future<CreateOrderForAmenities?> createOrderForAmenitiesAmenities(
       return CreateOrderForAmenities.fromJson(data);
       // return data[0];
     } else {
-      log("error");
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return CreateOrderForAmenities.fromJson(data);
     }
   } catch (e) {
     throw Exception(e.toString());
   }
-  return null;
 }
 
 Future<BuyAmenitiesDone?> buyAmenities(

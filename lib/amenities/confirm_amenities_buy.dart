@@ -1,21 +1,18 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:society_gate/amenities/amenities_images.dart';
 import 'package:society_gate/amenities/amenities_payment_success.dart';
-import 'package:society_gate/amenities/bloc/amenities_bloc.dart';
 import 'package:society_gate/amenities/network/amenities_apis.dart';
 import 'package:society_gate/amenities/user_amenities_page.dart';
 import 'package:society_gate/constents/local_storage.dart';
-import 'package:society_gate/homepage_screen.dart';
 import 'package:society_gate/models/amenities_buy_done.dart';
-import 'package:society_gate/models/login_model.dart';
 import 'package:society_gate/models/amenities_ceate_order.dart';
+import 'package:society_gate/models/login_model.dart';
 
 import 'amenities_purchase_failled.dart';
 
@@ -43,7 +40,7 @@ class _ConfirmAmenitiesBuyState extends State<ConfirmAmenitiesBuy> {
   _getData() {
     String amenitiesId = "";
     for (var a in widget.selectedAmenitiesList) {
-      amenitiesId = amenitiesId + "${a['amenity_id']}" + ",";
+      amenitiesId = "$amenitiesId${a['amenity_id']},";
     }
     // setState(() {
     loginModel = LocalStoragePref().getLoginModel();
@@ -199,11 +196,74 @@ class _ConfirmAmenitiesBuyState extends State<ConfirmAmenitiesBuy> {
             Fluttertoast.showToast(msg: e.toString());
           }
         } else {
-          Fluttertoast.showToast(msg: "Something went wrong! try again.");
+          Fluttertoast.showToast(
+              msg: createOrderForAmenitiesModel?.message.toString() ??
+                  "Something went wrong! try again.");
         }
       } else {
-        Fluttertoast.showToast(msg: "Something went wrong! try again.");
+        showDialog(
+          context: (context),
+          builder: (BuildContext context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Icon at top
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.redAccent,
+                      size: 60,
+                    ),
+                    const SizedBox(height: 16),
+                    // Title
+                    const Text(
+                      "Payment Unavailable",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Description
+                    const Text(
+                      "Your society's bank account is not registered yet.\n\nPlease contact your society admin to complete the setup and try again.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                    const SizedBox(height: 20),
+                    // Button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close dialog
+                        },
+                        child: const Text(
+                          "OK",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
       }
+
       EasyLoading.dismiss();
     } catch (e) {
       EasyLoading.dismiss();
