@@ -95,8 +95,8 @@ class ApiRepository {
         final Map<String, dynamic> data = jsonDecode(response.body);
         return data;
       } else {
-        log("Request failed with status: ${response.statusCode}");
-        log("Body: ${response.body}");
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return data;
       }
     } catch (e) {
       log("Error: $e");
