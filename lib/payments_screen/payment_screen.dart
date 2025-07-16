@@ -415,7 +415,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
             ),
           ),
         ),
-        Text("No Visitor today! \n $msg")
+        Text("No Payments history! \n $msg")
       ],
     );
   }

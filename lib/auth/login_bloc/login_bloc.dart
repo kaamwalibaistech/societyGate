@@ -47,10 +47,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           }
         }
 
-        final ss = LocalStoragePref().getLoginModel();
-        String dd = ss?.user?.societyName ?? "NAAAA";
-        log(" Local : $dd");
-        log(" Model : ${_loginModel?.user?.societyName}");
+        // final ss = LocalStoragePref().getLoginModel();
+        // String dd = ss?.user?.societyName ?? "NAAAA";
+        // log(" Local : $dd");
+        // log(" Model : ${_loginModel?.user?.societyName}");
         if (loginData?.status == 200 && loginData?.user?.role == "admin") {
           approveStatus = await ApiRepository()
               .getExistingAmenitiesData(_loginModel!.user!.societyId);
