@@ -103,6 +103,7 @@ class _HomepageScreenState extends State<HomepageScreen>
       if (announcementmodel?.accId != null &&
           announcementmodel!.accId!.isNotEmpty) {
         LocalStoragePref().setBankAddedBool(true);
+        LocalStoragePref().setAccId(announcementmodel?.accId ?? "");
       } else {
         LocalStoragePref().setBankAddedBool(false);
       }

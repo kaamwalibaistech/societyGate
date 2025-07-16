@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:society_gate/constents/date_format.dart';
 import 'package:society_gate/dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 
 import '../../constents/local_storage.dart';
@@ -218,8 +219,10 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
                           child: _infoTile(
                               "Gender", visitorsDetailModel?.data?.gender)),
                       Expanded(
-                        child: _infoTile("Invited At",
-                            visitorsDetailModel?.data?.visitingDate),
+                        child: _infoTile(
+                            "Invited At",
+                            formatDate(
+                                visitorsDetailModel?.data?.visitingDate)),
                       ),
                     ],
                   ),
