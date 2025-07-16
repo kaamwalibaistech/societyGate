@@ -23,7 +23,7 @@ class CommunityPage extends StatefulWidget {
 class _CommunityPageState extends State<CommunityPage> {
   final ScrollController _scrollController = ScrollController();
   String page = "1";
-  int limit = 1;
+  int limit = 100;
   bool isLoading = false;
   String defaultImg =
       "https://ui-avatars.com/api/?background=random&name=User+Names.";
@@ -32,27 +32,27 @@ class _CommunityPageState extends State<CommunityPage> {
     super.initState();
     BlocProvider.of<CommunityBloc>(context)
         .add(CommunityPostEvent(page: page, limit: limit.toString()));
-    _scrollController.addListener(pageCount);
+    // _scrollController.addListener(pageCount);
   }
 
-  pageCount() async {
-    if (isLoading) return;
+  // pageCount() async {
+  //   if (isLoading) return;
 
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      setState(() {
-        isLoading = true;
-        limit = limit + 10;
-      });
-      log(limit.toString());
+  //   if (_scrollController.position.pixels ==
+  //       _scrollController.position.maxScrollExtent) {
+  //     setState(() {
+  //       isLoading = true;
+  //       limit = limit + 10;
+  //     });
+  //     log(limit.toString());
 
-      BlocProvider.of<CommunityBloc>(context)
-          .add(CommunityPostEvent(page: page, limit: limit.toString()));
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  //     BlocProvider.of<CommunityBloc>(context)
+  //         .add(CommunityPostEvent(page: page, limit: limit.toString()));
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class _CommunityPageState extends State<CommunityPage> {
         return const CommunityLoading();
       } else if (state is CommunityPostSuccess) {
         return ListView.builder(
-            controller: _scrollController,
+            // controller: _scrollController,
             itemCount: state.communityModel?.data?.length ?? 0,
             itemBuilder: (context, index) {
               final post = state.communityModel?.data?[index];

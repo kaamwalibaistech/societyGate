@@ -39,8 +39,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (_loginModel!.status == 200) {
         LocalStoragePref().storeLoginModel(_loginModel!);
         LocalStoragePref().setLoginBool(true);
-        if (_loginModel?.user?.role != "admin") {
-          LocalStoragePref().setAmenitiesBool(true);
+        if (_loginModel?.user?.role == "admin") {
+          approveStatus = await ApiRepository()
+              .getExistingAmenitiesData(_loginModel!.user!.societyId);
+          if (approveStatus == true) {
+            LocalStoragePref().setAmenitiesBool(true);
+          }
         }
 
         final ss = LocalStoragePref().getLoginModel();
