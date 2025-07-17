@@ -9,7 +9,6 @@ import 'package:society_gate/models/amenities_ceate_order.dart';
 import 'package:society_gate/models/login_model.dart';
 
 Future<void> generateAndDownloadInvoice(
-  BuildContext context,
   LoginModel? loginModel,
   BuyAmenitiesDone? buyAmenitiesDone,
   CreateOrderForAmenities? orderDetails,

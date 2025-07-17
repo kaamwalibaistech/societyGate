@@ -50,12 +50,13 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
           key: _formKey,
           child: ListView(
             children: [
-              const Text("Business Info",
+              const Text("Society Information",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               TextFormField(
                   controller: contactName,
-                  decoration: const InputDecoration(labelText: "Owner Name")),
+                  decoration:
+                      const InputDecoration(labelText: "Secretary Name")),
               TextFormField(
                   validator: (value) {
                     if (value == null || value == "") {
@@ -69,19 +70,19 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
               TextFormField(
                   controller: phone,
                   decoration: const InputDecoration(labelText: "Phone")),
-              TextFormField(
-                  controller: refId,
-                  decoration: const InputDecoration(labelText: "Reference ID")),
+              // TextFormField(
+              //     controller: refId,
+              //     decoration: const InputDecoration(labelText: "Reference ID")),
               TextFormField(
                   controller: businessName,
                   decoration:
-                      const InputDecoration(labelText: "Legal Business Name")),
-              TextFormField(
-                  controller: category,
-                  decoration: const InputDecoration(labelText: "category")),
-              TextFormField(
-                  controller: subcategory,
-                  decoration: const InputDecoration(labelText: "subcategory")),
+                      const InputDecoration(labelText: "Legal society Name")),
+              // TextFormField(
+              //     controller: category,
+              //     decoration: const InputDecoration(labelText: "category")),
+              // TextFormField(
+              //     controller: subcategory,
+              //     decoration: const InputDecoration(labelText: "subcategory")),
               const SizedBox(height: 20),
               const Text("Legal Info",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),

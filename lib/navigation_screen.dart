@@ -13,7 +13,7 @@ import 'watchman_tools/watchman_profile_page.dart';
 import 'community/community_page.dart';
 import 'constents/local_storage.dart';
 import 'homepage_screen.dart';
-import 'shops/dailyneeds_tab.dart';
+import 'dashboard/shops/dailyneeds_tab.dart';
 
 class Navigationscreen extends StatefulWidget {
   final int newIndexData;
