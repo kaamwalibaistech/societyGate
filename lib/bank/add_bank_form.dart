@@ -1,7 +1,7 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:society_gate/api/api_constant.dart';
 import 'package:society_gate/models/login_model.dart';
@@ -18,23 +18,35 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController email = TextEditingController();
   final TextEditingController phone = TextEditingController();
-  //type = route
   final TextEditingController refId = TextEditingController();
   final TextEditingController businessName = TextEditingController();
-  // "business_type":"partnership",
   final TextEditingController contactName = TextEditingController();
   final TextEditingController pan = TextEditingController();
   final TextEditingController gst = TextEditingController();
-  final TextEditingController category = TextEditingController();
-  final TextEditingController subcategory = TextEditingController();
-
-  // Address
   final TextEditingController street1 = TextEditingController();
   final TextEditingController street2 = TextEditingController();
   final TextEditingController city = TextEditingController();
   final TextEditingController state = TextEditingController();
   final TextEditingController postalCode = TextEditingController();
   final TextEditingController country = TextEditingController(text: 'IN');
+
+  @override
+  void dispose() {
+    email.dispose();
+    phone.dispose();
+    refId.dispose();
+    businessName.dispose();
+    contactName.dispose();
+    pan.dispose();
+    gst.dispose();
+    street1.dispose();
+    street2.dispose();
+    city.dispose();
+    state.dispose();
+    postalCode.dispose();
+    country.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,71 +62,21 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
           key: _formKey,
           child: ListView(
             children: [
-              const Text("Society Information",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              TextFormField(
-                  controller: contactName,
-                  decoration:
-                      const InputDecoration(labelText: "Secretary Name")),
-              TextFormField(
-                  validator: (value) {
-                    if (value == null || value == "") {
-                      return "Required";
-                    } else {
-                      return null;
-                    }
-                  },
-                  controller: email,
-                  decoration: const InputDecoration(labelText: "Email")),
-              TextFormField(
-                  controller: phone,
-                  decoration: const InputDecoration(labelText: "Phone")),
-              // TextFormField(
-              //     controller: refId,
-              //     decoration: const InputDecoration(labelText: "Reference ID")),
-              TextFormField(
-                  controller: businessName,
-                  decoration:
-                      const InputDecoration(labelText: "Legal society Name")),
-              // TextFormField(
-              //     controller: category,
-              //     decoration: const InputDecoration(labelText: "category")),
-              // TextFormField(
-              //     controller: subcategory,
-              //     decoration: const InputDecoration(labelText: "subcategory")),
-              const SizedBox(height: 20),
-              const Text("Legal Info",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              TextFormField(
-                  controller: pan,
-                  decoration: const InputDecoration(labelText: "PAN Number")),
-              TextFormField(
-                  controller: gst,
-                  decoration: const InputDecoration(labelText: "GST Number")),
-              const SizedBox(height: 20),
-              const Text("Registered Address",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              TextFormField(
-                  controller: street1,
-                  decoration: const InputDecoration(labelText: "Street 1")),
-              TextFormField(
-                  controller: street2,
-                  decoration: const InputDecoration(labelText: "Street 2")),
-              TextFormField(
-                  controller: city,
-                  decoration: const InputDecoration(labelText: "City")),
-              TextFormField(
-                  controller: state,
-                  decoration: const InputDecoration(labelText: "State")),
-              TextFormField(
-                  controller: postalCode,
-                  decoration: const InputDecoration(labelText: "Postal Code")),
-              TextFormField(
-                  controller: country,
-                  decoration: const InputDecoration(labelText: "Country")),
+              sectionTitle("Society Information"),
+              formField("Secretary Name", contactName),
+              formField("Email", email, required: true, isEmail: true),
+              formField("Phone", phone, required: true),
+              formField("Legal Society Name", businessName),
+              sectionTitle("Legal Info"),
+              formField("PAN Number", pan),
+              formField("GST Number", gst),
+              sectionTitle("Registered Address"),
+              formField("Street 1", street1),
+              formField("Street 2", street2),
+              formField("City", city),
+              formField("State", state),
+              formField("Postal Code", postalCode),
+              formField("Country", country),
               const SizedBox(height: 24),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
@@ -137,19 +99,47 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
     );
   }
 
+  Widget sectionTitle(String title) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 20),
+          Text(title,
+              style:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+        ],
+      );
+
+  Widget formField(String label, TextEditingController controller,
+      {bool required = true, bool isEmail = false}) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(labelText: label),
+      validator: (value) {
+        if (required && (value == null || value.trim().isEmpty)) {
+          return "Required";
+        }
+        if (isEmail && !RegExp(r'\S+@\S+\.\S+').hasMatch(value!)) {
+          return "Enter valid email";
+        }
+        return null;
+      },
+    );
+  }
+
   Future<void> createRouteAccount() async {
+    EasyLoading.show(status: 'Submitting...');
     final body = {
       "email": email.text,
       "phone": phone.text,
       "type": "route",
-      "reference_id": refId.text,
+      "reference_id": "SID${widget.loginModel?.user?.societyId}1",
       "legal_business_name": businessName.text,
       "business_type": "partnership",
-      // "business_type": "unregistered",
       "contact_name": contactName.text,
       "profile": {
-        "category": category.text,
-        "subcategory": subcategory.text,
+        "category": "housing",
+        "subcategory": "facility_management",
         "addresses": {
           "registered": {
             "street1": street1.text,
@@ -165,8 +155,8 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
     };
 
     try {
-      const username = "rzp_test_Kc0D3gsG5D09RJ"; //  Razorpay Key ID
-      const password = "LcCmBfKtlajuiR9H2ruqRubl"; // Razorpay Key Secret
+      const username = "rzp_test_Kc0D3gsG5D09RJ";
+      const password = "LcCmBfKtlajuiR9H2ruqRubl";
       final credentials = base64Encode(utf8.encode("$username:$password"));
 
       final response = await http.post(
@@ -180,26 +170,29 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Account created successfully")),
-        );
-        // await storeAccId( widget.loginModel?.user?.societyId.toString() ?? "", "");
-        log(data);
+        log("Account Created: $data");
+        String accId = data['id'] ?? "";
+
+        await storeAccId(
+            widget.loginModel?.user?.societyId.toString() ?? "", accId);
+
+        EasyLoading.dismiss();
+        EasyLoading.showSuccess("Account created successfully");
+        Navigator.pop(context);
       } else {
-        log(response.body);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed: ${response.body}")),
-        );
+        log("Failed: ${response.body}");
+        EasyLoading.dismiss();
+        EasyLoading.showError(
+            "Error: ${jsonDecode(response.body)['error']['description'] ?? 'Failed'}");
       }
     } catch (e) {
-      throw Exception(e);
+      log("Exception: $e");
+      EasyLoading.dismiss();
+      EasyLoading.showError("Something went wrong");
     }
   }
 
-  Future<void> storeAccId(
-    String societyId,
-    String accId,
-  ) async {
+  Future<void> storeAccId(String societyId, String accId) async {
     String api = ApiConstant.storeAccId;
     String baseUrl = ApiConstant.baseUrl;
     Uri url = Uri.parse(baseUrl + api);
@@ -208,16 +201,17 @@ class _AddBankDetailsPageState extends State<AddBankDetailsPage> {
       'society_id': societyId,
       'razorpay_account_id': accId,
     };
+
     try {
       final response = await http.post(url, body: body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-        // if (data['status'] == 200) {
-        // return LoginModel.fromJson(data);
-        // }
+        log("Acc ID Stored: $data");
+      } else {
+        log("StoreAccId Failed: ${response.body}");
       }
     } catch (e) {
-      throw Exception();
+      log("StoreAccId Exception: $e");
     }
   }
 }
