@@ -14,24 +14,38 @@ class PaymentsBloc extends Bloc<PaymentsEvent, PaymentsState> {
   void _fetchPayments(PaymentsEvent event, Emitter<PaymentsState> emit) async {
     // emit(CommentsLoading());
     try {
-      UnPaidMaintainenceModel? unpaidData;
-      List<Datum>? newUnpaid = [];
-      List<Datum>? newPaid = [];
-      unpaidData = await ApiRepository().getUnpaidMaintainence(
+      final dataa = await ApiRepository().getUnpaidMaintainence(
           event.societyId.toString(), event.userId.toString());
 
-      if (unpaidData?.status == 200) {
-        // unpaidData?.data!.removeWhere((e) => e.status == "paid");
-        // emit(PaymentsUNPaidLoadedState(unpaidData: unpaidData));
-        for (var i in unpaidData!.data!) {
-          if (i.status == "unpaid") {
-            newUnpaid.add(i);
+      if (dataa?.status == 200) {
+        List<Maintenance> unPaidMaintenance = [];
+        List<Fine> unPaidFines = [];
+        List<Maintenance> paidMaintenance = [];
+        List<Fine> paidFines = [];
+
+        List<Maintenance> maintainence = dataa?.data?.last.maintenance ?? [];
+        List<Fine> fines = dataa?.data?.last.fines ?? [];
+
+        for (int i = 0; i < maintainence.length; i++) {
+          if (maintainence[i].status == "unpaid") {
+            unPaidMaintenance.add(maintainence[i]);
           } else {
-            newPaid.add(i);
+            paidMaintenance.add(maintainence[i]);
           }
         }
-        emit(PaymentsPaidLoadedState(paidData: newPaid));
-        emit(PaymentsUNPaidLoadedState(unpaidData: newUnpaid));
+        for (int i = 0; i < fines.length; i++) {
+          if (fines[i].status == "unpaid") {
+            unPaidFines.add(fines[i]);
+          } else {
+            paidFines.add(fines[i]);
+          }
+        }
+
+        emit(PaymentsLoadedState(
+            unPaidMaintenance: unPaidMaintenance,
+            unPaidFines: unPaidFines,
+            paidFines: paidFines,
+            paidMaintenance: paidMaintenance));
       } else {
         emit(const PaymentsFailed(msg: ""));
       }

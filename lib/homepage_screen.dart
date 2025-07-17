@@ -206,14 +206,14 @@ class _HomepageScreenState extends State<HomepageScreen>
                     children: [
                       Container(
                         padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            color: loginType == "watchman"
-                                ? const Color(0xFFFF9933)
-                                : const Color(0xFF6B4EFF),
-                            width: 1.5,
-                          ),
+                          // border: Border.all(
+                          //   color: loginType == "watchman"
+                          //       ? const Color(0xFFFF9933)
+                          //       : const Color(0xFF6B4EFF),
+                          //   width: 1.5,
+                          // ),
                         ),
                         child: CircleAvatar(
                           radius: 25,

@@ -106,7 +106,9 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   late TabController _tabController;
 
   UnPaidMaintainenceOrderModel? createOrder;
-  UnPaidMaintainenceModel? unpaidData;
+  UnPaidMaintainenceModel? newUnpaidData;
+  // UnPaidMaintainenceModel? newPaidData;
+
   List<String> selectedMaintainenceIds = [];
 
   // getUnpaidData() async {
@@ -168,8 +170,6 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
       appBar: AppBar(
         title: const Text("Society Payments"),
         centerTitle: true,
-        // backgroundColor: const Color(0xFF002366),
-        // iconTheme: const IconThemeData(color: Colors.white),
         titleTextStyle: const TextStyle(
             fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
         bottom: TabBar(
@@ -183,16 +183,43 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
           ],
         ),
       ),
-      // Inside TabBarView:
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildUnpaidPaymentList(),
-          _buildPaidPaymentList(),
-        ],
+      body: BlocConsumer<PaymentsBloc, PaymentsState>(
+        listener: (context, state) {
+          if (state is PaymentsLoadedState) {}
+        },
+        // buildWhen: (previous, current) {
+        //   return current is PaymentsLoadedState;
+        // },
+        builder: (context, state) {
+          if (state is PaymentsLoadedState) {
+            return TabBarView(
+              controller: _tabController,
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _buildUnpaidPaymentList(state.unPaidFines),
+                      _buildUnpaidMaintainencePaymentList(
+                          state.unPaidMaintenance),
+                    ],
+                  ),
+                ),
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _buildPaidPaymentList(state.paidFines),
+                      _buildPaidMaintainencePaymentList(state.paidMaintenance),
+                    ],
+                  ),
+                )
+              ],
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
       ),
-
-      bottomNavigationBar: unpaidData?.data == null
+      bottomNavigationBar: newUnpaidData == null
           ? SafeArea(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -295,111 +322,169 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     );
   }
 
-  Widget _buildUnpaidPaymentList() {
-    return BlocConsumer<PaymentsBloc, PaymentsState>(
-      // bloc: _paymentBloc,
-      listener: (context, state) {
-        if (state is PaymentsUNPaidLoadedState) {
-          setState(() {
-            unpaidDataLength = state.unpaidData?.length.toString() ?? "0";
-          });
-        }
-      },
+  Widget _buildUnpaidPaymentList(List<Fine> unPaidFines) {
+    return unPaidFines.isNotEmpty
+        ? ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(12),
+            itemCount: unPaidFines.length,
+            itemBuilder: (context, index) {
+              final unpaidList = unPaidFines;
+              final date = formatDate(unPaidFines[index].fineDate.toString());
 
-      builder: (context, state) {
-        if (state is PaymentsUNPaidLoadedState) {
-          return state.unpaidData?.length != 0
-              ? ListView.builder(
-                  padding: const EdgeInsets.all(12),
-                  itemCount: state.unpaidData?.length ?? 0,
-                  itemBuilder: (context, index) {
-                    final unpaidList = state.unpaidData ?? [];
-                    final date = formatDate(state.unpaidData?[index].date);
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                elevation: 0,
+                surfaceTintColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(12),
+                  leading: CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.green.shade50,
+                    child: Checkbox(
+                      activeColor: Colors.green,
+                      splashRadius: 50,
+                      shape: const CircleBorder(),
+                      side: BorderSide(
+                        color: Colors.green.shade300,
+                        width: 2,
+                      ),
+                      value: unpaidList[index].isChecked ?? false,
+                      onChanged: (value) {
+                        setState(() {
+                          unpaidList[index].isChecked = value ?? false;
 
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      elevation: 0,
-                      surfaceTintColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(12),
-                        leading: CircleAvatar(
-                          radius: 25,
-                          backgroundColor: Colors.green.shade50,
-                          child: Checkbox(
-                            activeColor: Colors.green,
-                            splashRadius: 50,
-                            shape: const CircleBorder(),
-                            side: BorderSide(
-                              color: Colors.green.shade300,
-                              width: 2,
-                            ),
-                            value: unpaidList[index].isChecked ?? false,
-                            onChanged: (value) {
-                              setState(() {
-                                unpaidList[index].isChecked = value ?? false;
+                          final a = unpaidList[index].fineAmount ?? 0.0;
+                          final double amount = (a is num)
+                              ? a.toDouble()
+                              : double.tryParse(a.toString()) ?? 0.0;
+                          if (value == true) {
+                            totalPayment += amount;
+                          } else {
+                            totalPayment -= amount;
+                          }
 
-                                final a = unpaidList[index].totalAmount ?? 0.0;
-                                final double amount = (a is num)
-                                    ? a.toDouble()
-                                    : double.tryParse(a.toString()) ?? 0.0;
-                                if (value == true) {
-                                  totalPayment += amount;
-                                } else {
-                                  totalPayment -= amount;
-                                }
+                          log("Total Payment: $totalPayment");
+                          if (value == true) {
+                            selectedMaintainenceIds
+                                .add(unpaidList[index].fineId.toString());
+                          } else {
+                            selectedMaintainenceIds
+                                .remove(unpaidList[index].fineId.toString());
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                  title: Text(
+                    unpaidList[index].fineTitle.toString(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  trailing: Text(
+                    '₹${unpaidList[index].fineAmount.toString()}',
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              );
+            },
+          )
+        : const SizedBox.shrink();
+  }
 
-                                log("Total Payment: $totalPayment");
-                                if (value == true) {
-                                  selectedMaintainenceIds
-                                      .add(unpaidList[index].id.toString());
-                                } else {
-                                  selectedMaintainenceIds
-                                      .remove(unpaidList[index].id.toString());
-                                }
-                              });
-                            },
-                          ),
-                        ),
-                        title: Text(
-                          unpaidList[index].type.toString(),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        subtitle: Text("Due date: $date"),
-                        trailing: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '₹${unpaidList[index].totalAmount.toString()}',
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            // const SizedBox(height: 8),
-                            // const Icon(Icons.arrow_forward_ios,
-                            //     size: 14, color: Colors.grey),
-                          ],
+  Widget _buildUnpaidMaintainencePaymentList(List<Maintenance> newUnpaidData) {
+    return newUnpaidData.isNotEmpty
+        ? ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(12),
+            itemCount: newUnpaidData.length ?? 0,
+            itemBuilder: (context, index) {
+              final unpaidList = newUnpaidData ?? [];
+              final date = formatDate(newUnpaidData[index].date.toString());
+
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                elevation: 0,
+                surfaceTintColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.all(12),
+                  leading: CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.green.shade50,
+                    child: Checkbox(
+                      activeColor: Colors.green,
+                      splashRadius: 50,
+                      shape: const CircleBorder(),
+                      side: BorderSide(
+                        color: Colors.green.shade300,
+                        width: 2,
+                      ),
+                      value: unpaidList[index].isChecked ?? false,
+                      onChanged: (value) {
+                        setState(() {
+                          unpaidList[index].isChecked = value ?? false;
+
+                          final a = unpaidList[index].totalAmount ?? 0.0;
+                          final double amount = (a is num)
+                              ? a.toDouble()
+                              : double.tryParse(a.toString()) ?? 0.0;
+                          if (value == true) {
+                            totalPayment += amount;
+                          } else {
+                            totalPayment -= amount;
+                          }
+
+                          log("Total Payment: $totalPayment");
+                          if (value == true) {
+                            selectedMaintainenceIds
+                                .add(unpaidList[index].id.toString());
+                          } else {
+                            selectedMaintainenceIds
+                                .remove(unpaidList[index].id.toString());
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                  title: Text(
+                    unpaidList[index].type.toString(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Text("Due date: $date"),
+                  trailing: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '₹${unpaidList[index].totalAmount.toString()}',
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
                       ),
-                    );
-                  },
-                )
-              : _buildError("No Unpaid Payments");
-        } else if (state is PaymentsFailed) {
-          return _buildError(state.msg ?? "No Unpaid Payments");
-        } else {
-          return const Center(
-              child: CircularProgressIndicator(
-            color: Colors.green,
-          ));
-        }
-      },
-    );
+                      // const SizedBox(height: 8),
+                      // const Icon(Icons.arrow_forward_ios,
+                      //     size: 14, color: Colors.grey),
+                    ],
+                  ),
+                ),
+              );
+            },
+          )
+        : const SizedBox.shrink();
   }
 
   Widget _buildError(String msg) {
@@ -420,134 +505,213 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     );
   }
 
-  _buildPaidPaymentList() {
-    return BlocConsumer(
-      bloc: _paymentBloc,
-      listener: (context, state) {
-        if (state is PaymentsPaidLoadedState) {
-          setState(() {
-            paidDataLength = state.paidData?.length.toString() ?? "0";
-          });
-        }
-      },
-      buildWhen: (previous, current) =>
-          previous is PaymentsUNPaidLoadedState ||
-          previous is PaymentsLoading ||
-          current is PaymentsPaidLoadedState,
-      builder: (context, state) {
-        if (state is PaymentsPaidLoadedState) {
-          return state.paidData?.isNotEmpty == true
-              ? ListView.builder(
+  _buildPaidPaymentList(List<Fine> newPaidData) {
+    return newPaidData.isNotEmpty == true
+        ? ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            itemCount: newPaidData.length,
+            itemBuilder: (context, index) {
+              final paidList = newPaidData;
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                shadowColor: Colors.grey.withOpacity(0.3),
+                child: Padding(
                   padding: const EdgeInsets.all(16),
-                  itemCount: state.paidData?.length,
-                  itemBuilder: (context, index) {
-                    final paidList = state.paidData ?? [];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 24,
+                        backgroundColor: Colors.green.withOpacity(0.1),
+                        child: const Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                          size: 28,
+                        ),
                       ),
-                      shadowColor: Colors.grey.withOpacity(0.3),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CircleAvatar(
-                              radius: 24,
-                              backgroundColor: Colors.green.withOpacity(0.1),
-                              child: const Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
-                                size: 28,
+                            Text(
+                              paidList[index].fineTitle ?? "",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    paidList[index].type ?? "",
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    formatDate(paidList[index].date ?? ""),
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ],
+                            const SizedBox(height: 6),
+                            Text(
+                              formatDate(
+                                  paidList[index].fineDate.toString() ?? ""),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
                               ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  paidList[index].totalAmount ?? "",
-                                  style: const TextStyle(
-                                    color: Colors.blueAccent,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                GestureDetector(
-                                  onTap: () async {
-                                    EasyLoading.show(
-                                        status: "Loading Invoice...");
-                                    generateInvoicePdf(
-                                      // invoiceNumber: "INV-2025-0001",
-                                      customerName: locaData?.user?.uname ?? "",
-                                      contact: locaData?.user?.uphone ?? "",
-                                      email: locaData?.user?.uemail ?? "",
-                                      societyName:
-                                          locaData?.user?.societyName ?? "",
-                                      block: locaData?.user?.block ?? "",
-                                      flatNo: locaData?.user?.flatNumber ?? "",
-                                      paymentDate:
-                                          paidList[index].date.toString(),
-                                      paymentMode: "UPI",
-                                      paidAmount: paidList[index]
-                                          .totalAmount
-                                          .toString(),
-                                      fineType: paidList[index].type.toString(),
-                                    );
-                                  },
-                                  child: const Text(
-                                    "Invoice",
-                                    style: TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
                           ],
                         ),
                       ),
-                    );
-                  },
-                )
-              : _buildError("No Paid Payments");
-        } else if (state is PaymentsFailed) {
-          return _buildError(state.msg ?? "Failed to load paid payments");
-        } else {
-          return const Center(
-              child: CircularProgressIndicator(
-            color: Colors.green,
-          ));
-        }
-      },
-    );
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            paidList[index].fineAmount ?? "",
+                            style: const TextStyle(
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          GestureDetector(
+                            onTap: () async {
+                              EasyLoading.show(status: "Loading Invoice...");
+                              generateInvoicePdf(
+                                // invoiceNumber: "INV-2025-0001",
+                                customerName: locaData?.user?.uname ?? "",
+                                contact: locaData?.user?.uphone ?? "",
+                                email: locaData?.user?.uemail ?? "",
+                                societyName: locaData?.user?.societyName ?? "",
+                                block: locaData?.user?.block ?? "",
+                                flatNo: locaData?.user?.flatNumber ?? "",
+                                paymentDate:
+                                    paidList[index].fineDate.toString(),
+                                paymentMode: "UPI",
+                                paidAmount:
+                                    paidList[index].fineAmount.toString(),
+                                fineType: paidList[index].fineTitle.toString(),
+                              );
+                            },
+                            child: const Text(
+                              "Invoice",
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          )
+        : const SizedBox.shrink();
+  }
+
+  _buildPaidMaintainencePaymentList(List<Maintenance> newPaidData) {
+    return newPaidData.isNotEmpty == true
+        ? ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            itemCount: newPaidData.length,
+            itemBuilder: (context, index) {
+              final paidList = newPaidData;
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                shadowColor: Colors.grey.withOpacity(0.3),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 24,
+                        backgroundColor: Colors.green.withOpacity(0.1),
+                        child: const Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                          size: 28,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              paidList[index].type ?? "",
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              formatDate(paidList[index].date.toString() ?? ""),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            paidList[index].totalAmount ?? "",
+                            style: const TextStyle(
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          GestureDetector(
+                            onTap: () async {
+                              EasyLoading.show(status: "Loading Invoice...");
+                              generateInvoicePdf(
+                                // invoiceNumber: "INV-2025-0001",
+                                customerName: locaData?.user?.uname ?? "",
+                                contact: locaData?.user?.uphone ?? "",
+                                email: locaData?.user?.uemail ?? "",
+                                societyName: locaData?.user?.societyName ?? "",
+                                block: locaData?.user?.block ?? "",
+                                flatNo: locaData?.user?.flatNumber ?? "",
+                                paymentDate: paidList[index].date.toString(),
+                                paymentMode: "UPI",
+                                paidAmount:
+                                    paidList[index].totalAmount.toString(),
+                                fineType: paidList[index].type.toString(),
+                              );
+                            },
+                            child: const Text(
+                              "Invoice",
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          )
+        : const SizedBox.shrink();
   }
 }

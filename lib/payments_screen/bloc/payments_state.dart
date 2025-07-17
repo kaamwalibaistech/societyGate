@@ -17,19 +17,29 @@ final class PaymentsLoading extends PaymentsState {
   List<Object> get props => [];
 }
 
-class PaymentsUNPaidLoadedState extends PaymentsState {
-  final List<Datum>? unpaidData;
-  const PaymentsUNPaidLoadedState({required this.unpaidData});
+class PaymentsLoadedState extends PaymentsState {
+  // final UnPaidMaintainenceModel? dataa;
+  final List<Maintenance> unPaidMaintenance;
+  final List<Fine> unPaidFines;
+  final List<Maintenance> paidMaintenance;
+  final List<Fine> paidFines;
+
+  const PaymentsLoadedState(
+      {required this.unPaidMaintenance,
+      required this.unPaidFines,
+      required this.paidMaintenance,
+      required this.paidFines});
   @override
-  List<Object> get props => [unpaidData ?? Object()];
+  List<Object> get props =>
+      [unPaidMaintenance, unPaidFines, paidMaintenance, paidFines];
 }
 
-class PaymentsPaidLoadedState extends PaymentsState {
-  final List<Datum>? paidData;
-  const PaymentsPaidLoadedState({required this.paidData});
-  @override
-  List<Object> get props => [paidData ?? Object()];
-}
+// class PaymentsPaidLoadedState extends PaymentsState {
+//   final List<Datum>? paidData;
+//   const PaymentsPaidLoadedState({required this.paidData});
+//   @override
+//   List<Object> get props => [paidData ?? Object()];
+// }
 
 final class PaymentsFailed extends PaymentsState {
   const PaymentsFailed({required this.msg});
