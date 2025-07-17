@@ -18,8 +18,8 @@ import 'dashboard/members/member_bloc/members_bloc.dart';
 import 'dashboard/visitors/visitor_view_bloc/visitors_view_bloc.dart';
 import 'dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'navigation_screen.dart';
-import 'payments_screen/bloc/payments_bloc.dart';
-import 'shops/bloc/dailyneeds_bloc.dart';
+import 'dashboard/payments_screen/bloc/payments_bloc.dart';
+import 'dashboard/shops/bloc/dailyneeds_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,8 +80,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<CommunityBloc>(create: (context) => CommunityBloc()),
         BlocProvider<CommentsBloc>(create: (context) => CommentsBloc()),
         BlocProvider<AllAmenitiesBloc>(create: (context) => AllAmenitiesBloc()),
-        BlocProvider<AmenitiesOFMemberBloc>(
-            create: (context) => AmenitiesOFMemberBloc()),
+        // BlocProvider<AmenitiesOFMemberBloc>( create: (context) => AmenitiesOFMemberBloc()),
         BlocProvider<VisitorsDetailBloc>(
             create: (context) => VisitorsDetailBloc()),
         BlocProvider<HomepageBloc>(create: (context) => HomepageBloc())

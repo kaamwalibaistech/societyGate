@@ -8,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 
-import '../constents/sizedbox.dart';
+import '../../constents/sizedbox.dart';
 import 'bloc/dailyneeds_bloc.dart';
 
 class AddShop extends StatefulWidget {

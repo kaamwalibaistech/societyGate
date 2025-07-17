@@ -10,7 +10,8 @@ import 'package:society_gate/constents/sizedbox.dart';
 import '../navigation_screen.dart';
 
 class AmenitiesAdd extends StatefulWidget {
-  const AmenitiesAdd({super.key});
+  final String commingFrom;
+  const AmenitiesAdd({super.key, this.commingFrom = ""});
 
   @override
   State<AmenitiesAdd> createState() => _AmenitiesAddState();
@@ -65,46 +66,48 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          // leading: const Icon(
-          //   Icons.arrow_back,
-          //   // color: Colors.black,
-          // ),
-          backgroundColor: Colors.transparent,
-          foregroundColor: const Color.fromARGB(221, 27, 27, 27),
-          title: const Text("Add Amenities",
-              style: TextStyle(
-                  // fontWeight: FontWeight.bold,
-                  )),
-          centerTitle: true,
-          actions: [
-            SizedBox(
-              height: 30,
-              // width: 70,
-              child: OutlinedButton(
-                onPressed: () {
-                  LocalStoragePref().setAmenitiesBool(true);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const Navigationscreen()));
-                },
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.all(0),
-                  side: const BorderSide(color: Colors.red),
-                  backgroundColor: Colors.red.shade100,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                ),
-                child: const Text(
-                  "SKIP",
-                  style: TextStyle(color: Colors.red, fontSize: 12),
-                ),
-              ),
-            ),
-            sizedBoxW10(context),
-          ],
-        ),
+            automaticallyImplyLeading:
+                widget.commingFrom == "editAmenities" ? true : false,
+            // leading: const Icon(
+            //   Icons.arrow_back,
+            //   // color: Colors.black,
+            // ),
+            backgroundColor: Colors.transparent,
+            foregroundColor: const Color.fromARGB(221, 27, 27, 27),
+            title: const Text("Add Amenities",
+                style: TextStyle(
+                    // fontWeight: FontWeight.bold,
+                    )),
+            centerTitle: true,
+            actions: widget.commingFrom == "editAmenities"
+                ? null
+                : [
+                    SizedBox(
+                      height: 30,
+                      // width: 70,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          LocalStoragePref().setAmenitiesBool(true);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const Navigationscreen()));
+                        },
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.all(0),
+                          side: const BorderSide(color: Colors.red),
+                          backgroundColor: Colors.red.shade100,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                        ),
+                        child: const Text(
+                          "SKIP",
+                          style: TextStyle(color: Colors.red, fontSize: 12),
+                        ),
+                      ),
+                    ),
+                    sizedBoxW10(context),
+                  ]),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Form(

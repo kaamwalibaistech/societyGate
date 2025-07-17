@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:society_gate/shops/bloc/dailyneeds_bloc.dart';
+import 'package:society_gate/dashboard/shops/bloc/dailyneeds_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../constents/local_storage.dart';
-import '../models/login_model.dart';
-import '../models/shoplist_model.dart';
+import '../../constents/local_storage.dart';
+import '../../models/login_model.dart';
+import '../../models/shoplist_model.dart';
 import 'shopsettings.dart';
 
 class DailyneedsTab extends StatefulWidget {

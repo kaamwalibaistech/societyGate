@@ -15,9 +15,19 @@ class GetMyAmenities extends AmenitiesEvent {
   List<Object?> get props => [societyId, memberId];
 }
 
-// class EditAmenities extends AmenitiesEvent {
-//   final String societyId;
-//   EditAmenities({required this.societyId});
-//   @override
-//   List<Object?> get props => [societyId];
-// }
+class EditAmenitiesEvent extends AmenitiesEvent {
+  final String societyId;
+  final String amenityId;
+  final String name;
+  final String amount;
+  final String duration;
+  EditAmenitiesEvent({
+    required this.societyId,
+    required this.amenityId,
+    required this.name,
+    required this.amount,
+    required this.duration,
+  });
+  @override
+  List<Object?> get props => [societyId, amenityId, name, amount, duration];
+}
