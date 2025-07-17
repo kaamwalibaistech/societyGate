@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../constents/sizedbox.dart';
-import '../models/shoplist_model.dart';
+import '../../constents/sizedbox.dart';
+import '../../models/shoplist_model.dart';
 import 'addshop.dart';
 import 'bloc/dailyneeds_bloc.dart';
 import 'editShop.dart';

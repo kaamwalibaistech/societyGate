@@ -13,8 +13,8 @@ import 'package:society_gate/constents/sizedbox.dart';
 import 'package:society_gate/models/login_model.dart';
 import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
 import 'package:society_gate/models/unpaid_maintainence_order_model.dart';
-import 'package:society_gate/payments_screen/bloc/payments_bloc.dart';
-import 'package:society_gate/payments_screen/maintainence_invoice.dart';
+import 'package:society_gate/dashboard/payments_screen/bloc/payments_bloc.dart';
+import 'package:society_gate/dashboard/payments_screen/maintainence_invoice.dart';
 
 class SocietyPaymentsScreen extends StatefulWidget {
   const SocietyPaymentsScreen({super.key});

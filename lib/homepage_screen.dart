@@ -10,7 +10,7 @@ import 'package:lottie/lottie.dart';
 import 'package:society_gate/bank/add_bank_form.dart';
 import 'package:society_gate/community/community_post_add.dart';
 import 'package:society_gate/dashboard/notice_board/notice_api.dart';
-import 'package:society_gate/payments_screen/payment_screen.dart';
+import 'package:society_gate/dashboard/payments_screen/payment_screen.dart';
 
 import 'amenities/book_amenities.dart';
 import 'community/community_page.dart';
@@ -20,7 +20,7 @@ import 'dashboard/notice_board/notice_board_screen.dart';
 import 'dashboard/visitors/visitors_page.dart';
 import 'models/announcements_model.dart';
 import 'models/login_model.dart';
-import 'shops/dailyneeds_tab.dart';
+import 'dashboard/shops/dailyneeds_tab.dart';
 import 'watchman_tools/scanner_page.dart';
 
 class HomepageScreen extends StatefulWidget {

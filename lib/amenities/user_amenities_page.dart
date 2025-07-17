@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:society_gate/amenities/myamenity_details.dart';
-import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/amenities/network/amenities_apis.dart';
 import 'package:society_gate/constents/date_format.dart';
 import 'package:society_gate/constents/local_storage.dart';
 import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
@@ -30,8 +30,7 @@ class _UserAmenitiesPageState extends State<UserAmenitiesPage> {
 
   _getData() async {
     final data = LocalStoragePref.instance!.getLoginModel();
-    ApiRepository apiRepository = ApiRepository();
-    final amenitiesData = await apiRepository.getUserPurchaseAmenities(
+    final amenitiesData = await getUserPurchaseAmenities(
         data!.user!.societyId.toString(), data.user?.userId.toString());
     setState(() {
       getUserPurchaseAmenitiesData = amenitiesData;

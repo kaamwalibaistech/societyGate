@@ -301,28 +301,6 @@ class ApiRepository {
     return null;
   }
 
-  Future<GetUserPurchaseAmenitiesModel?> getUserPurchaseAmenities(
-      societyId, userId) async {
-    final url = Uri.parse("${baseUrl}get-amenities-by-userid");
-    final body = {
-      'user_id': userId,
-      'society_id': societyId,
-    };
-    try {
-      final response = await http.post(url, body: body);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        if (data['status'] == 200) {
-          return GetUserPurchaseAmenitiesModel.fromJson(data);
-        }
-        return GetUserPurchaseAmenitiesModel.fromJson(data);
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-    return null;
-  }
-
   Future<GetVehicleDetailsModel?> getVehicleDetails(flatid) async {
     final url = Uri.parse("${baseUrl}getvehicleparking");
     final body = {
@@ -757,24 +735,6 @@ class ApiRepository {
           return AddNoticeModel.fromJson(data);
         }
         return AddNoticeModel.fromJson(data);
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-    return null;
-  }
-
-  Future<AmenitiesModel?> fetchAmenities(societyid) async {
-    final url = Uri.parse("${baseUrl}get-amenities-by-societyid");
-    final body = {
-      'society_id': societyid.toString(),
-    };
-    try {
-      final response = await http.post(url, body: body);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        log("Api DATA: ${data.toString()}");
-        return AmenitiesModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

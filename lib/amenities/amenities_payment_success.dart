@@ -160,7 +160,6 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                       onPressed: () async {
                         EasyLoading.show(status: "Loading Invoice...");
                         await generateAndDownloadInvoice(
-                          context,
                           loginModel,
                           buyAmenitiesDone,
                           orderDetails,
