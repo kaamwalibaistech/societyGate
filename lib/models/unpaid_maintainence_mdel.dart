@@ -13,66 +13,38 @@ String unPaidMaintainenceModelToJson(UnPaidMaintainenceModel data) =>
 class UnPaidMaintainenceModel {
   int? status;
   String? message;
-  List<Datum>? data;
+  List<Maintenance>? maintenance;
+  List<Fine>? fine;
 
   UnPaidMaintainenceModel({
     this.status,
     this.message,
-    this.data,
+    this.maintenance,
+    this.fine,
   });
 
   factory UnPaidMaintainenceModel.fromJson(Map<String, dynamic> json) =>
       UnPaidMaintainenceModel(
         status: json["status"],
         message: json["message"],
-        data: json["data"] == null
+        maintenance: json["maintenance"] == null
             ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            : List<Maintenance>.from(
+                json["maintenance"]!.map((x) => Maintenance.fromJson(x))),
+        fine: json["fine"] == null
+            ? []
+            : List<Fine>.from(json["fine"]!.map((x) => Fine.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": data == null
-            ? []
-            : List<dynamic>.from(data!.map((x) => x.toJson())),
-      };
-}
-
-class Datum {
-  String? societyId;
-  String? userId;
-  List<Maintenance>? maintenance;
-  List<Fine>? fines;
-
-  Datum({
-    this.societyId,
-    this.userId,
-    this.maintenance,
-    this.fines,
-  });
-
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        societyId: json["society_id"],
-        userId: json["user_id"],
-        maintenance: json["maintenance"] == null
-            ? []
-            : List<Maintenance>.from(
-                json["maintenance"]!.map((x) => Maintenance.fromJson(x))),
-        fines: json["fines"] == null
-            ? []
-            : List<Fine>.from(json["fines"]!.map((x) => Fine.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "society_id": societyId,
-        "user_id": userId,
         "maintenance": maintenance == null
             ? []
             : List<dynamic>.from(maintenance!.map((x) => x.toJson())),
-        "fines": fines == null
+        "fine": fine == null
             ? []
-            : List<dynamic>.from(fines!.map((x) => x.toJson())),
+            : List<dynamic>.from(fine!.map((x) => x.toJson())),
       };
 }
 
@@ -86,24 +58,23 @@ class Fine {
   String? fineAmount;
   DateTime? fineDate;
   String? status;
-  dynamic attachment;
+  String? attachment;
   dynamic paidAt;
   bool? isChecked;
 
-  Fine({
-    this.fineId,
-    this.societyId,
-    this.userId,
-    this.flatId,
-    this.fineTitle,
-    this.fineReason,
-    this.fineAmount,
-    this.fineDate,
-    this.status,
-    this.attachment,
-    this.paidAt,
-    this.isChecked,
-  });
+  Fine(
+      {this.fineId,
+      this.societyId,
+      this.userId,
+      this.flatId,
+      this.fineTitle,
+      this.fineReason,
+      this.fineAmount,
+      this.fineDate,
+      this.status,
+      this.attachment,
+      this.paidAt,
+      this.isChecked});
 
   factory Fine.fromJson(Map<String, dynamic> json) => Fine(
         fineId: json["fine_id"],
@@ -135,7 +106,7 @@ class Fine {
         "status": status,
         "attachment": attachment,
         "paid_at": paidAt,
-        "isChecked": false,
+        "isChecked": false
       };
 }
 
@@ -192,5 +163,6 @@ class Maintenance {
         "date":
             "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
         "status": status,
+        "isChecked": false,
       };
 }

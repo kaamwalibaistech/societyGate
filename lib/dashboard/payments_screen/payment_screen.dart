@@ -10,11 +10,11 @@ import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/constents/date_format.dart';
 import 'package:society_gate/constents/local_storage.dart';
 import 'package:society_gate/constents/sizedbox.dart';
+import 'package:society_gate/dashboard/payments_screen/bloc/payments_bloc.dart';
+import 'package:society_gate/dashboard/payments_screen/maintainence_invoice.dart';
 import 'package:society_gate/models/login_model.dart';
 import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
 import 'package:society_gate/models/unpaid_maintainence_order_model.dart';
-import 'package:society_gate/dashboard/payments_screen/bloc/payments_bloc.dart';
-import 'package:society_gate/dashboard/payments_screen/maintainence_invoice.dart';
 
 class SocietyPaymentsScreen extends StatefulWidget {
   const SocietyPaymentsScreen({super.key});
@@ -164,6 +164,12 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     }
   }
 
+  int totalUnpaid = 0;
+
+  int totalUnpaidLength = 0;
+  int totalPaidLength = 0;
+  int totalPaid = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,8 +184,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
           labelColor: Colors.green,
           unselectedLabelColor: Colors.grey,
           tabs: [
-            Tab(text: "Unpaid (${unpaidDataLength ?? 0})"),
-            Tab(text: "Paid(${paidDataLength ?? 0}) "),
+            Tab(text: "Unpaid (${totalUnpaid ?? 0})"),
+            Tab(text: "Paid(${totalPaid ?? 0}) "),
           ],
         ),
       ),
@@ -242,7 +248,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                     ),
                   ),
                   const SizedBox(height: 10),
-                  unpaidDataLength == null
+                  totalUnpaid == null
                       ? const SizedBox.shrink()
                       : _tabController.index == 0
                           ? Padding(
@@ -323,6 +329,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   }
 
   Widget _buildUnpaidPaymentList(List<Fine> unPaidFines) {
+    totalUnpaidLength = unPaidFines.length;
     return unPaidFines.isNotEmpty
         ? ListView.builder(
             shrinkWrap: true,
@@ -401,6 +408,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   }
 
   Widget _buildUnpaidMaintainencePaymentList(List<Maintenance> newUnpaidData) {
+    totalUnpaid = totalUnpaidLength + newUnpaidData.length;
+
     return newUnpaidData.isNotEmpty
         ? ListView.builder(
             shrinkWrap: true,
@@ -506,6 +515,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   }
 
   _buildPaidPaymentList(List<Fine> newPaidData) {
+    totalPaidLength = newPaidData.length;
     return newPaidData.isNotEmpty == true
         ? ListView.builder(
             shrinkWrap: true,
@@ -612,6 +622,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   }
 
   _buildPaidMaintainencePaymentList(List<Maintenance> newPaidData) {
+    totalPaid = totalPaidLength + newPaidData.length;
+
     return newPaidData.isNotEmpty == true
         ? ListView.builder(
             shrinkWrap: true,

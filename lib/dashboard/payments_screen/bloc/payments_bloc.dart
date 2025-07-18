@@ -23,8 +23,8 @@ class PaymentsBloc extends Bloc<PaymentsEvent, PaymentsState> {
         List<Maintenance> paidMaintenance = [];
         List<Fine> paidFines = [];
 
-        List<Maintenance> maintainence = dataa?.data?.last.maintenance ?? [];
-        List<Fine> fines = dataa?.data?.last.fines ?? [];
+        List<Maintenance> maintainence = dataa?.maintenance ?? [];
+        List<Fine> fines = dataa?.fine ?? [];
 
         for (int i = 0; i < maintainence.length; i++) {
           if (maintainence[i].status == "unpaid") {
