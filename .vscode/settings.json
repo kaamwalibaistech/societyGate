@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/New project/societyGate/linux"
+    "cmake.sourceDirectory": "D:/New project/societyGate/linux",
+    "cmake.ignoreCMakeListsMissing": true
 }
