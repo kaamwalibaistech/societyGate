@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:society_gate/api/api_repository.dart';
@@ -33,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final _formKey = GlobalKey<FormState>();
   String? userPhoto;
-  UpdateUserModel? userData;
+
   LoginModel? logInData;
 
   @override
@@ -521,31 +522,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 TextButton(
                   onPressed: () async {
                     if (passwordController.text.isNotEmpty) {
-                      final loginData = await login(
-                          logInData!.user!.uphone.toString(),
-                          passwordController.text);
-
-                      if (loginData!.status == 200) {
-                        ApiRepository apiRepository = ApiRepository();
-                        userData = await apiRepository.updateUser(
-                            logInData?.user?.userId.toString(),
-                            name,
-                            email,
-                            phone,
-                            imagee?.path);
-
-                        Fluttertoast.showToast(
-                            msg: userData?.message.toString() ?? "");
-                        final loginDataa = await login(
-                            logInData!.user!.uphone.toString(),
-                            passwordController.text);
-                        await LocalStoragePref().storeLoginModel(loginDataa!);
-
-                        Navigator.pop(context); // close dialog
-                        Navigator.pop(context); // go back
-                      } else {
-                        Fluttertoast.showToast(msg: "Password is Incorrect");
-                      }
+                      update(
+                        passwordController.text,
+                        fullNameController.text,
+                        emailAddressController.text,
+                        phoneController.text,
+                      );
                     } else {
                       Fluttertoast.showToast(msg: "Please Enter Password");
                     }
@@ -564,5 +546,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  void update(String passrowd, String name, String email, String phone) async {
+    EasyLoading.show();
+    final loginData = await login(logInData!.user!.uphone.toString(), passrowd);
+
+    if (loginData!.status == 200) {
+      ApiRepository apiRepository = ApiRepository();
+      UpdateUserModel? userData = await apiRepository.updateUser(
+          logInData?.user?.userId.toString(), name, email, phone, imagee?.path);
+
+      if (userData?.status == 200) {
+        Fluttertoast.showToast(msg: userData?.message.toString() ?? "");
+        Navigator.pop(context); // go back
+      } else {
+        EasyLoading.dismiss();
+        Navigator.pop(context);
+        showError(userData?.errors?["profile_image"]?.first ??
+            "Something went wrong!");
+        return;
+      }
+      final loginDataa =
+          await login(logInData!.user!.uphone.toString(), passrowd);
+      await LocalStoragePref().storeLoginModel(loginDataa!);
+
+      Navigator.pop(context); // close dialog
+    } else {
+      Fluttertoast.showToast(msg: loginData.message ?? "Something went wrong!");
+    }
+    EasyLoading.dismiss();
+  }
+
+  void showError(String message) async {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: Text(
+                message,
+                textAlign: TextAlign.center,
+              ),
+              icon: const Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.red,
+                size: 80,
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Close")),
+              ],
+            ));
   }
 }

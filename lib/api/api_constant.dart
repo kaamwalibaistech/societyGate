@@ -3,6 +3,7 @@ class ApiConstant {
   static const String adminRegister = "mygetapi.php";
   static const String loginApi = "login";
   static const String societyMembersList = "usersbysociety";
+  static const String fine = "fine";
 
   // Visitors API Constants
   static const String visitorsbysocietyAndFlatId =
@@ -26,6 +27,7 @@ class ApiConstant {
   static const String deleteAnnouncement = "announcementsdelete";
 
   /// Community API Constants
+  static const String addCommunityPosts = "communitypostinsert";
   static const String getCommunityPosts = "communitypostget";
   static const String deleteCommunityPost = "communitypostdelete";
   static const String getComments = "community_commentget";

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -211,62 +212,6 @@ class ApiRepository {
   //   return null;
   // }
 
-  Future<int?> communityPost(
-    String societyId,
-    String adminId,
-    String title,
-    String description,
-    String photoPath, // <- pass file path here
-  ) async {
-    final url = Uri.parse("${baseUrl}communitypostinsert");
-
-    try {
-      final request = http.MultipartRequest("POST", url);
-
-      request.fields['society_id'] = societyId;
-      request.fields['admin_id'] = adminId;
-      request.fields['title'] = title;
-      request.fields['description'] = description;
-
-      // Add the image file
-
-      if (photoPath.isNotEmpty && File(photoPath).existsSync()) {
-        request.files.add(
-          await http.MultipartFile.fromPath(
-            'photo',
-            photoPath,
-            contentType: MediaType('image', 'jpeg'),
-          ),
-        );
-      } else {
-        print("Invalid or missing image path: $photoPath");
-      }
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'photo',
-          photoPath,
-          // contentType: MediaType(
-          //     'image', 'jpeg'), // Optional: adjust based on your file type
-        ),
-      );
-
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        final responseBody = await response.stream.bytesToString();
-        final Map<String, dynamic> data = jsonDecode(responseBody);
-        return data['status'];
-      } else {
-        print('Upload failed with status: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-      throw Exception(e.toString());
-    }
-
-    return null;
-  }
-
 // <<<<<<< anil
 //   Future<AddFamilyMemberModel?> addFamilyMembers(societyid, flatid, memberid,
 //       uname, uemail, uphone, relation, password) async {
@@ -380,7 +325,6 @@ class ApiRepository {
       }
     } catch (e) {
       log('Error: $e');
-      throw Exception(e.toString());
     }
 
     return null;
@@ -533,6 +477,7 @@ class ApiRepository {
       }
     } catch (e) {
       log('Error: $e');
+      EasyLoading.dismiss();
       throw Exception(e.toString());
     }
     return null;

@@ -681,7 +681,10 @@ class _MembersPageState extends State<MembersPage> {
   modelBottomsheet() {
     XFile? pickedImage;
     showModalBottomSheet(
+      isDismissible: false,
       context: context,
+      useRootNavigator: true,
+      showDragHandle: true,
       isScrollControlled: true, // Very important
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
