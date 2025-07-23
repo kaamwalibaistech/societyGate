@@ -483,69 +483,7 @@ Once acc is activated it should be hidden.
                               ],
                             )
                           ],
-                        )
-                        /* Column(
-                              children: [
-                                const Icon(
-                                    Icons.account_balance_wallet_outlined,
-                                    size: 36,
-                                    color: Colors.blue),
-                                const SizedBox(height: 12),
-                                const Text(
-                                  "Account pending",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                const Text(
-                                  "Please wait untill we are approve you account!.",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 13, color: Colors.black54),
-                                ),
-                                const SizedBox(height: 16),
-                                Wrap(
-                                  spacing: 10,
-                                  runSpacing: 10,
-                                  alignment: WrapAlignment.center,
-                                  children: [
-                                    ElevatedButton.icon(
-                                      icon: const Icon(Icons.edit),
-                                      label: const Text("Edit details"),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.blue,
-                                        foregroundColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 12, horizontal: 16),
-                                      ),
-                                      onPressed: () {
-                                        // TODO: Add bank details logic
-                                      },
-                                    ),
-                                    OutlinedButton.icon(
-                                      icon: const Icon(Icons.support_agent),
-                                      label: const Text("Support"),
-                                      style: OutlinedButton.styleFrom(
-                                        foregroundColor: Colors.blue,
-                                        side: const BorderSide(
-                                            color: Colors.blue),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 12, horizontal: 16),
-                                      ),
-                                      onPressed: () {
-                                        // TODO: Support contact logic
-                                      },
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            */
-                        ),
+                        )),
                   ),
                 ),
 

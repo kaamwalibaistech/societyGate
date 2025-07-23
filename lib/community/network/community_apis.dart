@@ -1,11 +1,75 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:society_gate/models/comments_model.dart';
 
 import '../../../api/api_constant.dart';
 import '../../models/community_model.dart';
+
+Future<int?> addCommunityPost(
+  String societyId,
+  String adminId,
+  String title,
+  String description,
+  String photoPath, // <- pass file path here
+) async {
+  // final url = Uri.parse("${baseUrl}communitypostinsert");
+  String api = ApiConstant.addCommunityPosts;
+  String baseUrl = ApiConstant.baseUrl;
+  Uri url = Uri.parse(baseUrl + api);
+
+  try {
+    final request = http.MultipartRequest("POST", url);
+
+    request.fields['society_id'] = societyId;
+    request.fields['admin_id'] = adminId;
+    request.fields['title'] = title;
+    request.fields['description'] = description;
+
+    // Add the image file
+
+    if (photoPath.isNotEmpty && File(photoPath).existsSync()) {
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'photo',
+          photoPath,
+          // contentType: MediaType('image', 'jpeg'),
+        ),
+      );
+    } else {
+      print("Invalid or missing image path: $photoPath");
+    }
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'photo',
+        photoPath,
+        // contentType: MediaType(
+        //     'image', 'jpeg'), // Optional: adjust based on your file type
+      ),
+    );
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> data = jsonDecode(responseBody);
+      return data['status'];
+    } else {
+      print('Upload failed with status: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Error: $e');
+    throw Exception(e.toString());
+  }
+
+  return null;
+}
+
+/*
+
+ */
 
 Future<CommunityModel?> getCommunityPosts(
   String page,

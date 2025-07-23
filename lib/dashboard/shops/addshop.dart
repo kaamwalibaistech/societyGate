@@ -33,21 +33,29 @@ class _AddShopState extends State<AddShop> {
         setState(() {
           _image = File(pickedFile.path);
         });
+
+        log("Size od selected Image : ${_image!.lengthSync()}");
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No image selected.')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No image selected.')),
+          );
+        }
       }
     } on PlatformException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.message}')),
-      );
-      print('PlatformException: ${e.code} - ${e.message}');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${e.message}')),
+        );
+      }
+      log('PlatformException: ${e.code} - ${e.message}');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('An unexpected error occurred.')),
-      );
-      print('Unexpected error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An unexpected error occurred.')),
+        );
+      }
+      log('Unexpected error: $e');
     }
   }
 
@@ -123,7 +131,7 @@ class _AddShopState extends State<AddShop> {
             Form(
               key: _formKey,
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.35,
+                height: MediaQuery.of(context).size.height * 0.38,
                 child: PageView(
                   controller: _pageController,
                   physics: const NeverScrollableScrollPhysics(),
@@ -181,6 +189,32 @@ class _AddShopState extends State<AddShop> {
                       onPressed: () {
                         if (_formKey.currentState!.validate() &&
                             _image != null) {
+                          if (_image!.lengthSync() > 5000000) {
+                            // 5242880 = 5 MB in Binary
+                            // 5000000 = 5 MB in Decimal
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      content: const Text(
+                                        "Image Size should not greater then 5 MB.",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      icon: const Icon(
+                                        Icons.warning_amber_rounded,
+                                        color: Colors.red,
+                                        size: 80,
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: const Text("Close")),
+                                      ],
+                                    ));
+
+                            return; // it cancel the further executions.
+                          }
+
                           if (_currentStep < totalSteps - 1) {
                             setState(() {
                               _currentStep++;
@@ -368,9 +402,29 @@ class _AddShopState extends State<AddShop> {
               ),
             ],
           ),
+          const SizedBox(height: 10),
+          Text(
+            "Selected Image Size : ${imageSizecalculate(_image?.lengthSync() ?? 0)}",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: (_image?.lengthSync() ?? 0) > 5000000
+                    ? Colors.red
+                    : Colors.green),
+          ),
         ],
       ),
     );
+  }
+
+  String imageSizecalculate(int size) {
+    double kb = size / 1000;
+    if (kb < 1000) {
+      return "${kb.toStringAsFixed(2)} KB";
+    } else {
+      double mb = kb / 1000;
+      return "${mb.toStringAsFixed(2)} MB";
+    }
   }
 }
 
@@ -413,16 +467,19 @@ class _AddingShopState extends State<AddingShop> {
     return BlocListener<DailyneedsBloc, DailyneedsState>(
       listener: (context, state) async {
         if (state is ShopAddSuccessState) {
-          await Future.delayed(const Duration(seconds: 5));
+          await Future.delayed(const Duration(seconds: 3));
           Fluttertoast.showToast(msg: "Shop added successfully!");
           Navigator.pop(context);
           Navigator.pop(context);
           context.read<DailyneedsBloc>().add(GetShopsList());
           Navigator.pop(context);
         } else if (state is ShopAddErrorState) {
-          await Future.delayed(const Duration(seconds: 5));
+          // await Future.delayed(const Duration(seconds: 3));
           Fluttertoast.showToast(msg: state.msg);
+          log("add shop error: ${state.msg}");
           showError(state.msg.toString());
+          // Navigator.pop(context);
+          // Navigator.pop(context);
         }
       },
       child: Scaffold(

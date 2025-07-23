@@ -75,6 +75,7 @@ class Members {
   final String? approvalStatus;
   final String? profileImage;
   final String? createdAt;
+  final int? flatId;
 
   Members({
     required this.userId,
@@ -86,6 +87,7 @@ class Members {
     required this.approvalStatus,
     required this.profileImage,
     required this.createdAt,
+    required this.flatId,
   });
 
   factory Members.fromJson(Map<String, dynamic> json) => Members(
@@ -98,6 +100,7 @@ class Members {
         approvalStatus: json['approval_status'],
         profileImage: json['profile_image'],
         createdAt: json['created_at'],
+        flatId: json['flat_id'],
       );
 
   Map<String, dynamic> toJson() {
@@ -111,6 +114,7 @@ class Members {
     data['approval_status'] = approvalStatus;
     data['profile_image'] = profileImage;
     data['created_at'] = createdAt;
+    data['flat_id'] = flatId;
     return data;
   }
 }
@@ -125,6 +129,7 @@ class Admins {
   String? approvalStatus;
   String? profileImage;
   String? createdAt;
+  int? flatId;
 
   Admins(
       {this.userId,
@@ -135,7 +140,8 @@ class Admins {
       this.uphone,
       this.approvalStatus,
       this.profileImage,
-      this.createdAt});
+      this.createdAt,
+      this.flatId});
 
   Admins.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'];
@@ -147,6 +153,7 @@ class Admins {
     approvalStatus = json['approval_status'];
     profileImage = json['profile_image'];
     createdAt = json['created_at'];
+    flatId = json['flat_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -160,6 +167,7 @@ class Admins {
     data['approval_status'] = approvalStatus;
     data['profile_image'] = profileImage;
     data['created_at'] = createdAt;
+    data['flat_id'] = flatId;
     return data;
   }
 }
@@ -174,6 +182,7 @@ class Watchmen {
   String? approvalStatus;
   String? profileImage;
   String? createdAt;
+  int? flatId;
 
   Watchmen(
       {this.userId,
@@ -184,7 +193,8 @@ class Watchmen {
       this.uphone,
       this.approvalStatus,
       this.profileImage,
-      this.createdAt});
+      this.createdAt,
+      this.flatId});
 
   Watchmen.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'];
@@ -196,6 +206,7 @@ class Watchmen {
     approvalStatus = json['approval_status'];
     profileImage = json['profile_image'];
     createdAt = json['created_at'];
+    flatId = json['flat_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -209,6 +220,7 @@ class Watchmen {
     data['approval_status'] = approvalStatus;
     data['profile_image'] = profileImage;
     data['created_at'] = createdAt;
+    data['flat_id'] = flatId;
     return data;
   }
 }

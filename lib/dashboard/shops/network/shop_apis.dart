@@ -66,6 +66,7 @@ Future<AddShopModel?> addShopAPI(
     if (response.statusCode == 200) {
       final responseBody = await response.stream.bytesToString();
       final Map<String, dynamic> data = jsonDecode(responseBody);
+      log(data.toString());
       return AddShopModel.fromJson(data);
     }
   } catch (e) {
@@ -76,7 +77,7 @@ Future<AddShopModel?> addShopAPI(
 
 class AddShopModel {
   int? status;
-  String? message;
+  dynamic message;
 
   AddShopModel({this.status, this.message});
 
