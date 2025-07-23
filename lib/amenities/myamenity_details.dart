@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:society_gate/amenities/amenities_invoice_helper.dart';
+import 'package:society_gate/constents/date_format.dart';
+import 'package:society_gate/constents/local_storage.dart';
+import 'package:society_gate/constents/sizedbox.dart';
+import 'package:society_gate/models/amenities_buy_done.dart';
 import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 
 import 'amenities_images.dart';
@@ -13,21 +18,36 @@ class MyAmenityDetails extends StatefulWidget {
 }
 
 class _MyAmenityDetailsState extends State<MyAmenityDetails> {
-  String formatDate(String? dateStr) {
-    if (dateStr == null) return '';
-    final date = DateTime.tryParse(dateStr);
-    return date != null ? DateFormat('dd MMM yyyy – hh:mm a').format(date) : '';
-  }
-
   @override
   Widget build(BuildContext context) {
     final data = widget.data;
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(data.amenity?.name ?? "Amenity Details"),
         backgroundColor: Colors.pinkAccent,
         foregroundColor: Colors.white,
+        /*   actions: [
+          GestureDetector(
+            onTap: () => generateAndDownloadInvoice(
+                LocalStoragePref().getLoginModel(),
+                widget.data as BuyAmenitiesDone?
+                
+                ),
+            child: const Text(
+              "Download Invoice",
+              style: TextStyle(
+                color: Colors.white,
+                decorationColor: Colors.white,
+                fontSize: 15,
+                // fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+          sizedBoxW10(context),
+        ],*/
       ),
       body: Container(
         padding: const EdgeInsets.all(16),

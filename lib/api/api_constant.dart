@@ -3,14 +3,20 @@ class ApiConstant {
   static const String adminRegister = "mygetapi.php";
   static const String loginApi = "login";
   static const String societyMembersList = "usersbysociety";
+  static const String fine = "fine";
+
+  // Visitors API Constants
   static const String visitorsbysocietyAndFlatId =
-      "getVisitorsbysocietyandflatid";
-  static const String visitorsbysocietyId = "getvisitorsbysocietyid";
+      "getVisitorsbysocietyandflatid"; // used to fetch visitors for membr, admin
+  static const String visitorsbysocietyId =
+      "getvisitorsbysocietyid"; //used to fetch visitors for watchmen
   static const String insertVisitor = "insertvisitor";
-  static const String getVisitors = "getvisitor";
+  static const String getVisitors = "getvisitordetails";
   static const String deleteVisitor = "deletevisitor";
   static const String aproveVisitor = "approvevisitor";
   static const String editVisitor = "updatevisitor";
+
+  // Shop API Constants
   static const String shopList = "shopslist";
   static const String addShop = "shopsadd";
   static const String updateShop = "shopsupdate";
@@ -21,6 +27,7 @@ class ApiConstant {
   static const String deleteAnnouncement = "announcementsdelete";
 
   /// Community API Constants
+  static const String addCommunityPosts = "communitypostinsert";
   static const String getCommunityPosts = "communitypostget";
   static const String deleteCommunityPost = "communitypostdelete";
   static const String getComments = "community_commentget";
@@ -29,8 +36,10 @@ class ApiConstant {
 
   //Amenities API Constants
   static const String createOrderForAmenitiesAmenities = "create-order";
+  static const String getAmenityByUserId = "get-amenities-by-userid";
+  static const String getAmenityForSociety = "get-amenities-by-societyid";
   static const String amenitiesBookbyUser = "amenities-book-by-user";
-
-  // Store AccId in database
-  static const String storeAccId = "add-razorpay-id";
+  static const String editAmenity = "edit-society-amenities";
+  static const String deleteAmenity = "delete-society-amenities";
+  static const String storeAccId = "add-razorpay-id"; // Store AccId in database
 }

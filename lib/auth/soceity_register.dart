@@ -64,22 +64,62 @@ class _SocietyRegister extends State<SocietyRegister> {
   }
 
   void approvalDialog() {
+    EasyLoading.dismiss();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(20),
         ),
-        title: const Text(
-          "Registration Successful",
-          style: TextStyle(fontWeight: FontWeight.bold),
+        backgroundColor: Colors.white,
+        elevation: 10,
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.check_circle_outline, color: Colors.green, size: 60),
+            SizedBox(height: 10),
+            Text(
+              "Registration Successful",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        content: const Text(
-          "Your society is registered successfully.\nPlease wait for approval.",
-          style: TextStyle(fontSize: 16),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Your society has been registered successfully.\nPlease wait for approval.",
+              style: TextStyle(fontSize: 16, color: Colors.black87),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 12),
+            Text(
+              "Credentials have been sent to your email.",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+                fontStyle: FontStyle.italic,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
+        actionsAlignment: MainAxisAlignment.center,
         actions: [
-          TextButton(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
             onPressed: () {
               nameController.clear();
               mobileNoController.clear();
@@ -92,8 +132,12 @@ class _SocietyRegister extends State<SocietyRegister> {
               floorNoNoController.clear();
               blockController.clear();
               Navigator.pop(context);
+              Navigator.pop(context);
             },
-            child: const Text("OK"),
+            child: const Text(
+              "OK",
+              style: TextStyle(fontSize: 16),
+            ),
           ),
         ],
       ),
@@ -608,6 +652,7 @@ class _SocietyRegister extends State<SocietyRegister> {
                     GestureDetector(
                       onTap: () async {
                         if (_formkey.currentState!.validate()) {
+                          EasyLoading.show();
                           AdminRegister? dataa = await ApiRepository()
                               .registerSocietyAdmin(
                                   societyNameController.text,
@@ -628,29 +673,82 @@ class _SocietyRegister extends State<SocietyRegister> {
                             setState(() {
                               datamap = dataa?.message;
                             });
+                            EasyLoading.dismiss();
 
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: const Text("Something went wrong!"),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                backgroundColor: Colors.white,
+                                elevation: 10,
+                                title: const Row(
+                                  children: [
+                                    Icon(Icons.error,
+                                        color: Colors.redAccent, size: 28),
+                                    SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        "Something went wrong!",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.redAccent,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 content: SingleChildScrollView(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text((datamap["sname"] ?? [""])
-                                          .join(", ")),
-                                      Text((datamap["uphone"] ?? [""])
-                                          .join(", ")),
-                                      Text((datamap["uemail"] ?? [""])
-                                          .join(", ")),
+                                      if ((datamap["sname"] ?? [""])
+                                          .join(", ")
+                                          .isNotEmpty)
+                                        _infoRow(
+                                            "Name",
+                                            (datamap["sname"] ?? [""])
+                                                .join(", ")),
+                                      if ((datamap["uphone"] ?? [""])
+                                          .join(", ")
+                                          .isNotEmpty)
+                                        _infoRow(
+                                            "Phone",
+                                            (datamap["uphone"] ?? [""])
+                                                .join(", ")),
+                                      if ((datamap["uemail"] ?? [""])
+                                          .join(", ")
+                                          .isNotEmpty)
+                                        _infoRow(
+                                            "Email",
+                                            (datamap["uemail"] ?? [""])
+                                                .join(", ")),
                                     ],
                                   ),
                                 ),
                                 actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text("Close"),
+                                  Center(
+                                    child: ElevatedButton.icon(
+                                      onPressed: () => Navigator.pop(context),
+                                      icon: const Icon(Icons.close, size: 18),
+                                      label: const Text(
+                                        "Close",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.redAccent,
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 24, vertical: 12),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -684,18 +782,21 @@ class _SocietyRegister extends State<SocietyRegister> {
                         color: Colors.black54,
                       ),
                     )),
-                    GestureDetector(
-                      onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => const AmenitiesAdd()));
-                      },
-                      child: Center(
-                        child: Text(
-                          "Terms & Conditions",
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => const AmenitiesAdd()));
+                        },
+                        child: Center(
+                          child: Text(
+                            "Terms & Conditions",
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
                         ),
                       ),
@@ -706,5 +807,31 @@ class _SocietyRegister extends State<SocietyRegister> {
             ),
           ),
         ));
+  }
+
+  Widget _infoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "$label: ",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                color: Colors.black54,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

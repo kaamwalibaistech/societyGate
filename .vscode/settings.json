@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "C:/Ritesh/flutter/my_society/linux"
+    "cmake.sourceDirectory": "D:/New project/societyGate/linux",
+    "cmake.ignoreCMakeListsMissing": true
 }

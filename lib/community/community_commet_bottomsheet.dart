@@ -11,8 +11,13 @@ import 'network/community_apis.dart';
 class CommunityCommetBottomsheet extends StatefulWidget {
   final List<Comment> finalComments; //useless
   final String postId;
-  const CommunityCommetBottomsheet(
-      {super.key, required this.finalComments, required this.postId});
+  final String limit;
+  const CommunityCommetBottomsheet({
+    super.key,
+    required this.finalComments,
+    required this.postId,
+    required this.limit,
+  });
 
   @override
   State<CommunityCommetBottomsheet> createState() =>
@@ -39,7 +44,7 @@ class _CommunityCommetBottomsheetState
         ),
         child: Container(
             width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.8,
+            height: MediaQuery.of(context).size.height * 0.82,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
               color: Colors.white,
@@ -67,6 +72,7 @@ class _CommunityCommetBottomsheetState
                               itemBuilder: (context, index) => CommentItem(
                                 comments: commentList[index],
                                 memberId: loginModel?.user?.userId ?? 0,
+                                limit: widget.limit.toString(),
                                 postId: widget.postId,
                                 isoutSide: false,
                               ),
@@ -91,7 +97,8 @@ class _CommunityCommetBottomsheetState
                                 hintText: 'Add a comment...',
                                 border: InputBorder.none,
                               ),
-                              maxLines: null,
+                              maxLines: 3,
+                              maxLength: 1000,
                             ),
                           ),
                           GestureDetector(

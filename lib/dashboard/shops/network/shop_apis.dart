@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import '../../../api/api_constant.dart';
+import '../../../../api/api_constant.dart';
 import 'package:http/http.dart' as http;
 
-import '../../models/shoplist_model.dart';
+import '../../../models/shoplist_model.dart';
 
 Future<ShopListModel?> shopList(String societyId) async {
   String api = ApiConstant.shopList;
@@ -66,6 +66,7 @@ Future<AddShopModel?> addShopAPI(
     if (response.statusCode == 200) {
       final responseBody = await response.stream.bytesToString();
       final Map<String, dynamic> data = jsonDecode(responseBody);
+      log(data.toString());
       return AddShopModel.fromJson(data);
     }
   } catch (e) {
@@ -76,7 +77,7 @@ Future<AddShopModel?> addShopAPI(
 
 class AddShopModel {
   int? status;
-  String? message;
+  dynamic message;
 
   AddShopModel({this.status, this.message});
 

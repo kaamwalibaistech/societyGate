@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/community/network/community_apis.dart';
 import 'package:society_gate/constents/local_storage.dart';
 
 class CreatePost extends StatefulWidget {
@@ -53,12 +54,12 @@ class _CreatePostState extends State<CreatePost> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.message}')),
       );
-      print('PlatformException: ${e.code} - ${e.message}');
+      log('PlatformException: ${e.code} - ${e.message}');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('An unexpected error occurred.')),
       );
-      print('Unexpected error: $e');
+      log('Unexpected error: $e');
     }
   }
 
@@ -96,8 +97,16 @@ class _CreatePostState extends State<CreatePost> {
                     );
                     return;
                   }
-                  communityPostInsert(
-                      titleController.text, descriptionController.text);
+                  if (_image!.lengthSync() < 2000000) {
+                    communityPostInsert(
+                        titleController.text, descriptionController.text);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text('The image should be less than 2 MB.')),
+                    );
+                  }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Please fill all fields')),
@@ -231,24 +240,24 @@ class _CreatePostState extends State<CreatePost> {
                                 ),
                               ),
                             ),
-                            // const SizedBox(width: 10),
-                            // Expanded(
-                            //   child: ElevatedButton.icon(
-                            //     onPressed: () => _pickImage(ImageSource.camera),
-                            //     icon: const Icon(
-                            //       Icons.camera_alt,
-                            //     ),
-                            //     label: const Text('Camera',
-                            //         style: TextStyle(color: Colors.black)),
-                            //     style: ElevatedButton.styleFrom(
-                            //       shape: RoundedRectangleBorder(
-                            //         borderRadius: BorderRadius.circular(10),
-                            //       ),
-                            //       padding:
-                            //           const EdgeInsets.symmetric(vertical: 14),
-                            //     ),
-                            //   ),
-                            // ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () => _pickImage(ImageSource.camera),
+                                icon: const Icon(
+                                  Icons.camera_alt,
+                                ),
+                                label: const Text('Camera',
+                                    style: TextStyle(color: Colors.black)),
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -267,8 +276,7 @@ class _CreatePostState extends State<CreatePost> {
     EasyLoading.show();
     try {
       final getLoginModel = LocalStoragePref().getLoginModel();
-      ApiRepository apiRepository = ApiRepository();
-      int? status = await apiRepository.communityPost(
+      int? status = await addCommunityPost(
           getLoginModel!.user!.societyId.toString(),
           getLoginModel.user!.userId.toString(),
           title,

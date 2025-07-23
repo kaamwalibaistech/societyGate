@@ -12,26 +12,26 @@ String watchManAddModelToJson(WatchManAddModel data) =>
 
 class WatchManAddModel {
   int? status;
-  String? message;
+  dynamic message;
   Data? data;
 
   WatchManAddModel({
-    required this.status,
-    required this.message,
-    required this.data,
+    this.status,
+    this.message,
+    this.data,
   });
 
   factory WatchManAddModel.fromJson(Map<String, dynamic> json) =>
       WatchManAddModel(
         status: json["status"],
         message: json["message"],
-        data: Data.fromJson(json["data"]),
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "status": status ?? 0,
-        "message": message ?? "",
-        "data": data?.toJson() ?? {},
+        "status": status,
+        "message": message,
+        "data": data?.toJson(),
       };
 }
 
@@ -40,41 +40,45 @@ class Data {
   String? urole;
   String? uname;
   String? uemail;
-  String? upassword;
   String? uphone;
   String? approvalStatus;
+  String? profileImage;
+  String? uniqueCode;
   int? userId;
 
   Data({
-    required this.societyId,
-    required this.urole,
-    required this.uname,
-    required this.uemail,
-    required this.upassword,
-    required this.uphone,
-    required this.approvalStatus,
-    required this.userId,
+    this.societyId,
+    this.urole,
+    this.uname,
+    this.uemail,
+    this.uphone,
+    this.approvalStatus,
+    this.profileImage,
+    this.uniqueCode,
+    this.userId,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        societyId: json["society_id"] ?? "",
-        urole: json["urole"] ?? "",
-        uname: json["uname"] ?? "",
-        uemail: json["uemail"] ?? "",
-        upassword: json["upassword"] ?? "",
-        uphone: json["uphone"] ?? "",
-        approvalStatus: json["approval_status"] ?? "",
-        userId: json["user_id"] ?? 0,
+        societyId: json["society_id"],
+        urole: json["urole"],
+        uname: json["uname"],
+        uemail: json["uemail"],
+        uphone: json["uphone"],
+        approvalStatus: json["approval_status"],
+        profileImage: json["profile_image"],
+        uniqueCode: json["unique_code"],
+        userId: json["user_id"],
       );
 
   Map<String, dynamic> toJson() => {
-        "society_id": societyId ?? "",
-        "urole": urole ?? "",
-        "uname": uname ?? "",
-        "uemail": uemail ?? "",
-        "upassword": upassword ?? "",
-        "uphone": uphone ?? "",
-        "approval_status": approvalStatus ?? "",
-        "user_id": userId ?? "",
+        "society_id": societyId,
+        "urole": urole,
+        "uname": uname,
+        "uemail": uemail,
+        "uphone": uphone,
+        "approval_status": approvalStatus,
+        "profile_image": profileImage,
+        "unique_code": uniqueCode,
+        "user_id": userId,
       };
 }

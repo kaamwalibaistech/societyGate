@@ -1,7 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:society_gate/amenities/amenities_images.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/auth/login_success.dart';
 import 'package:society_gate/constents/local_storage.dart';
@@ -10,61 +10,25 @@ import 'package:society_gate/constents/sizedbox.dart';
 import '../navigation_screen.dart';
 
 class AmenitiesAdd extends StatefulWidget {
-  const AmenitiesAdd({
-    super.key,
-  });
+  final String commingFrom;
+  const AmenitiesAdd({super.key, this.commingFrom = ""});
 
   @override
   State<AmenitiesAdd> createState() => _AmenitiesAddState();
 }
 
 class _AmenitiesAddState extends State<AmenitiesAdd> {
-  List<Map<String, dynamic>> amenities = [];
-  // String v = "c";
-  bool? swimmingPoolChecked = false;
-  bool? gardenChecked = false;
-  bool? parkingChecked = false;
-  bool? gymChecked = false;
-  bool? playGroundChecked = false;
-  bool? buildingWifi = false;
-  bool? rooftopGarden = false;
+  List<Map<String, dynamic>> selectedAmenitiesList = [];
   bool? other = false;
 
-  bool? spa = false;
-  bool? clubHouse = false;
-
-  //
   TextEditingController otherAmenitiesName = TextEditingController();
   TextEditingController otherAmenitiesPrice = TextEditingController();
   TextEditingController selectedAmenitiesPrice = TextEditingController();
 
-  //
-  String? gardernSelectedDuration;
-  String? playGroungSelectedDuration;
-  String? clubHouseSelectedDuration;
-  String? swimmingPoolSelectedDuration;
-  String? parkingSelectedDuration;
-  String? gymSelectedDuration;
-  String? spaSelectedDuration;
-  String? wifiSelectedDuration;
-  String? roofTopGardernSelectedDuration;
+  String? amenitiesSelectedOption;
+  String? selectedAmenitiesDuration;
   String? otherAmenitiesDuration;
 
-  //
-  String? selectedAmenitiesDuration;
-
-  //
-  TextEditingController swimmingPoolPriceController = TextEditingController();
-  TextEditingController gardernPriceController = TextEditingController();
-  TextEditingController parkingPriceController = TextEditingController();
-  TextEditingController gymPriceController = TextEditingController();
-  TextEditingController playGroundPriceController = TextEditingController();
-  TextEditingController clubHouseController = TextEditingController();
-  TextEditingController spaPriceController = TextEditingController();
-  TextEditingController wifiPriceController = TextEditingController();
-  TextEditingController roofTopPriceController = TextEditingController();
-
-  String? amenitiesSelectedOption;
   final List<String> amenitiesList = [
     'Swimming Pool',
     'Garden',
@@ -75,7 +39,6 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
     'Spa',
     'Building Wi-Fi',
     'Rooftop Garden',
-    // '',
   ];
   final List<String> durations = [
     'Monthly',
@@ -84,512 +47,413 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
     'Yearly',
   ];
 
-  //
   final formKey = GlobalKey<FormState>();
   final _formKeyOtherButton = GlobalKey<FormState>();
-
-  //
-
-  List<Map<String, dynamic>> selectedAmenitiesList = [];
-  // List<Map<String, dynamic>> otherAminitiesDataList = [];
-  // List<Map<String, dynamic>> finalAminitiesList = [];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
+          colors: [
+            Color(0xFFF8F9FF),
+            Color(0xFFEEF1FF),
+          ],
           begin: Alignment.topLeft,
-          end: Alignment(0.8, 1),
-          colors: <Color>[
-            Color(0xff1f005c),
-            Color(0xff5b0060),
-            Color(0xff870160),
-            Color(0xffac255e),
-            Color(0xffca485c),
-            Color(0xffe16b5c),
-            Color(0xfff39060),
-            Color(0xffffb56b),
-            Color(0xfff39060),
-            Color(0xffffb56b),
-          ], // Gradient from https://learnui.design/tools/gradient-generator.html
-          tileMode: TileMode.mirror,
+          end: Alignment.bottomRight,
         ),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          automaticallyImplyLeading: true,
-          title: const Text("Amenities"),
-          centerTitle: true,
-          // elevation: 100,
-          foregroundColor: Colors.white,
-          actions: [
-            OutlinedButton(
-                onPressed: () {
-                  LocalStoragePref().setAmenitiesBool(true);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Navigationscreen()));
-                },
-                child: const Text(
-                  "SKIP",
-                  style: TextStyle(color: Colors.white),
-                )),
-            sizedBoxW10(context)
-          ],
-        ),
-        body: Stack(children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 40.0),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      other == true
-                          ? const SizedBox.shrink()
-                          : sizedBoxH20(context),
-                      other == true
-                          ? const SizedBox.shrink()
-                          : SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.70,
-                              child: DropdownButtonFormField<String>(
-                                validator: (value) {
-                                  if (value == null) {
-                                    return "Please Select";
-                                  }
-                                  return null;
-                                },
-                                dropdownColor: Colors.black,
-                                decoration: const InputDecoration(
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.white, width: 2),
-                                  ),
-                                  labelText: 'Select Amenities',
-                                  labelStyle: TextStyle(color: Colors.white),
-                                  border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.white, width: 2)),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 10),
-                                ),
-                                value: amenitiesSelectedOption,
-                                style: const TextStyle(color: Colors.white),
-                                items: amenitiesList.map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    amenitiesSelectedOption = newValue;
-                                  });
-                                },
-                              ),
-                            ),
-                      other == true
-                          ? const SizedBox.shrink()
-                          : sizedBoxH10(context),
-                      other == true
-                          ? const SizedBox.shrink()
-                          : Row(
-                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.32,
-                                  child: TextFormField(
-                                    keyboardType: TextInputType.number,
-                                    controller: selectedAmenitiesPrice,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return "please enter Price!";
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                    decoration: const InputDecoration(
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide.none),
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 12, horizontal: 10),
-                                      counterText: "",
-                                      hintText: "Eg-Rs 2000/--",
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.06,
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.32,
-                                  child: DropdownButtonFormField<String>(
-                                    validator: (value) {
-                                      if (value == null) {
-                                        return "Please Select";
-                                      }
-                                      return null;
-                                    },
-                                    dropdownColor: Colors.black,
-                                    decoration: const InputDecoration(
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.white, width: 2),
-                                      ),
-                                      labelText: 'Select Duration',
-                                      labelStyle:
-                                          TextStyle(color: Colors.white),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.white, width: 2)),
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: 12, vertical: 10),
-                                    ),
-                                    value: selectedAmenitiesDuration,
-                                    style: const TextStyle(color: Colors.white),
-                                    items: durations.map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        selectedAmenitiesDuration = newValue;
-                                      });
-                                    },
-                                  ),
-                                )
-                              ],
-                            ),
-                      other == true
-                          ? const SizedBox.shrink()
-                          : Padding(
-                              padding: const EdgeInsets.only(
-                                top: 10.0,
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (formKey.currentState!.validate() &&
-                                      amenitiesSelectedOption
-                                          .toString()
-                                          .isNotEmpty &&
-                                      selectedAmenitiesPrice.text.isNotEmpty &&
-                                      selectedAmenitiesDuration
-                                          .toString()
-                                          .isNotEmpty) {
-                                    setState(() {
-                                      selectedAmenitiesList.add({
-                                        'name':
-                                            amenitiesSelectedOption.toString(),
-                                        'amount': selectedAmenitiesPrice.text,
-                                        'duration': selectedAmenitiesDuration
-                                            .toString(),
-                                      });
-                                    });
-                                    selectedAmenitiesDuration = null;
-                                    selectedAmenitiesPrice.clear();
-                                    Fluttertoast.showToast(
-                                        msg: "Added Successfully");
-                                  }
-
-                                  log(selectedAmenitiesList.toString());
-                                },
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.06,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.27,
-                                  decoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: const Center(
-                                      child: Text(
-                                    "Add",
-                                    style: TextStyle(color: Colors.white),
-                                  )),
-                                ),
-                              ),
-                            ),
-                      sizedBoxH10(context),
-                      Row(
-                        children: [
-                          Checkbox(
-                              side: const BorderSide(color: Colors.white),
-                              value: other,
-                              onChanged: (newValue) {
-                                setState(() {
-                                  other = newValue;
-                                  if (other == false) {
-                                    selectedAmenitiesList.clear();
-                                  }
-                                });
-                              }),
-                          const Text(
-                            "Others",
-                            style: TextStyle(color: Colors.white),
-                          )
-                        ],
-                      ),
-                      other == true ? others() : const SizedBox.shrink(),
-                      other == true
-                          ? otherAddButton()
-                          : const SizedBox.shrink(),
-                      other == true
-                          ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15.0, vertical: 10),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    selectedAmenitiesList
-                                        .asMap()
-                                        .entries
-                                        .map((entry) =>
-                                            "${entry.key + 1}. ${entry.value['name']} - ${entry.value['amount']} (${entry.value['duration']})")
-                                        .join("\n"),
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                      if (amenitiesSelectedOption != null || other == true)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0, bottom: 20),
-                          child: GestureDetector(
-                            onTap: () async {
-                              if (other == true ||
-                                  selectedAmenitiesList.isNotEmpty) {
-                                final loginModel =
-                                    LocalStoragePref().getLoginModel();
-                                ApiRepository apiRepository = ApiRepository();
-
-                                final dataa =
-                                    await apiRepository.amenitiesSendRawJson(
-                                        selectedAmenitiesList,
-                                        loginModel?.user?.societyId);
-                                if (dataa?["status"] == 200) {
-                                  Fluttertoast.showToast(
-                                      msg: dataa?["message"] ??
-                                          "Something Went Wrong!");
-                                  LocalStoragePref().setAmenitiesBool(true);
-                                  Navigator.pushReplacement(
-                                      // ignore: use_build_context_synchronously
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const LoginSuccess()));
-                                } else {
-                                  log(selectedAmenitiesList.toString());
-                                  Fluttertoast.showToast(
-                                      msg: dataa?["message"] ??
-                                          "Something Went Wrong!");
-                                }
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: "Selected Amenities are not Added");
-                              }
-                            },
-                            child: Center(
-                              child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.06,
-                                width: MediaQuery.of(context).size.width * 0.75,
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColor,
-                                    borderRadius: BorderRadius.circular(30)),
-                                child: const Center(
-                                    child: Text(
-                                  "Register",
-                                  style: TextStyle(color: Colors.white),
-                                )),
-                              ),
-                            ),
-                          ),
+            automaticallyImplyLeading:
+                widget.commingFrom == "editAmenities" ? true : false,
+            // leading: const Icon(
+            //   Icons.arrow_back,
+            //   // color: Colors.black,
+            // ),
+            backgroundColor: Colors.transparent,
+            foregroundColor: const Color.fromARGB(221, 27, 27, 27),
+            title: const Text("Add Amenities",
+                style: TextStyle(
+                    // fontWeight: FontWeight.bold,
+                    )),
+            centerTitle: true,
+            actions: widget.commingFrom == "editAmenities"
+                ? null
+                : [
+                    SizedBox(
+                      height: 30,
+                      // width: 70,
+                      child: OutlinedButton(
+                        onPressed: () {
+                          LocalStoragePref().setAmenitiesBool(true);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const Navigationscreen()));
+                        },
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.all(0),
+                          side: const BorderSide(color: Colors.red),
+                          backgroundColor: Colors.red.shade100,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
                         ),
-                    ],
-                  ),
-                ),
-              ),
+                        child: const Text(
+                          "SKIP",
+                          style: TextStyle(color: Colors.red, fontSize: 12),
+                        ),
+                      ),
+                    ),
+                    sizedBoxW10(context),
+                  ]),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildCard(child: _buildAmenityFields()),
+                sizedBoxH20(context),
+                _buildOtherCheckbox(),
+                if (other == true) ...[
+                  _buildCard(child: others()),
+                ],
+                if (selectedAmenitiesList.isNotEmpty) ...[
+                  sizedBoxH20(context),
+                  _buildAmenitiesChips(),
+                ],
+                _buildRegisterButton(),
+                sizedBoxH30(context)
+              ],
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 12.0, top: 40),
-          //   child: GestureDetector(
-          //     onTap: () {
-          //       Navigator.pop(context);
-          //     },
-          //     child: const Icon(
-          //       Icons.arrow_back,
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          // ),
-        ]),
+        ),
       ),
     );
   }
 
-  Widget others() {
-    final List<String> durations = [
-      'Monthly',
-      '3 Months',
-      '6 Months',
-      'Yearly',
-    ];
+  Widget _buildCard({required Widget child}) {
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: Colors.white.withOpacity(0.95),
+      child: Padding(padding: const EdgeInsets.all(16), child: child),
+    );
+  }
 
+  Widget _buildAmenityFields() {
+    return Column(
+      children: [
+        DropdownButtonFormField<String>(
+          value: amenitiesSelectedOption,
+          decoration: _inputDecoration("Select Amenity"),
+          items: amenitiesList.map((value) {
+            return DropdownMenuItem(
+              value: value,
+              child: Row(
+                children: [
+                  Image.asset(getAmenityImage(value), scale: 2),
+                  sizedBoxW10(context),
+                  Text(
+                    value,
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+          onChanged: (newValue) =>
+              setState(() => amenitiesSelectedOption = newValue),
+          validator: (value) =>
+              value == null ? "Please select an amenity" : null,
+        ),
+        sizedBoxH10(context),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: selectedAmenitiesPrice,
+                keyboardType: TextInputType.number,
+                decoration: _inputDecoration("Price (₹)"),
+                validator: (value) => value!.isEmpty ? "Enter price" : null,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                value: selectedAmenitiesDuration,
+                decoration: _inputDecoration("Duration"),
+                items: durations.map((value) {
+                  return DropdownMenuItem(value: value, child: Text(value));
+                }).toList(),
+                onChanged: (newValue) =>
+                    setState(() => selectedAmenitiesDuration = newValue),
+                validator: (value) => value == null ? "Select duration" : null,
+              ),
+            ),
+          ],
+        ),
+        sizedBoxH10(context),
+        ElevatedButton.icon(
+          onPressed: _addAmenity,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.deepPurple.shade100,
+            foregroundColor: const Color(0xFF6B4EFF),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+          ),
+          icon: const Icon(Icons.add),
+          label: const Text(
+            "Add Amenity",
+            style: TextStyle(
+              // color:
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOtherCheckbox() {
+    return Row(
+      children: [
+        Checkbox(
+          value: other,
+          activeColor: Colors.deepPurpleAccent.shade200,
+          onChanged: (value) {
+            setState(() {
+              other = value;
+              if (other == false) selectedAmenitiesList.clear();
+            });
+          },
+        ),
+        const Text(
+          "Add Custom Amenity",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+        )
+      ],
+    );
+  }
+
+  Widget _buildAmenitiesChips() {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: selectedAmenitiesList.asMap().entries.map((entry) {
+        final index = entry.key;
+        final amenity = entry.value;
+        return Chip(
+          avatar: Image.asset(getAmenityImage(amenity['name'])),
+          backgroundColor: Colors.white,
+          label: Text(
+            "${amenity['name']} - ₹${amenity['amount']} (${amenity['duration']})",
+          ),
+          deleteIcon: const Icon(Icons.close, color: Colors.redAccent),
+          onDeleted: () {
+            setState(() {
+              selectedAmenitiesList.removeAt(index);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("${amenity['name']} removed"),
+                  backgroundColor: Colors.redAccent,
+                  behavior: SnackBarBehavior.floating,
+                  showCloseIcon: true,
+                ),
+              );
+            });
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildRegisterButton() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: ElevatedButton(
+          onPressed: _registerAmenities,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.deepPurpleAccent.shade200,
+            foregroundColor: Colors.white,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+          ),
+          child: const Text("Register", style: TextStyle(fontSize: 18)),
+        ),
+      ),
+    );
+  }
+
+  void _addAmenity() {
+    if (formKey.currentState!.validate()) {
+      setState(() {
+        selectedAmenitiesList.add({
+          'name': amenitiesSelectedOption,
+          'amount': selectedAmenitiesPrice.text,
+          'duration': selectedAmenitiesDuration,
+        });
+        amenitiesSelectedOption = null;
+        selectedAmenitiesPrice.clear();
+        selectedAmenitiesDuration = null;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Amenity added successfully"),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            showCloseIcon: true,
+          ),
+        );
+      });
+    }
+  }
+
+  void _registerAmenities() async {
+    if (selectedAmenitiesList.isEmpty) {
+      // Fluttertoast.showToast(msg: "No amenities added.");
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("No amenities added."),
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+        backgroundColor: Colors.red,
+      ));
+      return;
+    }
+
+    final loginModel = LocalStoragePref().getLoginModel();
+    ApiRepository apiRepository = ApiRepository();
+
+    final response = await apiRepository.amenitiesSendRawJson(
+        selectedAmenitiesList, loginModel?.user?.societyId);
+
+    if (response?["status"] == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("${response?["message"] ?? "Registered!"}"),
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+        backgroundColor: Colors.green,
+      ));
+
+      // Fluttertoast.showToast(msg: response?["message"] ?? "Registered!");
+      LocalStoragePref().setAmenitiesBool(true);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => const LoginSuccess()));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("${response?["message"] ?? "Registration failed!"}"),
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+        backgroundColor: Colors.red,
+      ));
+
+      // Fluttertoast.showToast(
+      // msg: response?["message"] ?? "Registration failed!");
+    }
+  }
+
+  InputDecoration _inputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      filled: true,
+      fillColor: Colors.grey[100],
+      border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+    );
+  }
+
+  Widget others() {
     return Form(
       key: _formKeyOtherButton,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.27,
-            child: TextFormField(
-              keyboardType: TextInputType.text,
-              controller: otherAmenitiesName,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "please enter Name!";
-                } else {
-                  return null;
-                }
-              },
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                counterText: "",
-                hintText: "Name",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.27,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: otherAmenitiesPrice,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "please enter Price!";
-                } else {
-                  return null;
-                }
-              },
-              decoration: const InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                counterText: "",
-                hintText: "Eg-Rs 2000/--",
-                hintStyle: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.27,
-            child: DropdownButtonFormField<String>(
-              validator: (value) {
-                if (value == null) {
-                  return "Please Select";
-                }
-                return null;
-              },
-              dropdownColor: Colors.black,
-              decoration: const InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2),
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: otherAmenitiesName,
+                  decoration: _inputDecoration("Name"),
+                  validator: (value) => value!.isEmpty ? "Enter name" : null,
                 ),
-                labelText: 'Select Duration',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white, width: 2)),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 7, vertical: 10),
               ),
-              value: otherAmenitiesDuration,
-              style: const TextStyle(color: Colors.white),
-              items: durations.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                  ),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  otherAmenitiesDuration = newValue;
-                });
-              },
-            ),
-          )
+              const SizedBox(width: 8),
+              Expanded(
+                child: TextFormField(
+                  controller: otherAmenitiesPrice,
+                  keyboardType: TextInputType.number,
+                  decoration: _inputDecoration("Price (₹)"),
+                  validator: (value) => value!.isEmpty ? "Enter price" : null,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          DropdownButtonFormField<String>(
+            value: otherAmenitiesDuration,
+            decoration: _inputDecoration("Duration"),
+            items: durations.map((value) {
+              return DropdownMenuItem(value: value, child: Text(value));
+            }).toList(),
+            onChanged: (newValue) =>
+                setState(() => otherAmenitiesDuration = newValue),
+            validator: (value) => value == null ? "Select duration" : null,
+          ),
+          otherAddButton(),
         ],
       ),
     );
   }
 
   Widget otherAddButton() {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 10.0,
-          ),
-          child: GestureDetector(
-            onTap: () {
-              if (_formKeyOtherButton.currentState!.validate() &&
-                  otherAmenitiesName.text.isNotEmpty &&
-                  otherAmenitiesPrice.text.isNotEmpty &&
-                  otherAmenitiesDuration.toString().isNotEmpty) {
-                selectedAmenitiesList.add({
-                  'name': otherAmenitiesName.text,
-                  'amount': otherAmenitiesPrice.text,
-                  'duration': otherAmenitiesDuration.toString(),
-                });
-              }
-              setState(() {});
-              log(selectedAmenitiesList.toString());
-            },
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.06,
-              width: MediaQuery.of(context).size.width * 0.27,
-              decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(10)),
-              child: const Center(
-                  child: Text(
-                "Add",
-                style: TextStyle(color: Colors.white),
-              )),
-            ),
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, bottom: 10),
+      child: ElevatedButton.icon(
+        onPressed: () {
+          if (_formKeyOtherButton.currentState!.validate()) {
+            setState(() {
+              selectedAmenitiesList.add({
+                'name': otherAmenitiesName.text,
+                'amount': otherAmenitiesPrice.text,
+                'duration': otherAmenitiesDuration,
+              });
+              otherAmenitiesName.clear();
+              otherAmenitiesPrice.clear();
+              otherAmenitiesDuration = null;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Custom amenity added"),
+                  backgroundColor: Colors.green,
+                  behavior: SnackBarBehavior.floating,
+                  showCloseIcon: true,
+                ),
+              );
+            });
+          }
+        },
+        icon: const Icon(Icons.add),
+        label: const Text(
+          "Add Custom Amenity",
+          style: TextStyle(
+            // color: Color(0xFF6B4EFF),
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
           ),
         ),
-      ],
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.deepPurple.shade100,
+          foregroundColor: const Color(0xFF6B4EFF),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+        ),
+      ),
     );
   }
 }

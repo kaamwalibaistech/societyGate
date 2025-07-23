@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:society_gate/constents/date_format.dart';
 
 import '../../constents/local_storage.dart';
 import '../../constents/sizedbox.dart';
@@ -49,20 +50,25 @@ class _VisitorsPageState extends State<VisitorsPage> {
       length: 2, // Number of tabs
       child: Scaffold(
         floatingActionButton: loginModel?.user?.role != "watchman"
-            ? FloatingActionButton(
-                child: const Icon(Icons.add),
+            ? FloatingActionButton.extended(
+                icon: const Icon(Icons.person_add_alt_1),
+                backgroundColor: Colors.deepPurpleAccent,
+                foregroundColor: Colors.white,
+                label: const Text("Add Visitor"),
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const AddVisitorsPage()));
+                          builder: (context) => const AddVisitorsPage(
+                              isEnteredThroughNavBar: false)));
                 })
             : null,
         appBar: AppBar(
           backgroundColor: Colors.deepPurpleAccent,
+          foregroundColor: Colors.white,
           title: const Text(
             "Visitors",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           elevation: 10,
@@ -94,7 +100,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                                 context,
                                 state.visitorsListModel!.data?.upcomingVisitors
                                     ?.list)
-                            : const Center(child: Text("No visitors today!")),
+                            : _buildError(""),
                         // (state.visitorsListModel?.data?.regularVisitors?.list
                         //             ?.isNotEmpty ??
                         //         false)
@@ -110,7 +116,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                                 context,
                                 state.visitorsListModel?.data?.pastVisitors
                                     ?.list)
-                            : const Center(child: Text("No visitors!")),
+                            : _buildError(""),
                       ],
                     ),
                   )
@@ -140,8 +146,7 @@ class _VisitorsPageState extends State<VisitorsPage> {
                 ],
               );
             } else {
-              return const Text("data");
-              //CircularProgressIndicator();
+              return _buildError("No Visitor today!");
             }
           },
         ),
@@ -166,11 +171,20 @@ class _VisitorsPageState extends State<VisitorsPage> {
   }
 
   Widget _buildError(String msg) {
-    return Center(
-      child: Text(
-        msg,
-        style: const TextStyle(color: Colors.red),
-      ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 100, bottom: 10),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              "lib/assets/empty.jpg",
+              scale: 10,
+            ),
+          ),
+        ),
+        Text("No Visitor today! \n $msg")
+      ],
     );
   }
 
@@ -191,7 +205,11 @@ class _VisitorsPageState extends State<VisitorsPage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => VisitorsDetailsPage(
-                            visitorID: visitors.visitorId.toString())));
+                              visitorID: visitors.visitorId.toString(),
+                              societyId:
+                                  loginModel?.user?.societyId.toString() ?? "",
+                              flatId: loginModel?.user?.flatId.toString() ?? "",
+                            )));
               },
               child: Container(
                   margin:
@@ -201,56 +219,41 @@ class _VisitorsPageState extends State<VisitorsPage> {
                       color: Colors.purple.shade50,
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: 65,
-                        child: ListTile(
-                          leading: const CircleAvatar(
-                            foregroundImage: AssetImage("lib/assets/qr.jpg"),
-                            radius: 30,
-                          ),
-                          title: Text(visitors.name ?? "Not available"),
-                          subtitle: Text(visitors.phone ?? "Not available"),
+                      ListTile(
+                        leading: const CircleAvatar(
+                          foregroundImage: AssetImage("lib/assets/qr.jpg"),
+                          radius: 30,
                         ),
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        title: Text(visitors.name ?? "Not available"),
+                        trailing: Text(
+                          formatDate(visitors.visitingDate ?? "Not available"),
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.blueGrey),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              visitors.relation ?? "Not available",
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.blueGrey),
-                            ),
-                            sizedBoxW5(context),
-                            const Icon(
-                              Icons.circle,
-                              size: 6,
-                              color: Colors.blueGrey,
-                            ),
-                            sizedBoxW5(context),
-                            Text(
-                              visitors.visitingPurpose ?? "Not available",
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.blueGrey),
-                            ),
-                            //   sizedBoxW5(context),
-                            const SizedBox(
-                              height: 10,
-                              child: VerticalDivider(
-                                color: Colors.blueGrey,
-                                thickness: 1,
-                                width: 20,
+                            Text(visitors.phone ?? "Not available"),
+                            Wrap(children: [
+                              Text(
+                                "• ${visitors.relation ?? "Not available"}    ",
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.blueGrey),
                               ),
-                            ),
-                            sizedBoxW5(context),
-                            Text(
-                              visitors.visitingDate ?? "Not available",
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.blueGrey),
-                            ),
-                          ]),
-                      sizedBoxH5(context)
+                              Text(
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                "• ${visitors.visitingPurpose ?? "Not available"}",
+                                style: const TextStyle(
+                                    fontSize: 12, color: Colors.blueGrey),
+                              )
+                            ])
+                          ],
+                        ),
+                      )
                     ],
                   )),
             );
@@ -267,14 +270,18 @@ class _VisitorsPageState extends State<VisitorsPage> {
       child: ListView.builder(
           itemCount: pastVisitorsList?.length ?? 0,
           itemBuilder: (context, index) {
-            final regularvisitors = pastVisitorsList![index];
+            final pastvisitors = pastVisitorsList![index];
             return GestureDetector(
               onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => VisitorsDetailsPage(
-                            visitorID: regularvisitors.visitorId.toString())));
+                              visitorID: pastvisitors.visitorId.toString(),
+                              societyId:
+                                  loginModel?.user?.societyId.toString() ?? "",
+                              flatId: loginModel?.user?.flatId.toString() ?? "",
+                            )));
               },
               child: Container(
                   margin:
@@ -282,14 +289,14 @@ class _VisitorsPageState extends State<VisitorsPage> {
                   height: 75,
                   decoration: BoxDecoration(
                       color: Colors.purple.shade50,
-                      borderRadius: BorderRadius.circular(20)),
+                      borderRadius: BorderRadius.circular(10)),
                   child: ListTile(
                     leading: const CircleAvatar(
                       foregroundImage: AssetImage("lib/assets/qr.jpg"),
                       radius: 30,
                     ),
-                    title: Text(regularvisitors.name ?? "Not Available"),
-                    subtitle: Text(regularvisitors.phone ?? "Not Available"),
+                    title: Text(pastvisitors.name ?? "Not Available"),
+                    subtitle: Text(pastvisitors.phone ?? "Not Available"),
                   )),
             );
           }),

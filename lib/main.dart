@@ -6,7 +6,6 @@ import 'package:society_gate/amenities/amenities_add.dart';
 import 'package:society_gate/api/firebase_api.dart';
 import 'package:society_gate/bloc/homepage_bloc.dart';
 import 'package:society_gate/constents/firebase_options.dart';
-import 'package:society_gate/homepage_screen.dart';
 
 // import 'package:society_gate/firebase_options.dart';
 
@@ -19,8 +18,8 @@ import 'dashboard/members/member_bloc/members_bloc.dart';
 import 'dashboard/visitors/visitor_view_bloc/visitors_view_bloc.dart';
 import 'dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'navigation_screen.dart';
-import 'payments_screen/bloc/payments_bloc.dart';
-import 'shops/bloc/dailyneeds_bloc.dart';
+import 'dashboard/payments_screen/bloc/payments_bloc.dart';
+import 'dashboard/shops/bloc/dailyneeds_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +32,6 @@ Future<void> main() async {
 
   await LocalStoragePref.instance!.initPrefBox();
   // await dotenv.load(fileName: ".env");
-  // checkForUpdates();
 
   runApp(const MyApp());
   configLoading();
@@ -47,24 +45,6 @@ void configLoading() {
     ..maskType = EasyLoadingMaskType.black
     ..dismissOnTap = false;
 }
-
-/// Function to check for updates at app startup
-// void checkForUpdates() async {
-//   try {
-//     AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
-
-//     if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-//       if (updateInfo.immediateUpdateAllowed) {
-//         await InAppUpdate.performImmediateUpdate();
-//       } else if (updateInfo.flexibleUpdateAllowed) {
-//         await InAppUpdate.startFlexibleUpdate();
-//         await InAppUpdate.completeFlexibleUpdate();
-//       }
-//     }
-//   } catch (e) {
-//     log("Error checking for updates: $e");
-//   }
-// }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -100,8 +80,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<CommunityBloc>(create: (context) => CommunityBloc()),
         BlocProvider<CommentsBloc>(create: (context) => CommentsBloc()),
         BlocProvider<AllAmenitiesBloc>(create: (context) => AllAmenitiesBloc()),
-        BlocProvider<AmenitiesOFMemberBloc>(
-            create: (context) => AmenitiesOFMemberBloc()),
+        // BlocProvider<AmenitiesOFMemberBloc>( create: (context) => AmenitiesOFMemberBloc()),
         BlocProvider<VisitorsDetailBloc>(
             create: (context) => VisitorsDetailBloc()),
         BlocProvider<HomepageBloc>(create: (context) => HomepageBloc())

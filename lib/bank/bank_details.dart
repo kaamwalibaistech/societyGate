@@ -134,8 +134,14 @@ class BankDetailsPage extends StatelessWidget {
                         //   createRouteAccount();
                         // }
                       },
-                      icon: const Icon(Icons.edit),
-                      label: const Text("Edit"),
+                      icon: const Icon(
+                        Icons.edit_document,
+                        size: 22,
+                      ),
+                      label: const Text(
+                        "Update Account Details",
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
 
                     Visibility(

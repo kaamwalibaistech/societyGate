@@ -4,10 +4,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:society_gate/constents/date_format.dart';
+import 'package:society_gate/dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 
 import '../../constents/local_storage.dart';
 import '../../constents/sizedbox.dart';
@@ -21,7 +22,13 @@ import 'visitor_view_bloc/visitors_view_state.dart';
 
 class VisitorsDetailsPage extends StatefulWidget {
   final String visitorID;
-  const VisitorsDetailsPage({super.key, required this.visitorID});
+  final String societyId;
+  final String flatId;
+  const VisitorsDetailsPage(
+      {super.key,
+      required this.visitorID,
+      required this.societyId,
+      required this.flatId});
 
   @override
   State<VisitorsDetailsPage> createState() => _VisitorsDetailsPage();
@@ -52,25 +59,28 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
         title: const Text(
           "Visitors",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         elevation: 10,
       ),
-      body: BlocBuilder<VisitorsDetailBloc, VisitorsDetailState>(
-        builder: (context, state) {
-          if (state is VisitorsDetailInitialState) {
-            return _buildShimmer();
-          } else if (state is VisitorsDetailErrorState) {
-            return _buildError(state.msg);
-          } else if (state is VisitorsDetailSuccessState) {
-            return buildVisitorUI(state.visitorsDetailModel);
-          } else {
-            return const CircularProgressIndicator();
-          }
-        },
+      body: SafeArea(
+        child: BlocBuilder<VisitorsDetailBloc, VisitorsDetailState>(
+          builder: (context, state) {
+            if (state is VisitorsDetailInitialState) {
+              return _buildShimmer();
+            } else if (state is VisitorsDetailErrorState) {
+              return _buildError(state.msg);
+            } else if (state is VisitorsDetailSuccessState) {
+              return buildVisitorUI(state.visitorsDetailModel);
+            } else {
+              return const CircularProgressIndicator();
+            }
+          },
+        ),
       ),
     );
   }
@@ -180,6 +190,7 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
                     title: Center(
@@ -198,21 +209,31 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
                   ),
                   const Divider(),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      _infoTile(
-                          "Relation", visitorsDetailModel?.data?.relation),
-                      _infoTile("Gender", visitorsDetailModel?.data?.gender),
+                      Expanded(
+                        child: _infoTile(
+                            "Relation", visitorsDetailModel?.data?.relation),
+                      ),
+                      Expanded(
+                          child: _infoTile(
+                              "Gender", visitorsDetailModel?.data?.gender)),
+                      Expanded(
+                        child: _infoTile(
+                            "Invited At",
+                            formatDate(
+                                visitorsDetailModel?.data?.visitingDate)),
+                      ),
                     ],
                   ),
                   sizedBoxH15(context),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      _infoTile(
-                          "Date", visitorsDetailModel?.data?.visitingDate),
-                      _infoTile("Purpose",
-                          visitorsDetailModel?.data?.visitingPurpose),
+                      Expanded(
+                        child: _infoTile("Purpose",
+                            visitorsDetailModel?.data?.visitingPurpose),
+                      ),
                     ],
                   ),
                   sizedBoxH15(context),
@@ -228,7 +249,7 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
           ),
           sizedBoxH15(context),
           Visibility(
-            visible: loginModel?.user?.role == "member",
+            visible: visitorsDetailModel?.data?.entryTime == null,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -270,10 +291,17 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
                                           await deleteVisitor(visitorId);
                                       if (deleted != null) {
                                         if (deleted.containsValue(200)) {
+                                          context.read<VisitorsBloc>().add(
+                                              GetVisitorsEvent(
+                                                  soceityId: widget.societyId,
+                                                  flatId: widget.flatId));
+
                                           Fluttertoast.showToast(
                                             msg: deleted["message"],
                                           );
                                           Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          // Navigator.pop(context);
                                         }
                                       } else {
                                         Fluttertoast.showToast(
@@ -285,14 +313,11 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
                               ],
                             ));
                   },
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.black,
-                  ),
+                  icon: const Icon(Icons.delete),
                   label: const Text("Delete"),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade200,
-                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
                   ),
                 ),
               ],
@@ -305,19 +330,19 @@ class _VisitorsDetailsPage extends State<VisitorsDetailsPage> {
 
   Widget _infoTile(String label, String? value) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-            color: Colors.grey,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 4),
         Text(
-          value ?? "N/A",
-          style: const TextStyle(fontSize: 16),
+          value ?? "—",
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.blueGrey,
+          ),
         ),
       ],
     );

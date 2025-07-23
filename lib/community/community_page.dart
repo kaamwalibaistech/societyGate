@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,8 +21,9 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  // final ScrollController _scrollController = ScrollController();
-  int page = 1;
+  final ScrollController _scrollController = ScrollController();
+  String page = "1";
+  int limit = 100;
   bool isLoading = false;
   String defaultImg =
       "https://ui-avatars.com/api/?background=random&name=User+Names.";
@@ -28,7 +31,7 @@ class _CommunityPageState extends State<CommunityPage> {
   void initState() {
     super.initState();
     BlocProvider.of<CommunityBloc>(context)
-        .add(CommunityPostEvent(page: page.toString()));
+        .add(CommunityPostEvent(page: page, limit: limit.toString()));
     // _scrollController.addListener(pageCount);
   }
 
@@ -36,13 +39,18 @@ class _CommunityPageState extends State<CommunityPage> {
   //   if (isLoading) return;
 
   //   if (_scrollController.position.pixels ==
-  //       _scrollController.position.) {
-  //     isLoading = true;
-  //     page++;
+  //       _scrollController.position.maxScrollExtent) {
+  //     setState(() {
+  //       isLoading = true;
+  //       limit = limit + 10;
+  //     });
+  //     log(limit.toString());
 
   //     BlocProvider.of<CommunityBloc>(context)
-  //         .add(CommunityPostEvent(page: page.toString()));
-  //     isLoading = false;
+  //         .add(CommunityPostEvent(page: page, limit: limit.toString()));
+  //     setState(() {
+  //       isLoading = false;
+  //     });
   //   }
   // }
 
@@ -135,9 +143,8 @@ class _CommunityPageState extends State<CommunityPage> {
                           String msg =
                               await deletePost(post?.id.toString() ?? "");
                           EasyLoading.showToast(msg);
-                          context
-                              .read<CommunityBloc>()
-                              .add(CommunityPostEvent(page: '1'));
+                          context.read<CommunityBloc>().add(CommunityPostEvent(
+                              page: page, limit: limit.toString()));
                         } else if (value == 2) {
                           EasyLoading.showToast("Working on it");
                         }
@@ -239,8 +246,10 @@ class _CommunityPageState extends State<CommunityPage> {
                                   ),
                                   builder: (context) =>
                                       CommunityCommetBottomsheet(
-                                          finalComments: finalComments,
-                                          postId: post.id.toString()),
+                                    finalComments: finalComments,
+                                    postId: post.id.toString(),
+                                    limit: limit.toString(),
+                                  ),
                                 ),
                                 icon: const Icon(
                                   Icons.chat,
@@ -275,8 +284,10 @@ class _CommunityPageState extends State<CommunityPage> {
                                   ),
                                   builder: (context) =>
                                       CommunityCommetBottomsheet(
-                                          finalComments: finalComments,
-                                          postId: post.id.toString()),
+                                    finalComments: finalComments,
+                                    postId: post.id.toString(),
+                                    limit: limit.toString(),
+                                  ),
                                 ),
                                 child: Container(
                                     decoration: BoxDecoration(
@@ -290,6 +301,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                         CommentItem(
                                           comments: finalComments[0],
                                           memberId: state.memberId,
+                                          limit: limit.toString(),
                                           postId: post.id.toString(),
                                           isoutSide: true,
                                         ),
@@ -325,7 +337,7 @@ class _CommunityPageState extends State<CommunityPage> {
                         sizedBoxH10(context),
                       ],
                     ),
-                  )
+                  ),
                 ],
               );
             });
@@ -339,6 +351,7 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   String getTimeAgo(String? pubDate) {
+    log(pubDate.toString());
     // Parse the published date as UTC
     DateTime published = DateTime.parse(pubDate!).toUtc();
     // Get current date in UTC

@@ -3,13 +3,12 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:society_gate/account_tab/settings_pages/help_support.dart';
 import 'package:society_gate/account_tab/settings_pages/profile_screen.dart';
 import 'package:society_gate/account_tab/settings_pages/terms_condition.dart';
-import 'package:society_gate/amenities/amenities_add.dart';
+import 'package:society_gate/amenities/edit_amenities.dart';
 import 'package:society_gate/auth/register_screen.dart';
 import 'package:society_gate/bank/add_bank_form.dart';
 import 'package:society_gate/bank/bank_api.dart';
 import 'package:society_gate/bank/bank_details.dart';
 import 'package:society_gate/bank/bank_model.dart';
-import 'package:society_gate/dashboard/notice_board/notice_api.dart';
 import 'package:society_gate/navigation_screen.dart';
 
 import '../../constents/local_storage.dart';
@@ -53,7 +52,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => const Navigationscreen(
-                      newIndexData: 3,
+                      newIndexData: 4,
                     ),
                   ),
                 );
@@ -127,9 +126,28 @@ class _SettingScreenState extends State<SettingScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const AmenitiesAdd(),
+                                  builder: (context) => EditAmenities(),
                                 ),
                               );
+                              /*   bool isAmenityAdded =
+                                  LocalStoragePref().getAmenitiesBool() ??
+                                      false;
+                              if (isAmenityAdded == false) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AmenitiesAdd(),
+                                  ),
+                                );
+                              } else {
+                                 Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditAmenities(),
+                                ),
+                              );
+                              }
+                             */
                             },
                             loginType: loginType,
                           )
@@ -142,12 +160,11 @@ class _SettingScreenState extends State<SettingScreen> {
                                 "Update amenities lists, prices and more!",
                             onTap: () async {
                               EasyLoading.show(status: "Loading bank details!");
-                              final data = await getAnnouncement(
-                                  loginModel?.user!.societyId.toString() ?? "");
-
-                              if (data!.accId == "" ||
-                                  data.accId == null ||
-                                  data.accId!.isEmpty) {
+                              // final data = await getAnnouncement(
+                              //     loginModel?.user!.societyId.toString() ?? "");
+                              String accId =
+                                  LocalStoragePref().getAccId() ?? "";
+                              if (accId == "" || accId.isEmpty) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -159,7 +176,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               } else {
                                 bool isPending;
                                 RazorpayAccountModel? razorpayAccountModel =
-                                    await getRouteAccount(data!.accId!);
+                                    await getRouteAccount(accId);
 
                                 if (razorpayAccountModel?.status !=
                                     "activated") {

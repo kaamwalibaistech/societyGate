@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:society_gate/constents/local_storage.dart';
@@ -25,11 +23,13 @@ class CommunityBloc extends Bloc<CommunityEvent, CommunityPostState> {
       int memberId = getLoginModel?.user?.userId ?? 0;
       String adminName = getLoginModel?.user?.uname ?? "NA";
       List<Comment> commentsList = [];
-      final communityModelPost = await getCommunityPosts(event.page, "10");
+      final communityModelPost =
+          await getCommunityPosts(event.page, event.limit);
       if (communityModelPost != null) {
         for (var i = 0; i < communityModelPost.data!.length; i++) {
           String postId = communityModelPost.data![i].id.toString();
-          final commentsModel = await getCommentsApi(postId, event.page, "10");
+          final commentsModel =
+              await getCommentsApi(postId, event.page, event.limit);
           if (commentsModel != null) {
             commentsList.addAll(commentsModel.data!);
           }

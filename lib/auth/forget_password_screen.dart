@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:society_gate/api/api_repository.dart';
 import 'package:society_gate/constents/sizedbox.dart';
-import 'package:society_gate/new_password_screen.dart';
+import 'package:society_gate/auth/new_password_screen.dart';
 
 class EmployerForgetPassword extends StatefulWidget {
   const EmployerForgetPassword({super.key});

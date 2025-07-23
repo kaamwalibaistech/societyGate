@@ -100,6 +100,14 @@ class LocalStoragePref {
   bool? getBankAddedBool() {
     return storage?.getBool(LocalStorageKeys.isBankAdded);
   }
+
+  Future<void> setAccId(String value) async {
+    await storage?.setString(LocalStorageKeys.accid, value);
+  }
+
+  String? getAccId() {
+    return storage?.getString(LocalStorageKeys.accid);
+  }
 }
 
 class LocalStorageKeys {
@@ -108,4 +116,5 @@ class LocalStorageKeys {
   static const userPhotoo = 'user_photo';
   static const isAmenitiesAdded = 'is_amenities_added';
   static const isBankAdded = 'is_bank_added';
+  static const accid = 'account_id';
 }

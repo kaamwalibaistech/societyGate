@@ -5,8 +5,8 @@ import 'package:society_gate/auth/register_screen.dart';
 
 import '../constents/local_storage.dart';
 import '../constents/sizedbox.dart';
-import '../watchman_tools/manual_visitors_screen.dart';
-import 'settings_pages/privacy_policy_screen.dart';
+import 'manual_visitors_screen.dart';
+import '../account_tab/settings_pages/privacy_policy_screen.dart';
 
 class WatchmanProfilePage extends StatefulWidget {
   const WatchmanProfilePage({super.key});
@@ -32,12 +32,10 @@ class _WatchmanProfilePageState extends State<WatchmanProfilePage> {
           child: Column(
             children: [
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ManualVisitorsScreen()));
-                },
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ManualVisitorsScreen())),
                 child: Container(
                     margin: const EdgeInsets.all(14),
                     decoration: BoxDecoration(

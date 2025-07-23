@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -12,6 +13,7 @@ import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'package:society_gate/models/help_support_model.dart';
 import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
 import 'package:society_gate/models/unpaid_maintainence_order_model.dart';
+import 'package:society_gate/models/update_maintainence_status_model.dart';
 import 'package:society_gate/models/update_user_model.dart';
 
 import '../models/add_daily_help_model.dart';
@@ -94,8 +96,8 @@ class ApiRepository {
         final Map<String, dynamic> data = jsonDecode(response.body);
         return data;
       } else {
-        log("Request failed with status: ${response.statusCode}");
-        log("Body: ${response.body}");
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return data;
       }
     } catch (e) {
       log("Error: $e");
@@ -210,62 +212,6 @@ class ApiRepository {
   //   return null;
   // }
 
-  Future<int?> communityPost(
-    String societyId,
-    String adminId,
-    String title,
-    String description,
-    String photoPath, // <- pass file path here
-  ) async {
-    final url = Uri.parse("${baseUrl}communitypostinsert");
-
-    try {
-      final request = http.MultipartRequest("POST", url);
-
-      request.fields['society_id'] = societyId;
-      request.fields['admin_id'] = adminId;
-      request.fields['title'] = title;
-      request.fields['description'] = description;
-
-      // Add the image file
-
-      if (photoPath.isNotEmpty && File(photoPath).existsSync()) {
-        request.files.add(
-          await http.MultipartFile.fromPath(
-            'photo',
-            photoPath,
-            contentType: MediaType('image', 'jpeg'),
-          ),
-        );
-      } else {
-        print("Invalid or missing image path: $photoPath");
-      }
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'photo',
-          photoPath,
-          // contentType: MediaType(
-          //     'image', 'jpeg'), // Optional: adjust based on your file type
-        ),
-      );
-
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        final responseBody = await response.stream.bytesToString();
-        final Map<String, dynamic> data = jsonDecode(responseBody);
-        return data['status'];
-      } else {
-        print('Upload failed with status: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-      throw Exception(e.toString());
-    }
-
-    return null;
-  }
-
 // <<<<<<< anil
 //   Future<AddFamilyMemberModel?> addFamilyMembers(societyid, flatid, memberid,
 //       uname, uemail, uphone, relation, password) async {
@@ -293,28 +239,6 @@ class ApiRepository {
           return AddFamilyMemberModel.fromJson(data);
         }
         return AddFamilyMemberModel.fromJson(data);
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-    return null;
-  }
-
-  Future<GetUserPurchaseAmenitiesModel?> getUserPurchaseAmenities(
-      societyId, userId) async {
-    final url = Uri.parse("${baseUrl}get-amenities-by-userid");
-    final body = {
-      'user_id': userId,
-      'society_id': societyId,
-    };
-    try {
-      final response = await http.post(url, body: body);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        if (data['status'] == 200) {
-          return GetUserPurchaseAmenitiesModel.fromJson(data);
-        }
-        return GetUserPurchaseAmenitiesModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());
@@ -353,6 +277,7 @@ class ApiRepository {
       final response = await http.post(url, body: body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
+        log(data.toString());
         return UnPaidMaintainenceModel.fromJson(data);
       }
     } catch (e) {
@@ -400,7 +325,6 @@ class ApiRepository {
       }
     } catch (e) {
       log('Error: $e');
-      throw Exception(e.toString());
     }
 
     return null;
@@ -502,52 +426,103 @@ class ApiRepository {
   }
 
   Future<AddDailyHelpModel?> addDailyHelpMembers(
-      societyid, memberid, flatid, name, phone, address, emptype) async {
+      societyid, memberid, flatid, name, phone, address, emptype, image) async {
     final url = Uri.parse("${baseUrl}employmentadd");
-    final body = {
-      'society_id': societyid,
-      'member_id': memberid,
-      'flat_id': flatid,
-      'name': name,
-      'phone': phone,
-      'address': address,
-      'emp_type': emptype,
-    };
+    // final body = {
+    //   'society_id': societyid,
+    //   'member_id': memberid,
+    //   'flat_id': flatid,
+    //   'name': name,
+    //   'phone': phone,
+    //   'address': address,
+    //   'emp_type': emptype,
+    //   'profile_image': image,
+    // };
+
     try {
-      final response = await http.post(url, body: body);
+      final request = http.MultipartRequest("POST", url);
+
+      request.fields['society_id'] = societyid;
+      request.fields['member_id'] = memberid;
+      request.fields['flat_id'] = flatid;
+      request.fields['name'] = name;
+      request.fields['phone'] = phone;
+      request.fields['address'] = address;
+      request.fields['emp_type'] = emptype;
+
+      // Add the image file
+      if (image != null && image.isNotEmpty) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'profile_image',
+            image,
+            // contentType: MediaType('image', 'jpeg'), // optional
+          ),
+        );
+      }
+
+      final response = await request.send();
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
+        final responseBody = await response.stream.bytesToString();
+        final Map<String, dynamic> data = jsonDecode(responseBody);
         if (data['status'] == 200) {
           return AddDailyHelpModel.fromJson(data);
+        } else {
+          log('Upload failed: $data');
+          return AddDailyHelpModel.fromJson(data);
         }
-        return null;
+      } else {
+        log('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
+      log('Error: $e');
+      EasyLoading.dismiss();
       throw Exception(e.toString());
     }
     return null;
   }
 
   Future<WatchManAddModel?> addWatchman(
-      societyid, name, email, phoneNo, password) async {
+      societyid, name, email, phoneNo, password, profileImage) async {
     final url = Uri.parse("${baseUrl}watchmenadd");
-    final body = {
-      'society_id': societyid,
-      'uname': name,
-      'uemail': email ?? "",
-      'uphone': phoneNo,
-      'upassword': password,
-    };
+
     try {
-      final response = await http.post(url, body: body);
+      final request = http.MultipartRequest("POST", url);
+
+      request.fields['society_id'] = societyid;
+      request.fields['uname'] = name;
+      request.fields['uemail'] = email;
+      request.fields['uphone'] = phoneNo;
+      request.fields['upassword'] = password;
+
+      // Add the image file
+      if (profileImage != null && profileImage.isNotEmpty) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'profile_image',
+            profileImage,
+            // contentType: MediaType('image', 'jpeg'), // optional
+          ),
+        );
+      }
+
+      final response = await request.send();
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
+        final responseBody = await response.stream.bytesToString();
+        final Map<String, dynamic> data = jsonDecode(responseBody);
         if (data['status'] == 200) {
           return WatchManAddModel.fromJson(data);
+        } else {
+          log('Upload failed: $data');
+          return WatchManAddModel.fromJson(data);
         }
-        return null;
+      } else {
+        log('Upload failed with status: ${response.statusCode}');
       }
     } catch (e) {
+      log('Error: $e');
       throw Exception(e.toString());
     }
     return null;
@@ -712,24 +687,6 @@ class ApiRepository {
     return null;
   }
 
-  Future<AmenitiesModel?> fetchAmenities(societyid) async {
-    final url = Uri.parse("${baseUrl}get-amenities-by-societyid");
-    final body = {
-      'society_id': societyid.toString(),
-    };
-    try {
-      final response = await http.post(url, body: body);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        log("Api DATA: ${data.toString()}");
-        return AmenitiesModel.fromJson(data);
-      }
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-    return null;
-  }
-
   Future<UnPaidMaintainenceOrderModel?> unpaidMaintainenceOrder(
       String societyid,
       String userId,
@@ -750,6 +707,34 @@ class ApiRepository {
         final Map<String, dynamic> data = jsonDecode(response.body);
 
         return UnPaidMaintainenceOrderModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+    return null;
+  }
+
+  Future<UpdateMaintainenceStatusModel?> updateMaintainenceStatus(
+    String societyid,
+    String userId,
+    String flatId,
+    String razorPayId,
+    String mainatenanceIds,
+  ) async {
+    final url = Uri.parse("${baseUrl}payment-success");
+    final body = {
+      'society_id': societyid,
+      'user_id': userId,
+      'flat_id': flatId,
+      'razorpay_payment_id': razorPayId,
+      'maintenance_ids': mainatenanceIds,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+
+        return UpdateMaintainenceStatusModel.fromJson(data);
       }
     } catch (e) {
       throw Exception(e.toString());

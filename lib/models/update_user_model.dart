@@ -13,11 +13,13 @@ String updateUserModelToJson(UpdateUserModel data) =>
 class UpdateUserModel {
   int? status;
   String? message;
+  Map<String, dynamic>? errors;
   User? user;
 
   UpdateUserModel({
     this.status,
     this.message,
+    this.errors,
     this.user,
   });
 
@@ -25,12 +27,14 @@ class UpdateUserModel {
       UpdateUserModel(
         status: json["status"],
         message: json["message"],
+        errors: json["errors"],
         user: json["user"] == null ? null : User.fromJson(json["user"]),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
+        "errors": errors,
         "user": user?.toJson(),
       };
 }

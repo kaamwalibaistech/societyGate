@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:intl/intl.dart';
 import 'package:society_gate/account_tab/settings_pages/help_support.dart';
+import 'package:society_gate/amenities/user_amenities_page.dart';
+import 'package:society_gate/constents/date_format.dart';
 import 'package:society_gate/constents/local_storage.dart';
 import 'package:society_gate/constents/sizedbox.dart';
 import 'package:society_gate/models/amenities_buy_done.dart';
 import 'package:society_gate/models/amenities_ceate_order.dart';
-import 'package:society_gate/amenities/user_amenities_page.dart';
 
 import 'amenities_images.dart';
 import 'amenities_invoice_helper.dart';
@@ -107,11 +107,11 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                                 "Duration: ${amenity.duration}"),
                             const SizedBox(height: 2),
                             _infoRow(Icons.play_arrow_rounded,
-                                "Start: ${amenity.startTime ?? ''}",
+                                "Start: ${formatDate(amenity.startTime ?? '')}",
                                 iconColor: Colors.green),
                             const SizedBox(height: 2),
                             _infoRow(Icons.stop_rounded,
-                                "End: ${amenity.endTime ?? ''}",
+                                "End: ${formatDate(amenity.endTime ?? '')}",
                                 iconColor: Colors.red),
                           ],
                         ),
@@ -132,7 +132,7 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
           decoration: const BoxDecoration(
             color: Colors.white,
             boxShadow: [
-              const BoxShadow(
+              BoxShadow(
                 color: Colors.black12,
                 blurRadius: 12,
                 offset: Offset(0, -2),
@@ -160,7 +160,6 @@ class AmenitiesPaymentSuccess extends StatelessWidget {
                       onPressed: () async {
                         EasyLoading.show(status: "Loading Invoice...");
                         await generateAndDownloadInvoice(
-                          context,
                           loginModel,
                           buyAmenitiesDone,
                           orderDetails,

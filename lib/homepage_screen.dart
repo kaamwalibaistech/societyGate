@@ -5,11 +5,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:lottie/lottie.dart';
 import 'package:society_gate/bank/add_bank_form.dart';
 import 'package:society_gate/community/community_post_add.dart';
 import 'package:society_gate/dashboard/notice_board/notice_api.dart';
-import 'package:society_gate/payments_screen/payment_screen.dart';
+import 'package:society_gate/dashboard/payments_screen/payment_screen.dart';
 
 import 'amenities/book_amenities.dart';
 import 'community/community_page.dart';
@@ -19,7 +20,7 @@ import 'dashboard/notice_board/notice_board_screen.dart';
 import 'dashboard/visitors/visitors_page.dart';
 import 'models/announcements_model.dart';
 import 'models/login_model.dart';
-import 'shops/dailyneeds_tab.dart';
+import 'dashboard/shops/dailyneeds_tab.dart';
 import 'watchman_tools/scanner_page.dart';
 
 class HomepageScreen extends StatefulWidget {
@@ -29,7 +30,10 @@ class HomepageScreen extends StatefulWidget {
   State<HomepageScreen> createState() => _HomepageScreenState();
 }
 
-class _HomepageScreenState extends State<HomepageScreen> {
+class _HomepageScreenState extends State<HomepageScreen>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
+  late final AnimationController _controller;
+
   Announcementmodel? announcementmodel;
   LoginModel? loginModel;
   String? loginType;
@@ -40,7 +44,47 @@ class _HomepageScreenState extends State<HomepageScreen> {
   @override
   void initState() {
     super.initState();
+    checkForUpdate();
+    _controller = AnimationController(vsync: this);
+    WidgetsBinding.instance.addObserver(this);
     getData();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> checkForUpdate() async {
+    try {
+      AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+
+      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        if (updateInfo.immediateUpdateAllowed) {
+          await InAppUpdate.performImmediateUpdate();
+        } else if (updateInfo.flexibleUpdateAllowed) {
+          await InAppUpdate.startFlexibleUpdate();
+          await InAppUpdate.completeFlexibleUpdate();
+        } else {
+          print("Update available, but no method allowed.");
+        }
+      }
+    } catch (e) {
+      print("Error checking for update: $e");
+    }
+  }
+
+  // Handle app lifecycle changes
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _controller.stop(); // Pause animation
+    } else if (state == AppLifecycleState.resumed) {
+      _controller.repeat(); // Resume animation
+    }
   }
 
   Future<void> getData() async {
@@ -59,6 +103,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       if (announcementmodel?.accId != null &&
           announcementmodel!.accId!.isNotEmpty) {
         LocalStoragePref().setBankAddedBool(true);
+        LocalStoragePref().setAccId(announcementmodel?.accId ?? "");
       } else {
         LocalStoragePref().setBankAddedBool(false);
       }
@@ -161,14 +206,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(
-                            color: loginType == "watchman"
-                                ? const Color(0xFFFF9933)
-                                : const Color(0xFF6B4EFF),
-                            width: 1.5,
-                          ),
+                          // border: Border.all(
+                          //   color: loginType == "watchman"
+                          //       ? const Color(0xFFFF9933)
+                          //       : const Color(0xFF6B4EFF),
+                          //   width: 1.5,
+                          // ),
                         ),
                         child: CircleAvatar(
                           radius: 25,
@@ -365,7 +410,7 @@ Once acc is activated it should be hidden.
                 Visibility(
                   visible: _showAddBank(),
                   child: Card(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(20),
                     elevation: 10,
                     color: Colors.white,
                     shadowColor: Colors.blue.shade100,
@@ -438,69 +483,7 @@ Once acc is activated it should be hidden.
                               ],
                             )
                           ],
-                        )
-                        /* Column(
-                              children: [
-                                const Icon(
-                                    Icons.account_balance_wallet_outlined,
-                                    size: 36,
-                                    color: Colors.blue),
-                                const SizedBox(height: 12),
-                                const Text(
-                                  "Account pending",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                const Text(
-                                  "Please wait untill we are approve you account!.",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 13, color: Colors.black54),
-                                ),
-                                const SizedBox(height: 16),
-                                Wrap(
-                                  spacing: 10,
-                                  runSpacing: 10,
-                                  alignment: WrapAlignment.center,
-                                  children: [
-                                    ElevatedButton.icon(
-                                      icon: const Icon(Icons.edit),
-                                      label: const Text("Edit details"),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.blue,
-                                        foregroundColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 12, horizontal: 16),
-                                      ),
-                                      onPressed: () {
-                                        // TODO: Add bank details logic
-                                      },
-                                    ),
-                                    OutlinedButton.icon(
-                                      icon: const Icon(Icons.support_agent),
-                                      label: const Text("Support"),
-                                      style: OutlinedButton.styleFrom(
-                                        foregroundColor: Colors.blue,
-                                        side: const BorderSide(
-                                            color: Colors.blue),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 12, horizontal: 16),
-                                      ),
-                                      onPressed: () {
-                                        // TODO: Support contact logic
-                                      },
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            */
-                        ),
+                        )),
                   ),
                 ),
 
@@ -930,6 +913,12 @@ Once acc is activated it should be hidden.
                           ),
                           child: Lottie.asset(
                             "lib/assets/lottie_json/scan.json",
+                            controller: _controller,
+                            onLoaded: (composition) {
+                              _controller
+                                ..duration = composition.duration
+                                ..repeat();
+                            },
                             fit: BoxFit.contain,
                           ),
                         ),

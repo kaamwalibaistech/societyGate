@@ -26,7 +26,7 @@ class ShopAddSuccessState extends DailyneedsState {
 }
 
 class ShopAddErrorState extends DailyneedsState {
-  final String msg;
+  final dynamic msg;
   ShopAddErrorState({required this.msg});
   @override
   List<Object?> get props => [msg];
