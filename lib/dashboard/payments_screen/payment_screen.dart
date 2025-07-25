@@ -13,6 +13,7 @@ import 'package:society_gate/constents/sizedbox.dart';
 import 'package:society_gate/dashboard/payments_screen/bloc/payments_bloc.dart';
 import 'package:society_gate/dashboard/payments_screen/maintainence_invoice.dart';
 import 'package:society_gate/models/login_model.dart';
+import 'package:society_gate/models/paid_maintainence_model.dart';
 import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
 import 'package:society_gate/models/unpaid_maintainence_order_model.dart';
 
@@ -29,6 +30,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   late Razorpay _razorpay;
   String? paymentId;
   dynamic maintainenceIds;
+  dynamic fineIds;
   // dynamic date;
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {}
@@ -37,19 +39,18 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
       PaymentSuccessResponse response) async {
     paymentId = response.paymentId ?? "N/A";
     await ApiRepository().updateMaintainenceStatus(
-      locaData?.user?.societyId.toString() ?? "",
-      locaData?.user?.userId.toString() ?? "",
-      locaData?.user?.flatId.toString() ?? "",
+      createOrder?.orderId ?? "",
       paymentId ?? "",
-      maintainenceIds,
     );
     setState(() {
       totalPayment = 0.00;
     });
-    BlocProvider.of<PaymentsBloc>(context).add(PaymentsEvent(
+    BlocProvider.of<PaymentsBloc>(context).add(UnpaidPaymentsEvent(
         societyId: locaData?.user?.societyId.toString() ?? "",
         userId: locaData?.user?.userId.toString() ?? ""));
-
+    // BlocProvider.of<PaymentsBloc>(context).add(PaidPaymentsEvent(
+    //     societyId: locaData?.user?.societyId.toString() ?? "",
+    //     userId: locaData?.user?.userId.toString() ?? ""));
     Fluttertoast.showToast(
       msg: "Payment Successful!\nPayment ID: $paymentId",
       toastLength: Toast.LENGTH_LONG,
@@ -59,13 +60,13 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     );
   }
 
-  void openCheckOut(String price) async {
-    EasyLoading.show(status: "Loading");
+  void openCheckOut(price) async {
+    EasyLoading.dismiss();
 
     var options = {
       'key': 'rzp_test_Kc0D3gsG5D09RJ',
       'order_id': createOrder?.orderId.toString() ?? "",
-      'amount': double.parse(price) * 100,
+
       'name': 'Society Gate',
       'send_sms_hash': true,
       // 'description': ,
@@ -110,6 +111,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
   // UnPaidMaintainenceModel? newPaidData;
 
   List<String> selectedMaintainenceIds = [];
+  List<String> selectedFineIds = [];
 
   // getUnpaidData() async {
 
@@ -125,9 +127,23 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     for (String a in selectedMaintainenceIds) {
       dataa += "$a,";
     }
-    log("Before trimed:  $dataa");
+    // log(" Maintainence Ids Before trimed:  $dataa");
     if (dataa.isNotEmpty) {
-      log(dataa.replaceRange(dataa.length - 1, dataa.length, ""));
+      log("Maintainence Ids ${dataa.replaceRange(dataa.length - 1, dataa.length, "")}");
+      return dataa.replaceRange(dataa.length - 1, dataa.length, "");
+    } else {
+      return "";
+    }
+  }
+
+  String getFineIds() {
+    String dataa = "";
+    for (String a in selectedFineIds) {
+      dataa += "$a,";
+    }
+    // log("Fine Ids Before trimed:  $dataa");
+    if (dataa.isNotEmpty) {
+      log("Fine Ids ${dataa.replaceRange(dataa.length - 1, dataa.length, "")}");
       return dataa.replaceRange(dataa.length - 1, dataa.length, "");
     } else {
       return "";
@@ -143,9 +159,12 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     _tabController.addListener(_onChange);
 
     locaData = LocalStoragePref().getLoginModel();
-    BlocProvider.of<PaymentsBloc>(context).add(PaymentsEvent(
+    BlocProvider.of<PaymentsBloc>(context).add(UnpaidPaymentsEvent(
         societyId: locaData?.user?.societyId.toString() ?? "",
         userId: locaData?.user?.userId.toString() ?? ""));
+    // BlocProvider.of<PaymentsBloc>(context).add(PaidPaymentsEvent(
+    //     societyId: locaData?.user?.societyId.toString() ?? "",
+    //     userId: locaData?.user?.userId.toString() ?? ""));
 
     _razorpay = Razorpay();
     _paymentBloc = BlocProvider.of<PaymentsBloc>(context);
@@ -153,12 +172,12 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
 
   void _onChange() {
     if (_tabController.index == 0) {
-      BlocProvider.of<PaymentsBloc>(context).add(PaymentsEvent(
+      BlocProvider.of<PaymentsBloc>(context).add(UnpaidPaymentsEvent(
           societyId: locaData?.user?.societyId.toString() ?? "",
           userId: locaData?.user?.userId.toString() ?? ""));
     } else {
       totalPayment = 0.00;
-      BlocProvider.of<PaymentsBloc>(context).add(PaymentsEvent(
+      BlocProvider.of<PaymentsBloc>(context).add(UnpaidPaymentsEvent(
           societyId: locaData?.user?.societyId.toString() ?? "",
           userId: locaData?.user?.userId.toString() ?? ""));
     }
@@ -183,48 +202,45 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
           indicatorColor: Colors.green,
           labelColor: Colors.green,
           unselectedLabelColor: Colors.grey,
-          tabs: [
-            Tab(text: "Unpaid (${totalUnpaid ?? 0})"),
-            Tab(text: "Paid(${totalPaid ?? 0}) "),
+          tabs: const [
+            Tab(text: "Unpaid"),
+            Tab(text: "Paid"),
+            // Tab(text: "Unpaid (${totalUnpaid ?? 0})"),
+            // Tab(text: "Paid(${totalPaid ?? 0}) "),
           ],
         ),
       ),
       body: BlocConsumer<PaymentsBloc, PaymentsState>(
-        listener: (context, state) {
-          if (state is PaymentsLoadedState) {}
-        },
-        // buildWhen: (previous, current) {
-        //   return current is PaymentsLoadedState;
-        // },
-        builder: (context, state) {
-          if (state is PaymentsLoadedState) {
-            return TabBarView(
-              controller: _tabController,
-              children: [
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildUnpaidPaymentList(state.unPaidFines),
-                      _buildUnpaidMaintainencePaymentList(
-                          state.unPaidMaintenance),
-                    ],
+          listener: (context, state) {},
+          builder: (context, state) {
+            if (state is PaymentsFullyLoadedState) {
+              return TabBarView(
+                controller: _tabController,
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _buildUnpaidPaymentList(state.unPaidFines ?? []),
+                        _buildUnpaidMaintainencePaymentList(
+                            state.unPaidMaintenance ?? []),
+                      ],
+                    ),
                   ),
-                ),
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildPaidPaymentList(state.paidFines),
-                      _buildPaidMaintainencePaymentList(state.paidMaintenance),
-                    ],
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _buildPaidPaymentList(state.paidFines ?? []),
+                        _buildPaidMaintainencePaymentList(
+                            state.paidMaintenance ?? []),
+                      ],
+                    ),
                   ),
-                )
-              ],
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
+                ],
+              );
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          }),
       bottomNavigationBar: newUnpaidData == null
           ? SafeArea(
               child: Column(
@@ -248,7 +264,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                     ),
                   ),
                   const SizedBox(height: 10),
-                  totalUnpaid == null
+                  totalUnpaid == 0
                       ? const SizedBox.shrink()
                       : _tabController.index == 0
                           ? Padding(
@@ -258,7 +274,10 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                 height: 50,
                                 child: ElevatedButton.icon(
                                   onPressed: () async {
+                                    EasyLoading.show();
+
                                     maintainenceIds = getMaintainenceIds();
+                                    fineIds = getFineIds();
 
                                     if (totalPayment < 1.0) {
                                       ScaffoldMessenger.of(context)
@@ -271,6 +290,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                           showCloseIcon: true,
                                         ),
                                       );
+                                      EasyLoading.dismiss();
                                       return;
                                     }
 
@@ -283,13 +303,13 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                                 "",
                                             // selectedMaintainenceIds,
                                             maintainenceIds,
-                                            totalPayment.toString(),
+                                            fineIds,
+                                            // totalPayment.toStringAsFixed(2),
                                             locaData?.user?.flatId.toString() ??
                                                 "");
 
-                                    final price = totalPayment;
                                     if (createOrder?.orderId != null) {
-                                      openCheckOut(price.toString());
+                                      openCheckOut(totalPayment.toString());
 
                                       _razorpay.on(
                                           Razorpay.EVENT_PAYMENT_SUCCESS,
@@ -300,6 +320,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                           Razorpay.EVENT_EXTERNAL_WALLET,
                                           handleExternalWalletSelected);
                                     } else {
+                                      EasyLoading.dismiss();
                                       Fluttertoast.showToast(
                                           msg: "Something went Wrong");
                                     }
@@ -328,7 +349,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
     );
   }
 
-  Widget _buildUnpaidPaymentList(List<Fine> unPaidFines) {
+  Widget _buildUnpaidPaymentList(List<UnFine> unPaidFines) {
     totalUnpaidLength = unPaidFines.length;
     return unPaidFines.isNotEmpty
         ? ListView.builder(
@@ -376,10 +397,10 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
 
                           log("Total Payment: $totalPayment");
                           if (value == true) {
-                            selectedMaintainenceIds
+                            selectedFineIds
                                 .add(unpaidList[index].fineId.toString());
                           } else {
-                            selectedMaintainenceIds
+                            selectedFineIds
                                 .remove(unpaidList[index].fineId.toString());
                           }
                         });
@@ -392,6 +413,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  subtitle: Text("DueDate : $date"),
                   trailing: Text(
                     '₹${unpaidList[index].fineAmount.toString()}',
                     style: const TextStyle(
@@ -407,7 +429,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
         : const SizedBox.shrink();
   }
 
-  Widget _buildUnpaidMaintainencePaymentList(List<Maintenance> newUnpaidData) {
+  Widget _buildUnpaidMaintainencePaymentList(
+      List<UnMaintenance> newUnpaidData) {
     totalUnpaid = totalUnpaidLength + newUnpaidData.length;
 
     return newUnpaidData.isNotEmpty
@@ -456,11 +479,11 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
 
                           log("Total Payment: $totalPayment");
                           if (value == true) {
-                            selectedMaintainenceIds
-                                .add(unpaidList[index].id.toString());
+                            selectedMaintainenceIds.add(
+                                unpaidList[index].maintenanceId.toString());
                           } else {
-                            selectedMaintainenceIds
-                                .remove(unpaidList[index].id.toString());
+                            selectedMaintainenceIds.remove(
+                                unpaidList[index].maintenanceId.toString());
                           }
                         });
                       },
@@ -493,7 +516,12 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
               );
             },
           )
-        : const SizedBox.shrink();
+        : totalUnpaid == 0
+            ? const Padding(
+                padding: EdgeInsets.symmetric(vertical: 300.0),
+                child: Text("No Unpaid Payments"),
+              )
+            : const SizedBox.shrink();
   }
 
   Widget _buildError(String msg) {
@@ -559,8 +587,7 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              formatDate(
-                                  paidList[index].fineDate.toString() ?? ""),
+                              "Fine date :  ${formatDate(paidList[index].fineDate.toString())}",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey[600],
@@ -598,6 +625,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                 paidAmount:
                                     paidList[index].fineAmount.toString(),
                                 fineType: paidList[index].fineTitle.toString(),
+                                paymentId: paymentId.toString(),
+                                orderId: createOrder?.orderId.toString() ?? "",
                               );
                             },
                             child: const Text(
@@ -704,6 +733,8 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
                                 paidAmount:
                                     paidList[index].totalAmount.toString(),
                                 fineType: paidList[index].type.toString(),
+                                paymentId: paymentId.toString(),
+                                orderId: createOrder?.orderId.toString() ?? "",
                               );
                             },
                             child: const Text(
@@ -724,6 +755,14 @@ class _SocietyPaymentsScreenState extends State<SocietyPaymentsScreen>
               );
             },
           )
-        : const SizedBox.shrink();
+        : totalPaid == 0
+            ? const Padding(
+                padding: EdgeInsets.symmetric(vertical: 300.0),
+                child: Text(
+                  "No Paid Payments",
+                  style: TextStyle(),
+                ),
+              )
+            : const SizedBox.shrink();
   }
 }
