@@ -9,8 +9,8 @@ import 'package:http_parser/http_parser.dart';
 // import 'package:http_parser/http_parser.dart';
 import 'package:society_gate/models/forget_password_model.dart';
 import 'package:society_gate/models/forget_password_response_model.dart';
-import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 import 'package:society_gate/models/help_support_model.dart';
+import 'package:society_gate/models/paid_maintainence_model.dart';
 import 'package:society_gate/models/unpaid_maintainence_mdel.dart';
 import 'package:society_gate/models/unpaid_maintainence_order_model.dart';
 import 'package:society_gate/models/update_maintainence_status_model.dart';
@@ -21,7 +21,6 @@ import '../models/add_family_member_model.dart';
 import '../models/add_notices_model.dart';
 import '../models/add_vehicle_model.dart';
 import '../models/admin_register_model.dart';
-import '../models/amenities_model.dart';
 import '../models/flat_id_model.dart';
 import '../models/get_daily_help_model.dart';
 import '../models/get_family_members_model.dart';
@@ -243,8 +242,28 @@ class ApiRepository {
       final response = await http.post(url, body: body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-        log(data.toString());
+        log(" unPaid Data = ${data.toString()}");
         return UnPaidMaintainenceModel.fromJson(data);
+      }
+    } catch (e) {
+      throw Exception("API Error: ${e.toString()}");
+    }
+    return null;
+  }
+
+  Future<PaidMaintainenceModel?> getpaidMaintainence(
+      String? societyId, String? userId) async {
+    final url = Uri.parse("${baseUrl}paid-maintenance");
+    final body = {
+      'society_id': societyId,
+      'user_id': userId,
+    };
+    try {
+      final response = await http.post(url, body: body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        log("Paid Data = ${data.toString()}");
+        return PaidMaintainenceModel.fromJson(data);
       }
     } catch (e) {
       throw Exception("API Error: ${e.toString()}");
@@ -654,17 +673,20 @@ class ApiRepository {
   }
 
   Future<UnPaidMaintainenceOrderModel?> unpaidMaintainenceOrder(
-      String societyid,
-      String userId,
-      String mainatenanceIds,
-      String totalAmount,
-      String flatId) async {
+    String societyid,
+    String userId,
+    String? mainatenanceIds,
+    String? fineIds,
+    // String totalAmount,
+    String flatId,
+  ) async {
     final url = Uri.parse("${baseUrl}order-for-maintenance");
     final body = {
       'society_id': societyid,
       'user_id': userId,
-      'maintenance_ids[]': mainatenanceIds,
-      'amount': totalAmount,
+      'maintenance_ids[]': mainatenanceIds ?? "",
+      'fine_ids[]': fineIds ?? "",
+      // 'amount': totalAmount,
       'flat_id': flatId,
     };
     try {
@@ -681,19 +703,13 @@ class ApiRepository {
   }
 
   Future<UpdateMaintainenceStatusModel?> updateMaintainenceStatus(
-    String societyid,
-    String userId,
-    String flatId,
+    String razorPayOrder,
     String razorPayId,
-    String mainatenanceIds,
   ) async {
     final url = Uri.parse("${baseUrl}payment-success");
     final body = {
-      'society_id': societyid,
-      'user_id': userId,
-      'flat_id': flatId,
+      'razorpay_order_id': razorPayOrder,
       'razorpay_payment_id': razorPayId,
-      'maintenance_ids': mainatenanceIds,
     };
     try {
       final response = await http.post(url, body: body);

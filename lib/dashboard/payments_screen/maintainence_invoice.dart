@@ -16,6 +16,8 @@ Future<void> generateInvoicePdf({
   required String paymentMode,
   required String paidAmount,
   required String fineType,
+  required String paymentId,
+  required String orderId,
 }) async {
   final pdf = pw.Document();
 
@@ -71,7 +73,9 @@ Future<void> generateInvoicePdf({
                       fontSize: 16, fontWeight: pw.FontWeight.bold)),
               pw.Divider(),
               pw.Text('Payment Mode: $paymentMode'),
-              pw.Text('Fine Type: $fineType'),
+              pw.Text('Reason of Fine : $fineType'),
+              pw.Text('Order Id : $orderId'),
+              pw.Text('Payment Id : $paymentId'),
               pw.Text('Paid Amount: $paidAmount',
                   style: const pw.TextStyle(fontSize: 14)),
               pw.SizedBox(height: 20),

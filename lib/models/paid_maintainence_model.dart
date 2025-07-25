@@ -1,36 +1,36 @@
 // To parse this JSON data, do
 //
-//     final unPaidMaintainenceModel = unPaidMaintainenceModelFromJson(jsonString);
+//     final paidMaintainenceModel = paidMaintainenceModelFromJson(jsonString);
 
 import 'dart:convert';
 
-UnPaidMaintainenceModel unPaidMaintainenceModelFromJson(String str) =>
-    UnPaidMaintainenceModel.fromJson(json.decode(str));
+PaidMaintainenceModel paidMaintainenceModelFromJson(String str) =>
+    PaidMaintainenceModel.fromJson(json.decode(str));
 
-String unPaidMaintainenceModelToJson(UnPaidMaintainenceModel data) =>
+String paidMaintainenceModelToJson(PaidMaintainenceModel data) =>
     json.encode(data.toJson());
 
-class UnPaidMaintainenceModel {
+class PaidMaintainenceModel {
   int? status;
-  List<UnMaintenance>? maintenance;
-  List<UnFine>? fines;
+  List<Maintenance>? maintenance;
+  List<Fine>? fines;
 
-  UnPaidMaintainenceModel({
+  PaidMaintainenceModel({
     this.status,
     this.maintenance,
     this.fines,
   });
 
-  factory UnPaidMaintainenceModel.fromJson(Map<String, dynamic> json) =>
-      UnPaidMaintainenceModel(
+  factory PaidMaintainenceModel.fromJson(Map<String, dynamic> json) =>
+      PaidMaintainenceModel(
         status: json["status"],
         maintenance: json["maintenance"] == null
             ? []
-            : List<UnMaintenance>.from(
-                json["maintenance"]!.map((x) => UnMaintenance.fromJson(x))),
+            : List<Maintenance>.from(
+                json["maintenance"]!.map((x) => Maintenance.fromJson(x))),
         fines: json["fines"] == null
             ? []
-            : List<UnFine>.from(json["fines"]!.map((x) => UnFine.fromJson(x))),
+            : List<Fine>.from(json["fines"]!.map((x) => Fine.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -44,7 +44,7 @@ class UnPaidMaintainenceModel {
       };
 }
 
-class UnFine {
+class Fine {
   int? fineId;
   int? societyId;
   int? userId;
@@ -56,9 +56,8 @@ class UnFine {
   String? status;
   String? attachment;
   dynamic paidAt;
-  bool? isChecked;
 
-  UnFine({
+  Fine({
     this.fineId,
     this.societyId,
     this.userId,
@@ -70,10 +69,9 @@ class UnFine {
     this.status,
     this.attachment,
     this.paidAt,
-    this.isChecked,
   });
 
-  factory UnFine.fromJson(Map<String, dynamic> json) => UnFine(
+  factory Fine.fromJson(Map<String, dynamic> json) => Fine(
         fineId: json["fine_id"],
         societyId: json["society_id"],
         userId: json["user_id"],
@@ -87,7 +85,6 @@ class UnFine {
         status: json["status"],
         attachment: json["attachment"],
         paidAt: json["paid_at"],
-        isChecked: false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -103,11 +100,10 @@ class UnFine {
         "status": status,
         "attachment": attachment,
         "paid_at": paidAt,
-        "isChecked": false,
       };
 }
 
-class UnMaintenance {
+class Maintenance {
   int? maintenanceId;
   int? userId;
   int? societyId;
@@ -119,9 +115,8 @@ class UnMaintenance {
   DateTime? date;
   String? status;
   dynamic paidAt;
-  bool? isChecked;
 
-  UnMaintenance({
+  Maintenance({
     this.maintenanceId,
     this.userId,
     this.societyId,
@@ -133,10 +128,9 @@ class UnMaintenance {
     this.date,
     this.status,
     this.paidAt,
-    this.isChecked,
   });
 
-  factory UnMaintenance.fromJson(Map<String, dynamic> json) => UnMaintenance(
+  factory Maintenance.fromJson(Map<String, dynamic> json) => Maintenance(
         maintenanceId: json["maintenance_id"],
         userId: json["user_id"],
         societyId: json["society_id"],
@@ -148,7 +142,6 @@ class UnMaintenance {
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
         status: json["status"],
         paidAt: json["paid_at"],
-        isChecked: false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -164,6 +157,5 @@ class UnMaintenance {
             "${date!.year.toString().padLeft(4, '0')}-${date!.month.toString().padLeft(2, '0')}-${date!.day.toString().padLeft(2, '0')}",
         "status": status,
         "paid_at": paidAt,
-        "isChecked": false,
       };
 }

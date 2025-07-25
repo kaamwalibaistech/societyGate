@@ -17,21 +17,63 @@ final class PaymentsLoading extends PaymentsState {
   List<Object> get props => [];
 }
 
-class PaymentsLoadedState extends PaymentsState {
-  // final UnPaidMaintainenceModel? dataa;
-  final List<Maintenance> unPaidMaintenance;
-  final List<Fine> unPaidFines;
+class PaymentsFullyLoadedState extends PaymentsState {
+  final List<UnFine>? unPaidFines;
+  final List<UnMaintenance>? unPaidMaintenance;
+  final List<Fine>? paidFines;
+  final List<Maintenance>? paidMaintenance;
+
+  const PaymentsFullyLoadedState({
+    this.unPaidFines,
+    this.unPaidMaintenance,
+    this.paidFines,
+    this.paidMaintenance,
+  });
+  @override
+  List<Object> get props => [
+        unPaidFines ?? [],
+        unPaidMaintenance ?? [],
+        paidFines ?? [],
+        paidMaintenance ?? [],
+      ];
+}
+
+// class PaymentsLoadedState extends PaymentsState {
+//   final List<UnMaintenance> unPaidMaintenance;
+//   final List<UnFine> unPaidFines;
+//   // final List<Maintenance> paidMaintenance;
+//   // final List<Fine> paidFines;
+
+//   const PaymentsLoadedState({
+//     required this.unPaidMaintenance,
+//     required this.unPaidFines,
+//     // required this.paidMaintenance,
+//     // required this.paidFines
+//   });
+//   @override
+//   List<Object> get props => [
+//         unPaidMaintenance,
+//         unPaidFines,
+//       ];
+// }
+
+class PaymentsPaidLoadedState extends PaymentsState {
   final List<Maintenance> paidMaintenance;
   final List<Fine> paidFines;
+  // final List<Maintenance> paidMaintenance;
+  // final List<Fine> paidFines;
 
-  const PaymentsLoadedState(
-      {required this.unPaidMaintenance,
-      required this.unPaidFines,
-      required this.paidMaintenance,
-      required this.paidFines});
+  const PaymentsPaidLoadedState({
+    required this.paidMaintenance,
+    required this.paidFines,
+    // required this.paidMaintenance,
+    // required this.paidFines
+  });
   @override
-  List<Object> get props =>
-      [unPaidMaintenance, unPaidFines, paidMaintenance, paidFines];
+  List<Object> get props => [
+        paidMaintenance,
+        paidFines,
+      ];
 }
 
 // class PaymentsPaidLoadedState extends PaymentsState {
