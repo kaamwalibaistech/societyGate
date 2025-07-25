@@ -120,9 +120,9 @@ class _Navigationscreen extends State<Navigationscreen> {
               activeIcon: Icon(Icons.add_circle, size: 50),
             ),
             const BottomNavigationBarItem(
-              icon: Icon(Icons.message_outlined),
+              icon: Icon(Icons.groups_outlined, size: 40),
               label: "Community",
-              activeIcon: Icon(Icons.message),
+              activeIcon: Icon(Icons.groups),
             ),
             BottomNavigationBarItem(
               icon: Container(
