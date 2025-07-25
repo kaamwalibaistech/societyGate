@@ -72,40 +72,6 @@ class ApiRepository {
     return null;
   }
 
-  Future<Map<String, dynamic>?> amenitiesSendRawJson(
-      List<Map<String, dynamic>> amenitiesList, societyId) async {
-    const url = 'https://thesocietygate.com/api/amenities-for-society';
-
-    final body = {
-      "society_id": societyId,
-      "amenities": amenitiesList,
-    };
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'User-Agent': 'FlutterApp/1.0',
-        },
-        body: jsonEncode(body),
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        return data;
-      } else {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        return data;
-      }
-    } catch (e) {
-      log("Error: $e");
-    }
-
-    return null;
-  }
-
   Future<MemberRegisterModel?> memberRegister(
       uname, uemail, uphone, sregistrationNo, flatNumber, block, floor) async {
     final url = Uri.parse("${baseUrl}memberregister");

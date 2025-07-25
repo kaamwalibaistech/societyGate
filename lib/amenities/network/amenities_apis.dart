@@ -8,13 +8,49 @@ import 'package:society_gate/models/amenities_ceate_order.dart';
 import 'package:society_gate/models/amenities_model.dart';
 import 'package:society_gate/models/get_user_purchase_amenities_model.dart';
 
-Future<CreateOrderForAmenities?> createOrderForAmenitiesAmenities(
+Future<Map<String, dynamic>?> amenitiesSendRawJson(
+    List<Map<String, dynamic>> amenitiesList, societyId) async {
+  String api = ApiConstant.addSocietyAmenity;
+  String baseUrl = ApiConstant.baseUrl;
+  String url = (baseUrl + api);
+
+  final body = {
+    "society_id": societyId,
+    "amenities": amenitiesList,
+  };
+
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'User-Agent': 'FlutterApp/1.0',
+      },
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return data;
+    } else {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return data;
+    }
+  } catch (e) {
+    log("Error: $e");
+  }
+
+  return null;
+}
+
+Future<CreateOrderForAmenities?> createOrderForAmenities(
   String amount,
   String societyId,
   String userId,
   String amenities,
 ) async {
-  String api = ApiConstant.createOrderForAmenitiesAmenities;
+  String api = ApiConstant.createOrderForAmenities;
   String baseUrl = ApiConstant.baseUrl;
   Uri url = Uri.parse(baseUrl + api);
   final body = {

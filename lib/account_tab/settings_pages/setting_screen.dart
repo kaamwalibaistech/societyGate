@@ -35,7 +35,7 @@ class _SettingScreenState extends State<SettingScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => const Navigationscreen(
-              newIndexData: 3,
+              newIndexData: 4,
             ),
           ),
         );
