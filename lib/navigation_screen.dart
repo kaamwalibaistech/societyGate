@@ -80,17 +80,17 @@ class _Navigationscreen extends State<Navigationscreen> {
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: true,
           showUnselectedLabels: false,
-          elevation: 20,
+          elevation: 10,
           useLegacyColorScheme: false,
           iconSize: 30,
-          unselectedItemColor: Colors.grey,
+          unselectedItemColor: Colors.black54,
           selectedItemColor: selectedIndex == 0
               ? Colors.deepOrangeAccent
               : selectedIndex == 1
                   ? Colors.green
                   : selectedIndex == 2
                       ? loginType == "watchman"
-                          ? Color(0xFFFF9933)
+                          ? const Color(0xFFFF9933)
                           : Colors.deepPurpleAccent
                       : selectedIndex == 3
                           ? Colors.blueAccent
@@ -113,14 +113,14 @@ class _Navigationscreen extends State<Navigationscreen> {
                 Icons.add_circle_rounded,
                 size: 50,
                 color: loginType == "watchman"
-                    ? Color(0xFFFF9933)
+                    ? const Color(0xFFFF9933)
                     : Colors.deepPurpleAccent,
               ),
               label: "Add Visitor",
-              activeIcon: Icon(Icons.add_circle, size: 50),
+              activeIcon: const Icon(Icons.add_circle, size: 50),
             ),
             const BottomNavigationBarItem(
-              icon: Icon(Icons.groups_outlined, size: 40),
+              icon: Icon(Icons.groups_outlined, size: 38),
               label: "Community",
               activeIcon: Icon(Icons.groups),
             ),
