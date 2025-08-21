@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
+
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../../../api/api_constant.dart';
 import 'package:http/http.dart' as http;
@@ -24,6 +27,47 @@ Future<MemberlistModel?> memberListApi(
     }
   } catch (e) {
     throw Exception();
+  }
+  return null;
+}
+
+Future<int?> updateWatchmanApi(
+  String soceityId,
+  String userId,
+  String name,
+  String email,
+  String phone,
+  String pass,
+  String status,
+  String image,
+) async {
+  String api = ApiConstant.fine;
+  String baseUrl = ApiConstant.baseUrl;
+  Uri url = Uri.parse(baseUrl + api);
+
+  try {
+    final request = http.MultipartRequest("POST", url);
+    request.fields['user_id'] = userId;
+    request.fields['society_id'] = soceityId;
+    request.fields['uname'] = name;
+    request.fields['uemail'] = email;
+    request.fields['uphone'] = phone;
+    request.fields['upassword'] = pass;
+    request.fields['approval_status'] = status;
+
+    request.files.add(await http.MultipartFile.fromPath('attachment', image));
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> data = jsonDecode(responseBody);
+      log("$data");
+      return data['status'];
+    }
+  } catch (e) {
+    EasyLoading.dismiss();
+    throw Exception(e);
   }
   return null;
 }

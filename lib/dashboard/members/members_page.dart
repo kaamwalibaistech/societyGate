@@ -126,9 +126,16 @@ class _MembersPageState extends State<MembersPage> {
                         ? Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MemberWatchmanDetailPage(
-                                    details: state
-                                        .memberlistModel?.users?.admins?[0])))
+                              builder: (context) => MemberWatchmanDetailPage(
+                                  details:
+                                      state.memberlistModel?.users?.admins?[0],
+                                  societyName: loginModel?.user?.societyName
+                                          .toString() ??
+                                      "",
+                                  societyId: loginModel?.user?.societyName
+                                          .toString() ??
+                                      ""),
+                            ))
                         : null,
                     child: Container(
                       margin: const EdgeInsets.symmetric(
@@ -381,8 +388,15 @@ class _MembersPageState extends State<MembersPage> {
                   ? Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              MemberWatchmanDetailPage(details: memberList)))
+                          builder: (context) => MemberWatchmanDetailPage(
+                                details: memberList,
+                                societyName:
+                                    loginModel?.user?.societyName.toString() ??
+                                        "",
+                                societyId:
+                                    loginModel?.user?.societyName.toString() ??
+                                        "",
+                              )))
                   : null,
               child: Container(
                   margin:
@@ -518,7 +532,15 @@ class _MembersPageState extends State<MembersPage> {
                               MaterialPageRoute(
                                   builder: (context) =>
                                       MemberWatchmanDetailPage(
-                                          details: watchmenList)))
+                                        details: watchmenList,
+                                        societyName: loginModel
+                                                ?.user?.societyName
+                                                .toString() ??
+                                            "",
+                                        societyId: loginModel?.user?.societyName
+                                                .toString() ??
+                                            "",
+                                      )))
                           : null,
                       child: Container(
                           margin: const EdgeInsets.symmetric(

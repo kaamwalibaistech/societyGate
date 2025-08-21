@@ -146,7 +146,7 @@ class _CommunityPageState extends State<CommunityPage> {
                           context.read<CommunityBloc>().add(CommunityPostEvent(
                               page: page, limit: limit.toString()));
                         } else if (value == 2) {
-                          EasyLoading.showToast("Working on it");
+                          EasyLoading.showToast("Comming Soon");
                         }
                       },
                     ),
@@ -205,32 +205,32 @@ class _CommunityPageState extends State<CommunityPage> {
                               )),
                           child: Row(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5, left: 6),
-                                child: Text(post!.like.toString()),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  EasyLoading.showToast("Working on it");
-                                },
-                                icon: const Icon(
-                                  Icons.thumb_up_outlined,
-                                  color: Colors.blueGrey,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5, left: 6),
-                                child: Text(post.dislike.toString()),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  EasyLoading.showToast("Working on it");
-                                },
-                                icon: const Icon(
-                                  Icons.thumb_down_outlined,
-                                  color: Colors.blueGrey,
-                                ),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.only(top: 5, left: 6),
+                              //   child: Text(post!.like.toString()),
+                              // ),
+                              // IconButton(
+                              //   onPressed: () {
+                              //     EasyLoading.showToast("Working on it");
+                              //   },
+                              //   icon: const Icon(
+                              //     Icons.thumb_up_outlined,
+                              //     color: Colors.blueGrey,
+                              //   ),
+                              // ),
+                              // Padding(
+                              //   padding: const EdgeInsets.only(top: 5, left: 6),
+                              //   child: Text(post.dislike.toString()),
+                              // ),
+                              // IconButton(
+                              //   onPressed: () {
+                              //     EasyLoading.showToast("Working on it");
+                              //   },
+                              //   icon: const Icon(
+                              //     Icons.thumb_down_outlined,
+                              //     color: Colors.blueGrey,
+                              //   ),
+                              // ),
                               const Spacer(),
                               IconButton(
                                 // onPressed: () => showCommentsBottomSheet(
@@ -247,7 +247,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                   builder: (context) =>
                                       CommunityCommetBottomsheet(
                                     finalComments: finalComments,
-                                    postId: post.id.toString(),
+                                    postId: post?.id.toString() ?? "",
                                     limit: limit.toString(),
                                   ),
                                 ),
@@ -285,7 +285,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                   builder: (context) =>
                                       CommunityCommetBottomsheet(
                                     finalComments: finalComments,
-                                    postId: post.id.toString(),
+                                    postId: post?.id.toString() ?? "",
                                     limit: limit.toString(),
                                   ),
                                 ),
@@ -302,7 +302,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                           comments: finalComments[0],
                                           memberId: state.memberId,
                                           limit: limit.toString(),
-                                          postId: post.id.toString(),
+                                          postId: post?.id.toString() ?? "",
                                           isoutSide: true,
                                         ),
                                         Padding(

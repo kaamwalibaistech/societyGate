@@ -159,7 +159,7 @@ class _ConfirmAmenitiesBuyState extends State<ConfirmAmenitiesBuy> {
   _createAmenitiesOrder() async {
     try {
       EasyLoading.show(status: "Proceeding to payment...");
-      createOrderForAmenitiesModel = await createOrderForAmenitiesAmenities(
+      createOrderForAmenitiesModel = await createOrderForAmenities(
           widget.total.toString(),
           loginModel?.user?.societyId.toString() ?? "",
           loginModel?.user?.userId.toString() ?? "",

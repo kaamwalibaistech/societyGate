@@ -2,8 +2,11 @@ class ApiConstant {
   static const String baseUrl = "https://thesocietygate.com/api/";
   static const String adminRegister = "mygetapi.php";
   static const String loginApi = "login";
+  static const String storeAccId =
+      "society-add-razorpay-id"; // Store AccId in database
   static const String societyMembersList = "usersbysociety";
   static const String fine = "fine";
+  static const String storeFcm = "save-fcm-token";
 
   // Visitors API Constants
   static const String visitorsbysocietyAndFlatId =
@@ -35,11 +38,11 @@ class ApiConstant {
   static const String deleteComment = "community_commentdelete";
 
   //Amenities API Constants
-  static const String createOrderForAmenitiesAmenities = "create-order";
+  static const String createOrderForAmenities = "amenity-create-order";
   static const String getAmenityByUserId = "get-amenities-by-userid";
   static const String getAmenityForSociety = "get-amenities-by-societyid";
   static const String amenitiesBookbyUser = "amenities-book-by-user";
+  static const String addSocietyAmenity = "add-society-amenities";
   static const String editAmenity = "edit-society-amenities";
   static const String deleteAmenity = "delete-society-amenities";
-  static const String storeAccId = "add-razorpay-id"; // Store AccId in database
 }

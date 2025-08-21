@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:society_gate/amenities/amenities_images.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:society_gate/api/api_repository.dart';
+import 'package:society_gate/amenities/network/amenities_apis.dart';
 import 'package:society_gate/auth/login_success.dart';
 import 'package:society_gate/constents/local_storage.dart';
 import 'package:society_gate/constents/sizedbox.dart';
@@ -328,9 +326,9 @@ class _AmenitiesAddState extends State<AmenitiesAdd> {
     }
 
     final loginModel = LocalStoragePref().getLoginModel();
-    ApiRepository apiRepository = ApiRepository();
+    // ApiRepository apiRepository = ApiRepository();
 
-    final response = await apiRepository.amenitiesSendRawJson(
+    final response = await amenitiesSendRawJson(
         selectedAmenitiesList, loginModel?.user?.societyId);
 
     if (response?["status"] == 200) {
