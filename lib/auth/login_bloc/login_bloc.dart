@@ -31,17 +31,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _loginMethod(LoginButtonEvent event, Emitter<LoginState> emit) async {
     emit(LoginLoadingState());
-    bool? approveStatus;
+    bool approveStatus = true;
     try {
       final loginData =
           await login(event.phoneNo.toString(), event.password.toString());
       _loginModel = loginData;
       if (_loginModel!.status == 200) {
         LocalStoragePref().storeLoginModel(_loginModel!);
+
         LocalStoragePref().setLoginBool(true);
         if (_loginModel?.user?.role == "admin") {
           approveStatus = await ApiRepository()
-              .getExistingAmenitiesData(_loginModel!.user!.societyId);
+                  .getExistingAmenitiesData(_loginModel!.user!.societyId) ??
+              true;
           if (approveStatus == true) {
             LocalStoragePref().setAmenitiesBool(true);
           }
@@ -53,15 +55,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         // log(" Model : ${_loginModel?.user?.societyName}");
         if (loginData?.status == 200 && loginData?.user?.role == "admin") {
           approveStatus = await ApiRepository()
-              .getExistingAmenitiesData(_loginModel!.user!.societyId);
+                  .getExistingAmenitiesData(_loginModel!.user!.societyId) ??
+              true;
         } else {
           approveStatus = true;
         }
         // emit(IsAmenitiesAvailableState(isAmenitiesAvailable: approveStatus!));
 
         emit(LoginSuccessState(
-            loginModel: _loginModel!,
-            isAmenitiesAvailable: approveStatus ?? false));
+            loginModel: _loginModel!, isAmenitiesAvailable: approveStatus));
       } else if (_loginModel!.status == 403) {
         log(" error");
         emit(LoginNotApproveState(approvemsg: _loginModel!.message.toString()));
