@@ -188,17 +188,22 @@ class _CreateNewAccountState extends State<LoginScreen> {
           // context.read<LoginBloc>().add(
           //         AmenitiesChecker(),
           //       );
-          if (state.isAmenitiesAvailable == true) {
+          if (state.loginModel.user?.role == "admin") {
             EasyLoading.dismiss();
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const Navigationscreen()),
-            );
+            state.isAmenitiesAvailable == true
+                ? Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => const Navigationscreen()),
+                  )
+                : Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => const AmenitiesAdd()),
+                  );
           } else {
             EasyLoading.dismiss();
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => const AmenitiesAdd()),
+              MaterialPageRoute(builder: (_) => const Navigationscreen()),
             );
           }
         } else if (state is LoginNotApproveState) {
