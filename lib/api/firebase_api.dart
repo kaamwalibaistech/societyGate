@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:society_gate/auth/network/login_api.dart';
+import 'package:society_gate/constents/local_storage.dart';
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   log("Title = ${message.notification!.title}");
@@ -15,6 +17,12 @@ class FirebaseApi {
     await _firebaseMessaging.requestPermission();
     final fcmToken = await _firebaseMessaging.getToken();
     log('Token = $fcmToken');
+    final loginData = LocalStoragePref().getLoginModel();
+    await storeFCM(
+        fcmToken.toString(),
+        loginData?.user?.userId.toString() ?? "",
+        loginData?.user?.societyId.toString() ?? "");
+    log(loginData?.user?.userId.toString() ?? "");
 
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
   }

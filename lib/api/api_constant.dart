@@ -6,6 +6,7 @@ class ApiConstant {
       "society-add-razorpay-id"; // Store AccId in database
   static const String societyMembersList = "usersbysociety";
   static const String fine = "fine";
+  static const String storeFcm = "save-fcm-token";
 
   // Visitors API Constants
   static const String visitorsbysocietyAndFlatId =

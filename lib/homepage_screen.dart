@@ -118,14 +118,15 @@ class _HomepageScreenState extends State<HomepageScreen>
   }
 
   bool _showAddBank() {
-    final isBankAdded = LocalStoragePref().getBankAddedBool();
+    bool isBankAdded = LocalStoragePref().getBankAddedBool() ?? true;
 
     if (loginType != "admin") return false;
-    if (isBankAdded == null || isBankAdded == false) {
+    if (isBankAdded == false) {
       log("Bank not added. Showing field.");
       return true;
-    } else {}
-    return false;
+    } else {
+      return false;
+    }
   }
 
   List<String> title = [

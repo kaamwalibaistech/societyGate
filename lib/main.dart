@@ -23,14 +23,13 @@ import 'navigation_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await LocalStoragePref.instance!.initPrefBox();
   // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseApi().initNotification();
 
-  await LocalStoragePref.instance!.initPrefBox();
   // await dotenv.load(fileName: ".env");
 
   runApp(const MyApp());
@@ -55,7 +54,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool? isLoggedin;
-  bool? isAmenitiesAdded;
+  bool isAmenitiesAdded = true;
 
   @override
   void initState() {
@@ -65,7 +64,9 @@ class _MyAppState extends State<MyApp> {
 
   void checkData() {
     isLoggedin = LocalStoragePref().getLoginBool();
-    isAmenitiesAdded = LocalStoragePref().getAmenitiesBool();
+    setState(() {
+      isAmenitiesAdded = LocalStoragePref().getAmenitiesBool() ?? true;
+    });
   }
 
   @override
