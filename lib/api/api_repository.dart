@@ -658,9 +658,7 @@ class ApiRepository {
       final response = await http.post(url, body: body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-        if (data['status'] == 200) {
-          return AddNoticeModel.fromJson(data);
-        }
+
         return AddNoticeModel.fromJson(data);
       }
     } catch (e) {
