@@ -10,61 +10,59 @@ AddNoticeModel addNoticeModelFromJson(String str) =>
 String addNoticeModelToJson(AddNoticeModel data) => json.encode(data.toJson());
 
 class AddNoticeModel {
-  int status;
-  String message;
-  Data? data;
+  String? status;
+  String? message;
+  Announcement? announcement;
 
   AddNoticeModel({
-    required this.status,
-    required this.message,
-    required this.data,
+    this.status,
+    this.message,
+    this.announcement,
   });
 
   factory AddNoticeModel.fromJson(Map<String, dynamic> json) => AddNoticeModel(
         status: json["status"],
         message: json["message"],
-        data: Data.fromJson(json["data"]),
+        announcement: json["announcement"] == null
+            ? null
+            : Announcement.fromJson(json["announcement"]),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": data?.toJson() ?? "",
+        "announcement": announcement?.toJson(),
       };
 }
 
-class Data {
+class Announcement {
   String? societyId;
   String? userId;
   String? title;
   String? description;
-  String? announcementType;
   int? announcementId;
 
-  Data({
-    required this.societyId,
-    required this.userId,
-    required this.title,
-    required this.description,
-    required this.announcementType,
-    required this.announcementId,
+  Announcement({
+    this.societyId,
+    this.userId,
+    this.title,
+    this.description,
+    this.announcementId,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        societyId: json["society_id"] ?? "",
-        userId: json["user_id"] ?? "",
-        title: json["title"] ?? "",
-        description: json["description"] ?? "",
-        announcementType: json["announcement_type"] ?? "",
-        announcementId: json["announcement_id"] ?? 0,
+  factory Announcement.fromJson(Map<String, dynamic> json) => Announcement(
+        societyId: json["society_id"],
+        userId: json["user_id"],
+        title: json["title"],
+        description: json["description"],
+        announcementId: json["announcement_id"],
       );
 
   Map<String, dynamic> toJson() => {
-        "society_id": societyId ?? "",
-        "user_id": userId ?? "",
-        "title": title ?? "",
-        "description": description ?? "",
-        "announcement_type": announcementType ?? "",
-        "announcement_id": announcementId ?? "",
+        "society_id": societyId,
+        "user_id": userId,
+        "title": title,
+        "description": description,
+        "announcement_id": announcementId,
       };
 }

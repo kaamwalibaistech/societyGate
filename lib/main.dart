@@ -15,11 +15,11 @@ import 'auth/register_screen.dart';
 import 'community/bloc/community_bloc.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/members/member_bloc/members_bloc.dart';
+import 'dashboard/payments_screen/bloc/payments_bloc.dart';
+import 'dashboard/shops/bloc/dailyneeds_bloc.dart';
 import 'dashboard/visitors/visitor_view_bloc/visitors_view_bloc.dart';
 import 'dashboard/visitors/visitors_bloc/visitors_bloc.dart';
 import 'navigation_screen.dart';
-import 'dashboard/payments_screen/bloc/payments_bloc.dart';
-import 'dashboard/shops/bloc/dailyneeds_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

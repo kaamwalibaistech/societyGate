@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 // import 'package:http_parser/http_parser.dart';
 import 'package:society_gate/models/forget_password_model.dart';
 import 'package:society_gate/models/forget_password_response_model.dart';
@@ -364,8 +362,7 @@ class ApiRepository {
     Map<String, String> queryParameters = {};
     queryParameters.addAll({"API-KEY": "ea3652c8-d890-44c6-9789-48dfc5831998"});
 
-    Uri url = Uri.parse(
-            "https://test.kaamwalijobs.com/API/Mobile_api/testsendforgototp")
+    Uri url = Uri.parse("https://kaamwalijobs.com/API/Mobile_api/sendforgototp")
         .replace(queryParameters: queryParameters);
 
     final body = {'mobile_no': number};
@@ -661,9 +658,7 @@ class ApiRepository {
       final response = await http.post(url, body: body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-        if (data['status'] == 200) {
-          return AddNoticeModel.fromJson(data);
-        }
+
         return AddNoticeModel.fromJson(data);
       }
     } catch (e) {

@@ -70,6 +70,11 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                       borderSide: BorderSide.none,
                     ),
                     hintStyle: const TextStyle(color: Colors.grey),
+                    errorStyle: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -84,6 +89,11 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                       ? "Enter Description"
                       : null,
                   decoration: InputDecoration(
+                    errorStyle: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                     hintText: "Enter Description",
                     filled: true,
                     fillColor: Colors.white,
@@ -120,22 +130,39 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                             emergencySelected != true) {
                           Fluttertoast.showToast(
                               msg: "Announcement type is Required");
-                        } else {
+                          return; // stop execution
+                        }
+
+                        try {
                           final logInData = LocalStoragePref().getLoginModel();
                           ApiRepository apiRepository = ApiRepository();
+
                           AddNoticeModel? addNoticeData =
                               await apiRepository.addNotices(
-                            logInData!.user!.societyId.toString(),
-                            logInData.user!.userId.toString(),
+                            logInData?.user?.societyId.toString() ?? "",
+                            logInData?.user?.userId.toString() ?? "",
                             titleController.text,
                             descriptionController.text,
                             announcementType.toString(),
                           );
+
                           BlocProvider.of<HomepageBloc>(context)
                               .add(GetHomePageDataEvent());
+
                           Fluttertoast.showToast(
-                              msg: addNoticeData?.message.toString() ?? "");
+                            msg: addNoticeData?.message.toString() ??
+                                "Notice added successfully",
+                          );
+
                           Navigator.pop(context);
+                        } catch (e, stack) {
+                          debugPrint("Add Notice Error: $e");
+                          debugPrintStack(stackTrace: stack);
+
+                          Fluttertoast.showToast(
+                            msg: "Something went Wrong",
+                            toastLength: Toast.LENGTH_LONG,
+                          );
                         }
                       } else {
                         Fluttertoast.showToast(msg: "All Fields Are Required");

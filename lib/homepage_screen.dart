@@ -1,12 +1,16 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:lottie/lottie.dart';
+import 'package:restart_app/restart_app.dart';
+import 'package:shorebird_code_push/shorebird_code_push.dart';
 import 'package:society_gate/bank/add_bank_form.dart';
 import 'package:society_gate/community/community_post_add.dart';
 import 'package:society_gate/dashboard/notice_board/notice_api.dart';
@@ -17,10 +21,10 @@ import 'community/community_page.dart';
 import 'constents/local_storage.dart';
 import 'dashboard/members/members_page.dart';
 import 'dashboard/notice_board/notice_board_screen.dart';
+import 'dashboard/shops/dailyneeds_tab.dart';
 import 'dashboard/visitors/visitors_page.dart';
 import 'models/announcements_model.dart';
 import 'models/login_model.dart';
-import 'dashboard/shops/dailyneeds_tab.dart';
 import 'watchman_tools/scanner_page.dart';
 
 class HomepageScreen extends StatefulWidget {
@@ -44,6 +48,11 @@ class _HomepageScreenState extends State<HomepageScreen>
   @override
   void initState() {
     super.initState();
+    checkForUpdateShoreBird();
+
+    Timer.periodic(const Duration(minutes: 5), (timer) {
+      checkForUpdateShoreBird();
+    });
     checkForUpdate();
     _controller = AnimationController(vsync: this);
     WidgetsBinding.instance.addObserver(this);
@@ -55,6 +64,39 @@ class _HomepageScreenState extends State<HomepageScreen>
     WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
     super.dispose();
+  }
+
+  final updater = ShorebirdUpdater();
+
+  Future<void> checkForUpdateShoreBird() async {
+    try {
+      final status = await updater.checkForUpdate();
+
+      if (status == UpdateStatus.outdated) {
+        print("🔄 Update available via Shorebird... Applying now.");
+
+        EasyLoading.show(status: 'Applying update... Please wait.');
+
+        await updater.update();
+
+        await Future.delayed(const Duration(seconds: 3));
+
+        EasyLoading.showSuccess('Update applied! Restarting app...');
+
+        await Future.delayed(const Duration(seconds: 2));
+
+        await Restart.restartApp(
+          notificationTitle: 'Restarting App',
+          notificationBody: 'Tap here to reopen the app.',
+        );
+      } else {
+        log("✅ App is up to date.");
+      }
+    } catch (e) {
+      log("❌ Shorebird update failed: $e");
+    } finally {
+      EasyLoading.dismiss();
+    }
   }
 
   Future<void> checkForUpdate() async {
@@ -76,14 +118,13 @@ class _HomepageScreenState extends State<HomepageScreen>
     }
   }
 
-  // Handle app lifecycle changes
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
-      _controller.stop(); // Pause animation
+      _controller.stop();
     } else if (state == AppLifecycleState.resumed) {
-      _controller.repeat(); // Resume animation
+      _controller.repeat();
     }
   }
 
@@ -200,7 +241,7 @@ class _HomepageScreenState extends State<HomepageScreen>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 12),
-                // Profile Section
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
@@ -470,17 +511,17 @@ Once acc is activated it should be hidden.
                                                     loginModel: loginModel)));
                                   },
                                 ),
-                                OutlinedButton.icon(
-                                  icon: const Icon(Icons.support_agent),
-                                  label: const Text("Support"),
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.red,
-                                    side: const BorderSide(color: Colors.red),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 16),
-                                  ),
-                                  onPressed: () {},
-                                ),
+                                // OutlinedButton.icon(
+                                //   icon: const Icon(Icons.support_agent),
+                                //   label: const Text("Support"),
+                                //   style: OutlinedButton.styleFrom(
+                                //     foregroundColor: Colors.red,
+                                //     side: const BorderSide(color: Colors.red),
+                                //     padding: const EdgeInsets.symmetric(
+                                //         vertical: 12, horizontal: 16),
+                                //   ),
+                                //   onPressed: () {},
+                                // ),
                               ],
                             )
                           ],
@@ -929,7 +970,6 @@ Once acc is activated it should be hidden.
 
                 const SizedBox(height: 8),
 
-                // Features Grid
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: GridView.builder(
@@ -1067,13 +1107,13 @@ Once acc is activated it should be hidden.
   Color _getAnnouncementColor(String type) {
     switch (type.toLowerCase()) {
       case 'emergency':
-        return const Color(0xFFFF3B30); // Red color for emergency
+        return const Color(0xFFFF3B30);
       case 'maintenance':
-        return Colors.greenAccent.shade700; // Green color for maintenance
+        return Colors.greenAccent.shade700;
       case 'general':
-        return const Color(0xFF6B4EFF); // Purple color for general
+        return const Color(0xFF6B4EFF);
       default:
-        return const Color(0xFF6B4EFF); // Default color
+        return const Color(0xFF6B4EFF);
     }
   }
 }

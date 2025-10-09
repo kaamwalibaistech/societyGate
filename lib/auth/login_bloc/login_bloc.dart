@@ -47,20 +47,31 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           if (approveStatus == true) {
             LocalStoragePref().setAmenitiesBool(true);
           }
+        } else {
+          LocalStoragePref().setAmenitiesBool(true);
         }
 
         // final ss = LocalStoragePref().getLoginModel();
         // String dd = ss?.user?.societyName ?? "NAAAA";
         // log(" Local : $dd");
         // log(" Model : ${_loginModel?.user?.societyName}");
-        if (loginData?.status == 200 && loginData?.user?.role == "admin") {
-          approveStatus = await ApiRepository()
-                  .getExistingAmenitiesData(_loginModel!.user!.societyId) ??
-              true;
-        } else {
-          approveStatus = true;
-        }
-        // emit(IsAmenitiesAvailableState(isAmenitiesAvailable: approveStatus!));
+// <<<<<<< HEAD
+//         // if (loginData?.status == 200 && loginData?.user?.role == "admin") {
+//         //   approveStatus = await ApiRepository()
+//         //       .getExistingAmenitiesData(_loginModel!.user!.societyId);
+//         // } else {
+//         //   approveStatus = true;
+//         // }
+// =======
+//         if (loginData?.status == 200 && loginData?.user?.role == "admin") {
+//           approveStatus = await ApiRepository()
+//                   .getExistingAmenitiesData(_loginModel!.user!.societyId) ??
+//               true;
+//         } else {
+//           approveStatus = true;
+//         }
+// >>>>>>> 47b538fcadcf041691a9b02e6212a5a2214f810f
+//         // emit(IsAmenitiesAvailableState(isAmenitiesAvailable: approveStatus!));
 
         emit(LoginSuccessState(
             loginModel: _loginModel!, isAmenitiesAvailable: approveStatus));

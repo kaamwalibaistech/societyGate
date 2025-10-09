@@ -167,15 +167,29 @@ class _SocietyRegister extends State<SocietyRegister> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            automaticallyImplyLeading: false,
+            leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
+            // automaticallyImplyLeading: false,
+            centerTitle: true,
             title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Register Your Society",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                      color: Colors.white),
+                const Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Text(
+                    "Register Your Society",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: Colors.white),
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -184,21 +198,24 @@ class _SocietyRegister extends State<SocietyRegister> {
                         MaterialPageRoute(
                             builder: (context) => const LoginScreen()));
                   },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Already registered? ",
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                      Text(
-                        "Log In",
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 105, 178, 237),
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 50.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Already registered? ",
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                        Text(
+                          "Log In",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 105, 178, 237),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],

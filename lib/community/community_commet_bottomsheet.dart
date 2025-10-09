@@ -79,7 +79,7 @@ class _CommunityCommetBottomsheetState
                               // commentTile(comments[index]),
                             ),
                     ),
-                    const SizedBox(height: 16),
+                    // const SizedBox(height: 16),
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.blue.shade50,
